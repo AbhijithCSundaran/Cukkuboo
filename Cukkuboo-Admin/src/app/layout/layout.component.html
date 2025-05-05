@@ -1,0 +1,19 @@
+<div class="main-layout">
+    <!-- Topbar -->
+    <header class="topbar">
+      <app-topbar></app-topbar>
+    </header>
+  
+    <div class="layout-body">
+      <!-- Sidebar -->
+      <div class="sidebar_wrpr" [class.collapsed]="isSidebarCollapsed">
+        <app-sidebar (sidebarToggle)="onSidebarToggled($event)"></app-sidebar> 
+      </div>
+  
+      <!-- Main Content -->
+      <main class="content" [class.expanded]="isSidebarCollapsed"> 
+        <router-outlet></router-outlet>
+      </main>
+    </div>
+  </div>
+  

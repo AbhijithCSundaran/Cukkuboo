@@ -1,0 +1,19 @@
+<nav class="navbar">
+    <div class="navbar-left">
+      <span class="title">{{ currentPageTitle }}</span>
+    </div>
+  
+    <div class="navbar-right">
+      <input type="text" placeholder="Search..." class="search-input" />
+  
+      <div class="profile-dropdown" (click)="toggleDropdown()">
+        <i class="fas fa-user-circle"></i>
+        <ul class="dropdown-menu" [class.show]="dropdownOpen">
+          <li><a href="#">Profile</a></li>
+          <li><a href="#">Settings</a></li>
+          <li><a href="#">Logout</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  

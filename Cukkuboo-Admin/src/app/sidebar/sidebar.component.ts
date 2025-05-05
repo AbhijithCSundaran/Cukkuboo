@@ -37,7 +37,7 @@ export class SidebarComponent {
       subItems: [
         { name: 'Add Movie/Show', path: '/add-movie-show' },
         { name: 'Manage Content', path: '/manage-content' },
-        { name: 'Categories,Ratings & Genres', path: '/categories-rating-genres' },
+        { name: 'Categories & Genres', path: '/categories-genres' },
       ],
     },
     {

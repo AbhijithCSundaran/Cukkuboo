@@ -39,7 +39,6 @@ export class AddMovieShowComponent {
   uploadProgress = 0;
   uploadInProgress = false;
   autoSave = false;
-  
 
   onThumbnailSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
@@ -56,7 +55,7 @@ export class AddMovieShowComponent {
   onDrop(event: DragEvent): void {
     event.preventDefault();
     event.stopPropagation();
-    if (event.dataTransfer?.files && event.dataTransfer.files.length > 0) {
+    if (event.dataTransfer?.files.length) {
       this.readThumbnailFile(event.dataTransfer.files[0]);
     }
   }
@@ -88,7 +87,7 @@ export class AddMovieShowComponent {
   onVideoDrop(event: DragEvent): void {
     event.preventDefault();
     event.stopPropagation();
-    if (event.dataTransfer?.files && event.dataTransfer.files.length > 0) {
+    if (event.dataTransfer?.files.length) {
       this.simulateUpload(event.dataTransfer.files[0]);
     }
   }
@@ -97,6 +96,7 @@ export class AddMovieShowComponent {
     this.videoName = file.name;
     this.uploadInProgress = true;
     this.uploadProgress = 0;
+
     const reader = new FileReader();
     reader.onload = () => {
       this.videoURL = reader.result as string;
@@ -108,9 +108,7 @@ export class AddMovieShowComponent {
       if (this.uploadProgress >= 100) {
         clearInterval(interval);
         this.uploadInProgress = false;
-        if (this.autoSave) {
-          this.saveVideo();
-        }
+        if (this.autoSave) this.saveVideo();
       }
     }, 200);
   }
@@ -123,3 +121,5 @@ export class AddMovieShowComponent {
     console.log('Form submitted');
   }
 }
+
+

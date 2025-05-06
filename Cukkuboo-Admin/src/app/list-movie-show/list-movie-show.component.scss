@@ -1,0 +1,103 @@
+.table-card.dark-theme {
+    background-color: #121212;
+    color: #ffffff;
+  
+    .mat-card-content {
+      padding: 0;
+    }
+  
+    .custom-table {
+      width: 100%;
+      color: #fff;
+  
+      th.mat-header-cell {
+        background-color: #1f1f1f;
+        color: #ff4c4c;
+        font-weight: bold;
+      }
+  
+      td.mat-cell {
+        background-color: #181818;
+      }
+  
+      .icon {
+        color: #ff4c4c;
+        cursor: pointer;
+        margin-right: 10px;
+      }
+  
+      .badge {
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 0.8rem;
+      }
+  
+      .badge-enabled {
+        background-color: #ff4c4c;
+        color: white;
+      }
+  
+      .badge-disabled {
+        background-color: #666;
+        color: white;
+      }
+    }
+  }
+  .table-card {
+    background-color: #121212; 
+    color:white;
+    border-radius: 8px;
+    padding: 1rem;
+  }
+  
+  .custom-table {
+    width: 100%;
+    background-color: #000; 
+    color: #fff;
+  
+    th {
+      background-color: #1e1e1e;
+      color: #f44336;
+      font-weight: bold;
+    }
+  
+    td {
+      background-color: #000;
+      color: #fff;
+    }
+  
+    .mat-header-row,
+    .mat-row {
+      border-bottom: 1px solid #333;
+    }
+  
+    .icon {
+      color: #f44336;
+      cursor: pointer;
+      margin-right: 8px;
+  
+      &:hover {
+        color: #ff7961;
+      }
+    }
+  
+    .badge {
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 500;
+      display: inline-block;
+      text-transform: capitalize;
+    }
+  
+    .badge-enabled {
+      background-color: #4caf50;
+      color: #fff;
+    }
+  
+    .badge-disabled {
+      background-color: #f44336;
+      color: #fff;
+    }
+  }
+  

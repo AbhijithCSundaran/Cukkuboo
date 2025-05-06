@@ -35,9 +35,15 @@ export class SidebarComponent {
       name: 'Content Management',
       icon: 'fa-film',
       subItems: [
+        {name:'List Movie/Show ',path:'/list-movie-show'},
         { name: 'Add Movie/Show', path: '/add-movie-show' },
         { name: 'Manage Content', path: '/manage-content' },
-        { name: 'Categories,Ratings & Genres', path: '/categories-rating-genres' },
+        { name: 'Categories', path: '/categories' },
+        { name: 'Genres', path: '/genres' },
+        
+
+       
+      
       ],
     },
     {
@@ -62,7 +68,7 @@ export class SidebarComponent {
 
   onMenuItemClick(menuItem: MenuItem, event: MouseEvent) {
     event.stopPropagation();
-    if (this.isCollapsed) return; // Prevent toggle on click if collapsed
+    if (this.isCollapsed) return; 
 
     menuItem.showSubmenu = !menuItem.showSubmenu;
     this.menuItems.forEach((item) => {

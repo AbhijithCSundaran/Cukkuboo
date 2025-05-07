@@ -36,8 +36,8 @@
     </mat-card>
   
 
-    <mat-card class="table-card">
-      <mat-card-content>
+    <!-- <mat-card class="table-card">
+      <mat-card-content> -->
         <table mat-table [dataSource]="categories" class="mat-elevation-z2 custom-table">
           <ng-container matColumnDef="name">
             <th mat-header-cell *matHeaderCellDef> Category Name </th>
@@ -77,7 +77,7 @@
           <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
           <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
         </table>
-      </mat-card-content>
-    </mat-card>
+      <!-- </mat-card-content>
+    </mat-card> -->
   </div>
   

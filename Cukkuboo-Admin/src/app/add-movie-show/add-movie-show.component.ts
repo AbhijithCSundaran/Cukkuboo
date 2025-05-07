@@ -11,6 +11,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-add-movie-show',
@@ -39,6 +40,8 @@ export class AddMovieShowComponent {
   uploadProgress = 0;
   uploadInProgress = false;
   autoSave = false;
+
+  constructor(private router: Router) {}
 
   onThumbnailSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
@@ -119,6 +122,10 @@ export class AddMovieShowComponent {
 
   submitForm(): void {
     console.log('Form submitted');
+  }
+
+  goBack(): void {
+    this.router.navigate(['/list-movie-show']);
   }
 }
 

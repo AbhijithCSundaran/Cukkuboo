@@ -30,13 +30,7 @@ export class ListMovieShowComponent {
   editMovie(movie: any): void {
   
     this.router.navigate(['/add-movie-show'], {
-      queryParams: { 
-        title: movie.title,
-        genre: movie.genre,
-        rating: movie.rating,
-        category: movie.category,
-        status: movie.status
-      }
+  
     });
   }
 

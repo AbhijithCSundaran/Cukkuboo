@@ -7,7 +7,7 @@ import { CategoriesComponent } from './categories/categories.component';
 import { GenresComponent } from './genres/genres.component';
 import { ListMovieShowComponent } from './list-movie-show/list-movie-show.component';
 import { UserListComponent } from './user-list/user-list.component';
-import { AddUserComponent } from './add-user/add-user.component'
+import { AddUserComponent } from './user-list/add-user/add-user.component'
 
 
 

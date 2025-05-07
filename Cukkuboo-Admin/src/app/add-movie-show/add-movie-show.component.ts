@@ -13,6 +13,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { Router } from '@angular/router';
 
+
 @Component({
   selector: 'app-add-movie-show',
   standalone: true,
@@ -35,13 +36,21 @@ import { Router } from '@angular/router';
 })
 export class AddMovieShowComponent {
   thumbnailPreview: string | ArrayBuffer | null = null;
+  bannerPreview: string | ArrayBuffer | null = null;
   videoName: string | null = null;
   videoURL: string | null = null;
   uploadProgress = 0;
   uploadInProgress = false;
   autoSave = false;
+  trailerName = '';
+  trailerURL: string | null = null;
+
+  accessType: 'free' | 'standard' | 'premium' | null = null;
+  status: 'active' | 'inactive' | null = null;
+
 
   constructor(private router: Router) {}
+
 
   onThumbnailSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
@@ -65,8 +74,8 @@ export class AddMovieShowComponent {
 
   private readThumbnailFile(file: File): void {
     const reader = new FileReader();
-    reader.onload = () => {
-      this.thumbnailPreview = reader.result;
+    reader.onload = (e) => {
+      this.thumbnailPreview = e.target?.result ?? null;
     };
     reader.readAsDataURL(file);
   }
@@ -75,6 +84,7 @@ export class AddMovieShowComponent {
     this.thumbnailPreview = null;
   }
 
+ 
   onVideoSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files[0]) {
@@ -117,15 +127,79 @@ export class AddMovieShowComponent {
   }
 
   saveVideo(): void {
-    console.log('Video saved:', this.videoName);
+ 
   }
 
-  submitForm(): void {
-    console.log('Form submitted');
+
+  onBannerSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files[0]) {
+      this.readBannerFile(input.files[0]);
+    }
   }
 
-  goBack(): void {
+  onBannerDrop(event: DragEvent): void {
+    event.preventDefault();
+    event.stopPropagation();
+    if (event.dataTransfer?.files.length) {
+      this.readBannerFile(event.dataTransfer.files[0]);
+    }
+  }
+
+  private readBannerFile(file: File): void {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      this.bannerPreview = e.target?.result ?? null;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  removeBanner(): void {
+    this.bannerPreview = null;
+  }
+
+
+  onTrailerSelected(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      this.trailerName = file.name;
+      this.trailerURL = URL.createObjectURL(file);
+     
+    }
+  }
+  
+  onTrailerDrop(event: DragEvent) {
+    event.preventDefault();
+    const file = event.dataTransfer?.files?.[0];
+    if (file) {
+      this.trailerName = file.name;
+      this.trailerURL = URL.createObjectURL(file);
+     
+    }
+  }
+  
+  onTrailerDragOver(event: DragEvent) {
+    event.preventDefault();
+  }
+  
+  removeMainVideo() {
+    this.videoURL = '';
+    this.videoName = '';
+    this.uploadProgress = 0;
+  }
+  
+  removeTrailer() {
+    this.trailerURL = '';
+    this.trailerName = '';
+  }
+  
+
+ goBack(): void {
     this.router.navigate(['/list-movie-show']);
   }
-}
 
+ 
+  submitForm(): void {
+   
+  }
+}

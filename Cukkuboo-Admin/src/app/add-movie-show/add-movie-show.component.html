@@ -1,5 +1,11 @@
 <div class="add-movie-show-container">
-  <h2>Add Movie/Show</h2>
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+    <h2>Add Movie/Show</h2>
+    <button class="back-to-list-button" (click)="goBack()">
+      Back to List
+    </button>
+    
+  </div>
 
   <mat-card appearance="outlined">
     <mat-card-content style="display: flex; flex-wrap: wrap;">
@@ -18,11 +24,11 @@
                   (drop)="onVideoDrop($event)"
                   (click)="videoInput.click()"
                 >
-                  <i class="fa-sharp fa-solid fa-arrow-up-from-bracket" style="font-size: 24px; margin-bottom: 8px; color: #ff1744;"></i>
+                  <i class="fa-sharp fa-solid fa-arrow-up-from-bracket"
+                     style="font-size: 24px; margin-bottom: 8px; color: #ff1744;"></i>
                   <p *ngIf="!videoName">Drag & drop a video here or click to select</p>
                   <p *ngIf="videoName">Video Selected: {{ videoName }}</p>
 
-                  <!-- Progress bar -->
                   <div *ngIf="uploadProgress >= 0 && uploadProgress < 100" class="progress-container">
                     <div class="progress-bar" [style.width.%]="uploadProgress"></div>
                     <span class="progress-text">{{ uploadProgress }}%</span>
@@ -38,25 +44,20 @@
                   hidden
                   #videoInput
                 />
-
-                
               </mat-card-content>
             </mat-card>
           </div>
 
-         <!-- Right: Video Preview  -->
-<div style="flex: 1; min-width: 250px;">
-  <div *ngIf="videoURL">
-    <h3 style="margin-bottom: 10px;">Preview</h3>
-    <video [src]="videoURL" controls class="video-preview" style="width: 100%; border-radius: 4px;"></video>
-
-    <div style="margin-top: 16px; display: flex; align-items: center; gap: 16px;">
-      <mat-checkbox [(ngModel)]="autoSave" color="blue">Save on upload</mat-checkbox>
-     
-    </div>
-  </div>
-</div>
-
+          <!-- Right: Video Preview -->
+          <div style="flex: 1; min-width: 250px;">
+            <div *ngIf="videoURL">
+              <h3 style="margin-bottom: 10px;">Preview</h3>
+              <video [src]="videoURL" controls class="video-preview" style="width: 100%; border-radius: 4px;"></video>
+              <div style="margin-top: 16px; display: flex; align-items: center; gap: 16px;">
+                <mat-checkbox [(ngModel)]="autoSave" color="blue">Save on upload</mat-checkbox>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -81,7 +82,7 @@
         </mat-form-field>
       </div>
 
-      <div style="width: 50%;padding: 0 10px 20px;">
+      <div style="width: 50%; padding: 0 10px 20px;">
         <mat-form-field appearance="outline" style="width: 100%;">
           <mat-label>Description</mat-label>
           <textarea matInput placeholder="Add description" required></textarea>
@@ -89,7 +90,7 @@
         </mat-form-field>
       </div>
 
-      <div style="width: 50%;padding: 0 10px 20px;">
+      <div style="width: 50%; padding: 0 10px 20px;">
         <mat-form-field appearance="outline" style="width: 100%;">
           <mat-label>Caste Details</mat-label>
           <textarea matInput placeholder="Add Caste details" required></textarea>
@@ -118,7 +119,7 @@
         </mat-form-field>
       </div>
 
-      <div style="width: 50%;padding: 0 10px 20px;">
+      <div style="width: 50%; padding: 0 10px 20px;">
         <mat-form-field appearance="outline" style="width: 100%;">
           <mat-label>Rating</mat-label>
           <mat-select required>
@@ -131,67 +132,45 @@
 
       <!-- Thumbnail Upload -->
       <div style="width: 50%; padding: 0 10px;">
-        <mat-card appearance="outlined" class="thumbnail-wrapper">
+        <mat-card appearance="outlined">
           <mat-card-content>
             <label style="font-weight: 500; display: block; margin-bottom: 8px;">Thumbnail</label>
-
-            <div 
-              class="drag-drop-zone" 
-              (dragover)="onDragOver($event)" 
+            <div
+              class="drag-drop-zone"
+              (dragover)="onDragOver($event)"
               (drop)="onDrop($event)"
               (click)="fileInput.click()"
             >
               <p *ngIf="!thumbnailPreview">Drag & drop an image here or click to select</p>
               <img *ngIf="thumbnailPreview" [src]="thumbnailPreview" alt="Thumbnail Preview" class="thumbnail-preview" />
             </div>
-
-            <input 
-              type="file" 
-              (change)="onThumbnailSelected($event)" 
-              accept="image/*" 
-              hidden 
-              #fileInput
-            />
-
-            <button 
-              mat-stroked-button 
-              color="warn" 
-              class="remove-button" 
-              (click)="removeThumbnail()" 
-              *ngIf="thumbnailPreview"
-            >
-              Remove Thumbnail
-            </button>
+            <input type="file" (change)="onThumbnailSelected($event)" accept="image/*" hidden #fileInput />
+            <button mat-stroked-button color="warn" (click)="removeThumbnail()" *ngIf="thumbnailPreview">Remove Thumbnail</button>
           </mat-card-content>
         </mat-card>
       </div>
 
-
-        <!-- Trailer Upload -->
-        <div style="width: 50%; padding: 0 10px;">
-          <mat-card appearance="outlined" class="thumbnail-wrapper">
-            <mat-card-content>
-              <label style="font-weight: 500; display: block; margin-bottom: 8px;">Trailer</label>
-  
-              <div 
+      <!-- Trailer Upload -->
+      <div style="width: 50%; padding: 0 10px;">
+        <mat-card appearance="outlined">
+          <mat-card-content>
+            <label style="font-weight: 500; display: block; margin-bottom: 8px;">Trailer</label>
+            <div
               class="drag-drop-zone"
               (dragover)="onVideoDragOver($event)"
               (drop)="onVideoDrop($event)"
               (click)="videoInput.click()"
-              >
+            >
               <p *ngIf="!videoName">Drag & drop a video here or click to select</p>
               <p *ngIf="videoName">Video Selected: {{ videoName }}</p>
-              </div>
-  
-             
-            </mat-card-content>
-          </mat-card>
-        </div>
-  
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
     </mat-card-content>
 
     <mat-card-actions style="padding: 0 50px 50px 30px; display: flex; justify-content: flex-end;">
-      <button mat-raised-button class="submit" (click)="submitForm()">Submit</button>
+      <button mat-raised-button color="primary" (click)="submitForm()">Submit</button>
     </mat-card-actions>
   </mat-card>
 </div>

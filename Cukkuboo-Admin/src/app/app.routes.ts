@@ -10,6 +10,7 @@ import{ ListMovieShowComponent }from'./list-movie-show/list-movie-show.component
 
 
 
+
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },

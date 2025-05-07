@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { Component,OnInit } from '@angular/core';
 import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import { Router } from '@angular/router';
@@ -9,16 +9,13 @@ import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'app-user-list',
-  imports: [MatTableModule, CommonModule, MatIconModule],
+  imports: [MatTableModule,CommonModule, MatIconModule ],
   templateUrl: './user-list.component.html',
-  styleUrl: './user-list.component.scss',
-  // changeDetection:ChangeDetectionStrategy.OnPush
+  styleUrl: './user-list.component.scss'
 })
 export class UserListComponent implements OnInit {
 
-  constructor(private router: Router,
-    private cdr:ChangeDetectorRef
-  ) { }
+  constructor(private router: Router) {}
 
   displayedColumns: string[] = ['name', 'contact', 'email', 'country', 'status', 'joindate', 'subscription', 'action'];
 
@@ -48,12 +45,12 @@ export class UserListComponent implements OnInit {
 
   dataSource = new MatTableDataSource(this.users);
 
-  ngOnInit(): void { }
+  ngOnInit(): void {}
 
   editUser(user: any): void {
-
+  
     this.router.navigate(['//add-user'], {
-
+  
     });
   }
 
@@ -63,15 +60,11 @@ export class UserListComponent implements OnInit {
     if (index > -1) {
       this.users.splice(index, 1);
       this.dataSource.data = [...this.users];
-      // this.dataSource = new MatTableDataSource(structuredClone(this.users));
-      this.cdr.detectChanges();
-
     }
   }
 
-
+  
   addNewUser(): void {
     this.router.navigate(['/add-user']);
-  
   }
 }

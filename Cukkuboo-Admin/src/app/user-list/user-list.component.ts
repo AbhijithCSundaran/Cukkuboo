@@ -71,15 +71,7 @@ export class UserListComponent implements OnInit {
 
 
   addNewUser(): void {
-    // this.router.navigate(['/add-user']);
-    this.users.push({
-      name: 'Jane Smith',
-      contact: '987-654-3210',
-      email: 'jane@example.com',
-      country: 'UK',
-      status: 'inactive',
-      joindate: new Date('2024-01-15'),
-      subscription: 'Basic'
-    })
+    this.router.navigate(['/add-user']);
+  
   }
 }

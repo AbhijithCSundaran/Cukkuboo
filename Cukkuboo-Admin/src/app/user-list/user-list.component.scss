@@ -120,3 +120,32 @@
       color: #fff;
     }
   }
+
+  .add-button {
+    background-color: #ff1744;
+    color: white;
+    border-radius: 24px;
+    height: 36px;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 0 16px;
+    box-shadow: 0 2px 6px rgba(255, 23, 68, 0.4);
+    border: none;
+    transition: background-color 0.3s ease;
+    display: flex;
+    align-items: center;
+  }
+  
+  .button-content {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  
+  .add-button mat-icon {
+    font-size: 18px;
+  }
+  
+  .add-button:hover {
+    background-color: #ff4569;
+  }

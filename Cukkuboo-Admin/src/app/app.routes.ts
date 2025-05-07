@@ -5,8 +5,8 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import{ AddMovieShowComponent }from'./add-movie-show/add-movie-show.component';
 import{CategoriesComponent}from'./categories/categories.component';
 import{GenresComponent}from'./genres/genres.component';
-import{ManageContentComponent}from'./manage-content/manage-content.component';
 import{ ListMovieShowComponent }from'./list-movie-show/list-movie-show.component';
+import{UserListComponent }from'./user-list/user-list.component';
 
 
 
@@ -24,7 +24,7 @@ export const routes: Routes = [
       { path: 'add-movie-show', component: AddMovieShowComponent }, 
       {path:'categories',component:CategoriesComponent},
       {path:'genres',component:GenresComponent},
-      {path:'manage-content',component:ManageContentComponent},
+      {path:'user-list',component:UserListComponent },
      
       
 

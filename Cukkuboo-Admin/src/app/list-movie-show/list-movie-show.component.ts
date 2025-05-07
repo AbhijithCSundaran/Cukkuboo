@@ -14,13 +14,13 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./list-movie-show.component.scss']
 })
 export class ListMovieShowComponent {
-  displayedColumns: string[] = ['title', 'genre', 'rating', 'category', 'status', 'action'];
+  displayedColumns: string[] = ['title', 'genre',  'category', 'status', 'action'];
 
   movies = [
-    { title: 'Inception', genre: 'Sci-Fi', rating: '8.8', category: 'Movie', status: 'active' },
-    { title: 'The Godfather', genre: 'Crime', rating: '9.2', category: 'Movie', status: 'inactive' },
-    { title: 'The Dark Knight', genre: 'Action', rating: '9.0', category: 'Movie', status: 'active' },
-    { title: 'Parasite', genre: 'Thriller', rating: '8.6', category: 'Movie', status: 'active' }
+    { title: 'Inception', genre: 'Sci-Fi',  category: 'Movie', status: 'active' },
+    { title: 'The Godfather', genre: 'Crime',  category: 'Movie', status: 'inactive' },
+    { title: 'The Dark Knight', genre: 'Action',  category: 'Movie', status: 'active' },
+    { title: 'Parasite', genre: 'Thriller',  category: 'Movie', status: 'active' }
   ];
 
   dataSource = new MatTableDataSource(this.movies);
@@ -28,7 +28,7 @@ export class ListMovieShowComponent {
   constructor(private router: Router) {}
 
   editMovie(movie: any): void {
-    // Navigate to the Add Movie/Show page with the movie data as query params
+  
     this.router.navigate(['/add-movie-show'], {
       queryParams: { 
         title: movie.title,

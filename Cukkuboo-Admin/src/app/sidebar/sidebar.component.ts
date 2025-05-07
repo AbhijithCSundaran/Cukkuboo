@@ -36,7 +36,7 @@ export class SidebarComponent {
       icon: 'fa-film',
       subItems: [
         {name:'List Movie/Show ',path:'/list-movie-show'},
-        { name: 'Manage Content', path: '/manage-content' },
+     
         { name: 'Categories', path: '/categories' },
         { name: 'Genres', path: '/genres' },
         
@@ -49,7 +49,7 @@ export class SidebarComponent {
       name: 'User Management',
       icon: 'fa-users',
       subItems: [
-        { name: 'Users List', path: '/users' },
+        { name: 'Users List', path: '/user-list' },
         { name: 'Subscriptions', path: '/subscriptions' },
       ],
     },

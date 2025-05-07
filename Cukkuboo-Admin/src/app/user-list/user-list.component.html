@@ -1,8 +1,12 @@
 <div class="user-container">
     <div class="header-row">
       <h2>User List</h2>
+      <button mat-raised-button color="primary" class="add-button"(click)="addNewUser()">
+        <mat-icon>add</mat-icon> New
+      </button>
  
     </div>
+    {{users.length}}
     <table mat-table [dataSource]="users" class="mat-elevation-z2 custom-table">
 
         <ng-container matColumnDef="name">

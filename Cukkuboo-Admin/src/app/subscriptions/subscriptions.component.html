@@ -53,7 +53,13 @@
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
       </table>
       
-       
+
+        <!-- No Data Found -->
+        <div class="no-data" *ngIf="dataSource.data.length === 0">
+            No Subscriptions found.
+        </div>
+
+      <mat-paginator class="pagination" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
      
   </div>
   

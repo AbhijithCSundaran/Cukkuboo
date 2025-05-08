@@ -55,8 +55,10 @@ export class SidebarComponent {
     },
     { name: 'Reports & Analytics', icon: 'fa-chart-bar', path: '/reports' },
     { name: 'Push Notifications', icon: 'fa-bell', path: '/notifications' },
-    { name: 'CMS Settings', icon: 'fa-cogs', path: '/cms-settings' },
-    { name: 'Settings', icon: 'fa-sliders-h', path: '/settings' },
+    { name: 'Settings', icon: 'fa-sliders-h', subItems: [
+      { name: 'Subscription Plans', path: '/subscription-plans' },
+     
+    ], },
   ];
 
   toggleSidebar() {

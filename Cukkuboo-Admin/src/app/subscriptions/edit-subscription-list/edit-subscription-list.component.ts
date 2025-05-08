@@ -13,8 +13,9 @@ import { MatSelectModule } from '@angular/material/select';
   styleUrl: './edit-subscription-list.component.scss'
 })
 export class EditSubscriptionListComponent {
-  selectedUser: string = '';
+ 
   selectedPlan: string = '';
+  selectedPeriod: string = '';
 
  
   constructor(private router: Router) {}
@@ -24,7 +25,7 @@ export class EditSubscriptionListComponent {
   }
 
   cancel(): void {
-  
+    this.router.navigate(['/subscriptions']);
   }
 
   

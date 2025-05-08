@@ -1,8 +1,8 @@
 <div class="list-movie-show-container">
     <div class="header-row">
       <h2>List Movie/Show</h2>
-      <button mat-raised-button color="primary" class="add-button"(click)="addNewMovie()">
-        <mat-icon>add</mat-icon> New
+      <button mat-raised-button  class="add-button" (click)="addNewMovie()">
+       + Add Movie/Show
       </button>
     </div>
 
@@ -54,7 +54,17 @@
   
           <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
           <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+        
+
         </table>
-     
+       
+         <!-- No Data Found -->
+         <div class="no-data" *ngIf="dataSource.data.length === 0">
+            No movies or shows found.
+        </div>
+
+        <mat-paginator class="pagination" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+
   </div>
   

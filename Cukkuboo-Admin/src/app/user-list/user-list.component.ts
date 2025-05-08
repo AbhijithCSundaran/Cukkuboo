@@ -4,12 +4,13 @@ import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import { Router } from '@angular/router';
 import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 
 
 @Component({
   selector: 'app-user-list',
-  imports: [MatTableModule,CommonModule, MatIconModule ],
+  imports: [MatTableModule,CommonModule, MatIconModule,MatPaginatorModule],
   templateUrl: './user-list.component.html',
   styleUrl: './user-list.component.scss'
 })
@@ -55,7 +56,7 @@ export class UserListComponent implements OnInit {
   }
 
   deleteUser(user: any): void {
-    debugger;
+   
     const index = this.users.indexOf(user);
     if (index > -1) {
       this.users.splice(index, 1);

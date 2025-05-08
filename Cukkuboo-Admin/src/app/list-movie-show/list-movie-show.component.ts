@@ -5,11 +5,12 @@ import { MatCardModule } from '@angular/material/card';
 import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-list-movie-show',
   standalone: true,
-  imports: [MatCardModule, MatTableModule, MatIconModule, CommonModule],
+  imports: [MatCardModule, MatTableModule, MatIconModule, CommonModule,MatPaginatorModule,],
   templateUrl: './list-movie-show.component.html',
   styleUrls: ['./list-movie-show.component.scss']
 })
@@ -45,4 +46,5 @@ export class ListMovieShowComponent {
   addNewMovie(): void {
     this.router.navigate(['/add-movie-show']);
   }
+  
 }

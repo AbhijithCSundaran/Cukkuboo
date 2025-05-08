@@ -1,3 +1,42 @@
 <div class="dashboard-content">
 <p>Welcome to Dashboard !</p>
+
+
+
+<div class="stats-container">
+  <mat-card class="stat-card">Subscribers: {{ stats.subscribers }}</mat-card>
+  <mat-card class="stat-card">Revenue: ${{ stats.revenue }}</mat-card>
+  <mat-card class="stat-card">Movies: {{ stats.movies }}</mat-card>
+  <mat-card class="stat-card">New Subs (Month): {{ stats.monthSubscribers }}</mat-card>
+</div>
+
+<div class="main-panels">
+  <mat-card class="panel">
+    <h3>Top 10 Most Viewed</h3>
+    <table mat-table [dataSource]="topMovies">
+      <ng-container matColumnDef="title">
+        <th mat-header-cell *matHeaderCellDef> Movie </th>
+        <td mat-cell *matCellDef="let movie"> {{ movie.title }} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="views">
+        <th mat-header-cell *matHeaderCellDef> Views </th>
+        <td mat-cell *matCellDef="let movie"> {{ movie.views }} </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="['title', 'views']"></tr>
+      <tr mat-row *matRowDef="let row; columns: ['title', 'views'];"></tr>
+    </table>
+  </mat-card>
+
+  <mat-card class="panel">
+    <h3>Latest Content</h3>
+    <ul>
+      <li *ngFor="let item of latestContent">
+        {{ item.title }} ({{ item.date }})
+      </li>
+    </ul>
+  </mat-card>
+</div>
+
 </div>

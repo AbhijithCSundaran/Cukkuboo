@@ -1,0 +1,37 @@
+<div class="edit-subscription-list-container">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+    <h2>Edit Subscription</h2>
+    <button class="back-to-list-button" (click)="goBack()">Back to List</button>
+  </div>
+
+  <mat-card appearance="outlined">
+    <mat-card-content style="display: flex; flex-wrap: wrap;">
+
+      <!-- User Dropdown -->
+    <!-- User Dropdown -->
+<div style="width: 50%; padding: 0 10px 20px;">
+  <mat-form-field appearance="outline" style="width: 100%;">
+    <mat-label>User</mat-label>
+    <mat-select [(value)]="selectedUser">
+      <mat-option value="John Doe">John Doe</mat-option>
+      <mat-option value="Jane Smith">Jane Smith</mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>
+
+
+      <!-- Plan Dropdown -->
+      <div style="width: 50%; padding: 0 10px 20px;">
+        <mat-form-field appearance="outline" style="width: 100%;">
+          <mat-label>Plan</mat-label>
+          <mat-select [(value)]="selectedPlan">
+            <mat-option value="Basic">Basic</mat-option>
+            <mat-option value="Standard">Standard</mat-option>
+            <mat-option value="Premium">Premium</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+    </mat-card-content>
+  </mat-card>
+</div>

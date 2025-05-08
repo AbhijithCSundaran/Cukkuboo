@@ -1,1 +1,85 @@
-<p>add-user works!</p>
+html
+<div class="add-movie-show-container">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+    <h2>Add User</h2>
+    <button class="back-to-list-button" (click)="goBack()">Back to List</button>
+  </div>
+
+  <mat-card appearance="outlined">
+    <mat-card-content style="display: flex; flex-wrap: wrap;">
+      
+      <!-- Name -->
+      <div style="width: 50%; padding: 0 10px 20px;">
+        <mat-form-field appearance="outline" style="width: 100%;">
+          <mat-label>Name</mat-label>
+          <input matInput placeholder="Add name" required>
+          <mat-hint>Name is required.</mat-hint>
+        </mat-form-field>
+      </div>
+
+      <!-- Contact -->
+      <div style="width: 50%; padding: 0 10px 20px;">
+        <mat-form-field appearance="outline" style="width: 100%;">
+          <mat-label>Contact</mat-label>
+          <input matInput placeholder="Add contact number">
+        </mat-form-field>
+      </div>
+
+      <!-- Email -->
+      <div style="width: 50%; padding: 0 10px 20px;">
+        <mat-form-field appearance="outline" style="width: 100%;">
+          <mat-label>Email</mat-label>
+          <input matInput type="email" placeholder="Add email">
+        </mat-form-field>
+      </div>
+
+      <!-- Country -->
+      <div style="width: 50%; padding: 0 10px 20px;">
+        <mat-form-field appearance="outline" style="width: 100%;">
+          <mat-label>Country</mat-label>
+          <input matInput placeholder="Enter country">
+        </mat-form-field>
+      </div>
+
+      <!-- Status -->
+      <div style="width: 50%; padding: 0 10px 20px;">
+        <mat-form-field appearance="outline" style="width: 100%;">
+          <mat-label>Status</mat-label>
+          <mat-select>
+            <mat-option value="active">Active</mat-option>
+            <mat-option value="inactive">Inactive</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <!-- Join Date -->
+      <div style="width: 50%; padding: 0 10px 20px;">
+        <mat-form-field appearance="outline" style="width: 100%;">
+          <mat-label>Join Date</mat-label>
+          <input matInput [matDatepicker]="picker" placeholder="Select join date">
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+      </div>
+
+      <!-- Subscription -->
+      <div style="width: 50%; padding: 0 10px 20px;">
+        <mat-form-field appearance="outline" style="width: 100%;">
+          <mat-label>Subscription</mat-label>
+          <mat-select>
+            <mat-option value="free">Free</mat-option>
+            <mat-option value="basic">Basic</mat-option>
+            <mat-option value="premium">Premium</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <!-- Action -->
+      <div  class="button-container">
+        <button class="save-button" (click)="saveUser()">Save</button>
+        <button class="cancel-button" (click)="cancel()">Cancel</button>
+      </div>
+
+    </mat-card-content>
+  </mat-card>
+</div>

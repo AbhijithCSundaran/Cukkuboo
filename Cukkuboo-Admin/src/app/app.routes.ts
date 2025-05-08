@@ -7,8 +7,9 @@ import { CategoriesComponent } from './categories/categories.component';
 import { GenresComponent } from './genres/genres.component';
 import { ListMovieShowComponent } from './list-movie-show/list-movie-show.component';
 import { UserListComponent } from './user-list/user-list.component';
-import { AddUserComponent } from './user-list/add-user/add-user.component'
-
+import { AddUserComponent} from './user-list/add-user/add-user.component';
+import{SubscriptionsComponent}from'./subscriptions/subscriptions.component';
+import{EditSubscriptionListComponent}from'./subscriptions/edit-subscription-list/edit-subscription-list.component';
 
 
 
@@ -27,7 +28,8 @@ export const routes: Routes = [
       { path: 'genres', component: GenresComponent },
       { path: 'user-list', component: UserListComponent },
       { path: 'add-user', component: AddUserComponent },
-
+      { path: 'subscriptions', component: SubscriptionsComponent},
+      { path: 'edit-subscription-list', component: EditSubscriptionListComponent},
 
 
 

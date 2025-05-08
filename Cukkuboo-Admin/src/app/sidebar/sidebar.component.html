@@ -3,7 +3,7 @@
       <img [src]="imgUrl+'assets/logo.png'" alt="App Logo" class="app-logo" />
     </div>
   
-    <div class="app-name" *ngIf="!isCollapsed">
+    <div class="app-name">
       <span>Cukkuboo</span>
     </div>
   
@@ -17,8 +17,8 @@
         <ng-container *ngIf="menuItem.subItems?.length; else mainmenu">
           <a (click)="onMenuItemClick(menuItem, $event)" class="menu-link">
             <i class="fas {{ menuItem.icon }}"></i>
-            <p class="menu-name" *ngIf="!isCollapsed">{{ menuItem.name }}</p>
-            <i class="fas icon" *ngIf="!isCollapsed" [ngClass]="menuItem.showSubmenu ? 'fa-chevron-left' : 'fa-chevron-right'"></i>
+            <p class="menu-name">{{ menuItem.name }}</p>
+            <i class="fas ms-auto arrow"  [ngClass]="menuItem.showSubmenu ? 'fa-chevron-left' : 'fa-chevron-right'"></i>
           </a>
   
           <!-- Submenu -->
@@ -45,4 +45,5 @@
       <i class="fas" [ngClass]="isCollapsed ? 'fa-chevron-right' : 'fa-chevron-left'"></i>
     </button>
   </div>
+
   

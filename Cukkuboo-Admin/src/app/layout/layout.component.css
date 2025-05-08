@@ -10,19 +10,21 @@
     flex: 1;
     display: flex;
     overflow: hidden;
-    
+
 }
 
 /* Sidebar */
 .sidebar_wrpr {
-    width: 250px;
+    width: 260px;
+    min-width: 17%;
     background-color: black;
-    padding:0 10px 0 30px;
+    padding: 0 10px 0 30px;
     transition: all 0.3s ease;
 }
 
 .sidebar_wrpr.collapsed {
-    width: 90px;
+    width: 100px;
+    min-width: 0;
 }
 
 /* Main Content */
@@ -34,5 +36,5 @@
     margin-left: 0px;
     height: 100%;
     background-color: black;
-  
+
 }

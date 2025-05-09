@@ -2,7 +2,7 @@
     background-color: #121212;
     color: #fff;
     padding: 20px;
-    height: 100%;
+    height: auto;
     font-weight: bold;
     font-size:x-large;
   }
@@ -50,11 +50,11 @@
   }
   
   .latest-card {
-    background: #212121;
+    background: linear-gradient(to right, #212121, #b71c1c);
     color: #fff;
     padding: 20px;
     border-radius: 12px;
-   
+    font-family: 'Roboto', sans-serif;
   }
   
   .latest-card h2 {
@@ -88,11 +88,11 @@
   }
   
   .most-viewed-card-inner {
-    background: #212121;
+    background: linear-gradient(to right, #000, #b71c1c);
     color: #fff;
     padding: 20px;
     border-radius: 12px;
-
+    font-family: 'Roboto', sans-serif;
   }
   
   .most-viewed-card-inner h2 {

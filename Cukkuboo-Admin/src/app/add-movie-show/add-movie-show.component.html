@@ -8,11 +8,12 @@
   </div>
 
   <mat-card appearance="outlined">
-    <mat-card-content style="display: flex; flex-wrap: wrap;">
+    <mat-card-content style="display: flex; flex-wrap: wrap; " >
      
-       <!-- Video Upload Section -->
-       <div style="width: 100%; display: flex; justify-content: center; margin-bottom: 50px;">
-        <div style="display: flex; width: 90%; gap: 24px; align-items: flex-start; flex-wrap: wrap;">
+          <!-- Video Upload Section -->
+<div style="width: 100%; padding: 0 10px 20px; box-sizing: border-box;">
+  <div style="display: flex; width: 100%; gap: 24px; align-items: flex-start; flex-wrap: wrap;">
+
           <!-- Left: Upload -->
           <div style="flex: 2; min-width: 300px;">
             <mat-card appearance="outlined">
@@ -52,13 +53,13 @@
           </div>
 
           <!-- Right: Video Preview -->
-          <div style="flex: 1; min-width: 250px;">
+          <div style="flex: 1; min-width: 250px; ">
             <div *ngIf="videoURL">
-              <h3 style="margin-bottom: 10px;">Preview</h3>
+              <label style="font-weight: 500; display: block; margin-bottom: 4px;">Preview</label>
               <video [src]="videoURL" controls class="video-preview" style="margin-top:0px; width: 100%; border-radius: 4px;"></video>
               <div style="margin-top: 16px; display: flex; align-items: center; gap: 16px;">
                 
-                <button mat-stroked-button color="warn" (click)="removeMainVideo()">Remove Video</button>
+                <button mat-stroked-button color="warn" style="color: white;"(click)="removeMainVideo()">Remove Video</button>
               </div>
             </div>
           </div>
@@ -180,7 +181,7 @@
           <img *ngIf="thumbnailPreview" [src]="thumbnailPreview" alt="Thumbnail Preview" class="thumbnail-preview" />
         </div>
         <input type="file" (change)="onThumbnailSelected($event)" accept="image/*" hidden #fileInput />
-        <button mat-stroked-button color="warn" (click)="removeThumbnail()" *ngIf="thumbnailPreview">Remove Thumbnail</button>
+        <button mat-stroked-button color="warn" style="color: white;" (click)="removeThumbnail()" *ngIf="thumbnailPreview">Remove Thumbnail</button>
       </mat-card-content>
     </mat-card>
   </div>
@@ -202,7 +203,7 @@
 
         <div *ngIf="trailerURL">
           <video [src]="trailerURL" controls class="video-preview" style="width: 100%; border-radius: 4px; margin-top: 10px;"></video>
-          <button mat-stroked-button color="warn" (click)="removeTrailer()" style="margin-top: 10px;">Remove Trailer</button>
+          <button mat-stroked-button color="warn"style="color: white;" (click)="removeTrailer()" style="margin-top: 10px;">Remove Trailer</button>
          </div>
       </div>
       <input
@@ -233,7 +234,7 @@
           <img *ngIf="bannerPreview" [src]="bannerPreview" alt="Banner Preview" class="thumbnail-preview" />
         </div>
         <input type="file" (change)="onBannerSelected($event)" accept="image/*" hidden #bannerInput />
-        <button mat-stroked-button color="warn" (click)="removeBanner()" *ngIf="bannerPreview">Remove Banner</button>
+        <button mat-stroked-button color="warn" style="color: white;"(click)="removeBanner()" *ngIf="bannerPreview">Remove Banner</button>
       </mat-card-content>
     </mat-card>
   </div>

@@ -77,7 +77,7 @@
   
     th {
       background-color: #1e1e1e;
-      color: #f44336;
+      color: white;
       font-weight: bold;
     }
   
@@ -92,12 +92,12 @@
     }
   
     .icon {
-      color: #f44336;
+      color: white;
       cursor: pointer;
       margin-right: 8px;
   
       &:hover {
-        color: #ff7961;
+        color: #ff1744;
       }
     }
   
@@ -116,13 +116,13 @@
     }
   
     .badge-disabled {
-      background-color: #f44336;
+      background-color: #b71c1c;
       color: #fff;
     }
   }
 
   .add-button {
-    background-color: #ff1744!important;
+    background-color: #b71c1c!important;
     color: white!important;
     border-radius: 24px;
     height: 36px;
@@ -143,7 +143,7 @@
   }
   
   .add-button:hover {
-    background-color: #ff4569;
+    background-color:#ff1744!important;
   }
 
   .pagination {

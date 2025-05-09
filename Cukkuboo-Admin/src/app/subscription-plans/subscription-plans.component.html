@@ -1,0 +1,47 @@
+
+<div class="subscription-container">
+    <div class="header-row">
+      <h2>Subscription Plan List</h2>
+      <button mat-raised-button  class="add-button"(click)="addNewPlan()">
+       + New
+      </button>
+ 
+    </div>
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z2 custom-table">
+  
+      <ng-container matColumnDef="plan">
+        <th mat-header-cell *matHeaderCellDef> Plan </th>
+        <td mat-cell *matCellDef="let plan"> {{ plan.name }} </td>
+      </ng-container>
+  
+      <ng-container matColumnDef="price">
+        <th mat-header-cell *matHeaderCellDef> Price </th>
+        <td mat-cell *matCellDef="let plan"> {{ plan.price }} </td>
+      </ng-container>
+  
+      <ng-container matColumnDef="features">
+        <th mat-header-cell *matHeaderCellDef> Features </th>
+        <td mat-cell *matCellDef="let plan"> {{ plan.features }} </td>
+      </ng-container>
+  
+      <ng-container matColumnDef="action">
+        <th mat-header-cell *matHeaderCellDef> Action </th>
+        <td mat-cell *matCellDef="let plan">
+          <mat-icon class="icon" (click)="editPlan(plan)">edit</mat-icon>
+          <mat-icon class="icon" (click)="deletePlan(plan)">delete</mat-icon>
+        </td>
+      </ng-container>
+  
+      <tr mat-header-row *matHeaderRowDef="['plan', 'price', 'features', 'action']"></tr>
+      <tr mat-row *matRowDef="let row; columns: ['plan', 'price', 'features', 'action'];"></tr>
+  
+    </table>
+
+        <!-- No Data Found -->
+        <div class="no-data" *ngIf="dataSource.data.length === 0">
+            No Subscriptions found.
+        </div>
+
+      <mat-paginator class="pagination" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+  </div>
+  

@@ -1,3 +1,54 @@
 <div class="dashboard-content">
-<p>Welcome to Dashboard !</p>
-</div>
+    <p>Welcome to Dashboard !</p>
+  
+    <div class="dashboard-row">
+      <mat-card class="dashboard-card red-card">
+        <div class="card-title">No. of Subscribers</div>
+        <div class="card-value">{{ totalSubscribers }}</div>
+      </mat-card>
+  
+      <mat-card class="dashboard-card black-card">
+        <div class="card-title">No. of Movies</div>
+        <div class="card-value">{{ totalMovies }}</div>
+      </mat-card>
+  
+      <mat-card class="dashboard-card red-card">
+        <div class="card-title">Subscribers This Month</div>
+        <div class="card-value">{{ subscribersThisMonth }}</div>
+      </mat-card>
+  
+      <mat-card class="dashboard-card black-card">
+        <div class="card-title">Revenue This Month</div>
+        <div class="card-value">₹{{ revenueThisMonth }}</div>
+      </mat-card>
+    </div>
+  
+    <!-- Latest Content Card -->
+    <div class="latest-content-card">
+      <mat-card class="latest-card">
+        <h2>Latest Content Added</h2>
+        <ul>
+          <li *ngFor="let content of latestContent">
+            <span class="content-title">{{ content.title }}</span>
+            <span class="content-date">{{ content.date }}</span>
+          </li>
+        </ul>
+      </mat-card>
+    </div>
+
+    <!-- Most Viewed Movies Card -->
+<div class="most-viewed-card">
+    <mat-card class="most-viewed-card-inner">
+      <h2>Most Viewed Movies</h2>
+      <ul >
+        <li *ngFor="let movie of mostViewedMovies">
+          <span class="content-title">{{ movie.title }}</span>
+          <span class="content-views">{{ movie.views }} views</span>
+        </li>
+      </ul>
+    
+    </mat-card>
+  </div>
+  
+  </div>
+  

@@ -10,6 +10,11 @@ import { UserListComponent } from './user-list/user-list.component';
 import { AddUserComponent} from './user-list/add-user/add-user.component';
 import{SubscriptionsComponent}from'./subscriptions/subscriptions.component';
 import{EditSubscriptionListComponent}from'./subscriptions/edit-subscription-list/edit-subscription-list.component';
+import{SubscriptionPlansComponent}from'./subscription-plans/subscription-plans.component';
+import{AddSubscriptionPlanComponent}from'./add-subscription-plan/add-subscription-plan.component';
+
+
+
 
 
 
@@ -30,6 +35,9 @@ export const routes: Routes = [
       { path: 'add-user', component: AddUserComponent },
       { path: 'subscriptions', component: SubscriptionsComponent},
       { path: 'edit-subscription-list', component: EditSubscriptionListComponent},
+      { path: 'subscription-plans', component: SubscriptionPlansComponent},
+      { path: 'add-subscription-plan', component: AddSubscriptionPlanComponent},
+
 
 
 

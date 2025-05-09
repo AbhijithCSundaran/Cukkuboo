@@ -1,4 +1,4 @@
-.subscriptions-container {
+.subscription-container {
     background-color: #121212;
     color: #fff;
     padding: 20px;
@@ -122,8 +122,8 @@
   }
 
   .add-button {
-    background-color: #ff1744;
-    color: white;
+    background-color: #ff1744!important;
+    color: white!important;
     border-radius: 24px;
     height: 36px;
     font-size: 14px;
@@ -136,11 +136,7 @@
     align-items: center;
   }
   
-  .button-content {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
+
   
   .add-button mat-icon {
     font-size: 18px;

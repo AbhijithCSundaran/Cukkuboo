@@ -1,0 +1,45 @@
+<div class="add-subscription-plan">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+    <h2>Add Subscription Plan</h2>
+    <button class="back-to-list-button" (click)="goBack()">Back to List</button>
+  </div>
+
+  <mat-card appearance="outlined">
+    <mat-card-content style="display: flex; flex-wrap: wrap;">
+      
+      
+
+      <!-- Plan -->
+      <div style="width: 50%; padding: 0 10px 20px;">
+        <mat-form-field appearance="outline" style="width: 100%;">
+          <mat-label>Plan</mat-label>
+          <input matInput placeholder="Enter plan name" required>
+        </mat-form-field>
+      </div>
+
+      <!-- Price -->
+      <div style="width: 50%; padding: 0 10px 20px;">
+        <mat-form-field appearance="outline" style="width: 100%;">
+          <mat-label>Price</mat-label>
+          <input matInput type="number" placeholder="Enter price" required>
+        </mat-form-field>
+      </div>
+
+      <!-- Features -->
+      <div style="width: 100%; padding: 0 10px 20px;">
+        <mat-form-field appearance="outline" style="width: 100%;">
+          <mat-label>Features</mat-label>
+          <textarea matInput placeholder="Enter features (comma-separated or listed)"></textarea>
+        </mat-form-field>
+      </div>
+
+     <!-- Action -->
+<div class="action">
+  <button class="save-button" (click)="saveUser()">Save</button>
+  <button class="cancel-button" (click)="cancel()">Cancel</button>
+</div>
+
+
+    </mat-card-content>
+  </mat-card>
+</div>

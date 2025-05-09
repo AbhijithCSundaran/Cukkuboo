@@ -1,10 +1,120 @@
+.dashboard-content{
+    background-color: #121212;
+    color: #fff;
+    padding: 20px;
+    height: 100%;
+    font-weight: bold;
+    font-size:x-large;
+  }
+  .dashboard-row {
+    display: flex;
+    gap: 16px;
+  
+    justify-content: space-between;
+    flex-wrap: nowrap; 
+    overflow-x: auto;   
+  }
+  
+  .dashboard-card {
+    flex: 1 1 22%; 
+    min-width: 220px;
+    max-width: 300px;
+    color: #fff;
+    padding: 20px;
+    font-family: 'Roboto', sans-serif;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    text-align: center;
+  }
+  
+  .red-card {
+    background-color: black;
+  }
+  
+  .black-card {
+    background-color: #212121;
+  }
+  
+  .card-title {
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+    opacity: 0.85;
+  }
+  
+  .card-value {
+    font-size: 2rem;
+    font-weight: bold;
+  }
+  .latest-content-card {
+    margin-top: 30px;
+  }
+  
+  .latest-card {
+    background: #212121;
+    color: #fff;
+    padding: 20px;
+    border-radius: 12px;
+   
+  }
+  
+  .latest-card h2 {
+    margin-bottom: 16px;
+  }
+  
+  .latest-card ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .latest-card li {
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.95rem;
+  }
+  
+  .content-title {
+    font-weight: 500;
+  }
+  
+  .content-date {
+    opacity: 0.75;
+    font-size: 0.85rem;
+  }
+  .most-viewed-card {
+    margin-top: 30px;
+  }
+  
+  .most-viewed-card-inner {
+    background: #212121;
+    color: #fff;
+    padding: 20px;
+    border-radius: 12px;
 
-.dashboard-content {
-color:white;
-background-color: #121212;
-font-size: 20px;
-font-weight: bold;
-height: 100%;
-padding-top: 50px;
-}
-
+  }
+  
+  .most-viewed-card-inner h2 {
+    margin-bottom: 16px;
+  }
+  
+  .most-viewed-card-inner ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .most-viewed-card-inner li {
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.95rem;
+  }
+  
+  .content-views {
+    opacity: 0.75;
+    font-size: 0.85rem;
+  }
+  

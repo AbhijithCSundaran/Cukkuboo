@@ -131,7 +131,7 @@
   .button-content {
     display: flex;
     align-items: center;
-    gap: 6px;
+   
   }
   
   .add-button mat-icon {
@@ -141,11 +141,31 @@
   .add-button:hover {
     background-color: #ff4569;
   }
-  
+
   .header-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 16px;
   }
-  
+  .pagination {
+    background-color: #121212!important;
+    color: white;
+
+    .mat-button, .mat-icon-button{
+
+        color: #ff4c4c;
+    }
+  }
+
+  .no-data {
+  text-align: center;
+  padding: 40px;
+  color: #ff4c4c;
+  font-size: 18px;
+  background-color: #1f1f1f;
+  border-radius: 8px;
+  margin-top: 20px;
+
+
+}

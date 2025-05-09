@@ -114,7 +114,7 @@
     top: 0;
     left: 100%;
     min-width: 160px;
-    background-color: rgba(0, 0, 0, 0.85);
+    background-color:rgb(176, 53, 53);
     border-radius: 6px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
     padding: 8px 0;
@@ -141,7 +141,7 @@
   }
   
   .submenu-list li a:hover {
-    background-color: rgba(0, 0, 0, 0.3);
+    background-color: rgba(10, 9, 9, 0.3);
   }
   
   /* Hover */

@@ -59,7 +59,7 @@
     position: absolute;
     top: 35px;
     right: 0;
-    background-color: #1a1a1a;
+    background-color: rgba(208, 40, 40, 0.8);
     opacity: 3;
     border-radius: 6px;
     min-width: 140px;

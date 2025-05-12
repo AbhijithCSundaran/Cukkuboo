@@ -25,7 +25,7 @@ mat-form-field {
 }
 
 mat-form-field .mat-form-field-label {
-  color: #b71c1c !important;
+  color: #7d2725 !important;
 }
 
 mat-form-field .mat-input-element {
@@ -33,7 +33,7 @@ mat-form-field .mat-input-element {
 }
 
 mat-form-field.mat-focused .mat-form-field-label {
-  color: #b71c1c !important;
+  color: #7d2725 !important;
 }
 
 mat-select,
@@ -45,11 +45,11 @@ input {
 }
 
 .mat-select-arrow {
-  color: #b71c1c;
+  color: #7d2725;
 }
 
 .drag-drop-zone {
-  border: 2px dashed #b71c1c;
+  border: 2px dashed #7d2725;
   border-radius: 8px;
   padding: 30px;
   text-align: center;
@@ -94,7 +94,7 @@ input {
 }
 
 .progress-bar {
-  background-color: #b71c1c;
+  background-color: #7d2725;
   height: 100%;
   border-radius: 20px 0 0 20px;
   transition: width 0.3s ease-in-out;
@@ -145,7 +145,7 @@ input {
 }
 
 .back-to-list-button {
-  background-color: #b71c1c;
+  background-color: #7d2725;
   color: white;
   border-radius: 24px;
   height: 36px;
@@ -166,7 +166,7 @@ input {
 
 .submit-button{
   
-    background-color: #b71c1c;
+    background-color: #7d2725;
     color: white;
     border-radius: 24px;
     height: 36px;

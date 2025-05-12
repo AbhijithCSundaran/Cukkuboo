@@ -1,27 +1,28 @@
 <nav class="navbar">
   <div class="navbar-left">
-   
+  
   </div>
 
   <div class="navbar-right">
     <input type="text" placeholder="Search..." class="search-input" />
 
-    <div class="profile-dropdown" (click)="toggleDropdown()">
-      <i class="fas fa-user-circle"></i>
+    <div class="profile-dropdown" (click)="toggleDropdown()" (mouseleave)="closeDropdown()">
+      <i class="fas fa-user-circle profile-icon"></i>
+
       <ul class="dropdown-menu" [class.show]="dropdownOpen">
-        <li >
+        <li>
           <a href="#">
-            <i class="fas fa-user "></i> Profile
+            <i class="fas fa-user"></i> Profile
           </a>
         </li>
         <li>
           <a href="#">
-            <i class="fas fa-cog "></i> Settings
+            <i class="fas fa-cog"></i> Settings
           </a>
         </li>
         <li>
-          <a href="#">
-            <i class="fas fa-sign-out-alt "></i> Logout
+          <a (click)="logout()">
+            <i class="fas fa-sign-out-alt"></i> Logout
           </a>
         </li>
       </ul>

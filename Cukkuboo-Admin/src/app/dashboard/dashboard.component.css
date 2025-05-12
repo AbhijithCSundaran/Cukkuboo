@@ -50,7 +50,7 @@
   }
   
   .latest-card {
-    background: linear-gradient(to right, #212121, #b71c1c);
+    background: linear-gradient(to right, #212121, #7d2725);
     color: #fff;
     padding: 20px;
     border-radius: 12px;
@@ -88,7 +88,7 @@
   }
   
   .most-viewed-card-inner {
-    background: linear-gradient(to right, #000, #b71c1c);
+    background: linear-gradient(to right, #000, #7d2725);
     color: #fff;
     padding: 20px;
     border-radius: 12px;

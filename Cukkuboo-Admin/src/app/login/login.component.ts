@@ -19,6 +19,7 @@ export class LoginComponent {
   login() {
     if (this.username === 'admin' && this.password === 'admin') {
       //  success message snackbar
+      localStorage.setItem('jwt',"ebyeygfyhugnuxhzvtvzfbfbcsufs")
       this.snackBar.open('Login successful', 'Close', {
         duration: 3000,
         verticalPosition: 'top'  

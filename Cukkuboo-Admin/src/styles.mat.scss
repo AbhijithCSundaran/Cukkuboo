@@ -7,3 +7,26 @@
 // $theme: mat.define-light-theme($primary, $accent, $warn);
 
 // @include mat.all-component-themes($theme);
+
+.snackbar-success {
+    .mdc-snackbar__surface.mat-mdc-snackbar-surface {
+        border: 1px solid #00a100;
+        background-color: #dbffde;
+        color: #00a100;
+    }
+}
+
+.snackbar-error {
+    .mdc-snackbar__surface.mat-mdc-snackbar-surface {
+        border: 1px solid #c20000;
+        background-color: #ffebee;
+        color: #c20000;
+    }
+}
+
+.mat-mdc-snack-bar-label .mdc-snackbar__label {
+    text-align: center;
+}
+.mdc-button__label{
+    color: #000;
+}

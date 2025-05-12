@@ -20,17 +20,19 @@ export class LoginComponent {
     if (this.username === 'admin' && this.password === 'admin') {
       //  success message snackbar
       localStorage.setItem('jwt',"ebyeygfyhugnuxhzvtvzfbfbcsufs")
-      this.snackBar.open('Login successful', 'Close', {
+      this.snackBar.open('Login successful', '', {
         duration: 3000,
-        verticalPosition: 'top'  
+        verticalPosition: 'top',  
+        panelClass: ['snackbar-success']
       });
       this.router.navigate(['/dashboard']);
     } else {
       this.error = 'Invalid username or password';
       //  error message snackbar
-      this.snackBar.open('Invalid username or password', 'Close', {
+      this.snackBar.open('Invalid username or password', '', {
         duration: 3000,
-        verticalPosition: 'top'  
+        verticalPosition: 'top',  
+        panelClass: ['snackbar-error']
       });
     }
   }

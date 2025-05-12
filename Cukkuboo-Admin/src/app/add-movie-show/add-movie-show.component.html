@@ -73,7 +73,6 @@
         <mat-form-field appearance="outline" style="width: 100%;">
           <mat-label>Title</mat-label>
           <input matInput placeholder="Add title" required>
-          <mat-hint>Title is required.</mat-hint>
         </mat-form-field>
       </div>
 
@@ -85,7 +84,6 @@
             <mat-option value="drama">Drama</mat-option>
             <mat-option value="comedy">Comedy</mat-option>
           </mat-select>
-          <mat-hint>Genre is required.</mat-hint>
         </mat-form-field>
       </div>
 
@@ -93,7 +91,6 @@
         <mat-form-field appearance="outline" style="width: 100%;">
           <mat-label>Description</mat-label>
           <textarea matInput placeholder="Add description" required></textarea>
-          <mat-hint>Description is required.</mat-hint>
         </mat-form-field>
       </div>
 
@@ -101,7 +98,6 @@
         <mat-form-field appearance="outline" style="width: 100%;">
           <mat-label>Caste Details</mat-label>
           <textarea matInput placeholder="Add Caste details" required></textarea>
-          <mat-hint>Caste detail is required.</mat-hint>
         </mat-form-field>
       </div>
 
@@ -112,17 +108,15 @@
             <mat-option value="movie">Movie</mat-option>
             <mat-option value="show">Show</mat-option>
           </mat-select>
-          <mat-hint>Category is required.</mat-hint>
         </mat-form-field>
       </div>
 
       <div style="width: 50%; padding: 0 10px 20px;">
         <mat-form-field appearance="outline" style="width: 100%;">
           <mat-label>Release Date</mat-label>
-          <input matInput [matDatepicker]="picker" placeholder="Choose a date" required>
+          <input matInput [matDatepicker]="picker" placeholder="Choose a date" (click)="picker.open()" readonly required>
           <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
           <mat-datepicker #picker></mat-datepicker>
-          <mat-hint>Release date is required.</mat-hint>
         </mat-form-field>
       </div>
 
@@ -133,7 +127,6 @@
             <mat-option value="18+">18+</mat-option>
             <mat-option value="16+">16+</mat-option>
           </mat-select>
-          <mat-hint>Rating is required.</mat-hint>
         </mat-form-field>
       </div>
 
@@ -146,7 +139,6 @@
       <mat-option value="standard">Standard</mat-option>
       <mat-option value="premium">Premium</mat-option>
     </mat-select>
-    <mat-hint>Access type is required.</mat-hint>
   </mat-form-field>
 </div>
 
@@ -158,7 +150,6 @@
       <mat-option value="active">Active</mat-option>
       <mat-option value="inactive">Inactive</mat-option>
     </mat-select>
-    <mat-hint>Status is required.</mat-hint>
   </mat-form-field>
 </div>
 

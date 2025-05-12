@@ -11,7 +11,7 @@ import { AddUserComponent } from './user-list/add-user/add-user.component';
 import { SubscriptionsComponent } from './subscriptions/subscriptions.component';
 import { EditSubscriptionListComponent } from './subscriptions/edit-subscription-list/edit-subscription-list.component';
 import { SubscriptionPlansComponent } from './subscription-plans/subscription-plans.component';
-import { AddSubscriptionPlanComponent } from './add-subscription-plan/add-subscription-plan.component';
+import { AddSubscriptionPlanComponent } from './subscription-plans/add-subscription-plan/add-subscription-plan.component';
 import { AuthGuard } from './auth.guard';
 
 export const routes: Routes = [

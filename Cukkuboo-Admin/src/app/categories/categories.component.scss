@@ -78,7 +78,7 @@
   }
   
   .add-button {
-    background-color: #ff1744;
+    background-color: #7d2725;
     color: white;
     border-radius: 20px;
     padding: 0 24px;
@@ -87,11 +87,11 @@
     height: 40px;
     font-weight: bold;
     box-shadow: 0 2px 5px rgba(255, 23, 68, 0.4);
-    border: 2px solid #ff4569; 
+    border: 2px solid #7d2725;
   }
   
   .add-button:hover {
-    background-color: #ff4569;
+    background-color: #ff1744;
   }
   
   /* Table */
@@ -138,26 +138,13 @@
     color: white;
   }
   .icon{
-    color:  #ff1744;
- 
+    color: white;
+    &:hover {
+      color: #ff1744;
+    }
     
   }
- /* Styling for status column */
-.enabled {
-    background-color: black;
-    color: white;
-    padding: 4px 8px;
-    border-radius: 4px;
-  }
-  
-  .disabled {
-    background-color: red;
-    color: white;
-    padding: 4px 8px;
-    border-radius: 4px;
-  }
-  
-  /* Optional: Style table */
+ 
   .custom-table {
     width: 100%;
   }
@@ -191,10 +178,11 @@
   }
   
   .badge-enabled {
-    background-color:#ff1744; 
+    background-color: #4caf50;
+    color: #fff;
   }
-  
+
   .badge-disabled {
-    background-color: #9e9e9e; 
+    background-color:#7d2725;
+    color: #fff;
   }
- 

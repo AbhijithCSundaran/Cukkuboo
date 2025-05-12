@@ -64,20 +64,20 @@
     }
   }
   .table-card {
-    background-color: #121212; // dark card background
-    color: #f44336; // red accent text
+    background-color: #121212; 
+    color: #f44336;
     border-radius: 8px;
     padding: 1rem;
   }
   
   .custom-table {
     width: 100%;
-    background-color: #000; // black table background
+    background-color: #000; 
     color: #fff;
   
     th {
       background-color: #1e1e1e;
-      color: #f44336;
+      color:white;
       font-weight: bold;
     }
   
@@ -92,12 +92,12 @@
     }
   
     .icon {
-      color: #f44336;
+      color: white;
       cursor: pointer;
       margin-right: 8px;
   
       &:hover {
-        color: #ff7961;
+        color: #ff1744;
       }
     }
   
@@ -116,13 +116,13 @@
     }
   
     .badge-disabled {
-      background-color: #f44336;
+      background-color: #7d2725;
       color: #fff;
     }
   }
 
   .add-button {
-    background-color: #ff1744;
+    background-color: #7d2725;
     color: white;
     border-radius: 24px;
     height: 36px;
@@ -147,7 +147,7 @@
   }
   
   .add-button:hover {
-    background-color: #ff4569;
+    background-color: #ff1744!important;
   }
 
   .pagination {

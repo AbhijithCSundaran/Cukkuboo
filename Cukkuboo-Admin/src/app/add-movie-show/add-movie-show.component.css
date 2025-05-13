@@ -209,3 +209,9 @@ input {
     flex-direction: column;
     justify-content: center;
   }
+  .snackbar-error {
+    background-color: #f44336 !important; 
+    color: white !important;
+  }
+ 
+  

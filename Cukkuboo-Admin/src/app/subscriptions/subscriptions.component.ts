@@ -2,10 +2,12 @@ import { Component, AfterViewInit, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { CommonModule } from '@angular/common';
-import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { Router } from '@angular/router';
+import { MatIconModule } from '@angular/material/icon';
+import { MatDialog } from '@angular/material/dialog';
+import { EditSubscriptionListComponent } from './edit-subscription-list/edit-subscription-list.component';
 
 interface Subscription {
   userName: string;
@@ -29,7 +31,7 @@ interface Subscription {
 })
 export class SubscriptionsComponent implements AfterViewInit {
   displayedColumns: string[] = ['user', 'plan', 'startDate', 'endDate', 'status', 'action'];
-  
+
   dataSource = new MatTableDataSource<Subscription>([
     { userName: 'John Doe', plan: 'Premium', startDate: new Date('2024-01-01'), endDate: new Date('2025-01-01'), status: 'active' },
     { userName: 'Jane Smith', plan: 'Basic', startDate: new Date('2023-05-01'), endDate: new Date('2024-05-01'), status: 'expired' },
@@ -60,17 +62,32 @@ export class SubscriptionsComponent implements AfterViewInit {
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private dialog: MatDialog,
+
+  ) { }
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
   }
 
   editSubscription(sub: Subscription): void {
-    this.router.navigate(['/edit-subscription-list']);
+    // this.router.navigate(['/edit-subscription-list']);
+    const dialogRef = this.dialog.open(EditSubscriptionListComponent, {
+      // width: '600px',
+      // height: '500px',
+      data: {  }
+    });
+    dialogRef.afterClosed().subscribe((data) => {
+      if (data) {
+      }
+    })
   }
 
   deleteSubscription(sub: Subscription): void {
     this.dataSource.data = this.dataSource.data.filter(s => s !== sub);
   }
+
+
 }

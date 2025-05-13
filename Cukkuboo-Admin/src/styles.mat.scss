@@ -27,6 +27,13 @@
 .mat-mdc-snack-bar-label .mdc-snackbar__label {
     text-align: center;
 }
-.mdc-button__label{
+
+.mdc-button__label {
     color: #000;
+}
+
+.mat-mdc-dialog-surface.mdc-dialog__surface {
+    border-radius: 10px;
+    // box-shadow: 0 0 2px 2px #c200005f;
+    border: 1px solid rgb(129, 0, 0);
 }

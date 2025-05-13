@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common'; 
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -20,7 +20,7 @@ import { Router } from '@angular/router';
   selector: 'app-add-movie-show',
   standalone: true,
   imports: [
-    CommonModule,               
+    CommonModule, ReactiveFormsModule,               
     MatFormFieldModule,
     MatInputModule,
     MatIconModule,
@@ -56,10 +56,20 @@ export class AddMovieShowComponent {
 
   onThumbnailSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
-    if (input.files && input.files[0]) {
-      this.readThumbnailFile(input.files[0]);
+    const file = input.files?.[0];
+  
+    if (file) {
+      const isJpeg = file.type === 'image/jpeg' || file.name.toLowerCase().endsWith('.jpg');
+      if (!isJpeg) {
+        alert('Only JPEG image files are allowed for thumbnails.');
+        input.value = ''; 
+        return;
+      }
+  
+      this.readThumbnailFile(file); 
     }
   }
+  
 
   onDragOver(event: DragEvent): void {
     event.preventDefault();
@@ -89,10 +99,20 @@ export class AddMovieShowComponent {
  
   onVideoSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
-    if (input.files && input.files[0]) {
-      this.simulateUpload(input.files[0]);
+    const file = input.files?.[0];
+  
+    if (file) {
+      const isMp4 = file.type === 'video/mp4';
+      if (!isMp4) {
+        alert('Only MP4 video files are allowed.');
+        input.value = ''; 
+        return;
+      }
+  
+      this.simulateUpload(file); 
     }
   }
+  
 
   onVideoDragOver(event: DragEvent): void {
     event.preventDefault();
@@ -128,6 +148,11 @@ export class AddMovieShowComponent {
     }, 200);
   }
 
+  removeMainVideo() {
+    this.videoURL = '';
+    this.videoName = '';
+    this.uploadProgress = 0;
+  }
   saveVideo(): void {
  
   }
@@ -135,10 +160,20 @@ export class AddMovieShowComponent {
 
   onBannerSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
-    if (input.files && input.files[0]) {
-      this.readBannerFile(input.files[0]);
+    const file = input.files?.[0];
+  
+    if (file) {
+      const isJpeg = file.type === 'image/jpeg' || file.name.toLowerCase().endsWith('.jpg');
+      if (!isJpeg) {
+        alert('Only JPEG image files are allowed for banners.');
+        input.value = ''; 
+        return;
+      }
+  
+      this.readBannerFile(file);
     }
   }
+  
 
   onBannerDrop(event: DragEvent): void {
     event.preventDefault();
@@ -161,14 +196,24 @@ export class AddMovieShowComponent {
   }
 
 
-  onTrailerSelected(event: any) {
-    const file = event.target.files[0];
+  onTrailerSelected(event: Event): void {
+    debugger;
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+  
     if (file) {
+      const isMp4 = file.type === 'video/mp4' || file.name.toLowerCase().endsWith('.mp4');
+      if (!isMp4) {
+        alert('Only MP4 video files are allowed for trailers.');
+        input.value = ''; 
+        return;
+      }
+  
       this.trailerName = file.name;
       this.trailerURL = URL.createObjectURL(file);
-     
     }
   }
+  
   
   onTrailerDrop(event: DragEvent) {
     event.preventDefault();
@@ -184,16 +229,13 @@ export class AddMovieShowComponent {
     event.preventDefault();
   }
   
-  removeMainVideo() {
-    this.videoURL = '';
-    this.videoName = '';
-    this.uploadProgress = 0;
-  }
-  
-  removeTrailer() {
+
+  removeTrailer(event: MouseEvent) {
+    event.stopPropagation();  // Prevents the click event from propagating to the parent
     this.trailerURL = '';
     this.trailerName = '';
   }
+  
   
 
  goBack(): void {
@@ -201,7 +243,11 @@ export class AddMovieShowComponent {
   }
 
  
+
+  
   submitForm(): void {
    
   }
+
+  
 }

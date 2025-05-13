@@ -1,10 +1,31 @@
-// @use '@angular/material' as mat;
+@use '@angular/material' as mat;
 
-// $primary: mat.define-palette(mat.$indigo-palette);
-// $accent: mat.define-palette(mat.$pink-palette, 500);
-// $warn: mat.define-palette(mat.$red-palette);
+// $my-reddish-primary: mat.define-palette(mat.$red-palette, 500, 100, 900);
+// $my-theme: mat.define-light-theme((
+//   color: (
+//     primary: $my-reddish-primary,
+//   )
+// ));
+// html {
+//   color-scheme: light dark;
+//   @include mat.theme((
+//     color: mat.$violet-palette,
+//     typography: Roboto,
+//     density: 0
+//   ));
+// }
+@include mat.core();
 
-// $theme: mat.define-light-theme($primary, $accent, $warn);
+html {
+    @include mat.theme((color: (primary: mat.$red-palette,
+                tertiary: mat.$orange-palette,
+                theme-type: dark,
+            ),
+            typography: Roboto,
+            density: -2));
+}
+
+
 
 // @include mat.all-component-themes($theme);
 
@@ -27,6 +48,7 @@
 .mat-mdc-snack-bar-label .mdc-snackbar__label {
     text-align: center;
 }
-.mdc-button__label{
+
+.mdc-button__label {
     color: #000;
 }

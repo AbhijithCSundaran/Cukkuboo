@@ -15,8 +15,8 @@ import { AddSubscriptionPlanComponent } from './subscription-plans/add-subscript
 import { AuthGuard } from './auth.guard';
 
 export const routes: Routes = [
-  { path: '', redirectTo: 'login', pathMatch: 'full' },
-  { path: 'login', component: LoginComponent },
+  { path: 'login', redirectTo: '', pathMatch: 'full' },
+  { path: '', component: LoginComponent },
   {
     path: '',
     component: LayoutComponent,

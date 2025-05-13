@@ -1,86 +1,64 @@
 <div class="add-movie-show-container">
   <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
     <h2>Add Movie/Show</h2>
-    <button class="back-to-list-button" (click)="goBack()">
-      Back to List
-    </button>
-    
+    <button class="back-to-list-button" (click)="goBack()">Back to List</button>
   </div>
 
   <mat-card appearance="outlined">
-    <mat-card-content style="display: flex; flex-wrap: wrap; " >
-     
-<!-- Video Upload Section -->
-<div style="width: 100%; padding: 0 10px 20px; box-sizing: border-box;">
-  <div style="display: flex; width: 100%; gap: 24px; align-items: stretch; flex-wrap: wrap;">
+    <mat-card-content style="display: flex; flex-wrap: wrap;">
 
-    <!-- Left: Upload Card -->
-    <div style="flex: 2; min-width: 300px;">
-      <mat-card appearance="outlined" style="height: 100%;">
-        <mat-card-content>
-          <label style="font-weight: 500; display: block; margin-bottom: 4px;">Upload Video</label>
+      <!-- Video Upload Section -->
+      <div style="width: 100%; padding: 0 10px 20px; box-sizing: border-box;">
+        <div style="display: flex; width: 100%; gap: 24px; align-items: stretch; flex-wrap: wrap;">
 
-          <div
-            class="drag-drop-zone"
-            (dragover)="onVideoDragOver($event)"
-            (drop)="onVideoDrop($event)"
-            (click)="videoInput.click()"
-          >
-            <i
-              class="fa-sharp fa-solid fa-arrow-up-from-bracket"
-              style="font-size: 24px; margin-bottom: 8px; color: #ff1744;"
-            ></i>
-            <p *ngIf="!videoName">Drag & drop a video here or click to select (MP4 only)</p>
-            <p *ngIf="videoName">Video Selected: {{ videoName }}</p>
+          <!-- Left: Upload Card -->
+          <div style="flex: 2; min-width: 300px;">
+            <mat-card appearance="outlined" style="height: 100%; position: relative;">
+              <mat-card-content>
+                <label style="font-weight: 500; display: block; margin-bottom: 4px;">Upload Video</label>
+                <div class="drag-drop-zone" (dragover)="onVideoDragOver($event)" (drop)="onVideoDrop($event)"
+                  (click)="videoInput.click()">
+                  <i class="fa-sharp fa-solid fa-arrow-up-from-bracket"
+                    style="font-size: 24px; margin-bottom: 8px; color: #ff1744;"></i>
+                  <p *ngIf="!videoName">Drag & drop a video here or click to select (MP4 only)</p>
+                  <p *ngIf="videoName">Video Selected: {{ videoName }}</p>
 
-            <div *ngIf="uploadProgress > 0 && uploadProgress < 100" class="progress-container">
-              <div class="progress-bar" [style.width.%]="uploadProgress"></div>
-              <span class="progress-text">{{ uploadProgress }}%</span>
+                  <div *ngIf="uploadProgress > 0 && uploadProgress < 100" class="progress-container">
+                    <div class="progress-bar" [style.width.%]="uploadProgress"></div>
+                    <span class="progress-text">{{ uploadProgress }}%</span>
+                  </div>
+
+                  <div *ngIf="uploadProgress === 100" class="upload-success">✅ Upload complete!</div>
+                </div>
+                <input type="file" (change)="onVideoSelected($event)" accept="video/mp4" hidden #videoInput />
+              </mat-card-content>
+            </mat-card>
+          </div>
+
+          <!-- Right: Preview Card (Shown only when upload is 100%) -->
+          <div *ngIf="uploadProgress === 100 && videoURL" style="flex: 1; min-width: 250px;">
+            <!-- <mat-card appearance="outlined" style="height: 100%; position: relative;"> -->
+
+            <!-- <mat-card-content> -->
+            <!-- <label style="font-weight: 500; display: block; margin-bottom: 4px;">Preview</label> -->
+            <div class="d-flex position-relative w-100 h-100">
+              <div class="d-flex position-relative w-100 mt-auto">
+                <button class="close-button" (click)="removeMainVideo()">×</button>
+                <video [src]="videoURL" controls class="video-preview"></video>
+              </div>
             </div>
-
-            <div *ngIf="uploadProgress === 100" class="upload-success">✅ Upload complete!</div>
+            <!-- </mat-card-content>
+            </mat-card> -->
           </div>
 
-          <input type="file" (change)="onVideoSelected($event)" accept="video/mp4" hidden #videoInput />
-        </mat-card-content>
-      </mat-card>
-    </div>
-
-    <!-- Right: Preview Card (Shown only when upload is 100%) -->
-    <div *ngIf="uploadProgress === 100 && videoURL" style="flex: 1; min-width: 250px;">
-      <mat-card appearance="outlined" style="height: 100%;">
-        <mat-card-content>
-          <label style="font-weight: 500; display: block; margin-bottom: 4px;">Preview</label>
-          <video
-            [src]="videoURL"
-            controls
-            class="video-preview"
-            style="width: 100%; border-radius: 4px;"
-          ></video>
-          <div style="margin-top: 16px; display: flex; align-items: center; gap: 16px;">
-            <button
-              mat-stroked-button
-              color="warn"
-              style="color: white;"
-              (click)="removeMainVideo()"
-            >
-              Remove Video
-            </button>
-          </div>
-        </mat-card-content>
-      </mat-card>
-    </div>
-
-  </div>
-</div>
-
+        </div>
+      </div>
 
       <!-- Form Inputs -->
-       
       <div style="width: 50%; padding: 0 10px 20px;">
         <mat-form-field appearance="outline" style="width: 100%;">
           <mat-label>Title</mat-label>
-          <input matInput placeholder="Add title" required>
+          <input matInput placeholder="Add title" required />
         </mat-form-field>
       </div>
 
@@ -122,7 +100,8 @@
       <div style="width: 50%; padding: 0 10px 20px;">
         <mat-form-field appearance="outline" style="width: 100%;">
           <mat-label>Release Date</mat-label>
-          <input matInput [matDatepicker]="picker" placeholder="Choose a date" (click)="picker.open()" readonly required>
+          <input matInput [matDatepicker]="picker" placeholder="Choose a date" (click)="picker.open()" readonly
+            required />
           <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
           <mat-datepicker #picker></mat-datepicker>
         </mat-form-field>
@@ -139,83 +118,83 @@
       </div>
 
       <!-- Access Type -->
-<div style="width: 50%; padding: 0 10px 20px;">
-  <mat-form-field appearance="outline" style="width: 100%;">
-    <mat-label>Access</mat-label>
-    <mat-select [(ngModel)]="accessType" required>
-      <mat-option value="free">Free</mat-option>
-      <mat-option value="standard">Standard</mat-option>
-      <mat-option value="premium">Premium</mat-option>
-    </mat-select>
-  </mat-form-field>
-</div>
+      <div style="width: 50%; padding: 0 10px 20px;">
+        <mat-form-field appearance="outline" style="width: 100%;">
+          <mat-label>Access</mat-label>
+          <mat-select [(ngModel)]="accessType" required>
+            <mat-option value="free">Free</mat-option>
+            <mat-option value="standard">Standard</mat-option>
+            <mat-option value="premium">Premium</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
 
-<!-- Status -->
-<div style="width: 50%; padding: 0 10px 20px;">
-  <mat-form-field appearance="outline" style="width: 100%;">
-    <mat-label>Status</mat-label>
-    <mat-select [(ngModel)]="status" required>
-      <mat-option value="active">Active</mat-option>
-      <mat-option value="inactive">Inactive</mat-option>
-    </mat-select>
-  </mat-form-field>
-</div>
+      <!-- Status -->
+      <div style="width: 50%; padding: 0 10px 20px;">
+        <mat-form-field appearance="outline" style="width: 100%;">
+          <mat-label>Status</mat-label>
+          <mat-select [(ngModel)]="status" required>
+            <mat-option value="active">Active</mat-option>
+            <mat-option value="inactive">Inactive</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
 
-    
-<div style="width: 100%; display: flex; gap: 24px; flex-wrap: wrap; padding: 0 10px 20px;">
-  
-  <!-- Thumbnail Upload -->
-  <div style="flex: 1; min-width: 250px;">
-    <mat-card appearance="outlined">
-      <mat-card-content>
-        <label style="font-weight: 500; display: block; margin-bottom: 8px;">Thumbnail</label>
-        <div class="drag-drop-zone" (dragover)="onDragOver($event)" (drop)="onDrop($event)" (click)="fileInput.click()">
-          <p *ngIf="!thumbnailPreview">Drag & drop an image here or click to select</p>
-          <img *ngIf="thumbnailPreview" [src]="thumbnailPreview" alt="Thumbnail Preview" class="media-preview" />
+      <!-- Uploads Section -->
+      <div style="width: 100%; display: flex; gap: 24px; flex-wrap: wrap; padding: 0 10px 20px;">
+
+        <!-- Thumbnail Upload -->
+        <div style="flex: 1; min-width: 250px;">
+          <mat-card appearance="outlined" style="position: relative;">
+            <button class="close-button" *ngIf="thumbnailPreview" (click)="removeThumbnail()">×</button>
+            <mat-card-content>
+              <label style="font-weight: 500; display: block; margin-bottom: 8px;">Thumbnail</label>
+              <div class="drag-drop-zone" (dragover)="onDragOver($event)" (drop)="onDrop($event)"
+                (click)="fileInput.click()">
+                <p *ngIf="!thumbnailPreview">Drag & drop an image here or click to select</p>
+                <img *ngIf="thumbnailPreview" [src]="thumbnailPreview" alt="Thumbnail Preview" class="media-preview" />
+              </div>
+              <input type="file" (change)="onThumbnailSelected($event)" accept="image/jpeg" hidden #fileInput />
+            </mat-card-content>
+          </mat-card>
         </div>
-        <input type="file" (change)="onThumbnailSelected($event)" accept="image/jpeg" hidden #fileInput />
-        <button mat-stroked-button color="warn" class="remove-button" *ngIf="thumbnailPreview" (click)="removeThumbnail()">Remove Thumbnail</button>
-      </mat-card-content>
-    </mat-card>
-  </div>
 
-  <!-- Trailer Upload -->
-  <div style="flex: 1; min-width: 250px;">
-    <mat-card appearance="outlined">
-      <mat-card-content>
-        <label style="font-weight: 500; display: block; margin-bottom: 8px;">Trailer</label>
-        <div class="drag-drop-zone" (dragover)="onTrailerDragOver($event)" (drop)="onTrailerDrop($event)" (click)="trailerInput.click()">
-          <p *ngIf="!trailerName">Drag & drop a trailer here or click to select (MP4 only)</p>
-
-          <video *ngIf="trailerURL" [src]="trailerURL" controls class="media-preview"></video>
+        <!-- Trailer Upload -->
+        <div style="flex: 1; min-width: 250px;">
+          <mat-card appearance="outlined" style="position: relative;">
+            <button class="close-button" *ngIf="trailerURL" (click)="removeTrailer($event)">×</button>
+            <mat-card-content>
+              <label style="font-weight: 500; display: block; margin-bottom: 8px;">Trailer</label>
+              <div class="drag-drop-zone" (dragover)="onTrailerDragOver($event)" (drop)="onTrailerDrop($event)"
+                (click)="trailerInput.click()">
+                <p *ngIf="!trailerName">Drag & drop a trailer here or click to select (MP4 only)</p>
+                <video *ngIf="trailerURL" [src]="trailerURL" controls class="media-preview"></video>
+              </div>
+              <input type="file" (change)="onTrailerSelected($event)" accept="video/mp4" hidden #trailerInput />
+            </mat-card-content>
+          </mat-card>
         </div>
-        <input type="file" (change)="onTrailerSelected($event)" accept="video/mp4" hidden #trailerInput />        <button mat-stroked-button color="warn" class="remove-button" *ngIf="trailerURL" (click)="removeTrailer($event)">Remove Trailer</button>
-      </mat-card-content>
-    </mat-card>
-  </div>
 
-  <!-- Banner Upload -->
-  <div style="flex: 1; min-width: 250px;">
-    <mat-card appearance="outlined">
-      <mat-card-content>
-        <label style="font-weight: 500; display: block; margin-bottom: 8px;">Banner</label>
-        <div class="drag-drop-zone" (dragover)="onDragOver($event)" (drop)="onBannerDrop($event)" (click)="bannerInput.click()">
-          <p *ngIf="!bannerPreview">Drag & drop an image here or click to select</p>
-          <img *ngIf="bannerPreview" [src]="bannerPreview" alt="Banner Preview" class="media-preview" />
+        <!-- Banner Upload -->
+        <div style="flex: 1; min-width: 250px;">
+          <mat-card appearance="outlined" style="position: relative;">
+            <button class="close-button" *ngIf="bannerPreview" (click)="removeBanner()">×</button>
+            <mat-card-content>
+              <label style="font-weight: 500; display: block; margin-bottom: 8px;">Banner</label>
+              <div class="drag-drop-zone" (dragover)="onDragOver($event)" (drop)="onBannerDrop($event)"
+                (click)="bannerInput.click()">
+                <p *ngIf="!bannerPreview">Drag & drop an image here or click to select</p>
+                <img *ngIf="bannerPreview" [src]="bannerPreview" alt="Banner Preview" class="media-preview" />
+              </div>
+              <input type="file" (change)="onBannerSelected($event)" accept="image/jpeg" hidden #bannerInput />
+            </mat-card-content>
+          </mat-card>
         </div>
-        <input type="file" (change)="onBannerSelected($event)" accept="image/jpeg" hidden #bannerInput />
-        <button mat-stroked-button color="warn" class="remove-button" *ngIf="bannerPreview" (click)="removeBanner()">Remove Banner</button>
-      </mat-card-content>
-    </mat-card>
-  </div>
-
-</div>
-
-       
+      </div>
     </mat-card-content>
 
     <mat-card-actions style="padding: 0 50px 50px 30px; display: flex; justify-content: flex-end;">
-      <button   class="submit-button" (click)="submitForm()" >Submit</button>
+      <button class="submit-button" (click)="submitForm()">Submit</button>
     </mat-card-actions>
   </mat-card>
 </div>

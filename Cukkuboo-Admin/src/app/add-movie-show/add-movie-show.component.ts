@@ -51,7 +51,9 @@ export class AddMovieShowComponent {
   status: 'active' | 'inactive' | null = null;
   videoInput!: HTMLInputElement;
 
+
   @ViewChild('videoInput') videoInputRef!: ElementRef<HTMLInputElement>;
+  @ViewChild('trailerInput') trailerInputRef!: ElementRef<HTMLInputElement>;
 
   constructor(private router: Router, private snackBar: MatSnackBar) {}
 
@@ -262,12 +264,21 @@ export class AddMovieShowComponent {
     event.preventDefault();
   }
 
-  removeTrailer(event: MouseEvent) {
+  removeTrailer(event: MouseEvent): void {
     event.stopPropagation();  // Prevents the click event from propagating to the parent
     this.trailerURL = '';
     this.trailerName = '';
+    this.uploadProgress = 0;
+  
+    // Reset file input
+    if (this.trailerInputRef) {
+      this.trailerInputRef.nativeElement.value = '';
+    }
   }
+  
 
+
+  
   goBack(): void {
     this.router.navigate(['/list-movie-show']);
   }

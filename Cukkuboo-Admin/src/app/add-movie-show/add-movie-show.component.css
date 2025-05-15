@@ -227,9 +227,9 @@ input {
     position: absolute;
     top: 8px;
     right: 8px;
-    background-color: #fff;
+    background: transparent;
     border: none;
-    border-radius: 50%;
+    color: white;
     width: 24px;
     height: 24px;
     font-size: 16px;

@@ -9,7 +9,7 @@ import { filter } from 'rxjs/operators';
 })
 export class TopbarComponent implements OnInit {
   dropdownOpen = false;
-  currentPageTitle = 'Dashboard'; 
+  showLogoutConfirm = false;
 
   constructor(private router: Router) {}
 
@@ -32,8 +32,20 @@ export class TopbarComponent implements OnInit {
   }
 
   logout() {
-    localStorage.removeItem('jwt'); // Clear token
-    this.router.navigate(['/login']); // Redirect to login
+    this.dropdownOpen = false;  // close dropdown
+    this.showLogoutConfirm = true;  // show modal instead of confirm()
   }
-  
+
+  confirmLogout() {
+    localStorage.removeItem('jwt');
+    this.showLogoutConfirm = false;
+    this.router.navigate(['/login']);
+  }
+
+  cancelLogout() {
+    this.showLogoutConfirm = false;
+  }
 }
+  
+ 
+

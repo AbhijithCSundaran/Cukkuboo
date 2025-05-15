@@ -20,19 +20,29 @@ export const routes: Routes = [
   {
     path: '',
     component: LayoutComponent,
-    canActivate: [AuthGuard], 
+    canActivate: [AuthGuard],
     children: [
       { path: 'dashboard', component: DashboardComponent },
       { path: 'list-movie-show', component: ListMovieShowComponent },
       { path: 'add-movie-show', component: AddMovieShowComponent },
+      { path: 'edit-movie-show/:id', component: AddMovieShowComponent },  // For edit mode
       { path: 'categories', component: CategoriesComponent },
       { path: 'genres', component: GenresComponent },
-      { path: 'user-list', component: UserListComponent },
-      { path: 'add-user', component: AddUserComponent },
+      {
+        path: 'user-list', children: [
+          { path: '', component: UserListComponent },
+          { path: 'add-user', component: AddUserComponent },
+          { path: 'edit-user/:id', component: AddUserComponent },
+        ]
+      },
+      // { path: 'user-list', component: UserListComponent },
+      // { path: 'add-user', component: AddUserComponent },
+      // { path: 'edit-user/:id', component: AddUserComponent },
       { path: 'subscriptions', component: SubscriptionsComponent },
       { path: 'edit-subscription-list', component: EditSubscriptionListComponent },
       { path: 'subscription-plans', component: SubscriptionPlansComponent },
       { path: 'add-subscription-plan', component: AddSubscriptionPlanComponent },
+      { path: 'edit-subscription-plan/:id', component: AddSubscriptionPlanComponent },
     ]
   }
 ];

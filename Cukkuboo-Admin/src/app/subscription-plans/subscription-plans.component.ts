@@ -7,6 +7,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { Router } from '@angular/router';
 
 interface SubscriptionPlan {
+  id: number;     
   name: string;
   price: string;
   features: string;
@@ -26,14 +27,15 @@ interface SubscriptionPlan {
   styleUrl: './subscription-plans.component.scss'
 })
 export class SubscriptionPlansComponent {
+  
   displayedColumns: string[] = ['name', 'price', 'features', 'action'];
 
   constructor(private router: Router) {}
 
   subscriptionPlans: SubscriptionPlan[] = [
-    { name: 'Basic', price: '₹5/month', features: 'Access to limited content' },
-    { name: 'Standard', price: '₹10/month', features: 'Access to standard content + 1 screen' },
-    { name: 'Premium', price: '₹15/month', features: 'All content + 4 screens + HD' }
+    { id: 1,  name: 'Basic', price: '₹5/month', features: 'Access to limited content' },
+    { id: 2, name: 'Standard', price: '₹10/month', features: 'Access to standard content + 1 screen' },
+    {id: 3,  name: 'Premium', price: '₹15/month', features: 'All content + 4 screens + HD' }
   ];
 
   // MatTableDataSource used by <table mat-table>
@@ -46,10 +48,12 @@ export class SubscriptionPlansComponent {
     
   }
 
-  editPlan(plan: SubscriptionPlan) {
-    this.router.navigate(['/add-subscription-plan']);
+  editPlan(id: number) :void{
+    this.router.navigate(['/edit-subscription-plan',id]);
    
   }
+
+  
 
   deletePlan(plan: SubscriptionPlan) {
     const index = this.subscriptionPlans.indexOf(plan);

@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
@@ -15,6 +16,7 @@ import { Router } from '@angular/router';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ViewChild, ElementRef } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 @Component({
   selector: 'app-add-movie-show',
   standalone: true,
@@ -37,7 +39,10 @@ import { ViewChild, ElementRef } from '@angular/core';
   templateUrl: './add-movie-show.component.html',
   styleUrls: ['./add-movie-show.component.css']
 })
-export class AddMovieShowComponent {
+export class AddMovieShowComponent implements OnInit {
+  movieForm!: FormGroup;
+  isEditMode: boolean = false; 
+  movieShowId: string | null = null;
   thumbnailPreview: string | ArrayBuffer | null = null;
   bannerPreview: string | ArrayBuffer | null = null;
   videoName: string | null = null;
@@ -54,8 +59,36 @@ export class AddMovieShowComponent {
 
   @ViewChild('videoInput') videoInputRef!: ElementRef<HTMLInputElement>;
   @ViewChild('trailerInput') trailerInputRef!: ElementRef<HTMLInputElement>;
+  @ViewChild('thumbnailInput') thumbnailInputRef!: ElementRef<HTMLInputElement>;
+  @ViewChild('bannerInput') bannerInputRef!: ElementRef<HTMLInputElement>;
 
-  constructor(private router: Router, private snackBar: MatSnackBar) {}
+
+  constructor(private router: Router, private snackBar: MatSnackBar,
+    private route: ActivatedRoute,private fb: FormBuilder) { }
+
+
+    ngOnInit(): void {
+      this.movieForm = this.fb.group({
+        title: ['', Validators.required],
+        genre: ['', Validators.required],
+        description: ['', Validators.required],
+        cast: ['', Validators.required],
+        category: ['', Validators.required],
+        releaseDate: ['', Validators.required],
+        rating: ['', Validators.required],
+        access: ['', Validators.required],
+        status: ['', Validators.required]
+      });
+
+
+       // Check if we're in edit mode (i.e., we have an ID in the route)
+    this.movieShowId = this.route.snapshot.paramMap.get('id');
+    if (this.movieShowId) {
+      this.isEditMode = true;
+      // Load movie/show data for editing based on the ID
+    }
+    }
+
 
   showSnackbar(message: string, panelClass: string = 'snackbar-default'): void {
     this.snackBar.open(message, 'Close', {
@@ -110,8 +143,15 @@ export class AddMovieShowComponent {
   }
 
   removeThumbnail(): void {
+    debugger;
     this.thumbnailPreview = null;
+
+    // Reset file input
+    if (this.thumbnailInputRef) {
+      this.thumbnailInputRef.nativeElement.value = '';
+    }
   }
+
 
   onVideoSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
@@ -174,13 +214,13 @@ export class AddMovieShowComponent {
     this.videoName = '';
     this.videoURL = '';
     this.uploadProgress = 0;
-  
+
     // Reset file input
     if (this.videoInputRef) {
       this.videoInputRef.nativeElement.value = '';
     }
   }
-  
+
   saveVideo(): void {
     // Add your saving logic here
   }
@@ -226,6 +266,11 @@ export class AddMovieShowComponent {
 
   removeBanner(): void {
     this.bannerPreview = null;
+
+    // Reset file input
+    if (this.bannerInputRef) {
+      this.bannerInputRef.nativeElement.value = '';
+    }
   }
 
   onTrailerSelected(event: Event): void {
@@ -269,21 +314,33 @@ export class AddMovieShowComponent {
     this.trailerURL = '';
     this.trailerName = '';
     this.uploadProgress = 0;
-  
+
     // Reset file input
     if (this.trailerInputRef) {
       this.trailerInputRef.nativeElement.value = '';
     }
   }
-  
 
 
-  
+
+
   goBack(): void {
     this.router.navigate(['/list-movie-show']);
   }
 
   submitForm(): void {
-    // Add your form submission logic here
+    if (this.movieForm.invalid) {
+      this.movieForm.markAllAsTouched();
+      return;
+    }
+
+    const formData = {
+      ...this.movieForm.value,
+      videoName: this.videoName,
+      thumbnail: this.thumbnailPreview,
+      trailer: this.trailerURL,
+      banner: this.bannerPreview
+    };
+
   }
 }

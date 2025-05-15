@@ -1,6 +1,6 @@
 <div class="add-subscription-plan">
   <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-    <h2>Add Subscription Plan</h2>
+    <h2>{{ isEditMode ? 'Edit Subscription Plan' : 'Add Subscription Plan' }}</h2>
     <button class="back-to-list-button" (click)="goBack()">Back to List</button>
   </div>
 
@@ -36,7 +36,6 @@
      <!-- Action -->
 <div class="action">
   <button class="save-button" (click)="saveUser()">Save</button>
-  <button class="cancel-button" (click)="cancel()">Cancel</button>
 </div>
 
 

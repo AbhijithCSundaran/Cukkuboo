@@ -1,14 +1,12 @@
 <div class="user-container">
     <div class="header-row">
       <h2>User List</h2>
-      <button mat-raised-button  class="add-button"(click)="addNewUser()">
+      <button mat-raised-button  class="add-button" [routerLink]="['add-user']">
        + New
       </button>
- 
     </div>
     
     <table mat-table [dataSource]="dataSource" class="mat-elevation-z2 custom-table">
-
         <ng-container matColumnDef="name">
           <th mat-header-cell *matHeaderCellDef> Name </th>
           <td mat-cell *matCellDef="let user"> {{ user.name }} </td>
@@ -57,7 +55,7 @@
         <ng-container matColumnDef="action">
           <th mat-header-cell *matHeaderCellDef> Action </th>
           <td mat-cell *matCellDef="let user">
-            <mat-icon class="icon" (click)="editUser(user)">edit</mat-icon>
+            <mat-icon class="icon" [routerLink]="['edit-user',user.id]">edit</mat-icon>
             <mat-icon class="icon" (click)="deleteUser(user)">delete</mat-icon>
           </td>
         </ng-container>

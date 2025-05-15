@@ -7,13 +7,11 @@
   <mat-card appearance="outlined">
     <mat-card-content style="display: flex; flex-wrap: wrap;">
       
-      
-
       <!-- Plan -->
       <div style="width: 50%; padding: 0 10px 20px;">
         <mat-form-field appearance="outline" style="width: 100%;">
           <mat-label>Plan</mat-label>
-          <input matInput placeholder="Enter plan name" required>
+          <input matInput placeholder="Enter plan name" required [(ngModel)]="plan.name">
         </mat-form-field>
       </div>
 
@@ -21,23 +19,34 @@
       <div style="width: 50%; padding: 0 10px 20px;">
         <mat-form-field appearance="outline" style="width: 100%;">
           <mat-label>Price</mat-label>
-          <input matInput type="number" placeholder="Enter price" required>
+          <input matInput type="number" placeholder="Enter price" required [(ngModel)]="plan.price">
+        </mat-form-field>
+      </div>
+
+      <!-- Period -->
+      <div style="width: 50%; padding: 0 10px 20px;">
+        <mat-form-field appearance="outline" style="width: 100%;">
+          <mat-label>Period</mat-label>
+          <mat-select required [(ngModel)]="plan.period">
+            <mat-option value="Monthly">Monthly</mat-option>
+            <mat-option value="Quarterly">Quarterly</mat-option>
+            <mat-option value="Yearly">Yearly</mat-option>
+          </mat-select>
         </mat-form-field>
       </div>
 
       <!-- Features -->
-      <div style="width: 100%; padding: 0 10px 20px;">
+      <div style="width: 50%; padding: 0 10px 20px;">
         <mat-form-field appearance="outline" style="width: 100%;">
           <mat-label>Features</mat-label>
-          <textarea matInput placeholder="Enter features (comma-separated or listed)"></textarea>
+          <textarea matInput placeholder="Enter features (comma-separated or listed)" [(ngModel)]="plan.features"></textarea>
         </mat-form-field>
       </div>
 
-     <!-- Action -->
-<div class="action">
-  <button class="save-button" (click)="saveUser()">Save</button>
-</div>
-
+      <!-- Action -->
+      <div class="action">
+        <button class="save-button" (click)="saveUser()">Save</button>
+      </div>
 
     </mat-card-content>
   </mat-card>

@@ -37,4 +37,4 @@ export class EditSubscriptionListComponent {
   goBack(): void {
     // this.router.navigate(['/subscriptions']);
   }
-}
+} 

@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -6,7 +7,6 @@ import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-genres',
@@ -19,69 +19,68 @@ import { FormsModule } from '@angular/forms';
     MatIconModule,
     MatSelectModule,
     CommonModule,
-    FormsModule
+    ReactiveFormsModule
   ],
   templateUrl: './genres.component.html',
   styleUrls: ['./genres.component.scss']
 })
-export class GenresComponent {
+export class GenresComponent implements OnInit {
+  genreForm!: FormGroup;
+  isEditing = false;
+  genreToEdit: { name: string; description: string; status: string } | null = null;
 
-
-  newGenre: string = '';
-  newGenreDescription: string = '';
-  newGenreStatus: string = 'enabled';
-  isEditing: boolean = false;
-  genreToEdit: { name: string, description: string, status: string } | null = null;
-
-  genres: { name: string, description: string, status: string }[] = [
+  genres = [
     { name: 'Action', description: 'High-energy scenes with fights, chases, and explosions', status: 'enabled' },
     { name: 'Comedy', description: 'Light-hearted content meant to entertain and amuse', status: 'enabled' },
     { name: 'Drama', description: 'Serious, plot-driven stories with emotional themes', status: 'disabled' }
   ];
-  
+
   displayedColumns: string[] = ['name', 'description', 'status', 'action'];
 
-  submitGenre() {
-    const name = this.newGenre.trim();
-    const description = this.newGenreDescription.trim();
-    const status = this.newGenreStatus;
+  constructor(private fb: FormBuilder) {}
 
-    if (!name) return;
+  ngOnInit(): void {
+    this.genreForm = this.fb.group({
+      name: ['', Validators.required],
+      description: [''],
+      status: ['enabled', Validators.required]
+    });
+  }
+
+  submitGenre(): void {
+    if (this.genreForm.invalid) return;
+
+    const { name, description, status } = this.genreForm.value;
 
     if (this.isEditing && this.genreToEdit) {
-      // Edit mode
       this.genreToEdit.name = name;
       this.genreToEdit.description = description;
       this.genreToEdit.status = status;
     } else {
-      // Add new category
       this.genres.push({ name, description, status });
     }
 
-    this.genres = [...this.genres]; 
+    this.genres = [...this.genres];
     this.resetForm();
   }
 
-  deleteGenre(genreToDelete: { name: string, description: string, status: string }) {
-    this.genres = this.genres.filter(genre => genre !== genreToDelete);
+  deleteGenre(genreToDelete: { name: string; description: string; status: string }): void {
+    this.genres = this.genres.filter(g => g !== genreToDelete);
   }
 
- 
-
-  editGenre(genre: { name: string, description: string, status: string }) {
-    this.newGenre = genre.name;
-    this.newGenreDescription = genre.description;
-    this.newGenreStatus = genre.status;
+  editGenre(genre: { name: string; description: string; status: string }): void {
+    this.genreForm.setValue({
+      name: genre.name,
+      description: genre.description,
+      status: genre.status
+    });
     this.isEditing = true;
     this.genreToEdit = genre;
   }
 
-  resetForm() {
-    this.newGenre = '';
-    this.newGenreDescription = '';
-    this.newGenreStatus = 'enabled';
+  resetForm(): void {
+    this.genreForm.reset({ name: '', description: '', status: 'enabled' });
     this.isEditing = false;
     this.genreToEdit = null;
   }
-
 }

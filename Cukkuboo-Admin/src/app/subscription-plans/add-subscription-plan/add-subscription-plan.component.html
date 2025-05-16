@@ -5,49 +5,50 @@
   </div>
 
   <mat-card appearance="outlined">
-    <mat-card-content style="display: flex; flex-wrap: wrap;">
-      
-      <!-- Plan -->
-      <div style="width: 50%; padding: 0 10px 20px;">
-        <mat-form-field appearance="outline" style="width: 100%;">
-          <mat-label>Plan</mat-label>
-          <input matInput placeholder="Enter plan name" required [(ngModel)]="plan.name">
-        </mat-form-field>
-      </div>
+    <form [formGroup]="subscriptionForm" (ngSubmit)="saveUser()">
+      <mat-card-content style="display: flex; flex-wrap: wrap;">
+        
+        <!-- Plan -->
+        <div class="w-50 px-2 pb-3">
+          <mat-form-field appearance="outline" style="width: 100%;">
+            <mat-label>Plan</mat-label>
+            <input matInput placeholder="Enter plan name" formControlName="name">
+          </mat-form-field>
+        </div>
 
-      <!-- Price -->
-      <div style="width: 50%; padding: 0 10px 20px;">
-        <mat-form-field appearance="outline" style="width: 100%;">
-          <mat-label>Price</mat-label>
-          <input matInput type="number" placeholder="Enter price" required [(ngModel)]="plan.price">
-        </mat-form-field>
-      </div>
+        <!-- Price -->
+        <div class="w-50 px-2 pb-3">
+          <mat-form-field appearance="outline" style="width: 100%;">
+            <mat-label>Price</mat-label>
+            <input matInput type="number" placeholder="Enter price" formControlName="price">
+          </mat-form-field>
+        </div>
 
-      <!-- Period -->
-      <div style="width: 50%; padding: 0 10px 20px;">
-        <mat-form-field appearance="outline" style="width: 100%;">
-          <mat-label>Period</mat-label>
-          <mat-select required [(ngModel)]="plan.period">
-            <mat-option value="Monthly">Monthly</mat-option>
-            <mat-option value="Quarterly">Quarterly</mat-option>
-            <mat-option value="Yearly">Yearly</mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
+        <!-- Period -->
+        <div class="w-50 px-2 pb-3">
+          <mat-form-field appearance="outline" style="width: 100%;">
+            <mat-label>Period</mat-label>
+            <mat-select formControlName="period">
+              <mat-option value="Monthly">Monthly</mat-option>
+              <mat-option value="Quarterly">Quarterly</mat-option>
+              <mat-option value="Yearly">Yearly</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
 
-      <!-- Features -->
-      <div style="width: 50%; padding: 0 10px 20px;">
-        <mat-form-field appearance="outline" style="width: 100%;">
-          <mat-label>Features</mat-label>
-          <textarea matInput placeholder="Enter features (comma-separated or listed)" [(ngModel)]="plan.features"></textarea>
-        </mat-form-field>
-      </div>
+        <!-- Features -->
+        <div class="w-50 px-2 pb-3">
+          <mat-form-field appearance="outline" style="width: 100%;">
+            <mat-label>Features</mat-label>
+            <textarea matInput placeholder="Enter features" formControlName="features"></textarea>
+          </mat-form-field>
+        </div>
 
-      <!-- Action -->
-      <div class="action">
-        <button class="save-button" (click)="saveUser()">Save</button>
-      </div>
-
-    </mat-card-content>
+        <!-- Action -->
+        <div class="action">
+          <button class="save-button" mat-raised-button color="primary" type="submit">Save</button>
+        </div>
+      </mat-card-content>
+    </form>
   </mat-card>
 </div>

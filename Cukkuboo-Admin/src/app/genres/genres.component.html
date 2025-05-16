@@ -1,83 +1,73 @@
 <div class="genre-container">
-    <h2>Genres</h2>
-  
-    <mat-card>
-        <mat-card-content class="form-section">
-            
-            <div class="left-side">
-              <mat-form-field appearance="outline" class="white-input">
-                <mat-label>Genre</mat-label>
-                <input matInput placeholder="Add genre name" [(ngModel)]="newGenre" required>
-              </mat-form-field>
-          
-              <mat-form-field appearance="outline" class="white-input">
-                <mat-label>Description</mat-label>
-                <textarea matInput placeholder="Enter genre description" [(ngModel)]="newGenreDescription"></textarea>
-              </mat-form-field>
-            </div>
-          
-            <div class="right-side">
-              <mat-form-field appearance="outline" class="white-input">
-                <mat-label>Status</mat-label>
-                <mat-select [(ngModel)]="newGenreStatus">
-                  <mat-option value="enabled">Enabled</mat-option>
-                  <mat-option value="disabled">Disabled</mat-option>
-                </mat-select>
-              </mat-form-field>
-          
-              <mat-card-actions style="padding: 90px 10px 0px 30px; display: flex; justify-content: flex-end;">
-                <button mat-raised-button class="add-button" (click)="submitGenre()">
-                  {{ isEditing ? 'Submit' : 'Add Genre' }}
-                </button>
-                </mat-card-actions>
-            </div>
-          </mat-card-content>
-          
-    </mat-card>
-  
+  <h2>Genres</h2>
 
-    <mat-card class="table-card">
-      <mat-card-content>
-        <table mat-table [dataSource]="genres" class="mat-elevation-z2 custom-table">
-          <ng-container matColumnDef="name">
-            <th mat-header-cell *matHeaderCellDef> Genre Name </th>
-            <td mat-cell *matCellDef="let genre"> {{ genre.name }} </td>
-          </ng-container>
-  
-          <ng-container matColumnDef="description">
-            <th mat-header-cell *matHeaderCellDef> Description </th>
-            <td mat-cell *matCellDef="let genre"> {{genre.description }} </td>
-          </ng-container>
-  
-          <ng-container matColumnDef="status">
-            <th mat-header-cell *matHeaderCellDef> Status </th>
-            <td mat-cell *matCellDef="let genre">
-                <span
-                  [ngClass]="{
-                    'badge': true,
-                    'badge-enabled': genre.status === 'enabled',
-                    'badge-disabled': genre.status === 'disabled'
-                  }"
-                >
-                  {{ genre.status }}
-                </span>
-              </td>
-              
-          </ng-container>
-  
-          <ng-container matColumnDef="action">
-            <th mat-header-cell *matHeaderCellDef> Action </th>
-            <td mat-cell *matCellDef="let genre">
-              <mat-icon class="icon" (click)="editGenre(genre)">edit</mat-icon>
-              <mat-icon class="icon" (click)="deleteGenre(genre)">delete</mat-icon>
-             
-            </td>
-          </ng-container>
-  
-          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-        </table>
-      </mat-card-content>
-    </mat-card>
-  </div>
-  
+  <mat-card>
+    <mat-card-content class="form-section" [formGroup]="genreForm">
+      <div class="left-side">
+        <mat-form-field appearance="outline" class="white-input">
+          <mat-label>Genre</mat-label>
+          <input matInput placeholder="Add genre name" formControlName="name" required>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="white-input">
+          <mat-label>Description</mat-label>
+          <textarea matInput placeholder="Enter genre description" formControlName="description"></textarea>
+        </mat-form-field>
+      </div>
+
+      <div class="right-side">
+        <mat-form-field appearance="outline" class="white-input">
+          <mat-label>Status</mat-label>
+          <mat-select formControlName="status">
+            <mat-option value="enabled">Enabled</mat-option>
+            <mat-option value="disabled">Disabled</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-card-actions style="padding: 90px 10px 0px 30px; display: flex; justify-content: flex-end;">
+          <button mat-raised-button class="add-button" (click)="submitGenre()">
+            {{ isEditing ? 'Submit' : 'Add Genre' }}
+          </button>
+        </mat-card-actions>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <table mat-table [dataSource]="genres" class="mat-elevation-z2 custom-table">
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef> Genre Name </th>
+      <td mat-cell *matCellDef="let genre"> {{ genre.name }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="description">
+      <th mat-header-cell *matHeaderCellDef> Description </th>
+      <td mat-cell *matCellDef="let genre"> {{ genre.description }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="status">
+      <th mat-header-cell *matHeaderCellDef> Status </th>
+      <td mat-cell *matCellDef="let genre">
+        <span
+          [ngClass]="{
+            'badge': true,
+            'badge-enabled': genre.status === 'enabled',
+            'badge-disabled': genre.status === 'disabled'
+          }"
+        >
+          {{ genre.status }}
+        </span>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="action">
+      <th mat-header-cell *matHeaderCellDef> Action </th>
+      <td mat-cell *matCellDef="let genre">
+        <mat-icon class="icon" (click)="editGenre(genre)">edit</mat-icon>
+        <mat-icon class="icon" (click)="deleteGenre(genre)">delete</mat-icon>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+</div>

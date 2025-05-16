@@ -1,35 +1,35 @@
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-categories',
   standalone: true,
   imports: [
+    CommonModule,
+    ReactiveFormsModule,
     MatCardModule,
     MatFormFieldModule,
     MatInputModule,
     MatTableModule,
     MatIconModule,
     MatSelectModule,
-    CommonModule,
-    FormsModule
+    MatButtonModule
   ],
   templateUrl: './categories.component.html',
   styleUrls: ['./categories.component.scss']
 })
 export class CategoriesComponent {
-  newCategory: string = '';
-  newCategoryDescription: string = '';
-  newCategoryStatus: string = 'enabled';
+  categoryForm: FormGroup;
   isEditing: boolean = false;
-  categoryToEdit: { name: string, description: string, status: string } | null = null;
+  categoryToEditIndex: number | null = null;
 
   categories: { name: string, description: string, status: string }[] = [
     { name: 'Movies', description: 'Feature films and blockbusters', status: 'enabled' },
@@ -39,46 +39,45 @@ export class CategoriesComponent {
 
   displayedColumns: string[] = ['name', 'description', 'status', 'action'];
 
+  constructor(private fb: FormBuilder) {
+    this.categoryForm = this.fb.group({
+      name: ['', Validators.required],
+      description: [''],
+      status: ['enabled', Validators.required]
+    });
+  }
+
   submitCategory() {
-    const name = this.newCategory.trim();
-    const description = this.newCategoryDescription.trim();
-    const status = this.newCategoryStatus;
+    if (this.categoryForm.invalid) return;
 
-    if (!name) return;
+    const formValue = this.categoryForm.value;
 
-    if (this.isEditing && this.categoryToEdit) {
-      // Edit mode
-      this.categoryToEdit.name = name;
-      this.categoryToEdit.description = description;
-      this.categoryToEdit.status = status;
+    if (this.isEditing && this.categoryToEditIndex !== null) {
+      this.categories[this.categoryToEditIndex] = { ...formValue };
     } else {
-      // Add new category
-      this.categories.push({ name, description, status });
+      this.categories.push(formValue);
     }
 
-    this.categories = [...this.categories]; 
+    this.categories = [...this.categories];
     this.resetForm();
   }
 
-  deleteCategory(categoryToDelete: { name: string, description: string, status: string }) {
-    this.categories = this.categories.filter(category => category !== categoryToDelete);
+  deleteCategory(index: number) {
+    this.categories.splice(index, 1);
+    this.categories = [...this.categories];
+    this.resetForm();
   }
 
- 
-
-  editCategory(category: { name: string, description: string, status: string }) {
-    this.newCategory = category.name;
-    this.newCategoryDescription = category.description;
-    this.newCategoryStatus = category.status;
+  editCategory(index: number) {
+    const category = this.categories[index];
+    this.categoryForm.patchValue(category);
     this.isEditing = true;
-    this.categoryToEdit = category;
+    this.categoryToEditIndex = index;
   }
 
   resetForm() {
-    this.newCategory = '';
-    this.newCategoryDescription = '';
-    this.newCategoryStatus = 'enabled';
+    this.categoryForm.reset({ status: 'enabled' });
     this.isEditing = false;
-    this.categoryToEdit = null;
+    this.categoryToEditIndex = null;
   }
 }

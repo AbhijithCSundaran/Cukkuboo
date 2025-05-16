@@ -1,83 +1,73 @@
 <div class="category-container">
-    <h2>Categories</h2>
-  
-    <mat-card>
-        <mat-card-content class="form-section">
-            
-            <div class="left-side">
-              <mat-form-field appearance="outline" class="white-input">
-                <mat-label>Category</mat-label>
-                <input matInput placeholder="Add category name" [(ngModel)]="newCategory" required>
-              </mat-form-field>
-          
-              <mat-form-field appearance="outline" class="white-input">
-                <mat-label>Description</mat-label>
-                <textarea matInput placeholder="Enter category description" [(ngModel)]="newCategoryDescription"></textarea>
-              </mat-form-field>
-            </div>
-          
-            <div class="right-side">
-              <mat-form-field appearance="outline" class="white-input">
-                <mat-label>Status</mat-label>
-                <mat-select [(ngModel)]="newCategoryStatus">
-                  <mat-option value="enabled">Enabled</mat-option>
-                  <mat-option value="disabled">Disabled</mat-option>
-                </mat-select>
-              </mat-form-field>
-          
-              
-              <mat-card-actions style="padding: 90px 10px 0px 30px; display: flex; justify-content: flex-end;">
-                <button mat-raised-button class="add-button" (click)="submitCategory()">
-                  {{ isEditing ? 'Submit' : 'Add Category' }}
-                </button>
-                </mat-card-actions>
-             
-            </div>
-          </mat-card-content>
-          
-    </mat-card>
-  
+  <h2>Categories</h2>
 
+  <mat-card>
+    <mat-card-content class="form-section" [formGroup]="categoryForm">
 
-        <table mat-table [dataSource]="categories" class="mat-elevation-z2 custom-table">
-          <ng-container matColumnDef="name">
-            <th mat-header-cell *matHeaderCellDef> Category Name </th>
-            <td mat-cell *matCellDef="let category"> {{ category.name }} </td>
-          </ng-container>
-  
-          <ng-container matColumnDef="description">
-            <th mat-header-cell *matHeaderCellDef> Description </th>
-            <td mat-cell *matCellDef="let category"> {{ category.description }} </td>
-          </ng-container>
-  
-          <ng-container matColumnDef="status">
-            <th mat-header-cell *matHeaderCellDef> Status </th>
-            <td mat-cell *matCellDef="let category">
-                <span
-                  [ngClass]="{
-                    'badge': true,
-                    'badge-enabled': category.status === 'enabled',
-                    'badge-disabled': category.status === 'disabled'
-                  }"
-                >
-                  {{ category.status }}
-                </span>
-              </td>
-              
-          </ng-container>
-  
-          <ng-container matColumnDef="action">
-            <th mat-header-cell *matHeaderCellDef> Action </th>
-            <td mat-cell *matCellDef="let category">
-              <mat-icon class="icon" (click)="editCategory(category)">edit</mat-icon>
-              <mat-icon class="icon" (click)="deleteCategory(category)">delete</mat-icon>
-             
-            </td>
-          </ng-container>
-  
-          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-        </table>
-   
-  </div>
-  
+      <div class="left-side">
+        <mat-form-field appearance="outline" class="white-input">
+          <mat-label>Category</mat-label>
+          <input matInput placeholder="Add category name" formControlName="name" required>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="white-input">
+          <mat-label>Description</mat-label>
+          <textarea matInput placeholder="Enter category description" formControlName="description"></textarea>
+        </mat-form-field>
+      </div>
+
+      <div class="right-side">
+        <mat-form-field appearance="outline" class="white-input">
+          <mat-label>Status</mat-label>
+          <mat-select formControlName="status">
+            <mat-option value="enabled">Enabled</mat-option>
+            <mat-option value="disabled">Disabled</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-card-actions style="padding: 90px 10px 0px 30px; display: flex; justify-content: flex-end;">
+          <button class="add-button" color="primary" (click)="submitCategory()">
+            {{ isEditing ? 'Submit' : 'Add Category' }}
+          </button>
+        </mat-card-actions>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <table mat-table [dataSource]="categories" class="mat-elevation-z2 custom-table">
+
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef> Category Name </th>
+      <td mat-cell *matCellDef="let category"> {{ category.name }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="description">
+      <th mat-header-cell *matHeaderCellDef> Description </th>
+      <td mat-cell *matCellDef="let category"> {{ category.description }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="status">
+      <th mat-header-cell *matHeaderCellDef> Status </th>
+      <td mat-cell *matCellDef="let category">
+        <span [ngClass]="{
+                'badge': true,
+                'badge-enabled': category.status === 'enabled',
+                'badge-disabled': category.status === 'disabled'
+              }">
+          {{ category.status }}
+        </span>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="action">
+      <th mat-header-cell *matHeaderCellDef> Action </th>
+      <td mat-cell *matCellDef="let category; let i = index">
+        <mat-icon class="icon" (click)="editCategory(i)">edit</mat-icon>
+        <mat-icon class="icon" (click)="deleteCategory(i)">delete</mat-icon>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+</div>

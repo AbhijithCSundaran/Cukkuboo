@@ -8,7 +8,7 @@
     <mat-card-content [formGroup]="userForm" style="display: flex; flex-wrap: wrap;">
 
       <!-- Name -->
-      <div style="width: 50%; padding: 0 10px 20px;">
+      <div class="w-50 px-2 pb-3">
         <mat-form-field appearance="outline" style="width: 100%;">
           <mat-label>Name</mat-label>
           <input matInput formControlName="name" placeholder="Add name" required>
@@ -16,7 +16,7 @@
       </div>
 
       <!-- Contact -->
-      <div style="width: 50%; padding: 0 10px 20px;">
+      <div class="w-50 px-2 pb-3">
         <mat-form-field appearance="outline" style="width: 100%;">
           <mat-label>Contact</mat-label>
           <input
@@ -29,7 +29,7 @@
       </div>
 
       <!-- Email -->
-      <div style="width: 50%; padding: 0 10px 20px;">
+      <div class="w-50 px-2 pb-3">
         <mat-form-field appearance="outline" style="width: 100%;">
           <mat-label>Email</mat-label>
           <input matInput formControlName="email" type="email" placeholder="Add email">
@@ -37,7 +37,7 @@
       </div>
 
       <!-- Country -->
-      <div style="width: 50%; padding: 0 10px 20px;">
+      <div class="w-50 px-2 pb-3">
         <mat-form-field appearance="outline" style="width: 100%;">
           <mat-label>Country</mat-label>
           <input
@@ -49,7 +49,7 @@
       </div>
 
       <!-- Status -->
-      <div style="width: 50%; padding: 0 10px 20px;">
+      <div class="w-50 px-2 pb-3">
         <mat-form-field appearance="outline" style="width: 100%;">
           <mat-label>Status</mat-label>
           <mat-select formControlName="status">
@@ -60,7 +60,7 @@
       </div>
 
       <!-- Join Date -->
-      <div style="width: 50%; padding: 0 10px 20px;">
+      <div class="w-50 px-2 pb-3">
         <mat-form-field appearance="outline" style="width: 100%;">
           <mat-label>Join Date</mat-label>
           <input matInput [matDatepicker]="picker" formControlName="releaseDate" placeholder="Choose a date"(click)="picker.open()"  readonly />
@@ -70,7 +70,7 @@
       </div>
 
       <!-- Subscription -->
-      <div style="width: 50%; padding: 0 10px 20px;">
+      <div class="w-50 px-2 pb-3">
         <mat-form-field appearance="outline" style="width: 100%;">
           <mat-label>Subscription</mat-label>
           <mat-select formControlName="subscription">

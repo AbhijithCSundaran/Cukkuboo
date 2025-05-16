@@ -1,34 +1,39 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 declare var grecaptcha: any;
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [FormsModule, CommonModule],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent implements OnInit {
-  username = '';
-  password = '';
-  error = '';
+export class LoginComponent implements OnInit, AfterViewInit {
+  loginForm!: FormGroup;
   hoveringEye = false;
   captchaToken: string | null = null;
 
-  constructor(private router: Router, private snackBar: MatSnackBar) { }
+  constructor(
+    private fb: FormBuilder,
+    private router: Router,
+    private snackBar: MatSnackBar
+  ) {}
 
   ngOnInit() {
-
+    this.loginForm = this.fb.group({
+      username: ['', Validators.required],
+      password: ['', Validators.required]
+    });
   }
+
   ngAfterViewInit() {
-    debugger;
     if ((window as any).grecaptcha) {
-      (window as any).grecaptcha.render('recaptcha-container', {
+      grecaptcha.render('recaptcha-container', {
         sitekey: '6LeoL5UpAAAAABy-sNgzr_XHc2vWl2Kpr45VHWey',
         callback: (response: any) => {
           this.captchaToken = response;
@@ -38,8 +43,6 @@ export class LoginComponent implements OnInit {
         },
         theme: 'dark'
       });
-    } else {
-      // Wait and retry or add listener for script load
     }
   }
 
@@ -53,7 +56,9 @@ export class LoginComponent implements OnInit {
       return;
     }
 
-    if (this.username === 'admin' && this.password === 'admin') {
+    const { username, password } = this.loginForm.value;
+
+    if (username === 'admin' && password === 'admin') {
       localStorage.setItem('jwt', 'ebyeygfyhugnuxhzvtvzfbfbcsufs');
       this.snackBar.open('Login successful', '', {
         duration: 3000,
@@ -62,7 +67,6 @@ export class LoginComponent implements OnInit {
       });
       this.router.navigate(['/dashboard']);
     } else {
-      this.error = 'Invalid username or password';
       this.snackBar.open('Invalid username or password', '', {
         duration: 3000,
         verticalPosition: 'top',
@@ -70,7 +74,6 @@ export class LoginComponent implements OnInit {
       });
     }
 
-    // Reset CAPTCHA after login attempt
     grecaptcha.reset();
     this.captchaToken = null;
   }

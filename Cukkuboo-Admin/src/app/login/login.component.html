@@ -1,7 +1,7 @@
 <div class="login-container">
   <div class="login-card">
     <h2>Admin Login</h2>
-    <form (ngSubmit)="login()" #loginForm="ngForm">
+    <form (ngSubmit)="login()" #loginForm="ngForm" class="d-flex flex-column align-items-center">
       <input type="text" placeholder="Username" [(ngModel)]="username" name="username" required />
 
       <div class="password-wrapper">
@@ -11,7 +11,8 @@
       </div>
 
       <!-- Google reCAPTCHA -->
-      <div id="recaptcha-container" class="g-recaptcha"></div>
+      <div id="recaptcha-container" class="g-recaptcha">
+      </div>
       <!-- data-sitekey="6LeoL5UpAAAAABy-sNgzr_XHc2vWl2Kpr45VHWey"
         data-callback="captchaResolved"
         data-expired-callback="captchaExpired" -->

@@ -26,23 +26,26 @@ export class LoginComponent implements OnInit {
 
   }
   ngAfterViewInit() {
-    debugger;
-    if ((window as any).grecaptcha) {
-      (window as any).grecaptcha.render('recaptcha-container', {
-        sitekey: '6LeoL5UpAAAAABy-sNgzr_XHc2vWl2Kpr45VHWey',
-        callback: (response: any) => {
-          this.captchaToken = response;
-        },
-        'expired-callback': () => {
-          this.captchaToken = null;
-        },
-        theme: 'dark'
-      });
-    } else {
-      // Wait and retry or add listener for script load
-    }
+    this.renderCaptcha();
   }
-
+  renderCaptcha() {
+    setTimeout(() => {
+      if ((window as any).grecaptcha) {
+        (window as any).grecaptcha.render('recaptcha-container', {
+          sitekey: '6LeoL5UpAAAAABy-sNgzr_XHc2vWl2Kpr45VHWey',
+          callback: (response: any) => {
+            this.captchaToken = response;
+          },
+          'expired-callback': () => {
+            this.captchaToken = null;
+          },
+          theme: 'dark'
+        });
+      } 
+      // else
+        // this.renderCaptcha()
+    }, 500);
+  }
   login() {
     if (!this.captchaToken) {
       this.snackBar.open('Please complete the CAPTCHA', '', {

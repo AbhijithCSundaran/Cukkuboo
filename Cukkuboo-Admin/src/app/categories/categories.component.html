@@ -25,9 +25,13 @@
                 </mat-select>
               </mat-form-field>
           
-              <button mat-raised-button class="add-button" (click)="submitCategory()">
-                {{ isEditing ? 'Submit' : 'Add' }}
-              </button>
+              
+              <mat-card-actions style="padding: 90px 10px 0px 30px; display: flex; justify-content: flex-end;">
+                <button mat-raised-button class="add-button" (click)="submitCategory()">
+                  {{ isEditing ? 'Submit' : 'Add Category' }}
+                </button>
+                </mat-card-actions>
+             
             </div>
           </mat-card-content>
           

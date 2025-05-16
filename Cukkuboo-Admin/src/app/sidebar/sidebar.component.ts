@@ -25,7 +25,6 @@ interface MenuItem {
 })
 export class SidebarComponent {
   isCollapsed = false;
-  imgUrl:string=environment.imgUrl;
 
   @Output() sidebarToggle = new EventEmitter<boolean>();
 

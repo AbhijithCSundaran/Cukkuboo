@@ -1,50 +1,58 @@
-
 <div class="add-movie-show-container">
   <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-    <h2>Add User</h2>
+    <h2>{{UserId?'Edit User':'Add User'}}</h2>
     <button class="back-to-list-button" (click)="goBack()">Back to List</button>
   </div>
 
   <mat-card appearance="outlined">
-    <mat-card-content style="display: flex; flex-wrap: wrap;">
-      
+    <mat-card-content [formGroup]="userForm" style="display: flex; flex-wrap: wrap;">
+
       <!-- Name -->
       <div style="width: 50%; padding: 0 10px 20px;">
         <mat-form-field appearance="outline" style="width: 100%;">
           <mat-label>Name</mat-label>
-          <input matInput placeholder="Add name" required>
-        </mat-form-field>
+          <input matInput formControlName="name" placeholder="Add name" required>
+                </mat-form-field>
       </div>
 
       <!-- Contact -->
       <div style="width: 50%; padding: 0 10px 20px;">
         <mat-form-field appearance="outline" style="width: 100%;">
           <mat-label>Contact</mat-label>
-          <input matInput placeholder="Add contact number">
-        </mat-form-field>
+          <input
+          matInput
+          formControlName="contact"
+          placeholder="Add contact number"
+          maxlength="15"
+          (input)="onNumberInput($event)">
+                        </mat-form-field>
       </div>
 
       <!-- Email -->
       <div style="width: 50%; padding: 0 10px 20px;">
         <mat-form-field appearance="outline" style="width: 100%;">
           <mat-label>Email</mat-label>
-          <input matInput type="email" placeholder="Add email">
-        </mat-form-field>
+          <input matInput formControlName="email" type="email" placeholder="Add email">
+                </mat-form-field>
       </div>
 
       <!-- Country -->
       <div style="width: 50%; padding: 0 10px 20px;">
         <mat-form-field appearance="outline" style="width: 100%;">
           <mat-label>Country</mat-label>
-          <input matInput placeholder="Enter country">
-        </mat-form-field>
+          <input
+          matInput
+          formControlName="country"
+          placeholder="Enter country"
+          (input)="onCountryInput($event)">
+                        </mat-form-field>
       </div>
 
       <!-- Status -->
       <div style="width: 50%; padding: 0 10px 20px;">
         <mat-form-field appearance="outline" style="width: 100%;">
           <mat-label>Status</mat-label>
-          <mat-select>
+          <mat-select formControlName="status">
             <mat-option value="active">Active</mat-option>
             <mat-option value="inactive">Inactive</mat-option>
           </mat-select>
@@ -55,7 +63,7 @@
       <div style="width: 50%; padding: 0 10px 20px;">
         <mat-form-field appearance="outline" style="width: 100%;">
           <mat-label>Join Date</mat-label>
-          <input matInput [matDatepicker]="picker" placeholder="Select join date">
+          <input matInput [matDatepicker]="picker" formControlName="releaseDate" placeholder="Choose a date"(click)="picker.open()"  readonly />
           <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
           <mat-datepicker #picker></mat-datepicker>
         </mat-form-field>
@@ -65,7 +73,7 @@
       <div style="width: 50%; padding: 0 10px 20px;">
         <mat-form-field appearance="outline" style="width: 100%;">
           <mat-label>Subscription</mat-label>
-          <mat-select>
+          <mat-select formControlName="subscription">
             <mat-option value="free">Free</mat-option>
             <mat-option value="basic">Basic</mat-option>
             <mat-option value="premium">Premium</mat-option>
@@ -73,14 +81,13 @@
         </mat-form-field>
       </div>
 
-      <!-- Action -->
-      <div  class="button-container">
-        <button class="save-button" (click)="saveUser()">Save</button>
-        <button class="cancel-button" (click)="cancel()">Cancel</button>
-      </div>
+     <!-- Action -->
+<div style="width: 100%; padding: 10px 10px 0; display: flex; justify-content: flex-end; gap: 12px;">
+  <button class="save-button" mat-raised-button color="primary" (click)="saveUser()">Save</button>
+</div>
 
     </mat-card-content>
   </mat-card>
 
-   
+
 </div>

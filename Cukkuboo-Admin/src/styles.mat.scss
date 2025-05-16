@@ -58,3 +58,9 @@ html {
     // box-shadow: 0 0 2px 2px #c200005f;
     border: 1px solid rgb(129, 0, 0);
 }
+
+.mat-calendar-header {
+    .mdc-button__label {
+        color: #9b9b9b!important;
+    }
+}

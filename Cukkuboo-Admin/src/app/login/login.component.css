@@ -39,3 +39,34 @@ button {
 button:hover {
   background-color: #c00;
 }
+
+.password-wrapper {
+  position: relative;
+  width: 90%;
+  margin: 10px auto;
+}
+
+.password-wrapper input {
+  width: 100%;
+  padding-right: 35px;
+}
+
+.password-wrapper i {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  color: #fff;
+  transform: translateY(-50%);
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.g-recaptcha {
+  margin-top: 30px;
+  margin-bottom: 15px;
+  transform: scale(0.8);
+  width: 100%;
+  display: flex;
+  justify-content: center;
+
+}

@@ -7,8 +7,10 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { Router } from '@angular/router';
 
 interface SubscriptionPlan {
+  id: number;
   name: string;
-  price: string;
+  price: string | number;
+  period: string;          
   features: string;
 }
 
@@ -26,36 +28,50 @@ interface SubscriptionPlan {
   styleUrl: './subscription-plans.component.scss'
 })
 export class SubscriptionPlansComponent {
-  displayedColumns: string[] = ['name', 'price', 'features', 'action'];
+
+  displayedColumns: string[] = ['name', 'price', 'period', 'features', 'action'];
 
   constructor(private router: Router) {}
 
   subscriptionPlans: SubscriptionPlan[] = [
-    { name: 'Basic', price: '₹5/month', features: 'Access to limited content' },
-    { name: 'Standard', price: '₹10/month', features: 'Access to standard content + 1 screen' },
-    { name: 'Premium', price: '₹15/month', features: 'All content + 4 screens + HD' }
+    {
+      id: 1,
+      name: 'Basic',
+      price: 10,
+      period: 'Monthly',
+      features: 'Feature 1, Feature 2'
+    },
+    {
+      id: 2,
+      name: 'Standard',
+      price: '₹10/month',
+      period: 'Monthly', 
+      features: 'Access to standard content + 1 screen'
+    },
+    {
+      id: 3,
+      name: 'Premium',
+      price: '₹15/month',
+      period: 'Monthly', 
+      features: 'All content + 4 screens + HD'
+    }
   ];
 
-  // MatTableDataSource used by <table mat-table>
   dataSource = new MatTableDataSource<SubscriptionPlan>(this.subscriptionPlans);
 
   addNewPlan() {
-   
-      this.router.navigate(['/add-subscription-plan']);
-   
-    
+    this.router.navigate(['/add-subscription-plan']);
   }
 
-  editPlan(plan: SubscriptionPlan) {
-    this.router.navigate(['/add-subscription-plan']);
-   
+  editPlan(id: number): void {
+    this.router.navigate(['/edit-subscription-plan', id]);
   }
 
   deletePlan(plan: SubscriptionPlan) {
     const index = this.subscriptionPlans.indexOf(plan);
     if (index >= 0) {
       this.subscriptionPlans.splice(index, 1);
-      this.dataSource.data = [...this.subscriptionPlans]; // Refresh table
+      this.dataSource.data = [...this.subscriptionPlans]; 
     }
   }
 }

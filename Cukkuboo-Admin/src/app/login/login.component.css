@@ -48,7 +48,7 @@ button:hover {
 
 .password-wrapper input {
   width: 100%;
-  padding-right: 35px; 
+  padding-right: 35px;
 }
 
 .password-wrapper i {
@@ -57,6 +57,16 @@ button:hover {
   right: 10px;
   color: #fff;
   transform: translateY(-50%);
- font-size: 13px;
-cursor: pointer;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.g-recaptcha {
+  margin-top: 30px;
+  margin-bottom: 15px;
+  transform: scale(0.8);
+  width: 100%;
+  display: flex;
+  justify-content: center;
+
 }

@@ -55,6 +55,7 @@ export class AddMovieShowComponent implements OnInit {
   accessType: 'free' | 'standard' | 'premium' | null = null;
   status: 'active' | 'inactive' | null = null;
   videoInput!: HTMLInputElement;
+  
 
 
   @ViewChild('videoInput') videoInputRef!: ElementRef<HTMLInputElement>;

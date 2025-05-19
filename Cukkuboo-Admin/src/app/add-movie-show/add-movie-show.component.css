@@ -6,11 +6,7 @@
 }
 
 
-h2 {
-  color: white;
-  margin-bottom: 16px;
-  font-size: 20px;
-}
+
 
 mat-card {
   
@@ -235,5 +231,27 @@ input {
     font-size: 16px;
     cursor: pointer;
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+  }
+  .media-preview {
+    width: 100%;
+    height: auto;
+    max-height: 300px;
+    object-fit: contain;
+    border-radius: 4px;
+    display: block;
+    margin: 0 auto;
+  }
+  
+  /* Horizontal media: wider than tall */
+  .horizontal {
+    max-width: 100%;
+    max-height: 250px;
+  }
+  
+  /* Vertical media: taller than wide */
+  .vertical {
+    max-width: 150px;
+    max-height: 300px;
+    margin: 0 auto;
   }
   

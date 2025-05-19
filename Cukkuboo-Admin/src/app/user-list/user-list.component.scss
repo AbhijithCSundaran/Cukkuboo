@@ -5,21 +5,9 @@
     height: 100%;
   }
   
-  h2 {
-    color: white;
-    margin-bottom: 16px;
-    font-size: 20px;
-  }
 
-
-  .header-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 16px;
-  }
   .table-card.dark-theme {
-    background-color: #121212;
+    background-color: rgb(18, 18, 18);
     color: #ffffff;
   
     .mat-card-content {

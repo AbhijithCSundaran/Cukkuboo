@@ -1,5 +1,7 @@
 <div class="genre-container">
-  <h2>Genres</h2>
+  <div class="header-row">
+    <h2>Genres</h2>
+  </div>
 
   <mat-card>
     <mat-card-content class="form-section" [formGroup]="genreForm">
@@ -17,8 +19,9 @@
 
       <div class="right-side">
         <mat-form-field appearance="outline" class="white-input">
-          <mat-label>Status</mat-label>
+          
           <mat-select formControlName="status">
+            <mat-option value="">Choose Status</mat-option>
             <mat-option value="enabled">Enabled</mat-option>
             <mat-option value="disabled">Disabled</mat-option>
           </mat-select>

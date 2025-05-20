@@ -1,9 +1,12 @@
 <div class="add-subscription-plan">
-  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+  <!-- <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+    <h2>{{ isEditMode ? 'Edit Subscription Plan' : 'Add Subscription Plan' }}</h2>
+    <button class="back-to-list-button" (click)="goBack()">Back to List</button>
+  </div> -->
+  <div class="header-row">
     <h2>{{ isEditMode ? 'Edit Subscription Plan' : 'Add Subscription Plan' }}</h2>
     <button class="back-to-list-button" (click)="goBack()">Back to List</button>
   </div>
-
   <mat-card appearance="outlined">
     <form [formGroup]="subscriptionForm" (ngSubmit)="saveUser()">
       <mat-card-content style="display: flex; flex-wrap: wrap;">

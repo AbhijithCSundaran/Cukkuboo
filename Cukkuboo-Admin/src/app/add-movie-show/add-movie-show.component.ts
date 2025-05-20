@@ -156,6 +156,16 @@ export class AddMovieShowComponent implements OnInit {
     }
   }
 
+  openFullscreen(element: any): void {
+    if (element.requestFullscreen) {
+      element.requestFullscreen();
+    } else if (element.webkitRequestFullscreen) { /* Safari */
+      element.webkitRequestFullscreen();
+    } else if (element.msRequestFullscreen) { /* IE11 */
+      element.msRequestFullscreen();
+    }
+  }
+  
 
   onVideoSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
@@ -230,14 +240,6 @@ export class AddMovieShowComponent implements OnInit {
   }
 
 
-  onVideoMetadataLoaded(event: Event) {
-    const video = event.target as HTMLVideoElement;
-    if (video.videoHeight > video.videoWidth) {
-      this.isVerticalVideo = true;  // portrait
-    } else {
-      this.isVerticalVideo = false; // landscape
-    }
-  }
 
 
   onBannerSelected(event: Event): void {

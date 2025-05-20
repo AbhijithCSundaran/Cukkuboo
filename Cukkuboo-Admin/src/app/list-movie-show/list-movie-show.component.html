@@ -5,7 +5,9 @@
        + New
       </button>
     </div>
-
+        
+    
+    <div class="table-wrapper">
         <table mat-table [dataSource]="dataSource" class="mat-elevation-z2 custom-table">
   
           
@@ -58,6 +60,7 @@
         
 
         </table>
+    </div>    
        
          <!-- No Data Found -->
          <div class="no-data" *ngIf="dataSource.data.length === 0">

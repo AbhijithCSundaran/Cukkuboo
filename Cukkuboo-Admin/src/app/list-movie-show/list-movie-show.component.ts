@@ -16,6 +16,8 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 })
 export class ListMovieShowComponent implements OnInit {
     displayedColumns: string[] = ['title', 'genre',  'category', 'status', 'action'];
+  
+
 
   movies = [
     { id: 1, title: 'Inception', genre: 'Sci-Fi',  category: 'Movie', status: 'active' },

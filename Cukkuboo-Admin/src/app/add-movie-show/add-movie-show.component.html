@@ -8,19 +8,26 @@
     <button class="back-to-list-button" (click)="goBack()">Back to List</button>
   </div>
   <mat-card appearance="outlined">
-    <mat-card-content [formGroup]="movieForm" style="display: flex; flex-wrap: wrap;">
+    <mat-card-content [formGroup]="movieForm" class="form-container">
       
       <!-- Upload Video -->
-      <div style="width: 100%; padding: 0 10px 20px; box-sizing: border-box;">
-        <div style="display: flex; width: 100%; gap: 24px; align-items: stretch; flex-wrap: wrap;">
-          <div style="flex: 2; min-width: 300px;">
-            <mat-card appearance="outlined" style="height: 100%; position: relative;">
+      <div class="outer-wrapper">
+        <div class="main-upload-container">
+          <!-- Upload Card -->
+          <div class="upload-card-wrapper">
+            <mat-card appearance="outlined" class="upload-card">
               <mat-card-content>
-                <label style="font-weight: 500; display: block; margin-bottom: 4px;">Upload Video</label>
-                <div class="drag-drop-zone" (dragover)="onVideoDragOver($event)" (drop)="onVideoDrop($event)" (click)="videoInput.click()">
-                  <i class="fa-sharp fa-solid fa-arrow-up-from-bracket" style="font-size: 24px; margin-bottom: 8px; color: #ff1744;"></i>
+                <label class="label">Upload Video</label>
+                <div
+                  class="drag-drop-zone"
+                  (dragover)="onVideoDragOver($event)"
+                  (drop)="onVideoDrop($event)"
+                  (click)="videoInput.click()"
+                >
+                  <i class="fa-sharp fa-solid fa-arrow-up-from-bracket upload-icon"></i>
                   <p *ngIf="!videoName">Drag & drop a video here or click to select (MP4 only)</p>
                   <p *ngIf="videoName">Video Selected: {{ videoName }}</p>
+      
                   <div *ngIf="uploadProgress > 0 && uploadProgress < 100" class="progress-container">
                     <div class="progress-bar" [style.width.%]="uploadProgress"></div>
                     <span class="progress-text">{{ uploadProgress }}%</span>
@@ -31,24 +38,25 @@
               </mat-card-content>
             </mat-card>
           </div>
-
+      
           <!-- Video Preview -->
-        <div *ngIf="uploadProgress === 100 && videoURL" style="flex: 1; min-width: 250px; padding-top:50px;padding-bottom:30px; ">
-          <button class="trash-button-main"(click)="removeMainVideo()">
-            <i class="fa-solid fa-trash"></i>
-          </button>
-          
-  <div class="video-preview-container">
-    <video #videoPlayer [src]="videoURL" controls
-    
-           [ngClass]="{'vertical-video': isVerticalVideo, 'horizontal-video': !isVerticalVideo}"
-           (loadedmetadata)="onVideoMetadataLoaded($event)">
-    </video>
-  </div>
-</div>
-
+          <div *ngIf="uploadProgress === 100 && videoURL" class="preview-wrapper">
+            <button class="trash-button-main" (click)="removeMainVideo()">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+      
+            <div class="video-preview-container">
+              <video
+                [src]="videoURL"
+                controls
+                controlsList="nodownload"
+                [ngClass]="{ 'vertical-video': isVerticalVideo, 'horizontal-video': !isVerticalVideo }"
+              ></video>
+            </div>
+          </div>
         </div>
       </div>
+      
 
       <!-- Form Inputs -->
 
@@ -147,17 +155,30 @@
       <div  class="uploads">
 
         <!-- Thumbnail -->
-        <div style="flex: 1; min-width: 250px;">
-          <mat-card appearance="outlined" style="position: relative;">
+        <div  class="upload-container">
+          <mat-card appearance="outlined">
             <mat-card-content>
-              <label style="font-weight: 500; display: block; margin-bottom: 8px;">Thumbnail</label>
+              <label class="label">Thumbnail</label>
               <button class="trash-button" *ngIf="thumbnailPreview" (click)="removeThumbnail()">
                 <i class="fa-solid fa-trash"></i>
               </button>
               
-              <div class="drag-drop-zone" (dragover)="onDragOver($event)" (drop)="onDrop($event)" (click)="thumbnailInput.click()">
-                <p *ngIf="!thumbnailPreview">Drag & drop an image here or click to select</p>
-                <img *ngIf="thumbnailPreview" [src]="thumbnailPreview" alt="Thumbnail Preview" class="media-preview" />
+              <div
+              class="drag-drop-zone"
+              [ngClass]="{'uploaded': thumbnailPreview}"
+              (dragover)="onDragOver($event)"
+              (drop)="onDrop($event)"
+              (click)="!thumbnailPreview && thumbnailInput.click()"
+            >
+            
+                            <p *ngIf="!thumbnailPreview">Drag & drop an image here or click to select</p>
+                <div class="preview-container" *ngIf="thumbnailPreview">
+                  <img [src]="thumbnailPreview" alt="Thumbnail Preview" class="media-preview" (click)="$event.stopPropagation()" #thumbnailImg />
+                  <button class="fullscreen-button" (click)="openFullscreen(thumbnailImg)">
+                    <i class="fa-solid fa-expand"></i>
+                  </button>
+                </div>
+                              
               </div>
               <input type="file" (change)="onThumbnailSelected($event)" accept="image/jpeg" hidden #thumbnailInput />
             </mat-card-content>
@@ -165,18 +186,24 @@
         </div>
 
         <!-- Trailer -->
-        <div style="flex: 1; min-width: 250px;">
-          <mat-card appearance="outlined" style="position: relative;">
+        <div  class="upload-container">
+          <mat-card appearance="outlined" >
             <mat-card-content>
 
-              <label style="font-weight: 500; display: block; margin-bottom: 8px;">Trailer</label>
+              <label class="label">Trailer</label>
               <button class="trash-button" *ngIf="trailerURL" (click)="removeTrailer($event)">
                 <i class="fa-solid fa-trash"></i>
               </button>
               
-              <div class="drag-drop-zone" (dragover)="onTrailerDragOver($event)" (drop)="onTrailerDrop($event)" (click)="trailerInput.click()">
+              <div class="drag-drop-zone"
+              [ngClass]="{'uploaded': trailerName}"
+              (dragover)="onTrailerDragOver($event)"
+               (drop)="onTrailerDrop($event)" 
+              
+               (click)="!trailerName && trailerInput.click()"
+            >
                 <p *ngIf="!trailerName">Drag & drop a trailer here or click to select (MP4 only)</p>
-                <video *ngIf="trailerURL" [src]="trailerURL" controls class="media-preview"></video>
+                <video *ngIf="trailerURL" [src]="trailerURL" controls   controlsList="nodownload" class="media-preview"></video>
               </div>
               
               <input type="file" (change)="onTrailerSelected($event)" accept="video/mp4" hidden #trailerInput />
@@ -184,28 +211,48 @@
           </mat-card>
         </div>
 
-        <!-- Banner -->
-        <div style="flex: 1; min-width: 250px;">
-          <mat-card appearance="outlined" style="position: relative;">
-            <mat-card-content>
-              <label style="font-weight: 500; display: block; margin-bottom: 8px;">Banner</label>
-              <button class="trash-button" *ngIf="bannerPreview" (click)="removeBanner()">
-                <i class="fa-solid fa-trash"></i>
-              </button>
-              
-              <div class="drag-drop-zone" (dragover)="onDragOver($event)" (drop)="onBannerDrop($event)" (click)="bannerInput.click()">
-                <p *ngIf="!bannerPreview">Drag & drop an image here or click to select</p>
-                <img *ngIf="bannerPreview" [src]="bannerPreview" alt="Banner Preview" class="media-preview" />
-              </div>
-              <input type="file" (change)="onBannerSelected($event)" accept="image/jpeg" hidden #bannerInput />
-            </mat-card-content>
-          </mat-card>
+      <!-- Banner -->
+<div class="upload-container">
+  <mat-card appearance="outlined">
+    <mat-card-content>
+      <label class="label">Banner</label>
+      <button class="trash-button" *ngIf="bannerPreview" (click)="removeBanner()">
+        <i class="fa-solid fa-trash"></i>
+      </button>
+
+      <div
+        class="drag-drop-zone"
+        [ngClass]="{ 'uploaded': bannerPreview }"
+        (dragover)="onDragOver($event)"
+        (drop)="!bannerPreview && onBannerDrop($event)"
+        (click)="!bannerPreview && bannerInput.click()"
+      >
+        <p *ngIf="!bannerPreview">Drag & drop an image here or click to select</p>
+
+        <div class="preview-container" *ngIf="bannerPreview">
+          <img
+            [src]="bannerPreview"
+            alt="Banner Preview"
+            class="media-preview"
+            (click)="$event.stopPropagation()"
+            #bannerImg
+          />
+          <button class="fullscreen-button" (click)="openFullscreen(bannerImg)">
+            <i class="fa-solid fa-expand"></i>
+          </button>
         </div>
+      </div>
+
+      <input type="file" (change)="onBannerSelected($event)" accept="image/jpeg" hidden #bannerInput />
+    </mat-card-content>
+  </mat-card>
+</div>
+
       </div>
     </mat-card-content>
 
-    <mat-card-actions style="padding: 0 50px 10px 30px; display: flex; justify-content: flex-end;">
-      <button class="submit-button" (click)="submitForm()">Save</button>
+    <mat-card-actions class="save">
+      <button class="save-button" (click)="submitForm()">Save</button>
     </mat-card-actions>
   </mat-card>
 </div>

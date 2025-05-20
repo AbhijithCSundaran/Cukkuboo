@@ -11,6 +11,7 @@
 }
 
 
+
 mat-card {
   background-color: #1e1e1e;
   border: 1px solid white;
@@ -29,6 +30,8 @@ input {
  
   border-radius: 4px;
 }
+ 
+
 
 /* Ensure all form fields are the same width */
 .form-section {
@@ -190,4 +193,21 @@ input.mat-input-element {
   .right-side {
     justify-content: flex-start;
   }
+}
+.no-data-message{
+  text-align: center;
+  padding: 40px;
+  color: #ff4c4c;
+  font-size: 18px;
+  background-color: #1f1f1f;
+  border-radius: 8px;
+  margin-top: 20px;
+
+
+}
+
+.form-actions {
+  padding: 90px 10px 0px 30px;
+  display: flex;
+  justify-content: flex-end;
 }

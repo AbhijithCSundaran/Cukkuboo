@@ -55,7 +55,9 @@ export class AddMovieShowComponent implements OnInit {
   accessType: 'free' | 'standard' | 'premium' | null = null;
   status: 'active' | 'inactive' | null = null;
   videoInput!: HTMLInputElement;
+  isVerticalVideo = false;
   
+
 
 
   @ViewChild('videoInput') videoInputRef!: ElementRef<HTMLInputElement>;
@@ -98,6 +100,7 @@ export class AddMovieShowComponent implements OnInit {
       panelClass: [panelClass]
     });
   }
+  
 
   onThumbnailSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
@@ -225,6 +228,17 @@ export class AddMovieShowComponent implements OnInit {
   saveVideo(): void {
     // Add your saving logic here
   }
+
+
+  onVideoMetadataLoaded(event: Event) {
+    const video = event.target as HTMLVideoElement;
+    if (video.videoHeight > video.videoWidth) {
+      this.isVerticalVideo = true;  // portrait
+    } else {
+      this.isVerticalVideo = false; // landscape
+    }
+  }
+
 
   onBannerSelected(event: Event): void {
     const input = event.target as HTMLInputElement;

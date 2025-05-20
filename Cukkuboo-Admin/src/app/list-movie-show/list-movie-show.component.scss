@@ -1,10 +1,15 @@
 .list-movie-show-container {
-    background-color: #121212;
-    color: #fff;
-    padding: 20px;
-    height: 100%;
-  }
-  
+  background-color: #121212;
+  color: #fff;
+
+ 
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  padding: 32px 16px;
+  box-sizing: border-box;
+}
+
 
 
   .table-card.dark-theme {

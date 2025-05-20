@@ -186,3 +186,13 @@
   background-color: #e53935; /* red background */
   color: white;
 }
+.navbar-left {
+  display: flex;
+  align-items: center;
+}
+
+.admin-panel-label {
+  font-size: 1.2em;
+  font-weight: bold;
+  padding: 0 10px;
+}

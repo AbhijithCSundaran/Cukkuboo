@@ -1,9 +1,14 @@
-<div class="add-movie-show-container">
-  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+<div class="add-user-container">
+  <!-- <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
     <h2>{{UserId?'Edit User':'Add User'}}</h2>
     <button class="back-to-list-button" (click)="goBack()">Back to List</button>
-  </div>
+  </div> -->
 
+ 
+  <div class="header-row">
+   <h2>{{UserId?'Edit User':'Add User'}}</h2>
+    <button class="back-to-list-button" (click)="goBack()">Back to List</button>
+  </div>
   <mat-card appearance="outlined">
     <mat-card-content [formGroup]="userForm" style="display: flex; flex-wrap: wrap;">
 

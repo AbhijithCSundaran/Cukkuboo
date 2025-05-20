@@ -17,6 +17,7 @@
 @include mat.core();
 
 html {
+    color-scheme: dark;
     @include mat.theme((color: (primary: mat.$red-palette,
                 tertiary: mat.$orange-palette,
                 theme-type: dark,
@@ -61,6 +62,6 @@ html {
 
 .mat-calendar-header {
     .mdc-button__label {
-        color: #9b9b9b!important;
+        color: #9b9b9b !important;
     }
 }

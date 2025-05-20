@@ -32,18 +32,25 @@ export class LoginComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    if ((window as any).grecaptcha) {
-      grecaptcha.render('recaptcha-container', {
-        sitekey: '6LeoL5UpAAAAABy-sNgzr_XHc2vWl2Kpr45VHWey',
-        callback: (response: any) => {
-          this.captchaToken = response;
-        },
-        'expired-callback': () => {
-          this.captchaToken = null;
-        },
-        theme: 'dark'
-      });
-    }
+    this.renderCaptcha();
+  }
+  renderCaptcha() {
+    setTimeout(() => {
+      if ((window as any).grecaptcha) {
+        (window as any).grecaptcha.render('recaptcha-container', {
+          sitekey: '6LeoL5UpAAAAABy-sNgzr_XHc2vWl2Kpr45VHWey',
+          callback: (response: any) => {
+            this.captchaToken = response;
+          },
+          'expired-callback': () => {
+            this.captchaToken = null;
+          },
+          theme: 'dark'
+        });
+      } 
+      // else
+        // this.renderCaptcha()
+    }, 500);
   }
 
   login() {

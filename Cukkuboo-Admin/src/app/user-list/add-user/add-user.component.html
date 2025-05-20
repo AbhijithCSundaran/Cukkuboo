@@ -10,11 +10,11 @@
     <button class="back-to-list-button" (click)="goBack()">Back to List</button>
   </div>
   <mat-card appearance="outlined">
-    <mat-card-content [formGroup]="userForm" style="display: flex; flex-wrap: wrap;">
+    <mat-card-content [formGroup]="userForm" class="form-container">
 
       <!-- Name -->
       <div class="w-50 px-2 pb-3">
-        <mat-form-field appearance="outline" style="width: 100%;">
+        <mat-form-field appearance="outline" class="w-100">
           <mat-label>Name</mat-label>
           <input matInput formControlName="name" placeholder="Add name" required>
                 </mat-form-field>
@@ -22,7 +22,7 @@
 
       <!-- Contact -->
       <div class="w-50 px-2 pb-3">
-        <mat-form-field appearance="outline" style="width: 100%;">
+        <mat-form-field appearance="outline" class="w-100">
           <mat-label>Contact</mat-label>
           <input
           matInput
@@ -35,7 +35,7 @@
 
       <!-- Email -->
       <div class="w-50 px-2 pb-3">
-        <mat-form-field appearance="outline" style="width: 100%;">
+        <mat-form-field appearance="outline" class="w-100">
           <mat-label>Email</mat-label>
           <input matInput formControlName="email" type="email" placeholder="Add email">
                 </mat-form-field>
@@ -43,7 +43,7 @@
 
       <!-- Country -->
       <div class="w-50 px-2 pb-3">
-        <mat-form-field appearance="outline" style="width: 100%;">
+        <mat-form-field appearance="outline" class="w-100">
           <mat-label>Country</mat-label>
           <input
           matInput
@@ -55,7 +55,7 @@
 
       <!-- Status -->
       <div class="w-50 px-2 pb-3">
-        <mat-form-field appearance="outline" style="width: 100%;">
+        <mat-form-field appearance="outline" class="w-100">
           <mat-label>Status</mat-label>
           <mat-select formControlName="status">
             <mat-option value="active">Active</mat-option>
@@ -66,7 +66,7 @@
 
       <!-- Join Date -->
       <div class="w-50 px-2 pb-3">
-        <mat-form-field appearance="outline" style="width: 100%;">
+        <mat-form-field appearance="outline" class="w-100">
           <mat-label>Join Date</mat-label>
           <input matInput [matDatepicker]="picker" formControlName="releaseDate" placeholder="Choose a date"(click)="picker.open()"  readonly />
           <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
@@ -76,7 +76,7 @@
 
       <!-- Subscription -->
       <div class="w-50 px-2 pb-3">
-        <mat-form-field appearance="outline" style="width: 100%;">
+        <mat-form-field appearance="outline" class="w-100">
           <mat-label>Subscription</mat-label>
           <mat-select formControlName="subscription">
             <mat-option value="free">Free</mat-option>
@@ -87,7 +87,7 @@
       </div>
 
      <!-- Action -->
-<div style="width: 100%; padding: 10px 10px 0px; display: flex; justify-content: flex-end; gap: 12px;">
+<div class="save">
   <button class="save-button" mat-raised-button color="primary" (click)="saveUser()">Save</button>
 </div>
 

@@ -1,17 +1,12 @@
 .add-movie-show-container {
   background-color: #121212;
   color: #fff;
-
- 
   display: flex;
   flex-direction: column;
   min-height: 100vh;
   padding: 32px 16px;
   box-sizing: border-box;
 }
-
-
-
 
 mat-card {
   padding-top: 10px;
@@ -22,7 +17,7 @@ mat-card {
   box-shadow: 0 2px 10px rgba(255, 23, 68, 0.2);
 }
 
-mat-form-field {
+/* mat-form-field {
   color: #fff;
 }
 
@@ -36,22 +31,19 @@ mat-form-field .mat-input-element {
 
 mat-form-field.mat-focused .mat-form-field-label {
   color: #7d2725 !important;
-}
+} */
 
 mat-select,
 textarea,
 input {
-
   border-radius: 4px;
 }
 
-.mat-select-arrow {
+/* .mat-select-arrow {
   color: #7d2725;
-}
+} */
 
 .drag-drop-zone {
-  
-  
   min-height: 200px;
   display: flex;
   flex-direction: column;
@@ -74,11 +66,11 @@ input {
 
 .drag-drop-zone.uploaded {
   border: none;
-
-
 }
+
 .drag-drop-zone.uploaded:hover {
-  background-color: transparent; /* No hover effect */
+  background-color: transparent;
+  /* No hover effect */
 }
 
 .progress-container {
@@ -97,58 +89,54 @@ input {
     height: 100%;
     border-radius: 20px 0 0 20px;
     transition: width 0.3s ease-in-out;
-    background-image: linear-gradient(45deg, rgba(14, 2, 2, 0.2) 25%, transparent 25%, transparent 50%, rgba(12, 1, 1, 0.2) 50%, rgba(255,255,255,0.2) 75%, transparent 75%, transparent);
+    background-image: linear-gradient(45deg, rgba(14, 2, 2, 0.2) 25%, transparent 25%, transparent 50%, rgba(12, 1, 1, 0.2) 50%, rgba(255, 255, 255, 0.2) 75%, transparent 75%, transparent);
     background-size: 40px 40px;
     animation: progress-stripes 1s linear infinite;
   }
-  
-  
-@keyframes progress-stripes {
-  from {
-    background-position: 40px 0;
+
+
+  @keyframes progress-stripes {
+    from {
+      background-position: 40px 0;
+    }
+
+    to {
+      background-position: 0 0;
+    }
   }
-  to {
-    background-position: 0 0;
+
+  .progress-text {
+    position: absolute;
+    width: 100%;
+    text-align: center;
+    top: 0;
+    left: 0;
+    line-height: 20px;
+    font-weight: bold;
+    color: black;
+  }
+
+  .upload-success {
+    text-align: center;
+    color: green;
+    font-weight: bold;
+    margin-top: 10px;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
   }
 }
 
-.progress-text {
-  position: absolute;
-  width: 100%;
-  text-align: center;
-  top: 0;
-  left: 0;
-  line-height: 20px;
-  font-weight: bold;
-  color: black;
-}
-.upload-success {
-  text-align: center;
-  color: green;
-  font-weight: bold;
-  margin-top: 10px;
-}
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-}
 
-
-
-
-
-.save{
- padding: 0 30px 10px 30px;
-  display: flex;
-   justify-content: flex-end;
-}
 .save-button {
   background-color: #7d2725;
   color: white;
@@ -160,68 +148,57 @@ input {
   box-shadow: 0 2px 6px rgba(255, 23, 68, 0.4);
   border: none;
   transition: background-color 0.3s ease;
- 
+
 }
 
-  
-  .save-button:hover {
-    background-color: #ff1744;
-  }
+
+.save-button:hover {
+  background-color: #ff1744;
+}
+
+.trash-button {
+  position: absolute;
+  top: 20px;
+  right: 15px;
+  background: transparent;
+  border: none;
+  color: white;
+  width: 24px;
+  height: 24px;
+  font-size: 12px;
+  cursor: pointer;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+}
+
+.trash-button-main {
+  position: absolute;
+  top: 60px;
+  right: 22px;
+  background: transparent;
+  border: none;
+  color: white;
+  width: 24px;
+  height: 24px;
+  font-size: 12px;
+  cursor: pointer;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+  padding-top: 10px;
+}
 
 
+.horizontal {
+  max-width: 100%;
+  max-height: 250px;
+}
 
-  .snackbar-error {
-    background-color: #f44336 !important; 
-    color: white !important;
-  }
- 
-  .trash-button {
-    position: absolute;
-    top: 20px;
-    right: 15px;
-    
-    
-    background: transparent;
-    border: none;
-    color: white;
-    width: 24px;
-    height: 24px;
-    font-size: 12px;
-    cursor: pointer;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
-  }
+.vertical {
+  max-width: 150px;
+  max-height: 300px;
+  margin: 0 auto;
+}
 
-  .trash-button-main{
-    position: absolute;
-    top: 60px;
-    right: 22px;
-    
-    background: transparent;
-    border: none;
-    color: white;
-    width: 24px;
-    height: 24px;
-    font-size: 12px;
-    cursor: pointer;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
-    padding-top: 10px;
-  }
- 
-
-  .horizontal {
-    max-width: 100%;
-    max-height: 250px;
-  }
-  
-  .vertical {
-    max-width: 150px;
-    max-height: 300px;
-    margin: 0 auto;
-  }
-  .video-preview-container {
-     
-  height: 200px;     
- 
+.video-preview-container {
+  height: 200px;
   border-radius: 8px;
   overflow: hidden;
   position: relative;
@@ -251,17 +228,17 @@ input {
   margin: 0 auto;
   object-fit: contain;
   transition: all 0.3s ease;
-  height: 150px;     
+  height: 150px;
   max-width: 100%;
 }
 
-.uploads{
-  width: 100%; 
+.uploads {
+  width: 100%;
   display: flex;
 
-   gap: 24px;
-    flex-wrap: wrap;
-    padding: 0 10px 20px;
+  gap: 24px;
+  flex-wrap: wrap;
+  padding: 0 10px 20px;
 }
 
 .preview-container {
@@ -287,17 +264,12 @@ input {
 .preview-container:hover .fullscreen-button {
   display: block;
 }
-.label{
-  font-weight: 500;
-  display: block;
-  margin-bottom: 8px;
-}
 
-.upload-container{
-  flex: 1; 
+.upload-container {
+  flex: 1;
   min-width: 250px;
 
-  .mat-card{
+  .mat-card {
     position: relative;
   }
 }
@@ -322,10 +294,6 @@ input {
   min-width: 300px;
 }
 
-.upload-card {
-  height: 100%;
-  position: relative;
-}
 
 .upload-icon {
   font-size: 24px;

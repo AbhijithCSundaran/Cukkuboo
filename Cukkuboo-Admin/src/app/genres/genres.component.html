@@ -3,22 +3,22 @@
     <h2>Genres</h2>
   </div>
 
-  <mat-card>
+  <mat-card class="form-card">
     <mat-card-content class="form-section" [formGroup]="genreForm">
       <div class="left-side">
-        <mat-form-field appearance="outline" class="white-input">
+        <mat-form-field appearance="outline" class="w-100">
           <mat-label>Genre</mat-label>
           <input matInput placeholder="Add genre name" formControlName="name" required>
         </mat-form-field>
 
-        <mat-form-field appearance="outline" class="white-input">
+        <mat-form-field appearance="outline" class="w-100">
           <mat-label>Description</mat-label>
           <textarea matInput placeholder="Enter genre description" formControlName="description"></textarea>
         </mat-form-field>
       </div>
 
       <div class="right-side">
-        <mat-form-field appearance="outline" class="white-input">
+        <mat-form-field appearance="outline" class="w-100">
           
           <mat-select formControlName="status">
             <mat-option value="">Choose Status</mat-option>
@@ -78,5 +78,5 @@
   
   <!-- No data found message -->
   <div *ngIf="genres.length === 0" class="no-data">
-    No data found.
+    No genres found.
 </div>

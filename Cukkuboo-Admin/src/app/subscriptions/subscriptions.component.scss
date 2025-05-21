@@ -12,51 +12,7 @@
   
   }
   
-  .table-card.dark-theme {
-    background-color: #121212;
-    color: #ffffff;
-  
-    .mat-card-content {
-      padding: 0;
-    }
-  
-    .custom-table {
-      width: 100%;
-      color: #fff;
-  
-      th.mat-header-cell {
-        background-color: #1f1f1f;
-        color: #ff4c4c;
-        font-weight: bold;
-      }
-  
-      td.mat-cell {
-        background-color: #181818;
-      }
-  
-      .icon {
-        color: #ff4c4c;
-        cursor: pointer;
-        margin-right: 10px;
-      }
-  
-      .badge {
-        padding: 4px 8px;
-        border-radius: 4px;
-        font-size: 0.8rem;
-      }
-  
-      .badge-enabled {
-        background-color: #ff4c4c;
-        color: white;
-      }
-  
-      .badge-disabled {
-        background-color: #666;
-        color: white;
-      }
-    }
-  }
+
   .table-card {
     background-color: #121212; 
     color: #f44336;
@@ -148,11 +104,7 @@
     background-color: #121212!important;
     color: white;
 
-    .mat-button, .mat-icon-button{
-
-        color: #ff4c4c;
-    }
-
+    
 
     
   }

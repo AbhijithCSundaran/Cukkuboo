@@ -8,8 +8,8 @@
     </div>
   
     <ul class="menu">
-      <li *ngFor="let menuItem of menuItems" routerLinkActive="active"
-          class="menu-item-with-submenu"
+      <li *ngFor="let menuItem of menuItems" routerLinkActive="active" 
+          class="menu-item-with-submenu w-100"
           [ngClass]="{ 'hoverable': isCollapsed && menuItem.subItems?.length }"
           (mouseenter)="onMouseEnter(menuItem)"
           (mouseleave)="onMouseLeave(menuItem)">

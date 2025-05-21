@@ -1,5 +1,5 @@
 <nav class="navbar">
-  <div class="navbar-left">
+  <div  class="d-flex align-items-center">
     <span class="admin-panel-label">Admin Panel</span>
   </div>
 
@@ -35,7 +35,7 @@
 <div class="modal" [class.show]="showLogoutConfirm">
   <div class="modal-content">
     <p>Are you sure you want to <span class="highlight">logout</span>?</p>
-    <div class="modal-actions">
+    <div class="d-flex justify-content-around">
       <button class="btn-yes" (click)="confirmLogout()">Logout</button>
       <button class="btn-no" (click)="cancelLogout()">Cancel</button>
     </div>

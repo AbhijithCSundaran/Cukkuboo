@@ -6,9 +6,9 @@
       <input type="text" placeholder="Username" formControlName="username" required />
 
       <div class="password-wrapper">
-        <input [type]="hoveringEye ? 'text' : 'password'" placeholder="Password"
+        <input [type]="hoveringEye ? 'text' : 'password'" placeholder="Password" 
                formControlName="password" required />
-        <i class="fa fa-eye" (mouseenter)="hoveringEye = true" (mouseleave)="hoveringEye = false"></i>
+        <i class="fa" [ngClass]="hoveringEye ? 'fa-eye' : 'fa-eye-slash'" (mousedown)="hoveringEye = true" (mouseup)="hoveringEye = false" (mouseleave)="hoveringEye = false"></i>
       </div>
 
       <!-- Google reCAPTCHA -->

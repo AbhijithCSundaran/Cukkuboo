@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
@@ -22,26 +22,17 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
   standalone: true,
   imports: [
     CommonModule,
-    ReactiveFormsModule,
-    MatSnackBarModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatIconModule,
-    MatCardModule,
-    MatSelectModule,
-    MatDatepickerModule,
-    MatNativeDateModule,
-    MatButtonModule,
-    MatProgressBarModule,
-    MatCheckboxModule,
-    FormsModule
+    ReactiveFormsModule, MatSnackBarModule, MatFormFieldModule, MatInputModule, MatIconModule,
+    MatCardModule, MatSelectModule, MatDatepickerModule, MatNativeDateModule, MatButtonModule,
+    MatProgressBarModule, MatCheckboxModule,
+    FormsModule, RouterModule
   ],
   templateUrl: './add-movie-show.component.html',
-  styleUrls: ['./add-movie-show.component.css']
+  styleUrls: ['./add-movie-show.component.scss']
 })
 export class AddMovieShowComponent implements OnInit {
   movieForm!: FormGroup;
-  isEditMode: boolean = false; 
+  isEditMode: boolean = false;
   movieShowId: string | null = null;
   thumbnailPreview: string | ArrayBuffer | null = null;
   bannerPreview: string | ArrayBuffer | null = null;
@@ -56,7 +47,7 @@ export class AddMovieShowComponent implements OnInit {
   status: 'active' | 'inactive' | null = null;
   videoInput!: HTMLInputElement;
   isVerticalVideo = false;
-  
+
 
 
 
@@ -67,30 +58,30 @@ export class AddMovieShowComponent implements OnInit {
 
 
   constructor(private router: Router, private snackBar: MatSnackBar,
-    private route: ActivatedRoute,private fb: FormBuilder) { }
+    private route: ActivatedRoute, private fb: FormBuilder) { }
 
 
-    ngOnInit(): void {
-      this.movieForm = this.fb.group({
-        title: ['', Validators.required],
-        genre: ['', Validators.required],
-        description: ['', Validators.required],
-        cast: ['', Validators.required],
-        category: ['', Validators.required],
-        releaseDate: ['', Validators.required],
-        rating: ['', Validators.required],
-        access: ['', Validators.required],
-        status: ['', Validators.required]
-      });
+  ngOnInit(): void {
+    this.movieForm = this.fb.group({
+      title: ['', Validators.required],
+      genre: ['', Validators.required],
+      description: ['', Validators.required],
+      cast: ['', Validators.required],
+      category: ['', Validators.required],
+      releaseDate: ['', Validators.required],
+      rating: ['', Validators.required],
+      access: ['', Validators.required],
+      status: ['', Validators.required]
+    });
 
 
-       // Check if we're in edit mode (i.e., we have an ID in the route)
+    // Check if we're in edit mode (i.e., we have an ID in the route)
     this.movieShowId = this.route.snapshot.paramMap.get('id');
     if (this.movieShowId) {
       this.isEditMode = true;
       // Load movie/show data for editing based on the ID
     }
-    }
+  }
 
 
   showSnackbar(message: string, panelClass: string = 'snackbar-default'): void {
@@ -100,7 +91,7 @@ export class AddMovieShowComponent implements OnInit {
       panelClass: [panelClass]
     });
   }
-  
+
 
   onThumbnailSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
@@ -165,7 +156,7 @@ export class AddMovieShowComponent implements OnInit {
       element.msRequestFullscreen();
     }
   }
-  
+
 
   onVideoSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
@@ -336,13 +327,6 @@ export class AddMovieShowComponent implements OnInit {
     if (this.trailerInputRef) {
       this.trailerInputRef.nativeElement.value = '';
     }
-  }
-
-
-
-
-  goBack(): void {
-    this.router.navigate(['/list-movie-show']);
   }
 
   submitForm(): void {

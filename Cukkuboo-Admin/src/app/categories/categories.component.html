@@ -3,23 +3,23 @@
   <div class="header-row">
     <h2>Categories</h2>
   </div>
-  <mat-card>
+  <mat-card  class="form-card">
     <mat-card-content class="form-section" [formGroup]="categoryForm">
 
       <div class="left-side">
-        <mat-form-field appearance="outline" class="white-input">
+        <mat-form-field appearance="outline" class="w-100">
           <mat-label>Category</mat-label>
           <input matInput placeholder="Add category name" formControlName="name" required>
         </mat-form-field>
 
-        <mat-form-field appearance="outline" class="white-input">
+        <mat-form-field appearance="outline" class="w-100">
           <mat-label>Description</mat-label>
           <textarea matInput placeholder="Enter category description" formControlName="description"></textarea>
         </mat-form-field>
       </div>
 
       <div class="right-side">
-        <mat-form-field appearance="outline" class="white-input">
+        <mat-form-field appearance="outline" class="w-100">
      
           <mat-select formControlName="status">
             <mat-option value="">Choose Status</mat-option>
@@ -37,7 +37,7 @@
     </mat-card-content>
   </mat-card>
 
-  <table mat-table [dataSource]="categories" class="mat-elevation-z2 custom-table" *ngIf="categories.length > 0">
+  <table mat-table [dataSource]="categories" class="mat-elevation-z2 custom-table" >
 
     <ng-container matColumnDef="name">
       <th mat-header-cell *matHeaderCellDef> Category Name </th>
@@ -76,6 +76,6 @@
   
   <!-- No data found message -->
   <div *ngIf="categories.length === 0" class="no-data">
-    No data found.
+    No categories found.
   </div>
   

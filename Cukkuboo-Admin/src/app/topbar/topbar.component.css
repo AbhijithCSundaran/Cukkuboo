@@ -16,11 +16,7 @@
   padding-left: 10px;
 }
 
-.profile-dropdown i {
-  font-size: 28px;
-  color: white;
-  padding: 0 10px;
-}
+
 
 .icon-small {
   font-size: 10px;
@@ -36,21 +32,14 @@
   position: relative;
 }
 
-.search-input {
-  padding: 6px 12px;
-  border-radius: 4px;
-  border: none;
-  outline: none;
-  width: 200px;
-}
 
-.search-input:focus {
-  box-shadow: 0 0 5px white;
-}
 
 .profile-dropdown {
   position: relative;
   cursor: pointer;
+   font-size: 28px;
+  color: white;
+  padding: 0 10px;
 }
 
 
@@ -129,9 +118,7 @@
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.modal.show {
-  display: flex;
-}
+
 
 .modal-content {
   background-color: transparent;
@@ -151,10 +138,6 @@
 
 
 
-.modal-actions {
-  display: flex;
-  justify-content: space-around;
-}
 
 .modal-actions button {
   cursor: pointer;
@@ -185,10 +168,6 @@
 .btn-no:hover {
   background-color: #e53935; /* red background */
   color: white;
-}
-.navbar-left {
-  display: flex;
-  align-items: center;
 }
 
 .admin-panel-label {

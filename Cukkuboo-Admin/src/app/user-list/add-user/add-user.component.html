@@ -9,8 +9,8 @@
    <h2>{{UserId?'Edit User':'Add User'}}</h2>
     <button class="back-to-list-button" (click)="goBack()">Back to List</button>
   </div>
-  <mat-card appearance="outlined">
-    <mat-card-content [formGroup]="userForm" class="form-container">
+  <mat-card appearance="outlined" class="form-card">
+    <mat-card-content [formGroup]="userForm" class="d-flex flex-wrap">
 
       <!-- Name -->
       <div class="w-50 px-2 pb-3">

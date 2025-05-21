@@ -43,10 +43,10 @@
     gap: 4px;
   }
   
-  .menu li {
+  /* .menu li {
     width: 100%;
   }
-  
+   */
   .menu-link {
     display: flex;
     align-items: center;
@@ -112,6 +112,10 @@
     position: absolute;
     z-index: 1;
     top: 0;
+
+
+
+    
     left: 100%;
     min-width: 160px;
     background-color:rgb(176, 53, 53);

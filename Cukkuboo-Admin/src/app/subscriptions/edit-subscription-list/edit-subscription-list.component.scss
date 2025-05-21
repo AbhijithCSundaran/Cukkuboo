@@ -22,21 +22,21 @@
     box-shadow: 0 2px 10px rgba(255, 23, 68, 0.2);
   }
   
-  mat-form-field {
-    color: #fff;
-  }
+  // mat-form-field {
+  //   color: #fff;
+  // }
   
-  mat-form-field .mat-form-field-label {
-    color: #7d2725 !important;
-  }
+  // mat-form-field .mat-form-field-label {
+  //   color: #7d2725 !important;
+  // }
   
-  mat-form-field .mat-input-element {
-    color: #fff;
-  }
+  // mat-form-field .mat-input-element {
+  //   color: #fff;
+  // }
   
-  mat-form-field.mat-focused .mat-form-field-label {
-    color:#7d2725 !important;
-  }
+  // mat-form-field.mat-focused .mat-form-field-label {
+  //   color:#7d2725 !important;
+  // }
   
   mat-select,
   textarea,
@@ -92,12 +92,3 @@
   .cancel-button:hover {
     background-color: #ff1744;
   }
-  
-   .edit-modal{
-
-    display: flex;
-    justify-content: space-between; 
-    align-items: center; 
-    margin-bottom: 16px;
-
-   }

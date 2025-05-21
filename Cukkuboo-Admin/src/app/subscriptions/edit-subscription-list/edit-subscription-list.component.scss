@@ -5,30 +5,14 @@
     height: 100%;
   }
   
-  .back-to-list-button {
-    background-color:#7d2725;
-    color: white;
-    border-radius: 24px;
-    height: 36px;
-    font-size: 14px;
-    font-weight: 500;
-    padding: 0 16px;
-    box-shadow: 0 2px 6px rgba(255, 23, 68, 0.4);
-    border: none;
-    transition: background-color 0.3s ease;
-    display: flex;
-    align-items: center;
-   
-  }
+  
   h2 {
     color: white;
     margin: 0;
     font-size: 25px;
     line-height: 1;
 }
-  .back-to-list-button:hover {
-    background-color: #ff1744;
-  }
+ 
   mat-card {
     background-color: #1e1e1e;
     border: 1px solid white;
@@ -108,10 +92,7 @@
   .cancel-button:hover {
     background-color: #ff1744;
   }
-  .form-container{
-    display: flex; 
-    flex-wrap: wrap;
-   }
+  
    .edit-modal{
 
     display: flex;

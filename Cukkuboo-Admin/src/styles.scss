@@ -28,3 +28,38 @@ body {
         line-height: 1;
     }
 }
+
+.back-to-list-button {
+    background-color: #7d2725;
+    color: white;
+    border-radius: 24px;
+    height: 36px;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 0 16px;
+    box-shadow: 0 2px 6px rgba(255, 23, 68, 0.4);
+    border: none;
+    transition: background-color 0.3s ease;
+    display: flex;
+    align-items: center;
+  
+    &:hover {
+      background-color: #ff1744;
+    }
+  }
+  .form-container{
+    display: flex; 
+    flex-wrap: wrap;
+   }
+   .no-data{
+    text-align: center;
+    padding: 40px;
+    color: #ff4c4c;
+    font-size: 18px;
+    background-color: #1f1f1f;
+    border-radius: 8px;
+    margin-top: 20px;
+  
+  
+  }
+  

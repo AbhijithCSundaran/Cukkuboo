@@ -174,24 +174,3 @@ input {
   color: #fff;
 }
 
-/*  smaller screens */
-@media (max-width: 768px) {
-  .form-section {
-    flex-direction: column;
-  }
-
-  .right-side,
-  .left-side {
-    align-items: stretch;
-  }
-
-  .right-side {
-    justify-content: flex-start;
-  }
-}
-
-.form-actions {
-  padding: 90px 10px 0px 30px;
-  display: flex;
-  justify-content: flex-end;
-}

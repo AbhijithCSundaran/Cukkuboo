@@ -1,5 +1,5 @@
 <div class="add-movie-show-container">
-  <div class="header-row">
+  <div class="header-row d-flex justify-content-between align-items-center flex-wrap">
     <h2>{{ isEditMode ? 'Edit Movie/Show' : 'Add Movie/Show' }}</h2>
     <button class="back-to-list-button" [routerLink]="['/list-movie-show']">Back to List</button>
   </div>
@@ -50,7 +50,7 @@
 
 
       <!-- Title -->
-      <div class="w-50 px-2 pb-3">
+      <div class="form-field-wrapper w-50 px-2 pb-3">
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Title</mat-label>
           <input matInput placeholder="Add title" formControlName="title" />

@@ -2,8 +2,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #ddd;
-  color: black;
+  background: linear-gradient(to right, #c71336, #e96238);
+  color: white;
   padding: 10px 20px;
 
   position: relative;
@@ -18,7 +18,7 @@
 
 .profile-dropdown i {
   font-size: 28px;
-  color: black;
+  color:white;
   padding: 0 10px;
 }
 

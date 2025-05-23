@@ -321,7 +321,7 @@ export class AddMovieShowComponent implements OnInit {
     event.stopPropagation();  // Prevents the click event from propagating to the parent
     this.trailerURL = '';
     this.trailerName = '';
-    this.uploadProgress = 0;
+ 
 
     // Reset file input
     if (this.trailerInputRef) {

@@ -22,6 +22,8 @@ class User extends BaseController
 
     public function registerFun()
     {
+
+        
         $data = $this->request->getJSON(true);
 
         if (empty($data['phone']) && empty($data['email'])) {

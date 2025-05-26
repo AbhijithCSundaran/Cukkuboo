@@ -5,7 +5,7 @@ use CodeIgniter\Model;
 
 class UserModel extends Model
 {
-        // Table name
+    // Table name
     protected $table = 'user';
 
     // Primary key (optional but good to include)
@@ -22,11 +22,11 @@ class UserModel extends Model
         'join_date',
         'subscription'
     ];
-     public function isUserExists($phone, $email)
+    public function isUserExists($phone, $email)
     {
         return $this->where('phone', $phone)
-                    ->orWhere('email', $email)
-                    ->first(); // Uses query builder (safe)
+            ->orWhere('email', $email)
+            ->first(); // Uses query builder (safe)
     }
 
     public function addUser($data)

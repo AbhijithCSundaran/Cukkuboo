@@ -1,113 +1,83 @@
-CRITICAL - 2025-05-22 05:42:08 --> ErrorException: Undefined variable $request
-[Method: GET, Route: register]
-in APPPATH\Controllers\Api.php on line 17.
- 1 APPPATH\Controllers\Api.php(17): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined variable $request', 'C:\\xampp\\htdocs\\cukkuboo\\app\\Controllers\\Api.php', 17)
- 2 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Api->registerFun()
- 3 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Api))
- 4 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
- 5 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
- 6 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
- 7 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
-CRITICAL - 2025-05-22 05:42:30 --> ArgumentCountError: Too few arguments to function App\Controllers\Api::registerFun(), 0 passed in C:\xampp\htdocs\cukkuboo\system\CodeIgniter.php on line 933 and exactly 1 expected
-[Method: GET, Route: register]
-in APPPATH\Controllers\Api.php on line 14.
- 1 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Api->registerFun()
- 2 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Api))
- 3 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
- 4 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
- 5 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
- 6 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
-CRITICAL - 2025-05-22 05:49:55 --> ErrorException: Undefined variable $request
-[Method: GET, Route: register]
-in APPPATH\Controllers\Api.php on line 18.
- 1 APPPATH\Controllers\Api.php(18): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined variable $request', 'C:\\xampp\\htdocs\\cukkuboo\\app\\Controllers\\Api.php', 18)
- 2 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Api->registerFun()
- 3 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Api))
- 4 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
- 5 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
- 6 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
- 7 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
-CRITICAL - 2025-05-22 06:06:20 --> ErrorException: Undefined variable $request
+CRITICAL - 2025-05-22 06:05:10 --> ErrorException: Undefined property: App\Controllers\Api::$input
 [Method: POST, Route: register]
-in APPPATH\Controllers\Api.php on line 18.
- 1 APPPATH\Controllers\Api.php(18): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined variable $request', 'C:\\xampp\\htdocs\\cukkuboo\\app\\Controllers\\Api.php', 18)
+in APPPATH\Controllers\Api.php on line 13.
+ 1 APPPATH\Controllers\Api.php(13): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined property: App\\Controllers\\Api::$input', 'C:\\xampp\\htdocs\\cukkuboo\\app\\Controllers\\Api.php', 13)
  2 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Api->registerFun()
  3 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Api))
  4 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
  5 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
  6 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
  7 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
-CRITICAL - 2025-05-22 07:07:42 --> ErrorException: Undefined variable $request
-[Method: POST, Route: Api/register]
-in APPPATH\Controllers\Api.php on line 18.
- 1 APPPATH\Controllers\Api.php(18): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined variable $request', 'C:\\xampp\\htdocs\\cukkuboo\\app\\Controllers\\Api.php', 18)
+CRITICAL - 2025-05-22 06:05:42 --> ErrorException: Undefined property: App\Controllers\Api::$input
+[Method: POST, Route: register]
+in APPPATH\Controllers\Api.php on line 13.
+ 1 APPPATH\Controllers\Api.php(13): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined property: App\\Controllers\\Api::$input', 'C:\\xampp\\htdocs\\cukkuboo\\app\\Controllers\\Api.php', 13)
  2 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Api->registerFun()
  3 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Api))
  4 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
  5 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
  6 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
  7 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
-CRITICAL - 2025-05-22 07:15:21 --> ErrorException: Undefined variable $request
-[Method: POST, Route: Api/register]
-in APPPATH\Controllers\Api.php on line 18.
- 1 APPPATH\Controllers\Api.php(18): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined variable $request', 'C:\\xampp\\htdocs\\cukkuboo\\app\\Controllers\\Api.php', 18)
+CRITICAL - 2025-05-22 06:08:11 --> ErrorException: Undefined variable $request
+[Method: POST, Route: register]
+in APPPATH\Controllers\Api.php on line 16.
+ 1 APPPATH\Controllers\Api.php(16): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined variable $request', 'C:\\xampp\\htdocs\\cukkuboo\\app\\Controllers\\Api.php', 16)
  2 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Api->registerFun()
  3 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Api))
  4 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
  5 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
  6 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
  7 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
-CRITICAL - 2025-05-22 07:18:22 --> ErrorException: Undefined variable $request
-[Method: POST, Route: Api/register]
-in APPPATH\Controllers\Api.php on line 18.
- 1 APPPATH\Controllers\Api.php(18): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined variable $request', 'C:\\xampp\\htdocs\\cukkuboo\\app\\Controllers\\Api.php', 18)
+CRITICAL - 2025-05-22 06:09:46 --> ErrorException: Undefined property: App\Controllers\Api::$input
+[Method: POST, Route: register]
+in APPPATH\Controllers\Api.php on line 13.
+ 1 APPPATH\Controllers\Api.php(13): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined property: App\\Controllers\\Api::$input', 'C:\\xampp\\htdocs\\cukkuboo\\app\\Controllers\\Api.php', 13)
  2 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Api->registerFun()
  3 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Api))
  4 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
  5 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
  6 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
  7 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
-CRITICAL - 2025-05-22 07:20:44 --> ArgumentCountError: Too few arguments to function App\Controllers\Api::registerFun(), 0 passed in C:\xampp\htdocs\cukkuboo\system\CodeIgniter.php on line 933 and exactly 1 expected
-[Method: POST, Route: Api/register]
-in APPPATH\Controllers\Api.php on line 15.
+CRITICAL - 2025-05-22 06:11:55 --> ErrorException: Undefined variable $request
+[Method: POST, Route: register]
+in APPPATH\Controllers\Api.php on line 16.
+ 1 APPPATH\Controllers\Api.php(16): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined variable $request', 'C:\\xampp\\htdocs\\cukkuboo\\app\\Controllers\\Api.php', 16)
+ 2 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Api->registerFun()
+ 3 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Api))
+ 4 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 5 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+ 6 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 7 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-05-22 06:12:46 --> Error: Class "App\Models\User_Model" not found
+[Method: POST, Route: register]
+in APPPATH\Controllers\Api.php on line 23.
  1 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Api->registerFun()
  2 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Api))
  3 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
  4 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
  5 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
  6 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
-CRITICAL - 2025-05-22 07:25:01 --> ErrorException: Undefined variable $input
-[Method: POST, Route: Api/register]
-in APPPATH\Controllers\Api.php on line 18.
- 1 APPPATH\Controllers\Api.php(18): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined variable $input', 'C:\\xampp\\htdocs\\cukkuboo\\app\\Controllers\\Api.php', 18)
- 2 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Api->registerFun()
- 3 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Api))
- 4 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
- 5 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
- 6 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
- 7 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
-CRITICAL - 2025-05-22 07:28:10 --> ErrorException: Undefined variable $input
-[Method: POST, Route: Api/register]
-in APPPATH\Controllers\Api.php on line 18.
- 1 APPPATH\Controllers\Api.php(18): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined variable $input', 'C:\\xampp\\htdocs\\cukkuboo\\app\\Controllers\\Api.php', 18)
- 2 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Api->registerFun()
- 3 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Api))
- 4 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
- 5 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
- 6 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
- 7 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
-CRITICAL - 2025-05-22 07:28:56 --> ArgumentCountError: Too few arguments to function App\Controllers\Api::registerFun(), 0 passed in C:\xampp\htdocs\cukkuboo\system\CodeIgniter.php on line 933 and exactly 1 expected
-[Method: POST, Route: Api/register]
-in APPPATH\Controllers\Api.php on line 15.
+CRITICAL - 2025-05-22 06:18:26 --> Error: Class "App\Models\User_Model" not found
+[Method: POST, Route: register]
+in APPPATH\Controllers\Api.php on line 23.
  1 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Api->registerFun()
  2 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Api))
  3 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
  4 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
  5 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
  6 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
-CRITICAL - 2025-05-22 07:30:08 --> ParseError: syntax error, unexpected variable "$username"
-[Method: POST, Route: Api/register]
-in APPPATH\Controllers\Api.php on line 18.
+CRITICAL - 2025-05-22 06:18:28 --> Error: Class "App\Models\User_Model" not found
+[Method: POST, Route: register]
+in APPPATH\Controllers\Api.php on line 23.
+ 1 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Api->registerFun()
+ 2 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Api))
+ 3 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 4 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+ 5 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 6 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-05-22 06:45:01 --> ParseError: syntax error, unexpected token "/", expecting "," or ";"
+[Method: POST, Route: register]
+in APPPATH\Controllers\Api.php on line 4.
  1 SYSTEMPATH\Autoloader\Autoloader.php(295): CodeIgniter\Autoloader\Autoloader->includeFile('C:\\xampp\\htdocs\\cukkuboo\\app\\Controllers\\Api.php')
  2 SYSTEMPATH\Autoloader\Autoloader.php(271): CodeIgniter\Autoloader\Autoloader->loadInNamespace('App\\Controllers\\Api')
  3 [internal function]: CodeIgniter\Autoloader\Autoloader->loadClass('App\\Controllers\\Api')
@@ -117,14 +87,68 @@ in APPPATH\Controllers\Api.php on line 18.
  7 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
  8 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
  9 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
-ERROR - 2025-05-22 07:31:50 --> mysqli_sql_exception: Column 'username' cannot be null in C:\xampp\htdocs\cukkuboo\system\Database\MySQLi\Connection.php:327
+CRITICAL - 2025-05-22 06:53:48 --> Error: Class "App\Models\User_Model" not found
+[Method: POST, Route: register]
+in APPPATH\Controllers\Api.php on line 24.
+ 1 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Api->registerFun()
+ 2 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Api))
+ 3 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 4 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+ 5 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 6 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-05-22 06:57:24 --> Error: Class "App\Controllers\UserModel" not found
+[Method: POST, Route: register]
+in APPPATH\Controllers\Api.php on line 24.
+ 1 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Api->registerFun()
+ 2 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Api))
+ 3 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 4 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+ 5 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 6 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-05-22 07:07:25 --> Error: Class "App\Models\UserModel" not found
+[Method: POST, Route: register]
+in APPPATH\Controllers\Api.php on line 24.
+ 1 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Api->registerFun()
+ 2 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Api))
+ 3 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 4 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+ 5 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 6 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-05-22 07:14:10 --> Error: Class "App\Models\UserModel" not found
+[Method: POST, Route: Api/register]
+in APPPATH\Controllers\Api.php on line 24.
+ 1 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Api->registerFun()
+ 2 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Api))
+ 3 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 4 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+ 5 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 6 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-05-22 07:14:51 --> Error: Class "App\Models\UserModel" not found
+[Method: POST, Route: Api/register]
+in APPPATH\Controllers\Api.php on line 14.
+ 1 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Api->registerFun()
+ 2 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Api))
+ 3 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 4 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+ 5 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 6 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-05-22 07:15:53 --> Error: Class "App\Models\UserModel" not found
+[Method: POST, Route: Api/register]
+in APPPATH\Controllers\Api.php on line 24.
+ 1 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Api->registerFun()
+ 2 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Api))
+ 3 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 4 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+ 5 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 6 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+ERROR - 2025-05-22 07:16:45 --> mysqli_sql_exception: Column 'username' cannot be null in C:\xampp\htdocs\cukkuboo\system\Database\MySQLi\Connection.php:327
 Stack trace:
 #0 C:\xampp\htdocs\cukkuboo\system\Database\MySQLi\Connection.php(327): mysqli->query('INSERT INTO `us...', 0)
 #1 C:\xampp\htdocs\cukkuboo\system\Database\BaseConnection.php(738): CodeIgniter\Database\MySQLi\Connection->execute('INSERT INTO `us...')
 #2 C:\xampp\htdocs\cukkuboo\system\Database\BaseConnection.php(652): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO `us...')
 #3 C:\xampp\htdocs\cukkuboo\system\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `us...', Array, false)
-#4 C:\xampp\htdocs\cukkuboo\app\Models\UserModel.php(17): CodeIgniter\Database\BaseBuilder->insert(Array)
-#5 C:\xampp\htdocs\cukkuboo\app\Controllers\Api.php(46): App\Models\UserModel->adduser(Array)
+#4 C:\xampp\htdocs\cukkuboo\app\Models\UserModel.php(15): CodeIgniter\Database\BaseBuilder->insert(Array)
+#5 C:\xampp\htdocs\cukkuboo\app\Controllers\Api.php(45): App\Models\UserModel->adduser(Array)
 #6 C:\xampp\htdocs\cukkuboo\system\CodeIgniter.php(933): App\Controllers\Api->registerFun()
 #7 C:\xampp\htdocs\cukkuboo\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Api))
 #8 C:\xampp\htdocs\cukkuboo\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
@@ -132,251 +156,315 @@ Stack trace:
 #10 C:\xampp\htdocs\cukkuboo\system\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
 #11 C:\xampp\htdocs\cukkuboo\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
 #12 {main}
-CRITICAL - 2025-05-22 07:31:50 --> CodeIgniter\Database\Exceptions\DatabaseException: Column 'username' cannot be null
+CRITICAL - 2025-05-22 07:16:45 --> CodeIgniter\Database\Exceptions\DatabaseException: Column 'username' cannot be null
 [Method: POST, Route: Api/register]
 in SYSTEMPATH\Database\BaseConnection.php on line 692.
  1 SYSTEMPATH\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `user` (`username`, `phone`, `email`, `password`, `country`, `status`, `join_date`, `subscription`) VALUES (:username:, :phone:, :email:, :password:, :country:, :status:, :join_date:, :subscription:)', [...], false)
- 2 APPPATH\Models\UserModel.php(17): CodeIgniter\Database\BaseBuilder->insert([...])
- 3 APPPATH\Controllers\Api.php(46): App\Models\UserModel->adduser([...])
+ 2 APPPATH\Models\UserModel.php(15): CodeIgniter\Database\BaseBuilder->insert([...])
+ 3 APPPATH\Controllers\Api.php(45): App\Models\UserModel->adduser([...])
  4 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Api->registerFun()
  5 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Api))
  6 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
  7 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
  8 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
  9 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
-CRITICAL - 2025-05-22 07:31:50 --> [Caused by] CodeIgniter\Database\Exceptions\DatabaseException: Column 'username' cannot be null
+CRITICAL - 2025-05-22 07:16:45 --> [Caused by] CodeIgniter\Database\Exceptions\DatabaseException: Column 'username' cannot be null
 in SYSTEMPATH\Database\MySQLi\Connection.php on line 332.
- 1 SYSTEMPATH\Database\BaseConnection.php(738): CodeIgniter\Database\MySQLi\Connection->execute('INSERT INTO `user` (`username`, `phone`, `email`, `password`, `country`, `status`, `join_date`, `subscription`) VALUES (NULL, NULL, NULL, \'$2y$10$6iFULeAnJRKs5ItTGANNpOpGYgLVXfe.1Bsc5IVIr/X/IzXknYRfe\', NULL, NULL, NULL, NULL)')
- 2 SYSTEMPATH\Database\BaseConnection.php(652): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO `user` (`username`, `phone`, `email`, `password`, `country`, `status`, `join_date`, `subscription`) VALUES (NULL, NULL, NULL, \'$2y$10$6iFULeAnJRKs5ItTGANNpOpGYgLVXfe.1Bsc5IVIr/X/IzXknYRfe\', NULL, NULL, NULL, NULL)')
+ 1 SYSTEMPATH\Database\BaseConnection.php(738): CodeIgniter\Database\MySQLi\Connection->execute('INSERT INTO `user` (`username`, `phone`, `email`, `password`, `country`, `status`, `join_date`, `subscription`) VALUES (NULL, NULL, NULL, \'$2y$10$6N8NjGy1Jb03jlMxM93GmOjnvpwxOpvOwtU96XURHIi9dIX9of/pG\', NULL, NULL, NULL, NULL)')
+ 2 SYSTEMPATH\Database\BaseConnection.php(652): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO `user` (`username`, `phone`, `email`, `password`, `country`, `status`, `join_date`, `subscription`) VALUES (NULL, NULL, NULL, \'$2y$10$6N8NjGy1Jb03jlMxM93GmOjnvpwxOpvOwtU96XURHIi9dIX9of/pG\', NULL, NULL, NULL, NULL)')
  3 SYSTEMPATH\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `user` (`username`, `phone`, `email`, `password`, `country`, `status`, `join_date`, `subscription`) VALUES (:username:, :phone:, :email:, :password:, :country:, :status:, :join_date:, :subscription:)', [...], false)
- 4 APPPATH\Models\UserModel.php(17): CodeIgniter\Database\BaseBuilder->insert([...])
- 5 APPPATH\Controllers\Api.php(46): App\Models\UserModel->adduser([...])
+ 4 APPPATH\Models\UserModel.php(15): CodeIgniter\Database\BaseBuilder->insert([...])
+ 5 APPPATH\Controllers\Api.php(45): App\Models\UserModel->adduser([...])
  6 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Api->registerFun()
  7 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Api))
  8 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
  9 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
 10 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
 11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
-CRITICAL - 2025-05-22 07:31:50 --> [Caused by] mysqli_sql_exception: Column 'username' cannot be null
+CRITICAL - 2025-05-22 07:16:45 --> [Caused by] mysqli_sql_exception: Column 'username' cannot be null
 in SYSTEMPATH\Database\MySQLi\Connection.php on line 327.
- 1 SYSTEMPATH\Database\MySQLi\Connection.php(327): mysqli->query('INSERT INTO `user` (`username`, `phone`, `email`, `password`, `country`, `status`, `join_date`, `subscription`) VALUES (NULL, NULL, NULL, \'$2y$10$6iFULeAnJRKs5ItTGANNpOpGYgLVXfe.1Bsc5IVIr/X/IzXknYRfe\', NULL, NULL, NULL, NULL)', 0)
- 2 SYSTEMPATH\Database\BaseConnection.php(738): CodeIgniter\Database\MySQLi\Connection->execute('INSERT INTO `user` (`username`, `phone`, `email`, `password`, `country`, `status`, `join_date`, `subscription`) VALUES (NULL, NULL, NULL, \'$2y$10$6iFULeAnJRKs5ItTGANNpOpGYgLVXfe.1Bsc5IVIr/X/IzXknYRfe\', NULL, NULL, NULL, NULL)')
- 3 SYSTEMPATH\Database\BaseConnection.php(652): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO `user` (`username`, `phone`, `email`, `password`, `country`, `status`, `join_date`, `subscription`) VALUES (NULL, NULL, NULL, \'$2y$10$6iFULeAnJRKs5ItTGANNpOpGYgLVXfe.1Bsc5IVIr/X/IzXknYRfe\', NULL, NULL, NULL, NULL)')
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(327): mysqli->query('INSERT INTO `user` (`username`, `phone`, `email`, `password`, `country`, `status`, `join_date`, `subscription`) VALUES (NULL, NULL, NULL, \'$2y$10$6N8NjGy1Jb03jlMxM93GmOjnvpwxOpvOwtU96XURHIi9dIX9of/pG\', NULL, NULL, NULL, NULL)', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(738): CodeIgniter\Database\MySQLi\Connection->execute('INSERT INTO `user` (`username`, `phone`, `email`, `password`, `country`, `status`, `join_date`, `subscription`) VALUES (NULL, NULL, NULL, \'$2y$10$6N8NjGy1Jb03jlMxM93GmOjnvpwxOpvOwtU96XURHIi9dIX9of/pG\', NULL, NULL, NULL, NULL)')
+ 3 SYSTEMPATH\Database\BaseConnection.php(652): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO `user` (`username`, `phone`, `email`, `password`, `country`, `status`, `join_date`, `subscription`) VALUES (NULL, NULL, NULL, \'$2y$10$6N8NjGy1Jb03jlMxM93GmOjnvpwxOpvOwtU96XURHIi9dIX9of/pG\', NULL, NULL, NULL, NULL)')
  4 SYSTEMPATH\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `user` (`username`, `phone`, `email`, `password`, `country`, `status`, `join_date`, `subscription`) VALUES (:username:, :phone:, :email:, :password:, :country:, :status:, :join_date:, :subscription:)', [...], false)
- 5 APPPATH\Models\UserModel.php(17): CodeIgniter\Database\BaseBuilder->insert([...])
- 6 APPPATH\Controllers\Api.php(46): App\Models\UserModel->adduser([...])
+ 5 APPPATH\Models\UserModel.php(15): CodeIgniter\Database\BaseBuilder->insert([...])
+ 6 APPPATH\Controllers\Api.php(45): App\Models\UserModel->adduser([...])
  7 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Api->registerFun()
  8 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Api))
  9 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
 10 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
 11 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
 12 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
-CRITICAL - 2025-05-22 07:35:26 --> ErrorException: Undefined variable $request
-[Method: POST, Route: Api/register]
-in APPPATH\Controllers\Api.php on line 18.
- 1 APPPATH\Controllers\Api.php(18): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined variable $request', 'C:\\xampp\\htdocs\\cukkuboo\\app\\Controllers\\Api.php', 18)
- 2 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Api->registerFun()
- 3 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Api))
- 4 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
- 5 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
- 6 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
- 7 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
-CRITICAL - 2025-05-22 07:40:43 --> ErrorException: Undefined variable $request
-[Method: POST, Route: Api/register]
-in APPPATH\Controllers\Api.php on line 22.
- 1 APPPATH\Controllers\Api.php(22): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined variable $request', 'C:\\xampp\\htdocs\\cukkuboo\\app\\Controllers\\Api.php', 22)
- 2 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Api->registerFun()
- 3 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Api))
- 4 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
- 5 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
- 6 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
- 7 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
-CRITICAL - 2025-05-22 07:41:38 --> Error: Object of class CodeIgniter\HTTP\IncomingRequest could not be converted to string
-[Method: POST, Route: Api/register]
-in APPPATH\Controllers\Api.php on line 22.
- 1 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Api->registerFun()
- 2 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Api))
- 3 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
- 4 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
- 5 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
- 6 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
-CRITICAL - 2025-05-22 07:42:22 --> Error: Object of class CodeIgniter\HTTP\IncomingRequest could not be converted to string
-[Method: POST, Route: Api/register]
-in APPPATH\Controllers\Api.php on line 23.
- 1 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Api->registerFun()
- 2 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Api))
- 3 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
- 4 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
- 5 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
- 6 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
-CRITICAL - 2025-05-22 07:49:07 --> Error: Class "App\Controllers\App\Models\UserModel" not found
-[Method: POST, Route: Api/register]
-in APPPATH\Controllers\Api.php on line 11.
- 1 SYSTEMPATH\CodeIgniter.php(903): App\Controllers\Api->__construct()
- 2 SYSTEMPATH\CodeIgniter.php(498): CodeIgniter\CodeIgniter->createController()
- 3 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
- 4 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
- 5 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
- 6 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
-CRITICAL - 2025-05-22 08:44:04 --> Error: Class "App\Controllers\App\Models\UserModel" not found
-[Method: POST, Route: Api/register]
-in APPPATH\Controllers\Api.php on line 11.
- 1 SYSTEMPATH\CodeIgniter.php(903): App\Controllers\Api->__construct()
- 2 SYSTEMPATH\CodeIgniter.php(498): CodeIgniter\CodeIgniter->createController()
- 3 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
- 4 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
- 5 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
- 6 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
-CRITICAL - 2025-05-22 08:54:34 --> ArgumentCountError: Too few arguments to function App\Controllers\Api::registerFun(), 0 passed in C:\xampp\htdocs\cukkuboo\system\CodeIgniter.php on line 933 and exactly 1 expected
-[Method: POST, Route: Api/register]
-in APPPATH\Controllers\Api.php on line 19.
- 1 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Api->registerFun()
- 2 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Api))
- 3 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
- 4 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
- 5 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
- 6 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
-CRITICAL - 2025-05-22 08:56:18 --> ErrorException: Undefined variable $request
-[Method: POST, Route: Api/register]
-in APPPATH\Controllers\Api.php on line 23.
- 1 APPPATH\Controllers\Api.php(23): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined variable $request', 'C:\\xampp\\htdocs\\cukkuboo\\app\\Controllers\\Api.php', 23)
- 2 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Api->registerFun()
- 3 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Api))
- 4 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
- 5 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
- 6 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
- 7 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
-CRITICAL - 2025-05-22 08:57:06 --> CodeIgniter\Database\Exceptions\DataException: Allowed fields must be specified for model: "App\Models\UserModel"
-[Method: POST, Route: Api/register]
-in SYSTEMPATH\Model.php on line 822.
- 1 SYSTEMPATH\Model.php(822): CodeIgniter\Database\Exceptions\DataException::forInvalidAllowedFields('App\\Models\\UserModel')
- 2 SYSTEMPATH\BaseModel.php(824): CodeIgniter\Model->doProtectFieldsForInsert([...])
- 3 SYSTEMPATH\Model.php(800): CodeIgniter\BaseModel->insert([...], true)
- 4 APPPATH\Models\UserModel.php(18): CodeIgniter\Model->insert([...])
- 5 APPPATH\Controllers\Api.php(50): App\Models\UserModel->addUser([...])
- 6 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Api->registerFun()
- 7 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Api))
- 8 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
- 9 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
-10 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
-11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
-CRITICAL - 2025-05-22 08:59:14 --> Error: Call to a member function getPost() on string
-[Method: POST, Route: Api/register]
-in APPPATH\Controllers\Api.php on line 23.
- 1 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Api->registerFun()
- 2 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Api))
- 3 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
- 4 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
- 5 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
- 6 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
-CRITICAL - 2025-05-22 09:10:19 --> ArgumentCountError: Too few arguments to function App\Controllers\Api::registerFun(), 0 passed in C:\xampp\htdocs\cukkuboo\system\CodeIgniter.php on line 933 and exactly 1 expected
-[Method: POST, Route: Api/register]
-in APPPATH\Controllers\Api.php on line 19.
- 1 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Api->registerFun()
- 2 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Api))
- 3 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
- 4 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
- 5 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
- 6 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
-CRITICAL - 2025-05-22 09:17:38 --> CodeIgniter\Database\Exceptions\DataException: Allowed fields must be specified for model: "App\Models\UserModel"
-[Method: POST, Route: Api/register]
-in SYSTEMPATH\Model.php on line 822.
- 1 SYSTEMPATH\Model.php(822): CodeIgniter\Database\Exceptions\DataException::forInvalidAllowedFields('App\\Models\\UserModel')
- 2 SYSTEMPATH\BaseModel.php(824): CodeIgniter\Model->doProtectFieldsForInsert([...])
- 3 SYSTEMPATH\Model.php(800): CodeIgniter\BaseModel->insert([...], true)
- 4 APPPATH\Models\UserModel.php(18): CodeIgniter\Model->insert([...])
- 5 APPPATH\Controllers\Api.php(50): App\Models\UserModel->addUser([...])
- 6 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Api->registerFun()
- 7 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Api))
- 8 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
- 9 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
-10 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
-11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
-CRITICAL - 2025-05-22 09:21:31 --> CodeIgniter\Database\Exceptions\DataException: Allowed fields must be specified for model: "App\Models\UserModel"
-[Method: POST, Route: Api/register]
-in SYSTEMPATH\Model.php on line 822.
- 1 SYSTEMPATH\Model.php(822): CodeIgniter\Database\Exceptions\DataException::forInvalidAllowedFields('App\\Models\\UserModel')
- 2 SYSTEMPATH\BaseModel.php(824): CodeIgniter\Model->doProtectFieldsForInsert([...])
- 3 SYSTEMPATH\Model.php(800): CodeIgniter\BaseModel->insert([...], true)
- 4 APPPATH\Models\UserModel.php(18): CodeIgniter\Model->insert([...])
- 5 APPPATH\Controllers\Api.php(50): App\Models\UserModel->addUser([...])
- 6 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Api->registerFun()
- 7 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Api))
- 8 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
- 9 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
-10 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
-11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
-ERROR - 2025-05-22 09:32:29 --> mysqli_sql_exception: Column 'username' cannot be null in C:\xampp\htdocs\cukkuboo\system\Database\MySQLi\Connection.php:327
+ERROR - 2025-05-22 07:17:06 --> mysqli_sql_exception: Column 'username' cannot be null in C:\xampp\htdocs\cukkuboo\system\Database\MySQLi\Connection.php:327
 Stack trace:
 #0 C:\xampp\htdocs\cukkuboo\system\Database\MySQLi\Connection.php(327): mysqli->query('INSERT INTO `us...', 0)
 #1 C:\xampp\htdocs\cukkuboo\system\Database\BaseConnection.php(738): CodeIgniter\Database\MySQLi\Connection->execute('INSERT INTO `us...')
 #2 C:\xampp\htdocs\cukkuboo\system\Database\BaseConnection.php(652): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO `us...')
 #3 C:\xampp\htdocs\cukkuboo\system\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `us...', Array, false)
-#4 C:\xampp\htdocs\cukkuboo\system\Model.php(394): CodeIgniter\Database\BaseBuilder->insert()
-#5 C:\xampp\htdocs\cukkuboo\system\BaseModel.php(843): CodeIgniter\Model->doInsert(Array)
-#6 C:\xampp\htdocs\cukkuboo\system\Model.php(800): CodeIgniter\BaseModel->insert(Array, true)
-#7 C:\xampp\htdocs\cukkuboo\app\Models\UserModel.php(34): CodeIgniter\Model->insert(Array)
-#8 C:\xampp\htdocs\cukkuboo\app\Controllers\Api.php(50): App\Models\UserModel->addUser(Array)
-#9 C:\xampp\htdocs\cukkuboo\system\CodeIgniter.php(933): App\Controllers\Api->registerFun()
-#10 C:\xampp\htdocs\cukkuboo\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Api))
-#11 C:\xampp\htdocs\cukkuboo\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
-#12 C:\xampp\htdocs\cukkuboo\system\Boot.php(334): CodeIgniter\CodeIgniter->run()
-#13 C:\xampp\htdocs\cukkuboo\system\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
-#14 C:\xampp\htdocs\cukkuboo\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
-#15 {main}
-CRITICAL - 2025-05-22 09:32:29 --> CodeIgniter\Database\Exceptions\DatabaseException: Column 'username' cannot be null
+#4 C:\xampp\htdocs\cukkuboo\app\Models\UserModel.php(15): CodeIgniter\Database\BaseBuilder->insert(Array)
+#5 C:\xampp\htdocs\cukkuboo\app\Controllers\Api.php(45): App\Models\UserModel->adduser(Array)
+#6 C:\xampp\htdocs\cukkuboo\system\CodeIgniter.php(933): App\Controllers\Api->registerFun()
+#7 C:\xampp\htdocs\cukkuboo\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Api))
+#8 C:\xampp\htdocs\cukkuboo\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#9 C:\xampp\htdocs\cukkuboo\system\Boot.php(334): CodeIgniter\CodeIgniter->run()
+#10 C:\xampp\htdocs\cukkuboo\system\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#11 C:\xampp\htdocs\cukkuboo\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#12 {main}
+CRITICAL - 2025-05-22 07:17:06 --> CodeIgniter\Database\Exceptions\DatabaseException: Column 'username' cannot be null
 [Method: POST, Route: Api/register]
 in SYSTEMPATH\Database\BaseConnection.php on line 692.
  1 SYSTEMPATH\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `user` (`username`, `phone`, `email`, `password`, `country`, `status`, `join_date`, `subscription`) VALUES (:username:, :phone:, :email:, :password:, :country:, :status:, :join_date:, :subscription:)', [...], false)
- 2 SYSTEMPATH\Model.php(394): CodeIgniter\Database\BaseBuilder->insert()
- 3 SYSTEMPATH\BaseModel.php(843): CodeIgniter\Model->doInsert([...])
- 4 SYSTEMPATH\Model.php(800): CodeIgniter\BaseModel->insert([...], true)
- 5 APPPATH\Models\UserModel.php(34): CodeIgniter\Model->insert([...])
- 6 APPPATH\Controllers\Api.php(50): App\Models\UserModel->addUser([...])
+ 2 APPPATH\Models\UserModel.php(15): CodeIgniter\Database\BaseBuilder->insert([...])
+ 3 APPPATH\Controllers\Api.php(45): App\Models\UserModel->adduser([...])
+ 4 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Api->registerFun()
+ 5 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Api))
+ 6 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 9 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-05-22 07:17:06 --> [Caused by] CodeIgniter\Database\Exceptions\DatabaseException: Column 'username' cannot be null
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 332.
+ 1 SYSTEMPATH\Database\BaseConnection.php(738): CodeIgniter\Database\MySQLi\Connection->execute('INSERT INTO `user` (`username`, `phone`, `email`, `password`, `country`, `status`, `join_date`, `subscription`) VALUES (NULL, NULL, NULL, \'$2y$10$3btFiND3OoaURtjYCVtxheP3KfFJ70.qULUDnInMb10E0hPuIG8fW\', NULL, NULL, NULL, NULL)')
+ 2 SYSTEMPATH\Database\BaseConnection.php(652): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO `user` (`username`, `phone`, `email`, `password`, `country`, `status`, `join_date`, `subscription`) VALUES (NULL, NULL, NULL, \'$2y$10$3btFiND3OoaURtjYCVtxheP3KfFJ70.qULUDnInMb10E0hPuIG8fW\', NULL, NULL, NULL, NULL)')
+ 3 SYSTEMPATH\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `user` (`username`, `phone`, `email`, `password`, `country`, `status`, `join_date`, `subscription`) VALUES (:username:, :phone:, :email:, :password:, :country:, :status:, :join_date:, :subscription:)', [...], false)
+ 4 APPPATH\Models\UserModel.php(15): CodeIgniter\Database\BaseBuilder->insert([...])
+ 5 APPPATH\Controllers\Api.php(45): App\Models\UserModel->adduser([...])
+ 6 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Api->registerFun()
+ 7 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Api))
+ 8 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-05-22 07:17:06 --> [Caused by] mysqli_sql_exception: Column 'username' cannot be null
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 327.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(327): mysqli->query('INSERT INTO `user` (`username`, `phone`, `email`, `password`, `country`, `status`, `join_date`, `subscription`) VALUES (NULL, NULL, NULL, \'$2y$10$3btFiND3OoaURtjYCVtxheP3KfFJ70.qULUDnInMb10E0hPuIG8fW\', NULL, NULL, NULL, NULL)', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(738): CodeIgniter\Database\MySQLi\Connection->execute('INSERT INTO `user` (`username`, `phone`, `email`, `password`, `country`, `status`, `join_date`, `subscription`) VALUES (NULL, NULL, NULL, \'$2y$10$3btFiND3OoaURtjYCVtxheP3KfFJ70.qULUDnInMb10E0hPuIG8fW\', NULL, NULL, NULL, NULL)')
+ 3 SYSTEMPATH\Database\BaseConnection.php(652): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO `user` (`username`, `phone`, `email`, `password`, `country`, `status`, `join_date`, `subscription`) VALUES (NULL, NULL, NULL, \'$2y$10$3btFiND3OoaURtjYCVtxheP3KfFJ70.qULUDnInMb10E0hPuIG8fW\', NULL, NULL, NULL, NULL)')
+ 4 SYSTEMPATH\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `user` (`username`, `phone`, `email`, `password`, `country`, `status`, `join_date`, `subscription`) VALUES (:username:, :phone:, :email:, :password:, :country:, :status:, :join_date:, :subscription:)', [...], false)
+ 5 APPPATH\Models\UserModel.php(15): CodeIgniter\Database\BaseBuilder->insert([...])
+ 6 APPPATH\Controllers\Api.php(45): App\Models\UserModel->adduser([...])
  7 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Api->registerFun()
  8 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Api))
  9 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
 10 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
 11 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
 12 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
-CRITICAL - 2025-05-22 09:32:29 --> [Caused by] CodeIgniter\Database\Exceptions\DatabaseException: Column 'username' cannot be null
+CRITICAL - 2025-05-22 07:31:37 --> ErrorException: Undefined property: App\Controllers\Api::$input
+[Method: POST, Route: Api/register]
+in APPPATH\Controllers\Api.php on line 14.
+ 1 APPPATH\Controllers\Api.php(14): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined property: App\\Controllers\\Api::$input', 'C:\\xampp\\htdocs\\cukkuboo\\app\\Controllers\\Api.php', 14)
+ 2 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Api->registerFun()
+ 3 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Api))
+ 4 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 5 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+ 6 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 7 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+ERROR - 2025-05-22 07:36:39 --> mysqli_sql_exception: Column 'username' cannot be null in C:\xampp\htdocs\cukkuboo\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\cukkuboo\system\Database\MySQLi\Connection.php(327): mysqli->query('INSERT INTO `us...', 0)
+#1 C:\xampp\htdocs\cukkuboo\system\Database\BaseConnection.php(738): CodeIgniter\Database\MySQLi\Connection->execute('INSERT INTO `us...')
+#2 C:\xampp\htdocs\cukkuboo\system\Database\BaseConnection.php(652): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO `us...')
+#3 C:\xampp\htdocs\cukkuboo\system\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `us...', Array, false)
+#4 C:\xampp\htdocs\cukkuboo\app\Models\UserModel.php(15): CodeIgniter\Database\BaseBuilder->insert(Array)
+#5 C:\xampp\htdocs\cukkuboo\app\Controllers\Api.php(45): App\Models\UserModel->adduser(Array)
+#6 C:\xampp\htdocs\cukkuboo\system\CodeIgniter.php(933): App\Controllers\Api->registerFun()
+#7 C:\xampp\htdocs\cukkuboo\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Api))
+#8 C:\xampp\htdocs\cukkuboo\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#9 C:\xampp\htdocs\cukkuboo\system\Boot.php(334): CodeIgniter\CodeIgniter->run()
+#10 C:\xampp\htdocs\cukkuboo\system\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#11 C:\xampp\htdocs\cukkuboo\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#12 {main}
+CRITICAL - 2025-05-22 07:36:39 --> CodeIgniter\Database\Exceptions\DatabaseException: Column 'username' cannot be null
+[Method: POST, Route: Api/register]
+in SYSTEMPATH\Database\BaseConnection.php on line 692.
+ 1 SYSTEMPATH\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `user` (`username`, `phone`, `email`, `password`, `country`, `status`, `join_date`, `subscription`) VALUES (:username:, :phone:, :email:, :password:, :country:, :status:, :join_date:, :subscription:)', [...], false)
+ 2 APPPATH\Models\UserModel.php(15): CodeIgniter\Database\BaseBuilder->insert([...])
+ 3 APPPATH\Controllers\Api.php(45): App\Models\UserModel->adduser([...])
+ 4 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Api->registerFun()
+ 5 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Api))
+ 6 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 9 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-05-22 07:36:39 --> [Caused by] CodeIgniter\Database\Exceptions\DatabaseException: Column 'username' cannot be null
 in SYSTEMPATH\Database\MySQLi\Connection.php on line 332.
- 1 SYSTEMPATH\Database\BaseConnection.php(738): CodeIgniter\Database\MySQLi\Connection->execute('INSERT INTO `user` (`username`, `phone`, `email`, `password`, `country`, `status`, `join_date`, `subscription`) VALUES (NULL, NULL, NULL, \'$2y$10$OyCAecmN/3vIf/YuQkcFQuZrnRnIhYGfykjqbIUjD0.beGwezM.y.\', NULL, NULL, NULL, NULL)')
- 2 SYSTEMPATH\Database\BaseConnection.php(652): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO `user` (`username`, `phone`, `email`, `password`, `country`, `status`, `join_date`, `subscription`) VALUES (NULL, NULL, NULL, \'$2y$10$OyCAecmN/3vIf/YuQkcFQuZrnRnIhYGfykjqbIUjD0.beGwezM.y.\', NULL, NULL, NULL, NULL)')
+ 1 SYSTEMPATH\Database\BaseConnection.php(738): CodeIgniter\Database\MySQLi\Connection->execute('INSERT INTO `user` (`username`, `phone`, `email`, `password`, `country`, `status`, `join_date`, `subscription`) VALUES (NULL, NULL, NULL, \'$2y$10$tGm.p9wMAxsHPWCDInbCxujF7CSk.XokstKVlQHQpJgS2JQ9SOBHy\', NULL, NULL, NULL, NULL)')
+ 2 SYSTEMPATH\Database\BaseConnection.php(652): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO `user` (`username`, `phone`, `email`, `password`, `country`, `status`, `join_date`, `subscription`) VALUES (NULL, NULL, NULL, \'$2y$10$tGm.p9wMAxsHPWCDInbCxujF7CSk.XokstKVlQHQpJgS2JQ9SOBHy\', NULL, NULL, NULL, NULL)')
  3 SYSTEMPATH\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `user` (`username`, `phone`, `email`, `password`, `country`, `status`, `join_date`, `subscription`) VALUES (:username:, :phone:, :email:, :password:, :country:, :status:, :join_date:, :subscription:)', [...], false)
- 4 SYSTEMPATH\Model.php(394): CodeIgniter\Database\BaseBuilder->insert()
- 5 SYSTEMPATH\BaseModel.php(843): CodeIgniter\Model->doInsert([...])
- 6 SYSTEMPATH\Model.php(800): CodeIgniter\BaseModel->insert([...], true)
- 7 APPPATH\Models\UserModel.php(34): CodeIgniter\Model->insert([...])
- 8 APPPATH\Controllers\Api.php(50): App\Models\UserModel->addUser([...])
- 9 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Api->registerFun()
-10 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Api))
-11 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
-12 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
-13 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
-14 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
-CRITICAL - 2025-05-22 09:32:29 --> [Caused by] mysqli_sql_exception: Column 'username' cannot be null
+ 4 APPPATH\Models\UserModel.php(15): CodeIgniter\Database\BaseBuilder->insert([...])
+ 5 APPPATH\Controllers\Api.php(45): App\Models\UserModel->adduser([...])
+ 6 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Api->registerFun()
+ 7 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Api))
+ 8 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-05-22 07:36:39 --> [Caused by] mysqli_sql_exception: Column 'username' cannot be null
 in SYSTEMPATH\Database\MySQLi\Connection.php on line 327.
- 1 SYSTEMPATH\Database\MySQLi\Connection.php(327): mysqli->query('INSERT INTO `user` (`username`, `phone`, `email`, `password`, `country`, `status`, `join_date`, `subscription`) VALUES (NULL, NULL, NULL, \'$2y$10$OyCAecmN/3vIf/YuQkcFQuZrnRnIhYGfykjqbIUjD0.beGwezM.y.\', NULL, NULL, NULL, NULL)', 0)
- 2 SYSTEMPATH\Database\BaseConnection.php(738): CodeIgniter\Database\MySQLi\Connection->execute('INSERT INTO `user` (`username`, `phone`, `email`, `password`, `country`, `status`, `join_date`, `subscription`) VALUES (NULL, NULL, NULL, \'$2y$10$OyCAecmN/3vIf/YuQkcFQuZrnRnIhYGfykjqbIUjD0.beGwezM.y.\', NULL, NULL, NULL, NULL)')
- 3 SYSTEMPATH\Database\BaseConnection.php(652): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO `user` (`username`, `phone`, `email`, `password`, `country`, `status`, `join_date`, `subscription`) VALUES (NULL, NULL, NULL, \'$2y$10$OyCAecmN/3vIf/YuQkcFQuZrnRnIhYGfykjqbIUjD0.beGwezM.y.\', NULL, NULL, NULL, NULL)')
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(327): mysqli->query('INSERT INTO `user` (`username`, `phone`, `email`, `password`, `country`, `status`, `join_date`, `subscription`) VALUES (NULL, NULL, NULL, \'$2y$10$tGm.p9wMAxsHPWCDInbCxujF7CSk.XokstKVlQHQpJgS2JQ9SOBHy\', NULL, NULL, NULL, NULL)', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(738): CodeIgniter\Database\MySQLi\Connection->execute('INSERT INTO `user` (`username`, `phone`, `email`, `password`, `country`, `status`, `join_date`, `subscription`) VALUES (NULL, NULL, NULL, \'$2y$10$tGm.p9wMAxsHPWCDInbCxujF7CSk.XokstKVlQHQpJgS2JQ9SOBHy\', NULL, NULL, NULL, NULL)')
+ 3 SYSTEMPATH\Database\BaseConnection.php(652): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO `user` (`username`, `phone`, `email`, `password`, `country`, `status`, `join_date`, `subscription`) VALUES (NULL, NULL, NULL, \'$2y$10$tGm.p9wMAxsHPWCDInbCxujF7CSk.XokstKVlQHQpJgS2JQ9SOBHy\', NULL, NULL, NULL, NULL)')
  4 SYSTEMPATH\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `user` (`username`, `phone`, `email`, `password`, `country`, `status`, `join_date`, `subscription`) VALUES (:username:, :phone:, :email:, :password:, :country:, :status:, :join_date:, :subscription:)', [...], false)
- 5 SYSTEMPATH\Model.php(394): CodeIgniter\Database\BaseBuilder->insert()
- 6 SYSTEMPATH\BaseModel.php(843): CodeIgniter\Model->doInsert([...])
- 7 SYSTEMPATH\Model.php(800): CodeIgniter\BaseModel->insert([...], true)
- 8 APPPATH\Models\UserModel.php(34): CodeIgniter\Model->insert([...])
- 9 APPPATH\Controllers\Api.php(50): App\Models\UserModel->addUser([...])
-10 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Api->registerFun()
-11 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Api))
-12 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
-13 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
-14 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
-15 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
-CRITICAL - 2025-05-22 09:58:47 --> Error: Call to undefined function App\Controllers\setJSON()
+ 5 APPPATH\Models\UserModel.php(15): CodeIgniter\Database\BaseBuilder->insert([...])
+ 6 APPPATH\Controllers\Api.php(45): App\Models\UserModel->adduser([...])
+ 7 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Api->registerFun()
+ 8 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Api))
+ 9 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+10 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+11 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+12 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+ERROR - 2025-05-22 07:37:43 --> mysqli_sql_exception: Column 'username' cannot be null in C:\xampp\htdocs\cukkuboo\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\cukkuboo\system\Database\MySQLi\Connection.php(327): mysqli->query('INSERT INTO `us...', 0)
+#1 C:\xampp\htdocs\cukkuboo\system\Database\BaseConnection.php(738): CodeIgniter\Database\MySQLi\Connection->execute('INSERT INTO `us...')
+#2 C:\xampp\htdocs\cukkuboo\system\Database\BaseConnection.php(652): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO `us...')
+#3 C:\xampp\htdocs\cukkuboo\system\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `us...', Array, false)
+#4 C:\xampp\htdocs\cukkuboo\app\Models\UserModel.php(15): CodeIgniter\Database\BaseBuilder->insert(Array)
+#5 C:\xampp\htdocs\cukkuboo\app\Controllers\Api.php(45): App\Models\UserModel->adduser(Array)
+#6 C:\xampp\htdocs\cukkuboo\system\CodeIgniter.php(933): App\Controllers\Api->registerFun()
+#7 C:\xampp\htdocs\cukkuboo\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Api))
+#8 C:\xampp\htdocs\cukkuboo\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#9 C:\xampp\htdocs\cukkuboo\system\Boot.php(334): CodeIgniter\CodeIgniter->run()
+#10 C:\xampp\htdocs\cukkuboo\system\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#11 C:\xampp\htdocs\cukkuboo\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#12 {main}
+CRITICAL - 2025-05-22 07:37:43 --> CodeIgniter\Database\Exceptions\DatabaseException: Column 'username' cannot be null
+[Method: POST, Route: Api/register]
+in SYSTEMPATH\Database\BaseConnection.php on line 692.
+ 1 SYSTEMPATH\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `user` (`username`, `phone`, `email`, `password`, `country`, `status`, `join_date`, `subscription`) VALUES (:username:, :phone:, :email:, :password:, :country:, :status:, :join_date:, :subscription:)', [...], false)
+ 2 APPPATH\Models\UserModel.php(15): CodeIgniter\Database\BaseBuilder->insert([...])
+ 3 APPPATH\Controllers\Api.php(45): App\Models\UserModel->adduser([...])
+ 4 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Api->registerFun()
+ 5 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Api))
+ 6 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 9 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-05-22 07:37:43 --> [Caused by] CodeIgniter\Database\Exceptions\DatabaseException: Column 'username' cannot be null
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 332.
+ 1 SYSTEMPATH\Database\BaseConnection.php(738): CodeIgniter\Database\MySQLi\Connection->execute('INSERT INTO `user` (`username`, `phone`, `email`, `password`, `country`, `status`, `join_date`, `subscription`) VALUES (NULL, NULL, NULL, \'$2y$10$vLmMASsOcsFZC9YHrSPvturs.CwT1sqQZmJCV3.b3nGtQoNThUbc.\', NULL, NULL, NULL, NULL)')
+ 2 SYSTEMPATH\Database\BaseConnection.php(652): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO `user` (`username`, `phone`, `email`, `password`, `country`, `status`, `join_date`, `subscription`) VALUES (NULL, NULL, NULL, \'$2y$10$vLmMASsOcsFZC9YHrSPvturs.CwT1sqQZmJCV3.b3nGtQoNThUbc.\', NULL, NULL, NULL, NULL)')
+ 3 SYSTEMPATH\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `user` (`username`, `phone`, `email`, `password`, `country`, `status`, `join_date`, `subscription`) VALUES (:username:, :phone:, :email:, :password:, :country:, :status:, :join_date:, :subscription:)', [...], false)
+ 4 APPPATH\Models\UserModel.php(15): CodeIgniter\Database\BaseBuilder->insert([...])
+ 5 APPPATH\Controllers\Api.php(45): App\Models\UserModel->adduser([...])
+ 6 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Api->registerFun()
+ 7 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Api))
+ 8 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-05-22 07:37:43 --> [Caused by] mysqli_sql_exception: Column 'username' cannot be null
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 327.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(327): mysqli->query('INSERT INTO `user` (`username`, `phone`, `email`, `password`, `country`, `status`, `join_date`, `subscription`) VALUES (NULL, NULL, NULL, \'$2y$10$vLmMASsOcsFZC9YHrSPvturs.CwT1sqQZmJCV3.b3nGtQoNThUbc.\', NULL, NULL, NULL, NULL)', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(738): CodeIgniter\Database\MySQLi\Connection->execute('INSERT INTO `user` (`username`, `phone`, `email`, `password`, `country`, `status`, `join_date`, `subscription`) VALUES (NULL, NULL, NULL, \'$2y$10$vLmMASsOcsFZC9YHrSPvturs.CwT1sqQZmJCV3.b3nGtQoNThUbc.\', NULL, NULL, NULL, NULL)')
+ 3 SYSTEMPATH\Database\BaseConnection.php(652): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO `user` (`username`, `phone`, `email`, `password`, `country`, `status`, `join_date`, `subscription`) VALUES (NULL, NULL, NULL, \'$2y$10$vLmMASsOcsFZC9YHrSPvturs.CwT1sqQZmJCV3.b3nGtQoNThUbc.\', NULL, NULL, NULL, NULL)')
+ 4 SYSTEMPATH\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `user` (`username`, `phone`, `email`, `password`, `country`, `status`, `join_date`, `subscription`) VALUES (:username:, :phone:, :email:, :password:, :country:, :status:, :join_date:, :subscription:)', [...], false)
+ 5 APPPATH\Models\UserModel.php(15): CodeIgniter\Database\BaseBuilder->insert([...])
+ 6 APPPATH\Controllers\Api.php(45): App\Models\UserModel->adduser([...])
+ 7 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Api->registerFun()
+ 8 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Api))
+ 9 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+10 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+11 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+12 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-05-22 07:47:19 --> ErrorException: Undefined variable $userModel
+[Method: POST, Route: Api/register]
+in APPPATH\Controllers\Api.php on line 30.
+ 1 APPPATH\Controllers\Api.php(30): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined variable $userModel', 'C:\\xampp\\htdocs\\cukkuboo\\app\\Controllers\\Api.php', 30)
+ 2 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Api->registerFun()
+ 3 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Api))
+ 4 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 5 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+ 6 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 7 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-05-22 07:55:44 --> ErrorException: Undefined variable $userModel
+[Method: POST, Route: Api/register]
+in APPPATH\Controllers\Api.php on line 30.
+ 1 APPPATH\Controllers\Api.php(30): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined variable $userModel', 'C:\\xampp\\htdocs\\cukkuboo\\app\\Controllers\\Api.php', 30)
+ 2 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Api->registerFun()
+ 3 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Api))
+ 4 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 5 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+ 6 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 7 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+ERROR - 2025-05-22 09:13:48 --> mysqli_sql_exception: Column 'username' cannot be null in C:\xampp\htdocs\cukkuboo\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\cukkuboo\system\Database\MySQLi\Connection.php(327): mysqli->query('INSERT INTO `us...', 0)
+#1 C:\xampp\htdocs\cukkuboo\system\Database\BaseConnection.php(738): CodeIgniter\Database\MySQLi\Connection->execute('INSERT INTO `us...')
+#2 C:\xampp\htdocs\cukkuboo\system\Database\BaseConnection.php(652): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO `us...')
+#3 C:\xampp\htdocs\cukkuboo\system\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `us...', Array, false)
+#4 C:\xampp\htdocs\cukkuboo\app\Models\UserModel.php(28): CodeIgniter\Database\BaseBuilder->insert(Array)
+#5 C:\xampp\htdocs\cukkuboo\app\Controllers\Api.php(55): App\Models\UserModel->userInsert(Array)
+#6 C:\xampp\htdocs\cukkuboo\system\CodeIgniter.php(933): App\Controllers\Api->registerFun()
+#7 C:\xampp\htdocs\cukkuboo\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Api))
+#8 C:\xampp\htdocs\cukkuboo\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#9 C:\xampp\htdocs\cukkuboo\system\Boot.php(334): CodeIgniter\CodeIgniter->run()
+#10 C:\xampp\htdocs\cukkuboo\system\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#11 C:\xampp\htdocs\cukkuboo\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#12 {main}
+CRITICAL - 2025-05-22 09:13:48 --> CodeIgniter\Database\Exceptions\DatabaseException: Column 'username' cannot be null
+[Method: POST, Route: Api/register]
+in SYSTEMPATH\Database\BaseConnection.php on line 692.
+ 1 SYSTEMPATH\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `user` (`username`, `phone`, `email`, `password`, `country`, `status`, `join_date`, `subscription`) VALUES (:username:, :phone:, :email:, :password:, :country:, :status:, :join_date:, :subscription:)', [...], false)
+ 2 APPPATH\Models\UserModel.php(28): CodeIgniter\Database\BaseBuilder->insert([...])
+ 3 APPPATH\Controllers\Api.php(55): App\Models\UserModel->userInsert([...])
+ 4 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Api->registerFun()
+ 5 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Api))
+ 6 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 9 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-05-22 09:13:48 --> [Caused by] CodeIgniter\Database\Exceptions\DatabaseException: Column 'username' cannot be null
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 332.
+ 1 SYSTEMPATH\Database\BaseConnection.php(738): CodeIgniter\Database\MySQLi\Connection->execute('INSERT INTO `user` (`username`, `phone`, `email`, `password`, `country`, `status`, `join_date`, `subscription`) VALUES (NULL, NULL, NULL, \'$2y$10$WIW1cNjjhYAZn21xlLeUv.ea84ZTJZd6rVD0N6ucFyvgKfM.abmVq\', NULL, NULL, NULL, NULL)')
+ 2 SYSTEMPATH\Database\BaseConnection.php(652): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO `user` (`username`, `phone`, `email`, `password`, `country`, `status`, `join_date`, `subscription`) VALUES (NULL, NULL, NULL, \'$2y$10$WIW1cNjjhYAZn21xlLeUv.ea84ZTJZd6rVD0N6ucFyvgKfM.abmVq\', NULL, NULL, NULL, NULL)')
+ 3 SYSTEMPATH\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `user` (`username`, `phone`, `email`, `password`, `country`, `status`, `join_date`, `subscription`) VALUES (:username:, :phone:, :email:, :password:, :country:, :status:, :join_date:, :subscription:)', [...], false)
+ 4 APPPATH\Models\UserModel.php(28): CodeIgniter\Database\BaseBuilder->insert([...])
+ 5 APPPATH\Controllers\Api.php(55): App\Models\UserModel->userInsert([...])
+ 6 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Api->registerFun()
+ 7 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Api))
+ 8 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-05-22 09:13:48 --> [Caused by] mysqli_sql_exception: Column 'username' cannot be null
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 327.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(327): mysqli->query('INSERT INTO `user` (`username`, `phone`, `email`, `password`, `country`, `status`, `join_date`, `subscription`) VALUES (NULL, NULL, NULL, \'$2y$10$WIW1cNjjhYAZn21xlLeUv.ea84ZTJZd6rVD0N6ucFyvgKfM.abmVq\', NULL, NULL, NULL, NULL)', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(738): CodeIgniter\Database\MySQLi\Connection->execute('INSERT INTO `user` (`username`, `phone`, `email`, `password`, `country`, `status`, `join_date`, `subscription`) VALUES (NULL, NULL, NULL, \'$2y$10$WIW1cNjjhYAZn21xlLeUv.ea84ZTJZd6rVD0N6ucFyvgKfM.abmVq\', NULL, NULL, NULL, NULL)')
+ 3 SYSTEMPATH\Database\BaseConnection.php(652): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO `user` (`username`, `phone`, `email`, `password`, `country`, `status`, `join_date`, `subscription`) VALUES (NULL, NULL, NULL, \'$2y$10$WIW1cNjjhYAZn21xlLeUv.ea84ZTJZd6rVD0N6ucFyvgKfM.abmVq\', NULL, NULL, NULL, NULL)')
+ 4 SYSTEMPATH\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `user` (`username`, `phone`, `email`, `password`, `country`, `status`, `join_date`, `subscription`) VALUES (:username:, :phone:, :email:, :password:, :country:, :status:, :join_date:, :subscription:)', [...], false)
+ 5 APPPATH\Models\UserModel.php(28): CodeIgniter\Database\BaseBuilder->insert([...])
+ 6 APPPATH\Controllers\Api.php(55): App\Models\UserModel->userInsert([...])
+ 7 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Api->registerFun()
+ 8 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Api))
+ 9 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+10 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+11 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+12 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-05-22 09:14:21 --> ErrorException: Undefined variable $userModel
+[Method: POST, Route: Api/register]
+in APPPATH\Controllers\Api.php on line 30.
+ 1 APPPATH\Controllers\Api.php(30): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined variable $userModel', 'C:\\xampp\\htdocs\\cukkuboo\\app\\Controllers\\Api.php', 30)
+ 2 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Api->registerFun()
+ 3 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Api))
+ 4 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 5 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+ 6 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 7 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-05-22 10:16:34 --> Error: Call to undefined function App\Controllers\setJSON()
 [Method: POST, Route: Api/register]
 in APPPATH\Controllers\Api.php on line 39.
  1 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Api->registerFun()
  2 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Api))
+ 3 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 4 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+ 5 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 6 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-05-22 11:17:19 --> Error: Call to undefined function App\Controllers\setJSON()
+[Method: POST, Route: user/register]
+in APPPATH\Controllers\User.php on line 39.
+ 1 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\User->registerFun()
+ 2 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\User))
  3 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
  4 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
  5 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))

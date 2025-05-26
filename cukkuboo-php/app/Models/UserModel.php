@@ -1,16 +1,16 @@
 <?php
-
+ 
 namespace App\Models;
 use CodeIgniter\Model;
-
+ 
 class UserModel extends Model
 {
     // Table name
     protected $table = 'user';
-
+ 
     // Primary key (optional but good to include)
     protected $primaryKey = 'user_id';
-
+ 
     // Mass assignable fields
     protected $allowedFields = [
         'username',
@@ -28,7 +28,7 @@ class UserModel extends Model
             ->orWhere('email', $email)
             ->first(); // Uses query builder (safe)
     }
-
+ 
     public function addUser($data)
     {
         return $this->insert($data); // Uses Model insert
@@ -40,9 +40,10 @@ class UserModel extends Model
     // {
     //     return $this->db->query("SELECT * FROM user WHERE phone = '".$phone."' OR email = '".$email."'") ->getRow();
     // }
-
+ 
     //  public function addUser($data)
     // {
-    //     return $this->insert($data); 
+    //     return $this->insert($data);
     // }
 }
+?>

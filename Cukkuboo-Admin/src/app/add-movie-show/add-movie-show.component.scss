@@ -1,21 +1,21 @@
-.add-movie-show-container {
-  background-color: #121212;
-  color: #fff;
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  padding: 32px 16px;
-  box-sizing: border-box;
-}
+// .content-container {
+//   background-color: #121212;
+//   color: #fff;
+//   display: flex;
+//   flex-direction: column;
+//   min-height: 100vh;
+//   padding: 32px 16px;
+//   box-sizing: border-box;
+// }
 
 
 mat-card {
-  padding-top: 10px;
-  padding-bottom: 10px;
-  background-color: #1e1e1e;
-  border: 1px solid white;
+  padding-top: 15px;
+  padding-bottom: 17px;
+  background-color: white;
+  border: 1px solid black;
   border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(255, 23, 68, 0.2);
+ 
 }
 
 /* mat-form-field {
@@ -139,23 +139,26 @@ input {
 
 
 .save-button {
-  background-color: #7d2725;
+ 
   color: white;
   border-radius: 24px;
   height: 36px;
   font-size: 14px;
   font-weight: 500;
   padding: 0 16px;
-  box-shadow: 0 2px 6px rgba(255, 23, 68, 0.4);
+ 
   border: none;
   transition: background-color 0.3s ease;
 
+  background-color: #c71336; 
+
+  &:hover {
+      background-color: #e96238 !important;
+    }
 }
 
 
-.save-button:hover {
-  background-color: #ff1744;
-}
+
 
 .trash-button {
   position: absolute;
@@ -163,27 +166,32 @@ input {
   right: 15px;
   background: transparent;
   border: none;
-  color: white;
-  width: 24px;
-  height: 24px;
-  font-size: 10px;
+  color: black;
+  
+  font-size: 13px;
   cursor: pointer;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+ 
+
+  &:hover {
+    color: #e96238 !important;
+}
 }
 
 .trash-button-main {
   position: absolute;
-  top: 60px;
+  top: 40px;
   right: 22px;
   background: transparent;
   border: none;
-  color: white;
-  width: 24px;
-  height: 24px;
-  font-size: 10px;
+  color:black;
+  font-size: 13px;
   cursor: pointer;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+  
   padding-top: 10px;
+
+  &:hover {
+    color: #e96238 !important;
+}
 }
 
 

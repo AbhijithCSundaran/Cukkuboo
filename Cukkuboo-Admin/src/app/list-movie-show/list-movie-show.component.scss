@@ -20,25 +20,7 @@
   }
 
 
-.add-button {
-  background-color: #c71336; 
-  width: 75px;
-  color: white;
-  border-radius: 24px;
-  height: 36px;
-  font-size: 14px;
-  font-weight: 500;
-  padding: 0 16px;
-  
-  border: none;
-  transition: background-color 0.3s ease;
-  display: flex;
-  align-items: center;
 
-  &:hover {
-    background-color: #e96238 !important;
-  }
-}
 
 .pagination {
   background-color: #f2f2f2;

@@ -1,18 +1,18 @@
 import { Routes } from '@angular/router';
-import { LoginComponent } from './login/login.component';
-import { LayoutComponent } from './layout/layout.component';
-import { DashboardComponent } from './dashboard/dashboard.component';
-import { AddMovieShowComponent } from './add-movie-show/add-movie-show.component';
-import { CategoriesComponent } from './categories/categories.component';
-import { GenresComponent } from './genres/genres.component';
-import { ListMovieShowComponent } from './list-movie-show/list-movie-show.component';
-import { UserListComponent } from './user-list/user-list.component';
-import { AddUserComponent } from './user-list/add-user/add-user.component';
-import { SubscriptionsComponent } from './subscriptions/subscriptions.component';
-import { EditSubscriptionListComponent } from './subscriptions/edit-subscription-list/edit-subscription-list.component';
-import { SubscriptionPlansComponent } from './subscription-plans/subscription-plans.component';
-import { AddSubscriptionPlanComponent } from './subscription-plans/add-subscription-plan/add-subscription-plan.component';
+import { LoginComponent } from './pages/login/login.component';
+import { DashboardComponent } from './pages/dashboard/dashboard.component';
+import { AddMovieShowComponent } from './pages/add-movie-show/add-movie-show.component';
+import { CategoriesComponent } from  './pages/categories/categories.component';
+import { GenresComponent } from './pages/genres/genres.component';
+import { ListMovieShowComponent } from './pages/list-movie-show/list-movie-show.component';
 import { AuthGuard } from './auth.guard';
+import { LayoutComponent } from './layout/layout.component';
+import { UserListComponent } from './pages/user-list/user-list.component';
+import { AddUserComponent } from './pages/user-list/add-user/add-user.component';
+import { SubscriptionsComponent } from './pages/subscriptions/subscriptions.component';
+import { EditSubscriptionListComponent } from './pages/subscriptions/edit-subscription-list/edit-subscription-list.component';
+import { SubscriptionPlansComponent } from './pages/subscription-plans/subscription-plans.component';
+import { AddSubscriptionPlanComponent } from './pages/subscription-plans/add-subscription-plan/add-subscription-plan.component';
 
 export const routes: Routes = [
   { path: 'login', redirectTo: '', pathMatch: 'full' },
@@ -22,7 +22,7 @@ export const routes: Routes = [
     component: LayoutComponent,
     canActivate: [AuthGuard],
     children: [
-      { path: 'dashboard', component: DashboardComponent },
+      { path: 'dashboard',  loadComponent: () => import('./pages/dashboard/dashboard.component').then((m) => m.DashboardComponent) },
       { path: 'list-movie-show', component: ListMovieShowComponent },
       { path: 'add-movie-show', component: AddMovieShowComponent },
       { path: 'edit-movie-show/:id', component: AddMovieShowComponent },  // For edit mode

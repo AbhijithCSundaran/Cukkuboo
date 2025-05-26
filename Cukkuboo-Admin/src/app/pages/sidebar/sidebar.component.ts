@@ -1,7 +1,6 @@
 import { Component, EventEmitter, Output, HostListener } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { environment } from '../../environments/environment';
 
 interface SubItem {
   name: string;

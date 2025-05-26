@@ -16,6 +16,8 @@ class Category extends BaseController
 
     public function categorylist()
     {
+
+        // test
         $categories = $this->categoryModel->findAll();
 
         return $this->response->setJSON([

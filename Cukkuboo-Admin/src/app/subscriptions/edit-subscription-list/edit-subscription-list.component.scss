@@ -1,51 +1,42 @@
 .edit-subscription-list-container {
-    background-color: #121212;
-    color: #fff;
+    background-color: white;
+    color: black;
     padding: 20px;
     height: 100%;
   }
   
-  .back-to-list-button {
-    background-color:#7d2725;
-    color: white;
-    border-radius: 24px;
-    height: 36px;
-    font-size: 14px;
-    font-weight: 500;
-    padding: 0 16px;
-    box-shadow: 0 2px 6px rgba(255, 23, 68, 0.4);
-    border: none;
-    transition: background-color 0.3s ease;
-    display: flex;
-    align-items: center;
-   
-  }
   
-  .back-to-list-button:hover {
-    background-color: #ff1744;
-  }
+  h2 {
+    color: black;
+    margin: 0;
+    font-size: 25px;
+    line-height: 1;
+}
+ 
   mat-card {
-    background-color: #1e1e1e;
-    border: 1px solid white;
+    background-color: white;
+    border: 1px solid black;
+    padding-top: 10px;
+    padding-bottom: 8px;
     border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(255, 23, 68, 0.2);
+
   }
   
-  mat-form-field {
-    color: #fff;
-  }
+  // mat-form-field {
+  //   color: #fff;
+  // }
   
-  mat-form-field .mat-form-field-label {
-    color: #7d2725 !important;
-  }
+  // mat-form-field .mat-form-field-label {
+  //   color: #7d2725 !important;
+  // }
   
-  mat-form-field .mat-input-element {
-    color: #fff;
-  }
+  // mat-form-field .mat-input-element {
+  //   color: #fff;
+  // }
   
-  mat-form-field.mat-focused .mat-form-field-label {
-    color:#7d2725 !important;
-  }
+  // mat-form-field.mat-focused .mat-form-field-label {
+  //   color:#7d2725 !important;
+  // }
   
   mat-select,
   textarea,
@@ -56,34 +47,36 @@
 
   .button-container {
     display: flex;
-    gap: 12px;
-    padding: 10px 0;
+   gap:12px;
+    padding: 10px 0 0;
     width: 100%;
     display: flex; 
     justify-content: flex-end; 
-    gap: 10px; 
-    padding: 10px;
+ 
   }
   
   .save-button {
-    background-color: #7d2725;
+   
     color: white;
     border-radius: 24px;
     height: 36px;
     font-size: 14px;
     font-weight: 500;
     padding: 0 16px;
-    box-shadow: 0 2px 6px rgba(255, 23, 68, 0.4);
+  
     border: none;
     transition: background-color 0.3s ease;
     display: flex;
     align-items: center;
+    
+  background-color: #c71336; 
+
+  &:hover {
+      background-color: #e96238 !important;
+    }
   }
   
-  .save-button:hover {
-    background-color: #ff1744;
-  }
-  
+
   .cancel-button {
     background-color:white;
     color: black;
@@ -92,14 +85,16 @@
     font-size: 14px;
     font-weight: 500;
     padding: 0 16px;
-    box-shadow: 0 2px 6px rgba(255, 23, 68, 0.4);
+    box-shadow: 0 2px 6px rgba(36, 35, 35, 0.4);
     border: none;
     transition: background-color 0.3s ease;
     display: flex;
     align-items: center;
+
+
+  &:hover {
+      background-color: #e96238 !important;
+    }
   }
   
-  .cancel-button:hover {
-    background-color: #ff1744;
-  }
   

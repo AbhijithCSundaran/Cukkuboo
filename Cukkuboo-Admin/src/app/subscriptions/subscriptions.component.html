@@ -1,4 +1,4 @@
-<div class="subscriptions-container">
+<div class="content-container">
     <div class="header-row">
       <h2>Subcriptions List</h2>
       
@@ -56,7 +56,7 @@
 
         <!-- No Data Found -->
         <div class="no-data" *ngIf="dataSource.data.length === 0">
-            No Subscriptionsfound.
+            No Subscriptions found.
         </div>
 
       <mat-paginator class="pagination" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>

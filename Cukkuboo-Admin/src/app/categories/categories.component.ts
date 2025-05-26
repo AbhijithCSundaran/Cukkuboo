@@ -30,6 +30,8 @@ export class CategoriesComponent {
   categoryForm: FormGroup;
   isEditing: boolean = false;
   categoryToEditIndex: number | null = null;
+  isMobileView = false;
+
 
   categories: { name: string, description: string, status: string }[] = [
     { name: 'Movies', description: 'Feature films and blockbusters', status: 'enabled' },
@@ -46,6 +48,18 @@ export class CategoriesComponent {
       status: ['enabled', Validators.required]
     });
   }
+
+ 
+
+ngOnInit(): void {
+  this.checkViewport();
+  window.addEventListener('resize', this.checkViewport.bind(this));
+}
+
+checkViewport() {
+  this.isMobileView = window.innerWidth <= 768;
+}
+
 
   submitCategory() {
     if (this.categoryForm.invalid) return;

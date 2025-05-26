@@ -17,10 +17,10 @@
 @include mat.core();
 
 html {
-    color-scheme: dark;
+    color-scheme: light;
     @include mat.theme((color: (primary: mat.$red-palette,
                 tertiary: mat.$orange-palette,
-                theme-type: dark,
+                theme-type: light,
             ),
             typography: Roboto,
             density: -2));

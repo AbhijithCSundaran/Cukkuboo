@@ -1,5 +1,7 @@
 <div class="edit-subscription-list-container">
-  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+
+    
     <h2>Edit Subscription</h2>
     <!-- <button class="back-to-list-button" (click)="goBack()">Back to List</button> -->
   </div>
@@ -7,13 +9,13 @@
 
   
   <mat-card appearance="outlined">
-    <mat-card-content style="display: flex; flex-wrap: wrap;">
+    <mat-card-content class="d-flex flex-wrap">
 
 
 
       <!-- Plan Dropdown -->
       <div class="w-50 px-2 pb-3">
-        <mat-form-field appearance="outline" style="width: 100%;">
+        <mat-form-field appearance="outline" class="w-100">
           <mat-label>Plan</mat-label>
           <mat-select [(value)]="selectedPlan">
             <mat-option value="Basic">Basic</mat-option>
@@ -24,7 +26,7 @@
       </div>
        <!-- Period Dropdown -->
        <div class="w-50 px-2 pb-3">
-        <mat-form-field appearance="outline" style="width: 100%;">
+        <mat-form-field appearance="outline" class="w-100">
           <mat-label>Period</mat-label>
           <mat-select [(value)]="selectedPeriod">
             <mat-option value="Monthly">Monthly</mat-option>

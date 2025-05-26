@@ -1,0 +1,19 @@
+<?php
+
+namespace App\Models;
+
+class UserModel extends Model
+{
+    public function __construct() {
+            $this->db = \Config\Database::connect();
+        }
+    public function isUserExists($phone,$email)
+    {
+        return $this->db->query("SELECT * FROM user WHERE phone = '".$phone."' OR email = '".$email."'") ->getRow();
+    }
+
+    public function adduser($data) {
+            return $this->db->table('user')->insert($data);
+    
+
+}

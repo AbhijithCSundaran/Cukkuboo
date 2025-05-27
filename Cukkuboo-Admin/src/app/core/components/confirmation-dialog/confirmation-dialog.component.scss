@@ -1,0 +1,27 @@
+:host {
+  >div {
+    height: 100%;
+    padding: 10px 25px;
+    min-height: 150px;
+    min-width: 200px;
+    color: #d5d5d5;
+  }
+
+  h2,
+  h5 {
+    text-align: center;
+  }
+
+  button {
+    min-width: 80px;
+    line-height: 1;
+  }
+
+  label {
+    color: #727272;
+
+    &:hover {
+      color: #86a7ff;
+    }
+  }
+}

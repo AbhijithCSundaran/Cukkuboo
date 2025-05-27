@@ -23,8 +23,10 @@ class Category extends BaseController
         return $this->response->setJSON([
             'success' => true,
             'data' => $categories
-        ]);
+        ])->setStatusCode(200);
     }
+
+    // POST: Create category
     public function create()
     {
         $data = $this->request->getJSON(true);
@@ -43,7 +45,7 @@ class Category extends BaseController
             'success' => true,
             'message' => 'Category created successfully.',
             'data' => $data
-        ]);
+        ])->setStatusCode(201);
     }
  
     // PUT /categories/{category_id} - Update a category
@@ -87,6 +89,6 @@ class Category extends BaseController
         return $this->respondDeleted([
             'success' => true,
             'message' => 'Category deleted successfully.'
-        ]);
+        ])->setStatusCode(200);
     }
 }

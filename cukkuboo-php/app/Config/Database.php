@@ -27,9 +27,9 @@ class Database extends Config
     public array $default = [
         'DSN'          => '',
         'hostname'     => 'localhost',
-        'username'     => 'vcstagin_ott',
-        'password'     => 'TZ7UZDtEB7pkUWGJSuvw',
-        'database'     => 'vcstagin_ott',
+        'username'     => 'root',
+        'password'     => '',
+        'database'     => 'cukkuboo',
         'DBDriver'     => 'MySQLi',
         'DBPrefix'     => '',
         'pConnect'     => false,

@@ -6,10 +6,15 @@ use CodeIgniter\Model;
 
 class LoginModel extends Model
 {
-    protected $table = 'user';         // Your users table name
-    protected $primaryKey = 'id';      // Primary key column
+    protected $table = 'user';             // Table name
+    protected $primaryKey = 'id';          // Primary key
 
-    protected $allowedFields = [       // Fields allowed for insert/update if needed
+    // Automatically manage created_at and updated_at
+    protected $useTimestamps = true;
+    protected $createdField  = 'created_at';
+    protected $updatedField  = 'updated_at';
+
+    protected $allowedFields = [
         'username',
         'phone',
         'email',
@@ -17,14 +22,14 @@ class LoginModel extends Model
         'token',
         'status',
         'subscription',
-        'join_date'
+        'created_at',
+        'updated_at',
+        'last_login'
     ];
 
-    // Optional: You can add helper methods if needed
-    public function getUser($email, $token)
+    // Optional: Add helper method
+    public function getUserByEmail($email)
     {
-        return $this->where('email', $email)
-                    ->where('token', $token)
-                    ->first();
+        return $this->where('email', $email)->first();
     }
 }

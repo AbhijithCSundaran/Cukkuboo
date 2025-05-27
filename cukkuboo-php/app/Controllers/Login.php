@@ -19,46 +19,54 @@ class Login extends BaseController
     }
 
     public function login()
-    {
-        $data = $this->request->getJSON(true);
+{
+    $data = $this->request->getJSON(true);
 
-        // Check required fields: email, password, and token
-        if (!isset($data['email'], $data['password'], $data['token'])) {
-            return $this->response->setJSON([
-                'status' => false,
-                'message' => 'Email, password, and token are required.'
-            ]);
-        }
-
-        // Fetch user by email and token from LoginModel (make sure the model has this table and fields)
-        $user = $this->LoginModel
-            ->where('email', $data['email'])
-            ->where('token', $data['token'])
-            ->first();
-
-        // Validate user existence and password
-        if (!$user || !password_verify($data['password'], $user['password'])) {
-            return $this->response->setJSON([
-                'status' => false,
-                'message' => 'Invalid credentials or token.'
-            ]);
-        }
-
-        // Return successful login response
-        return $this->response->setJSON([
-            'status' => true,
-            'message' => 'Login successful',
-            'user' => [
-                'user_id' => 'user' . $user['id'],
-                'username' => $user['username'],
-                'phone' => $user['phone'],
-                'email' => $user['email'],
-                'isBlocked' => $user['status'] !== 'active',
-                'subscription' => $user['subscription'],
-                'join_date' => date('Y-m-d'),
-            ]
+    // Check required fields: email and password only
+    if (!isset($data['email'], $data['password'])) {
+        return $this->response->setStatusCode(400)->setJSON([
+            'status' => false,
+            'message' => 'Email and password are required.',
+            'user' => null
         ]);
     }
+
+    // Fetch user by email only
+    $user = $this->LoginModel
+        ->where('email', $data['email'])
+        ->first();
+
+    // Validate user and password
+    if (!$user || !password_verify($data['password'], $user['password'])) {
+        return $this->response->setStatusCode(401)->setJSON([
+            'status' => false,
+            'message' => 'Invalid email or password.',
+            'user' => null
+        ]);
+    }
+
+    // Update last login
+    $this->LoginModel->update($user['id'], [
+        'last_login' => date('Y-m-d H:i:s')
+    ]);
+
+    // Success response
+    return $this->response->setJSON([
+        'status' => true,
+        'message' => 'Login successful',
+        'user' => [
+            'user_id' => 'user' . $user['id'],
+            'username' => $user['username'],
+            'phone' => $user['phone'],
+            'email' => $user['email'],
+            'isBlocked' => $user['status'] !== 'active',
+            'subscription' => $user['subscription'],
+            'createdAt' => $user['created_at'] ?? null,
+            'updatedAt' => $user['updated_at'] ?? null,
+            'lastLogin' => date('Y-m-d H:i:s')
+        ]
+    ]);
+}
 
     public function logout()
     {

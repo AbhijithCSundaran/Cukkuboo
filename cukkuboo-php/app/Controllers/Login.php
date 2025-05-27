@@ -36,14 +36,14 @@ class Login extends BaseController
 
 
         $now = date('Y-m-d H:i:s');
-        $this->loginModel->update($user['id'], ['last_login' => $now]);
+        $this->loginModel->update($user['user_id'], ['last_login' => $now]);
 
 
         return $this->response->setJSON([
             'status' => true,
             'message' => 'Login successful',
             'user' => [
-                'user_id' => 'user' . $user['id'],
+                'user_id' => 'user' . $user['user_id'],
                 'username' => $user['username'],
                 'phone' => $user['phone'],
                 'email' => $user['email'],
@@ -77,7 +77,7 @@ class Login extends BaseController
         }
 
         $now = date('Y-m-d H:i:s');
-        $this->loginModel->update($user['id'], [
+        $this->loginModel->update($user['user_id'], [
             'last_login' => $now,
             'fcm_token' => $data['fcm_token'] // store FCM token
         ]);
@@ -86,7 +86,7 @@ class Login extends BaseController
             'status' => true,
             'message' => 'Login with token successful',
             'user' => [
-                'user_id' => 'user' . $user['id'],
+                'user_id' => 'user' . $user['user_id'],
                 'username' => $user['username'],
                 'phone' => $user['phone'],
                 'email' => $user['email'],

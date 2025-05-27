@@ -8,19 +8,16 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { CommonModule } from '@angular/common';
+import { ValidationMessagesComponent } from '../../../core/components/validation-messsage/validaation-message.component';
 
 @Component({
   selector: 'app-add-subscription-plan',
   standalone: true,
   imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatCardModule,
-    MatSelectModule,
-    MatDatepickerModule,
-    MatNativeDateModule
+    CommonModule, ReactiveFormsModule,
+    MatFormFieldModule,MatInputModule,
+    MatCardModule,MatSelectModule,MatDatepickerModule,MatNativeDateModule,
+    ValidationMessagesComponent
   ],
   templateUrl: './add-subscription-plan.component.html',
   styleUrl: './add-subscription-plan.component.scss'
@@ -28,7 +25,7 @@ import { CommonModule } from '@angular/common';
 export class AddSubscriptionPlanComponent implements OnInit {
   isEditMode = false;
   subscriptionPlanId: string | null = null;
-  subscriptionForm!: FormGroup;
+  dataForm!: FormGroup;
 
   constructor(
     private router: Router,
@@ -37,7 +34,7 @@ export class AddSubscriptionPlanComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.subscriptionForm = this.fb.group({
+    this.dataForm = this.fb.group({
       name: ['', Validators.required],
       price: [null, [Validators.required, Validators.min(0)]],
       period: ['', Validators.required],
@@ -52,13 +49,13 @@ export class AddSubscriptionPlanComponent implements OnInit {
   }
 
   saveUser(): void {
-    if (this.subscriptionForm.invalid) {
-      this.subscriptionForm.markAllAsTouched();
+    if (this.dataForm.invalid) {
+      this.dataForm.markAllAsTouched();
     
       return;
     }
 
-    const planData = this.subscriptionForm.value;
+    const planData = this.dataForm.value;
     console.log('Saved plan:', planData);
     this.router.navigate(['/subscription-plans']);
   }

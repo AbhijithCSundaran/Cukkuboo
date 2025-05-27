@@ -8,14 +8,17 @@
     <button class="back-to-list-button" (click)="goBack()">Back to List</button>
   </div>
   <mat-card appearance="outlined">
-    <form [formGroup]="subscriptionForm" (ngSubmit)="saveUser()">
+    <form [formGroup]="dataForm" (ngSubmit)="saveUser()">
       <mat-card-content class="d-flex flex-wrap">
-        
+
         <!-- Plan -->
         <div class="w-50 px-2 pb-3">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Plan</mat-label>
             <input matInput placeholder="Enter plan name" formControlName="name">
+            <mat-error>
+              <Validation-Messages [control]="dataForm.controls['name']"></Validation-Messages>
+            </mat-error>
           </mat-form-field>
         </div>
 
@@ -24,6 +27,9 @@
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Price</mat-label>
             <input matInput type="number" placeholder="Enter price" formControlName="price">
+            <mat-error>
+              <Validation-Messages [control]="dataForm.controls['name']"></Validation-Messages>
+            </mat-error>
           </mat-form-field>
         </div>
 
@@ -36,6 +42,9 @@
               <mat-option value="Quarterly">Quarterly</mat-option>
               <mat-option value="Yearly">Yearly</mat-option>
             </mat-select>
+            <mat-error>
+              <Validation-Messages [control]="dataForm.controls['period']"></Validation-Messages>
+            </mat-error>
           </mat-form-field>
         </div>
 
@@ -44,6 +53,9 @@
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Features</mat-label>
             <textarea matInput placeholder="Enter features" formControlName="features"></textarea>
+            <mat-error>
+              <Validation-Messages [control]="dataForm.controls['features']"></Validation-Messages>
+            </mat-error>
           </mat-form-field>
         </div>
 

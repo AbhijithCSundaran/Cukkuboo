@@ -21,6 +21,6 @@ class LoginModel extends Model
         'status',
         'subscription',
         'last_login',
-        'fcm_token'
+        'jwt_token'
     ];
 }

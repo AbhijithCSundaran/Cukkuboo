@@ -49,6 +49,7 @@ class User extends BaseController
             'status' => 'active', // Set default status
             'subscription' => 'free',   // Set default subscription
             'join_date' => date('Y-m-d H:i:s')
+             
         ];
 
         $userId = $this->UserModel->addUser($userData);
@@ -57,19 +58,21 @@ class User extends BaseController
         $jwt = new Jwt();
         $token = $jwt->encode(['user_id' => $user['user_id']]);
 
+        $this->UserModel->update($user['user_id'], ['jwt_token' => $token]);
+
         return $this->response->setJSON([
-            'status' => true,
-            'message' => 'User registered successfully.',
-            'data' => [
-                'user_id' => $user['user_id'],
-                'username' => $user['username'],
-                'email' => $user['email'],
-                'phone' => $user['phone'],
-                'subscription_status' => $user['subscription'],
-                'created_at' => $user['join_date']
-            ],
-            'token' => $token
-        ])->setStatusCode(201);
+    'status' => true,
+    'message' => 'User registered successfully.',
+    'data' => [
+        'user_id'             => $user['user_id'],
+        'username'            => $user['username'],
+        'email'               => $user['email'],
+        'phone'               => $user['phone'],
+        'subscription_status' => $user['subscription'],
+        'created_at'          => $user['join_date'],
+        'jwt_token'           => $token
+    ]
+])->setStatusCode(201); 
     }
 }
 

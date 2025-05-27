@@ -10,85 +10,98 @@ class Category extends BaseController
 
     public function __construct()
     {
-        
         $this->categoryModel = new CategoryModel();
     }
 
+    // GET: List all categories
     public function categorylist()
     {
-
-        // test
         $categories = $this->categoryModel->findAll();
 
         return $this->response->setJSON([
             'success' => true,
             'data' => $categories
-        ]);
+        ])->setStatusCode(200);
     }
+
+    // POST: Create category
     public function create()
     {
-        $category_id = $this->input->getPost('category_id');
-        $category_name = $this->input->getPost('category_name');
-
         $data = $this->request->getJSON(true);
 
         if (empty($data['id']) || empty($data['name'])) {
-            return $this->failValidationError('Both ID and Name are required.');
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'Both ID and Name are required.'
+            ])->setStatusCode(400);
         }
 
         if ($this->categoryModel->find($data['id'])) {
-            return $this->fail('Category with this ID already exists.');
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'Category with this ID already exists.'
+            ])->setStatusCode(409);
         }
 
         $this->categoryModel->insert($data);
 
-        return $this->respondCreated([
+        return $this->response->setJSON([
             'success' => true,
             'message' => 'Category created successfully.',
             'data' => $data
-        ]);
+        ])->setStatusCode(201);
     }
 
     // PUT: Update category
     public function update($id = null)
     {
         if (!$id) {
-            return $this->failValidationError('ID is required');
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'ID is required.'
+            ])->setStatusCode(400);
         }
 
         $data = $this->request->getJSON(true);
 
         if (empty($data['name'])) {
-            return $this->failValidationError('Name is required');
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'Name is required.'
+            ])->setStatusCode(400);
         }
 
         if (!$this->categoryModel->find($id)) {
-            return $this->failNotFound('Category not found');
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'Category not found.'
+            ])->setStatusCode(404);
         }
 
         $this->categoryModel->update($id, ['name' => $data['name']]);
 
-        return $this->respond([
+        return $this->response->setJSON([
             'success' => true,
-            'message' => 'Category updated successfully',
+            'message' => 'Category updated successfully.',
             'data' => ['id' => $id, 'name' => $data['name']]
-        ]);
+        ])->setStatusCode(200);
     }
 
     // DELETE: Delete category
     public function delete($id = null)
     {
         if (!$id || !$this->categoryModel->find($id)) {
-            return $this->failNotFound('Category not found.');
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'Category not found.'
+            ])->setStatusCode(404);
         }
 
         $this->categoryModel->delete($id);
 
-        return $this->respondDeleted([
+        return $this->response->setJSON([
             'success' => true,
             'message' => 'Category deleted successfully.'
-        ]);
+        ])->setStatusCode(200);
     }
-
-
 }

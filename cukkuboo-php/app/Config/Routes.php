@@ -11,9 +11,9 @@ use CodeIgniter\Router\RouteCollection;
 $routes->get('/', 'Home::index');
 
 $routes->post('User/register','User::registerFun');
-$routes->get('categories', 'Category::categorylist');
-$routes->post('categories', 'Category::create');              
-$routes->put('categories/(:any)', 'Category::update/$1'); 
-$routes->delete('categories/(:any)', 'Category::delete/$1'); 
+$routes->get('Category/categories', 'Category::categorylist');
+$routes->post('Category/categories', 'Category::create');              
+$routes->put('Category/categories/(:any)', 'Category::update/$1'); 
+$routes->delete('Category/categories/(:any)', 'Category::delete/$1'); 
 
 ?>

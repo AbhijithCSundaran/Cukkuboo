@@ -6,73 +6,99 @@ use App\Models\LoginModel;
 
 class Login extends BaseController
 {
-    protected $LoginModel;
+    protected $loginModel;
 
     public function __construct()
     {
-        $this->LoginModel = new LoginModel();
+        $this->loginModel = new LoginModel();
     }
 
-    public function index(): string
+    public function loginFun()
     {
-        return view('welcome_message');
-    }
+        $data = $this->request->getJSON(true);
 
-    public function login()
-{
-    $data = $this->request->getJSON(true);
 
-    // Check required fields: email and password only
-    if (!isset($data['email'], $data['password'])) {
-        return $this->response->setStatusCode(400)->setJSON([
-            'status' => false,
-            'message' => 'Email and password are required.',
-            'user' => null
-        ]);
-    }
+        if (!isset($data['email']) || !isset($data['password'])) {
+            return $this->response->setStatusCode(400)->setJSON([
+                'status' => false,
+                'message' => 'Email and password are required.'
+            ]);
+        }
 
-    // Fetch user by email only
-    $user = $this->LoginModel
-        ->where('email', $data['email'])
-        ->first();
+        $user = $this->loginModel->where('email', $data['email'])->first();
 
-    // Validate user and password
-    if (!$user || !password_verify($data['password'], $user['password'])) {
-        return $this->response->setStatusCode(401)->setJSON([
-            'status' => false,
-            'message' => 'Invalid email or password.',
-            'user' => null
-        ]);
-    }
+        if (!$user || !password_verify($data['password'], hash: $user['password'])) {
+            return $this->response->setStatusCode(401)->setJSON([
+                'status' => false,
+                'message' => 'Invalid email or password'
+            ]);
+        }
 
-    // Update last login
-    $this->LoginModel->update($user['id'], [
-        'last_login' => date('Y-m-d H:i:s')
-    ]);
 
-    // Success response
-    return $this->response->setJSON([
-        'status' => true,
-        'message' => 'Login successful',
-        'user' => [
-            'user_id' => 'user' . $user['id'],
-            'username' => $user['username'],
-            'phone' => $user['phone'],
-            'email' => $user['email'],
-            'isBlocked' => $user['status'] !== 'active',
-            'subscription' => $user['subscription'],
-            'createdAt' => $user['created_at'] ?? null,
-            'updatedAt' => $user['updated_at'] ?? null,
-            'lastLogin' => date('Y-m-d H:i:s')
-        ]
-    ]);
-}
+        $now = date('Y-m-d H:i:s');
+        $this->loginModel->update($user['id'], ['last_login' => $now]);
 
-    public function logout()
-    {
+
         return $this->response->setJSON([
             'status' => true,
-            'message' => 'Logout successful'
+            'message' => 'Login successful',
+            'user' => [
+                'user_id' => 'user' . $user['id'],
+                'username' => $user['username'],
+                'phone' => $user['phone'],
+                'email' => $user['email'],
+                'isBlocked' => $user['status'] !== 'active',
+                'subscription' => $user['subscription'],
+                'date' => date('Y-m-d'),
+                'createdAt' => $user['created_at'],
+                'updatedAt' => $user['updated_at'],
+                'lastLogin' => $now
+            ]
+        ]);
+    }
+    public function loginToken()
+    {
+        $data = $this->request->getJSON(true);
+
+        if (!isset($data['email'], $data['password'], $data['fcm_token'])) {
+            return $this->response->setStatusCode(400)->setJSON([
+                'status' => false,
+                'message' => 'Email, password, and FCM token are required.'
+            ]);
+        }
+
+        $user = $this->loginModel->where('email', $data['email'])->first();
+
+        if (!$user || !password_verify($data['password'], $user['password'])) {
+            return $this->response->setStatusCode(401)->setJSON([
+                'status' => false,
+                'message' => 'Invalid email or password'
+            ]);
+        }
+
+        $now = date('Y-m-d H:i:s');
+        $this->loginModel->update($user['id'], [
+            'last_login' => $now,
+            'fcm_token' => $data['fcm_token'] // store FCM token
+        ]);
+
+        return $this->response->setJSON([
+            'status' => true,
+            'message' => 'Login with token successful',
+            'user' => [
+                'user_id' => 'user' . $user['id'],
+                'username' => $user['username'],
+                'phone' => $user['phone'],
+                'email' => $user['email'],
+                'fcm_token' => $data['fcm_token'],
+                'isBlocked' => $user['status'] !== 'active',
+                'subscription' => $user['subscription'],
+                'date' => date('Y-m-d'),
+                'createdAt' => $user['created_at'],
+                'updatedAt' => $user['updated_at'],
+                'lastLogin' => $now
+            ]
         ]);
     }
 }
+

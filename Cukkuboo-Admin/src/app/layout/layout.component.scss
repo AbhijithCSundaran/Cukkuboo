@@ -42,12 +42,31 @@
 
 }
 
+
+
+
 @media (max-width: 1024px) {
     .sidebar_wrpr {
-        position: fixed;
-        top: 0;
-        left: 0;
-        transform: translateX(-100%);
-        max-height: 100vh;
+      position: fixed;
+      top: 68px;
+      left: 0;
+      
+      height: 86vh;
+      transform: translateX(-100%);
+      
+      z-index: 1000;
     }
-}
+  
+    .sidebar_wrpr.show {
+      transform: translateX(0);
+      top: 68px;
+      left: 0;
+      width: auto;
+      height: 86vh;
+
+    }
+  
+  
+  }
+
+ 

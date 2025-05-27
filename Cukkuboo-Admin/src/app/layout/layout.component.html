@@ -1,12 +1,12 @@
 <div class="main-layout">
     <!-- Topbar -->
     <header class="topbar">
-      <app-topbar></app-topbar>
+      <app-topbar (sidebarToggle)="showSidebar=$event"></app-topbar>
     </header>
   
     <div class="layout-body">
       <!-- Sidebar -->
-      <div class="sidebar_wrpr" [class.collapsed]="isSidebarCollapsed">
+      <div class="sidebar_wrpr" [class.collapsed]="isSidebarCollapsed" [class.show]="showSidebar">
         <app-sidebar (sidebarToggle)="onSidebarToggled($event)"></app-sidebar> 
       </div>
   

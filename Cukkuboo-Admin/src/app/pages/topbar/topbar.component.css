@@ -197,3 +197,19 @@
   font-weight: bold;
    padding: 0 10px;
 }
+
+.hamburger {
+  display: none;
+  font-size: 24px;
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+@media (max-width: 1024px) {
+  .hamburger {
+    display: block;
+  }
+}

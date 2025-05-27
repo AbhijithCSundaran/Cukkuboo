@@ -27,6 +27,20 @@ export class SidebarComponent {
 
   @Output() sidebarToggle = new EventEmitter<boolean>();
 
+  @Output() closeSidebar = new EventEmitter<void>();
+
+onNavigate() {
+  this.closeSidebar.emit();
+}
+
+  isMobileView = window.innerWidth <= 1024;
+
+@HostListener('window:resize', ['$event'])
+onResize(event: any) {
+  this.isMobileView = event.target.innerWidth <= 1024;
+}
+
+
   menuItems: MenuItem[] = [
     { name: 'Dashboard', icon: 'fa-tachometer-alt', path: '/dashboard' },
     {

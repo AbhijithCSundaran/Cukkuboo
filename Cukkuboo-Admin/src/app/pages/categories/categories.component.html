@@ -38,8 +38,7 @@
   </mat-card>
 
 
-  <div class="table-wrapper" *ngIf="!isMobileView">
-    
+  <div class="table-wrapper">
   <table mat-table [dataSource]="categories" class="mat-elevation-z2 custom-table" >
 
     <ng-container matColumnDef="name">
@@ -77,26 +76,7 @@
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
 </div>
-<!-- Card View (Mobile) -->
-<div class="card-list" *ngIf="isMobileView">
-  <mat-card class="category-card" *ngFor="let category of categories; let i = index">
-        <div class="card-row"><strong>Name:</strong> {{ category.name }}</div>
-    <div class="card-row"><strong>Description:</strong> {{ category.description }}</div>
-    <div class="card-row"><strong>Status:</strong>
-      <span [ngClass]="{
-        'badge': true,
-        'badge-enabled': category.status === 'enabled',
-        'badge-disabled': category.status === 'disabled'
-      }">{{ category.status }}</span>
-    </div>
-    <div class="card-row actions">
-      <mat-icon class="icon" (click)="editCategory(i)">edit</mat-icon>
-      <mat-icon class="icon" (click)="deleteCategory(i)">delete</mat-icon>
-    </div>
-  </mat-card>
-</div>
   <!-- No data found message -->
   <div *ngIf="categories.length === 0" class="no-data">
     No categories found.
   </div>
-  

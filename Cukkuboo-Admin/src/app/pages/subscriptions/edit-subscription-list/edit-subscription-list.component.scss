@@ -98,3 +98,55 @@
   }
   
   
+  // Responsive 
+  mat-card-content {
+    display: flex;
+    flex-wrap: wrap;
+
+    > div {
+      width: 50%;
+      padding: 0 8px 12px;
+    }
+  }
+
+ 
+  @media (max-width: 1024px) {
+    mat-card-content > div {
+      width: 100%;
+    }
+
+    .button-container {
+      justify-content: center;
+    }
+  }
+
+  @media (max-width: 767px) {
+    h2 {
+      font-size: 20px;
+    }
+
+    .button-container {
+      flex-direction: column;
+      align-items: stretch;
+
+      .save-button,
+      .cancel-button {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  }
+
+  @media (max-width: 575px) {
+   
+
+    h2 {
+      font-size: 18px;
+    }
+  }
+
+  @media (max-width: 320px) {
+    h2 {
+      font-size: 16px;
+    }
+  }

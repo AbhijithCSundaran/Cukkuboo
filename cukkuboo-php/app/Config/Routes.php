@@ -5,10 +5,9 @@ use CodeIgniter\Router\RouteCollection;
 /**
  * @var RouteCollection $routes
  */
-
-
-
 $routes->get('/', 'Home::index');
+$routes->post('user/register', 'User::registerFun');
+$routes->post('user/login', 'User::login');
 
 $routes->post('User/register','User::registerFun');
 $routes->get('Category/categories', 'Category::categorylist');

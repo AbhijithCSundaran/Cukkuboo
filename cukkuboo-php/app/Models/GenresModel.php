@@ -44,3 +44,4 @@ class GenresModel extends Model
                         ->getRow();
     }
 }
+

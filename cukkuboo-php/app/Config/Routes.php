@@ -16,6 +16,11 @@ $routes->put('User/update', 'User::updateUser');
 $routes->delete('User/delete', 'User::deleteUser');
 
 
+$routes->get('Genres/genres', 'Genres::genreList');
+$routes->post('Genres/genres', 'Genres::create');              
+$routes->post('Genres/genres/(:any)', 'Genres::update/$1');
+$routes->delete('Genres/genres/(:any)', 'Genres::delete/$1');
+
 $routes->get('Category/categories', 'Category::categorylist');
 $routes->post('Category/categories', 'Category::create');              
 $routes->post('Category/categories/(:any)', 'Category::update/$1'); 

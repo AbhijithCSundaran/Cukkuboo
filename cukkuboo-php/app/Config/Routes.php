@@ -15,6 +15,7 @@ $routes->get('User/profile', 'User::getUserDetails');
 $routes->put('User/update', 'User::updateUser');
 $routes->delete('User/delete', 'User::deleteUser');
 
+
 $routes->get('Category/categories', 'Category::categorylist');
 $routes->post('Category/categories', 'Category::create');              
 $routes->post('Category/categories/(:any)', 'Category::update/$1'); 

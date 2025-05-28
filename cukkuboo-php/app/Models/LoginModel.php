@@ -16,9 +16,13 @@ class LoginModel extends Model
     protected $allowedFields = [
         'username',
         'email',
-        'password',
-        'jwt_token',
-        'last_login'
+        'phone',
+        'join_date',
+        'subscription',
+        'created_at',
+        'updated_at',
+        'last_login',
+        'jwt_token'
     ];
 
     // Optional: Clear all jwt_tokens

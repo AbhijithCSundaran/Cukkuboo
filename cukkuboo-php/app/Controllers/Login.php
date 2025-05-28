@@ -49,11 +49,16 @@ class Login extends BaseController
             'status' => true,
             'message' => 'Login successful',
             'user' => [
-                'user_id' => 'user' . $user['user_id'],
-                'username' => $user['username'],
-                'email' => $user['email'],
-                'jwt_token' => $token,
-                'lastLogin' => $now
+                'user_id'     => 'user' . $user['user_id'],
+                'username'    => $user['username'],
+                'phone'       => $user['phone'],
+                'email'       => $user['email'],
+                'subscription'=> $user['subscription'],
+                'join_date'   => $user['join_date'],
+                'createdAt'   => $user['created_at'],   
+                'updatedAt'   => $user['updated_at'],   
+                'lastLogin'   => $now,                  
+                'jwt_token'   => $token
             ]
         ]);
     }
@@ -69,3 +74,4 @@ class Login extends BaseController
         ]);
     }
 }
+

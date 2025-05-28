@@ -7,7 +7,7 @@ use CodeIgniter\Model;
 class LoginModel extends Model
 {
     protected $table = 'user';
-    protected $primaryKey = 'id';
+    protected $primaryKey = 'user_id';
 
     protected $useTimestamps = true;
     protected $createdField  = 'created_at';
@@ -21,6 +21,6 @@ class LoginModel extends Model
         'status',
         'subscription',
         'last_login',
-        'fcm_token'
+        'jwt_token'
     ];
 }

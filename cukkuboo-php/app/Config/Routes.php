@@ -8,7 +8,8 @@ use CodeIgniter\Router\RouteCollection;
 $routes->get('/', 'Home::index');
 $routes->post('user/register', 'User::registerFun');
 $routes->post('Login/login', 'Login::loginFun');
-$routes->post('Login/login', 'Login::loginToken');
+$routes->post('Login/logout', 'Login::logout');
+
 
 $routes->post('User/register','User::registerFun');
 $routes->get('Category/categories', 'Category::categorylist');

@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\LoginModel;
+use App\Libraries\Jwt;
 
 class Login extends BaseController
 {
@@ -17,7 +18,7 @@ class Login extends BaseController
     {
         $data = $this->request->getJSON(true);
 
-
+        
         if (!isset($data['email']) || !isset($data['password'])) {
             return $this->response->setStatusCode(400)->setJSON([
                 'status' => false,
@@ -25,50 +26,10 @@ class Login extends BaseController
             ]);
         }
 
+       
         $user = $this->loginModel->where('email', $data['email'])->first();
 
-        if (!$user || !password_verify($data['password'], hash: $user['password'])) {
-            return $this->response->setStatusCode(401)->setJSON([
-                'status' => false,
-                'message' => 'Invalid email or password'
-            ]);
-        }
-
-
-        $now = date('Y-m-d H:i:s');
-        $this->loginModel->update($user['id'], ['last_login' => $now]);
-
-
-        return $this->response->setJSON([
-            'status' => true,
-            'message' => 'Login successful',
-            'user' => [
-                'user_id' => 'user' . $user['id'],
-                'username' => $user['username'],
-                'phone' => $user['phone'],
-                'email' => $user['email'],
-                'isBlocked' => $user['status'] !== 'active',
-                'subscription' => $user['subscription'],
-                'date' => date('Y-m-d'),
-                'createdAt' => $user['created_at'],
-                'updatedAt' => $user['updated_at'],
-                'lastLogin' => $now
-            ]
-        ]);
-    }
-    public function loginToken()
-    {
-        $data = $this->request->getJSON(true);
-
-        if (!isset($data['email'], $data['password'], $data['fcm_token'])) {
-            return $this->response->setStatusCode(400)->setJSON([
-                'status' => false,
-                'message' => 'Email, password, and FCM token are required.'
-            ]);
-        }
-
-        $user = $this->loginModel->where('email', $data['email'])->first();
-
+       
         if (!$user || !password_verify($data['password'], $user['password'])) {
             return $this->response->setStatusCode(401)->setJSON([
                 'status' => false,
@@ -76,29 +37,52 @@ class Login extends BaseController
             ]);
         }
 
-        $now = date('Y-m-d H:i:s');
-        $this->loginModel->update($user['id'], [
-            'last_login' => $now,
-            'fcm_token' => $data['fcm_token'] // store FCM token
-        ]);
+        
+        $jwt = new Jwt();
+        $token = $jwt->encode(['user_id' => $user['user_id']]);
 
+        $now = date('Y-m-d H:i:s');
+
+        
+        $updateData = [
+            'last_login' => $now,
+            'jwt_token' => $token,
+        ];
+
+        
+        if (!empty($data['fcm_token'])) {
+            $updateData['fcm_token'] = $data['fcm_token'];
+        }
+
+        
+        $this->loginModel->update($user['user_id'], $updateData);
+        $this->UserModel->update($user['user_id'], ['jwt_token' => $token]);
+        
         return $this->response->setJSON([
             'status' => true,
-            'message' => 'Login with token successful',
+            'message' => 'Login successful',
             'user' => [
-                'user_id' => 'user' . $user['id'],
+                'user_id' => 'user' . $user['user_id'],
                 'username' => $user['username'],
                 'phone' => $user['phone'],
                 'email' => $user['email'],
-                'fcm_token' => $data['fcm_token'],
+                'fcm_token' => $updateData['fcm_token'] ?? null,
                 'isBlocked' => $user['status'] !== 'active',
                 'subscription' => $user['subscription'],
                 'date' => date('Y-m-d'),
                 'createdAt' => $user['created_at'],
                 'updatedAt' => $user['updated_at'],
-                'lastLogin' => $now
+                'lastLogin' => $now,
+                'jwt_token'    => $data['jwt_token']
             ]
         ]);
     }
-}
 
+    public function logout()
+    {
+        return $this->response->setJSON([
+            'status' => true,
+            'message' => 'Logout successful'
+        ]);
+    }
+}

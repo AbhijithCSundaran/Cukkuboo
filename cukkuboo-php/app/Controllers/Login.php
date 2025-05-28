@@ -19,38 +19,31 @@ class Login extends BaseController
         $data = $this->request->getJSON(true);
 
         if (!isset($data['email']) || !isset($data['password'])) {
-            return $this->response->setStatusCode(400)->setJSON([
+            return $this->response->setJSON([
                 'status' => false,
                 'message' => 'Email and password are required.'
             ]);
         }
 
-        $user = $this->loginModel->findUserByEmail($data['email']);
+        $user = $this->loginModel->where('email', $data['email'])->first();
 
         if (!$user || !password_verify($data['password'], $user['password'])) {
-            return $this->response->setStatusCode(401)->setJSON([
+            return $this->response->setJSON([
                 'status' => false,
-                'message' => 'Invalid email or password'
+                'message' => 'Invalid email or password.'
             ]);
         }
 
-        // Generate JWT token
+        // Generate new JWT token
         $jwt = new Jwt();
         $token = $jwt->encode(['user_id' => $user['user_id']]);
         $now = date('Y-m-d H:i:s');
 
-        // Prepare update data
-        $updateData = [
-            'last_login' => $now,
+        // Update login info
+        $this->loginModel->update($user['user_id'], [
             'jwt_token' => $token,
-        ];
-
-        // If fcm_token is provided, store it
-        if (!empty($data['fcm_token'])) {
-            $updateData['fcm_token'] = $data['fcm_token'];
-        }
-
-        $this->loginModel->updateLoginData($user['user_id'], $updateData);
+            'last_login' => $now
+        ]);
 
         return $this->response->setJSON([
             'status' => true,
@@ -58,50 +51,21 @@ class Login extends BaseController
             'user' => [
                 'user_id' => 'user' . $user['user_id'],
                 'username' => $user['username'],
-                'phone' => $user['phone'],
                 'email' => $user['email'],
-                'isBlocked' => $user['status'] !== 'active',
-                'subscription' => $user['subscription'],
-                'date' => date('Y-m-d'),
-                'createdAt' => $user['created_at'],
-                'updatedAt' => $user['updated_at'],
-                'lastLogin' => $now,
-                'jwt_token'=>$user['jwt_token']
+                'jwt_token' => $token,
+                'lastLogin' => $now
             ]
         ]);
     }
 
     public function logout()
     {
-        $data = $this->request->getJSON(true);
-
-        if (!isset($data['email'])) {
-            return $this->response->setStatusCode(400)->setJSON([
-                'status' => false,
-                'message' => 'Email is required to logout.'
-            ]);
-        }
-
-        $user = $this->loginModel->findUserByEmail($data['email']);
-
-        if (!$user) {
-            return $this->response->setStatusCode(404)->setJSON([
-                'status' => false,
-                'message' => 'User not found.'
-            ]);
-        }
-
-        // Generate a new JWT to invalidate old one
-        $jwt = new Jwt();
-        $newToken = $jwt->encode(['user_id' => $user['user_id'], 'logout' => true]);
-
-        $this->loginModel->updateLoginData($user['user_id'], [
-            'jwt_token' => $newToken
-        ]);
+        // Clear all tokens from all users (or apply condition if needed)
+        $this->loginModel->updateAllTokensNull();
 
         return $this->response->setJSON([
             'status' => true,
-            'message' => 'Logout successful. Token has been updated.'
+            'message' => 'Logout successful.'
         ]);
     }
 }

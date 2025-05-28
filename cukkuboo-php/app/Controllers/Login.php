@@ -63,15 +63,46 @@ class Login extends BaseController
         ]);
     }
 
-    public function logout()
-    {
-        // Clear all tokens from all users (or apply condition if needed)
-        $this->loginModel->updateAllTokensNull();
+    // public function logout()
+    // {
+    //     // Clear all tokens from all users (or apply condition if needed)
+    //     $this->loginModel->updateAllTokensNull();
 
+    //     return $this->response->setJSON([
+    //         'status' => true,
+    //         'message' => 'Logout successful.'
+    //     ]);
+    // }
+    public function logout()
+{
+    $authHeader = $this->request->getHeaderLine('Authorization');
+
+    if (!$authHeader || !preg_match('/Bearer\s(\S+)/', $authHeader, $matches)) {
         return $this->response->setJSON([
-            'status' => true,
-            'message' => 'Logout successful.'
+            'status' => false,
+            'message' => 'Authorization token missing or invalid.'
         ]);
     }
+
+    $token = $matches[1];
+
+    // Find user by token
+    $user = $this->loginModel->where('jwt_token', $token)->first();
+
+    if (!$user) {
+        return $this->response->setJSON([
+            'status' => false,
+            'message' => 'Invalid token or user not found.'
+        ]);
+    }
+
+    // Clear the token from the DB
+    $this->loginModel->update($user['user_id'], ['jwt_token' => null]);
+
+    return $this->response->setJSON([
+        'status' => true,
+        'message' => 'Logout successful. Token removed.'
+    ]);
+}
 }
 

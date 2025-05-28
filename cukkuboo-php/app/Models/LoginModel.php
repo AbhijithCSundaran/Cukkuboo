@@ -21,6 +21,17 @@ class LoginModel extends Model
         'status',
         'subscription',
         'last_login',
-        'jwt_token'
+        'jwt_token',
+        'fcm_token' 
     ];
+
+    public function findUserByEmail($email)
+    {
+        return $this->where('email', $email)->first();
+    }
+
+    public function updateLoginData($userId, $data)
+    {
+        return $this->update($userId, $data);
+    }
 }

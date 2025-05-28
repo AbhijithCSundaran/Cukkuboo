@@ -20,7 +20,9 @@ class UserModel extends Model
         'country',
         'status',
         'join_date',
-        'subscription'
+        'subscription',
+        'jwt_token'
+
     ];
     public function isUserExists($phone, $email)
     {
@@ -32,7 +34,9 @@ class UserModel extends Model
     public function addUser($data)
     {
         return $this->insert($data); // Uses Model insert
-    }
+
+    
+
     // public function __construct() {
     //         $this->db = \Config\Database::connect();
     //     }
@@ -46,4 +50,4 @@ class UserModel extends Model
     //     return $this->insert($data);
     // }
 }
-?>
+}

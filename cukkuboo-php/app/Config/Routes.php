@@ -13,7 +13,7 @@ $routes->post('Login/login', 'Login::loginToken');
 $routes->post('User/register','User::registerFun');
 $routes->get('Category/categories', 'Category::categorylist');
 $routes->post('Category/categories', 'Category::create');              
-$routes->put('Category/categories/(:any)', 'Category::update/$1'); 
+$routes->post('Category/categories/(:any)', 'Category::update/$1'); 
 $routes->delete('Category/categories/(:any)', 'Category::delete/$1'); 
 
 ?>

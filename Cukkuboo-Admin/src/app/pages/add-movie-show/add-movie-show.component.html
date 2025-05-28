@@ -1,4 +1,4 @@
-<div class="add-movie-show-container">
+<div class="content-container">
   <div class="header-row">
     <h2>{{ isEditMode ? 'Edit Movie/Show' : 'Add Movie/Show' }}</h2>
     <button class="back-to-list-button" [routerLink]="['/list-movie-show']">Back to List</button>
@@ -54,6 +54,9 @@
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Title</mat-label>
           <input matInput placeholder="Add title" formControlName="title" />
+          <mat-error *ngIf="movieForm.controls['title'].touched && movieForm.controls['title'].invalid">
+            <Validation-Messages [control]="movieForm.controls['title']"></Validation-Messages>
+          </mat-error>
         </mat-form-field>
       </div>
 
@@ -66,6 +69,9 @@
             <mat-option value="drama">Drama</mat-option>
             <mat-option value="comedy">Comedy</mat-option>
           </mat-select>
+          <mat-error>
+            <Validation-Messages [control]="movieForm.controls['genre']"></Validation-Messages>
+          </mat-error>
         </mat-form-field>
       </div>
 
@@ -74,6 +80,9 @@
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Description</mat-label>
           <textarea matInput placeholder="Add description" formControlName="description"></textarea>
+          <mat-error>
+            <Validation-Messages [control]="movieForm.controls['description']"></Validation-Messages>
+          </mat-error>
         </mat-form-field>
       </div>
 
@@ -82,6 +91,9 @@
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Cast Details</mat-label>
           <textarea matInput placeholder="Add Cast details" formControlName="cast"></textarea>
+          <mat-error>
+            <Validation-Messages [control]="movieForm.controls['cast']"></Validation-Messages>
+          </mat-error>
         </mat-form-field>
       </div>
 
@@ -93,6 +105,9 @@
             <mat-option value="movie">Movie</mat-option>
             <mat-option value="show">Show</mat-option>
           </mat-select>
+          <mat-error>
+            <Validation-Messages [control]="movieForm.controls['category']"></Validation-Messages>
+          </mat-error>
         </mat-form-field>
       </div>
 
@@ -104,6 +119,9 @@
             (click)="picker.open()" readonly />
           <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
           <mat-datepicker #picker></mat-datepicker>
+          <mat-error>
+            <Validation-Messages [control]="movieForm.controls['releaseDate']"></Validation-Messages>
+          </mat-error>
         </mat-form-field>
       </div>
 
@@ -115,6 +133,9 @@
             <mat-option value="18+">18+</mat-option>
             <mat-option value="16+">16+</mat-option>
           </mat-select>
+          <mat-error>
+            <Validation-Messages [control]="movieForm.controls['rating']"></Validation-Messages>
+          </mat-error>
         </mat-form-field>
       </div>
 
@@ -127,6 +148,9 @@
             <mat-option value="standard">Standard</mat-option>
             <mat-option value="premium">Premium</mat-option>
           </mat-select>
+          <mat-error>
+            <Validation-Messages [control]="movieForm.controls['access']"></Validation-Messages>
+          </mat-error>
         </mat-form-field>
       </div>
 
@@ -138,6 +162,9 @@
             <mat-option value="active">Active</mat-option>
             <mat-option value="inactive">Inactive</mat-option>
           </mat-select>
+          <mat-error>
+            <Validation-Messages [control]="movieForm.controls['status']"></Validation-Messages>
+          </mat-error>
         </mat-form-field>
       </div>
       <!-- Uploads -->

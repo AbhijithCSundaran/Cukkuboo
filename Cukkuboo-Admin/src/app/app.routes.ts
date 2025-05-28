@@ -24,6 +24,13 @@ export const routes: Routes = [
           { path: 'edit-user/:id', loadComponent: () => import('./pages/user-list/add-user/add-user.component').then((m) => m.AddUserComponent) },
         ]
       },
+      {
+        path: 'staff-list', children: [
+          { path: '', loadComponent: () => import('./pages/staff-list/staff-list.component').then((m) => m.StaffListComponent) },
+          { path: 'add-staff', loadComponent: () => import('./pages/staff-list/add-staff/add-staff.component').then((m) => m.AddStaffComponent) },
+          { path: 'edit-staff/:id', loadComponent: () => import('./pages/staff-list/add-staff/add-staff.component').then((m) => m.AddStaffComponent) },
+        ]
+      },
       // { path: 'user-list', loadComponent: () => import('./pages/user-list/user-list.component').then((m) => m.UserListComponent) },
       // { path: 'add-user', loadComponent: () => import('./pages/user-list/add-user/add-user.component').then((m) => m.AddUserComponent) },
       // { path: 'edit-user/:id', loadComponent: () => import('./pages/user-list/add-user/add-user.component').then((m) => m.AddUserComponent) },

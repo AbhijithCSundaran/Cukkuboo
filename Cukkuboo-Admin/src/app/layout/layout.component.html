@@ -7,8 +7,12 @@
     <div class="layout-body">
       <!-- Sidebar -->
       <div class="sidebar_wrpr" [class.collapsed]="isSidebarCollapsed" [class.show]="showSidebar">
-        <app-sidebar (sidebarToggle)="onSidebarToggled($event)"></app-sidebar> 
-      </div>
+        <app-sidebar
+        (sidebarToggle)="onSidebarToggled($event)"
+        (itemSelected)="onSidebarItemSelected()">
+      </app-sidebar>
+      
+            </div>
   
       <!-- Main Content -->
       <main class="content" [class.expanded]="isSidebarCollapsed"> 

@@ -40,14 +40,14 @@
           class="submenu-list open"
           (click)="$event.stopPropagation()">
           <li *ngFor="let subItem of menuItem.subItems">
-            <a [routerLink]="[subItem.path]" (click)="closeAllSubmenus()">{{ subItem.name }}</a>
+            <a [routerLink]="[subItem.path]" (click)="onSubItemClick()">{{ subItem.name }}</a>
           </li>
         </ul>
       </ng-container>
 
       <ng-template #mainmenu>
-        <a [routerLink]="[menuItem.path]" class="menu-link">
-          <i class="fas {{ menuItem.icon }}"></i>
+        <a [routerLink]="[menuItem.path]" class="menu-link" (click)="itemSelected.emit()">
+                    <i class="fas {{ menuItem.icon }}"></i>
           <p class="menu-name" *ngIf="!isCollapsed">{{ menuItem.name }}</p>
         </a>
       </ng-template>

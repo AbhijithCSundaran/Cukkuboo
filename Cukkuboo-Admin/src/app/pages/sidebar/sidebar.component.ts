@@ -27,11 +27,8 @@ export class SidebarComponent {
 
   @Output() sidebarToggle = new EventEmitter<boolean>();
 
-  @Output() closeSidebar = new EventEmitter<void>();
+  @Output() itemSelected = new EventEmitter<void>();
 
-onNavigate() {
-  this.closeSidebar.emit();
-}
 
   isMobileView = window.innerWidth <= 1024;
 
@@ -63,6 +60,13 @@ onResize(event: any) {
       subItems: [
         { name: 'Users List', path: '/user-list' },
         { name: 'Subscriptions', path: '/subscriptions' },
+      ],
+    },
+    {
+      name: 'Staff Management',
+      icon: 'fa fa-user-cog',
+      subItems: [
+        { name: 'Staff List', path: '/staff-list' },
       ],
     },
     { name: 'Reports & Analytics', icon: 'fa-chart-bar', path: '/reports' },
@@ -115,4 +119,9 @@ onResize(event: any) {
       this.closeAllSubmenus();
     }
   }
+  onSubItemClick() {
+    this.closeAllSubmenus();
+    this.itemSelected.emit();
+  }
+  
 }

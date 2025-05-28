@@ -31,13 +31,17 @@ export class LayoutComponent {
   handleClickOutside(event: MouseEvent) {
     const sidebar = this.eRef.nativeElement.querySelector('.sidebar_wrpr');
     const toggleButton = this.eRef.nativeElement.querySelector('app-topbar');
-
-    const clickedInsideSidebar = sidebar.contains(event.target as Node);
-    const clickedToggleButton = toggleButton.contains(event.target as Node);
-
-    if (!clickedInsideSidebar && !clickedToggleButton && this.isSidebarCollapsed) {
-      this.isSidebarCollapsed = false;
+  
+    const clickedInsideSidebar = sidebar?.contains(event.target as Node);
+    const clickedToggleButton = toggleButton?.contains(event.target as Node);
+  
+    if (!clickedInsideSidebar && !clickedToggleButton && this.showSidebar) {
+      this.showSidebar = false; 
     }
   }
-
+  
+  onSidebarItemSelected() {
+    this.showSidebar = false; 
+  }
+  
 }

@@ -17,6 +17,8 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ViewChild, ElementRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ValidationMessagesComponent } from '../../core/components/validation-messsage/validaation-message.component';
+
 @Component({
   selector: 'app-add-movie-show',
   standalone: true,
@@ -25,7 +27,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
     ReactiveFormsModule, MatSnackBarModule, MatFormFieldModule, MatInputModule, MatIconModule,
     MatCardModule, MatSelectModule, MatDatepickerModule, MatNativeDateModule, MatButtonModule,
     MatProgressBarModule, MatCheckboxModule,
-    FormsModule, RouterModule
+    FormsModule, RouterModule,    ValidationMessagesComponent
+    
   ],
   templateUrl: './add-movie-show.component.html',
   styleUrls: ['./add-movie-show.component.scss']

@@ -62,4 +62,22 @@ class UserModel extends Model
     {
         return $this->where('jwt_token', $token)->first();
     }
+    // Get user by ID
+public function getUserById($userId)
+{
+    return $this->where('user_id', $userId)->first();
+}
+
+// Update user by ID
+public function updateUserById($userId, $data)
+{
+    return $this->where('user_id', $userId)->set($data)->update();
+}
+
+// Delete user by ID
+public function deleteUserById($userId)
+{
+    return $this->where('user_id', $userId)->delete();
+}
+
 }

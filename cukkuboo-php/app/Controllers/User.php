@@ -170,4 +170,75 @@ class User extends BaseController
             'message' => 'User deleted successfully.'
         ]);
     }
+    // Get user details by user_id
+public function getUserDetailsById($userId)
+{
+    $user = $this->UserModel->getUserById($userId);
+
+    if (!$user) {
+        return $this->response->setJSON([
+            'status' => false,
+            'message' => 'User not found'
+        ])->setStatusCode(404);
+    }
+
+    return $this->response->setJSON([
+        'status' => true,
+        'data' => $user
+    ]);
+}
+
+// Update user details by user_id
+public function updateUserById($userId)
+{
+    $user = $this->UserModel->getUserById($userId);
+
+    if (!$user) {
+        return $this->response->setJSON([
+            'status' => false,
+            'message' => 'User not found'
+        ])->setStatusCode(404);
+    }
+
+    $data = $this->request->getJSON(true);
+
+    $updateData = array_filter([
+        'username' => $data['username'] ?? null,
+        'phone'    => $data['phone'] ?? null,
+        'email'    => $data['email'] ?? null,
+        'country'  => $data['country'] ?? null
+    ]);
+
+    if (!empty($data['password'])) {
+        $updateData['password'] = password_hash($data['password'], PASSWORD_BCRYPT);
+    }
+
+    $this->UserModel->updateUserById($userId, $updateData);
+
+    return $this->response->setJSON([
+        'status' => true,
+        'message' => 'User updated successfully.'
+    ]);
+}
+
+// Delete user by user_id
+public function deleteUserById($userId)
+{
+    $user = $this->UserModel->getUserById($userId);
+
+    if (!$user) {
+        return $this->response->setJSON([
+            'status' => false,
+            'message' => 'User not found'
+        ])->setStatusCode(404);
+    }
+
+    $this->UserModel->deleteUserById($userId);
+
+    return $this->response->setJSON([
+        'status' => true,
+        'message' => 'User deleted successfully.'
+    ]);
+}
+
 }

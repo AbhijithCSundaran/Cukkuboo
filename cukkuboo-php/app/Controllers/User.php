@@ -3,7 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\UserModel;
-use App\Libraries\JWT;
+use App\Libraries\Jwt;
 
 class User extends BaseController
 {
@@ -19,7 +19,7 @@ class User extends BaseController
         return view('welcome_message');
     }
 
-    // ✅ Register new user
+    //Register new user
     public function registerFun()
     {
         $data = $this->request->getJSON(true);
@@ -52,7 +52,7 @@ class User extends BaseController
         $userId = $this->UserModel->addUser($userData);
         $user   = $this->UserModel->find($userId);
 
-        $jwt    = new JWT();
+        $jwt    = new Jwt();
         $token  = $jwt->encode(['user_id' => $user['user_id']]);
 
         $this->UserModel->update($user['user_id'], ['jwt_token' => $token]);
@@ -72,7 +72,7 @@ class User extends BaseController
         ])->setStatusCode(201);
     }
 
-    // ✅ Auth helper
+    // Auth helper
     public function getAuthenticatedUser()
     {
         $authHeader = $this->request->getHeaderLine('Authorization');
@@ -83,7 +83,7 @@ class User extends BaseController
         $token = trim(str_replace('Bearer', '', $authHeader));
 
         try {
-            $jwt     = new JWT();
+            $jwt     = new Jwt();
             $payload = $jwt->decode($token);
             $userId  = $payload->user_id ?? null;
 
@@ -100,7 +100,7 @@ class User extends BaseController
         }
     }
 
-    // ✅ Get user details
+    //  Get user details
     public function getUserDetails()
     {
         $user = $this->getAuthenticatedUser();
@@ -118,7 +118,7 @@ class User extends BaseController
         ]);
     }
 
-    // ✅ Update user details
+    // Update user details
     public function updateUser()
     {
         $user = $this->getAuthenticatedUser();
@@ -151,7 +151,7 @@ class User extends BaseController
         ]);
     }
 
-    // ✅ Delete user
+    //  Delete user
     public function deleteUser()
     {
         $user = $this->getAuthenticatedUser();

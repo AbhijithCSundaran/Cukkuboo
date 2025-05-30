@@ -17,10 +17,11 @@ class UserModel extends Model
         'status',
         'join_date',
         'subscription',
+        'user_type',
         'jwt_token'
     ];
 
-    // ✅ Check if user exists (by phone or email)
+    //Check if user exists (by phone or email)
     public function isUserExists($phone, $email)
     {
         return $this->where('phone', $phone)
@@ -28,14 +29,14 @@ class UserModel extends Model
                     ->first();
     }
 
-    // ✅ Insert new user
+    // Insert new user
     public function addUser($data)
     {
         $this->insert($data);
         return $this->getInsertID(); // Return the newly inserted user_id
     }
 
-    // ✅ Update user details by user_id
+    // Update user details by user_id
     public function updateUser($userId, $data)
     {
         return $this->db->table($this->table)
@@ -43,7 +44,7 @@ class UserModel extends Model
                         ->update($data);
     }
 
-    // ✅ Delete user by user_id
+    // Delete user by user_id
     public function deleteUser($userId)
     {
         return $this->db->table($this->table)
@@ -51,13 +52,13 @@ class UserModel extends Model
                         ->delete();
     }
 
-    // ✅ Get user by ID
+    //  Get user by ID
     public function findUserById($userId)
     {
         return $this->where('user_id', $userId)->first();
     }
 
-    // ✅ Get user by JWT token
+    //  Get user by JWT token
     public function findUserByToken($token)
     {
         return $this->where('jwt_token', $token)->first();

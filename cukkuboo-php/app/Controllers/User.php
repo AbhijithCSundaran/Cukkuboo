@@ -46,6 +46,7 @@ class User extends BaseController
             'country'      => $data['country'] ?? null,
             'status'       => 'active',
             'subscription' => 'free',
+            'user_type' => 'admin',
             'join_date'    => date('Y-m-d H:i:s')
         ];
 
@@ -66,6 +67,7 @@ class User extends BaseController
                 'email'               => $user['email'],
                 'phone'               => $user['phone'],
                 'subscription_status' => $user['subscription'],
+                'user_type'           => $user['user_type'],
                 'created_at'          => $user['join_date'],
                 'jwt_token'           => $token
             ]

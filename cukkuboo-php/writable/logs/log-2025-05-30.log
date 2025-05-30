@@ -1,0 +1,24 @@
+CRITICAL - 2025-05-30 04:36:34 --> ParseError: syntax error, unexpected single-quoted string "jwt_token", expecting "]"
+[Method: POST, Route: User/register]
+in APPPATH\Models\UserModel.php on line 21.
+ 1 SYSTEMPATH\Autoloader\Autoloader.php(295): CodeIgniter\Autoloader\Autoloader->includeFile('C:\\xampp\\htdocs\\Cukkuboo\\cukkuboo-php\\app\\Models\\UserModel.php')
+ 2 SYSTEMPATH\Autoloader\Autoloader.php(271): CodeIgniter\Autoloader\Autoloader->loadInNamespace('App\\Models\\UserModel')
+ 3 APPPATH\Controllers\User.php(14): CodeIgniter\Autoloader\Autoloader->loadClass('App\\Models\\UserModel')
+ 4 SYSTEMPATH\CodeIgniter.php(903): App\Controllers\User->__construct()
+ 5 SYSTEMPATH\CodeIgniter.php(498): CodeIgniter\CodeIgniter->createController()
+ 6 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 9 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-05-30 04:36:52 --> ParseError: syntax error, unexpected single-quoted string "jwt_token", expecting "]"
+[Method: POST, Route: User/register]
+in APPPATH\Models\UserModel.php on line 21.
+ 1 SYSTEMPATH\Autoloader\Autoloader.php(295): CodeIgniter\Autoloader\Autoloader->includeFile('C:\\xampp\\htdocs\\Cukkuboo\\cukkuboo-php\\app\\Models\\UserModel.php')
+ 2 SYSTEMPATH\Autoloader\Autoloader.php(271): CodeIgniter\Autoloader\Autoloader->loadInNamespace('App\\Models\\UserModel')
+ 3 APPPATH\Controllers\User.php(14): CodeIgniter\Autoloader\Autoloader->loadClass('App\\Models\\UserModel')
+ 4 SYSTEMPATH\CodeIgniter.php(903): App\Controllers\User->__construct()
+ 5 SYSTEMPATH\CodeIgniter.php(498): CodeIgniter\CodeIgniter->createController()
+ 6 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 9 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))

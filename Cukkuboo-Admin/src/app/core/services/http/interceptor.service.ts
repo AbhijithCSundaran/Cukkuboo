@@ -3,7 +3,6 @@ import { HttpEvent, HttpInterceptor, HttpHandler, HttpRequest, HttpResponse, Htt
 import { Observable, of, throwError } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
 import { Router } from '@angular/router';
-import { ModalService } from '../../../shared/services/modal/modal.service';
 import { LoginComponent } from '../../../pages/login/login.component';
 @Injectable({
   providedIn: 'root'
@@ -13,7 +12,7 @@ export class InterceptorService implements HttpInterceptor {
   constructor(
     private injector: Injector,
     private router: Router,
-    private modalService: ModalService
+    // private modalService: ModalService
   ) { }
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const excludedUrls = [
@@ -55,7 +54,7 @@ export class InterceptorService implements HttpInterceptor {
     if (err.status === 0 || err.status === 401 || err.status === 403) {
       console.clear()
       console.log(err.message)
-      this.openLoginModal(request, next);
+      // this.openLoginModal(request, next);
       // this.storageService.updateItem("JWT", "ua");
       // if you've caught / handled the error, you don't want to rethrow it unless you also want downstream consumers to have to handle it as well.
       return of(err.message); // or EMPTY may be appropriate here
@@ -63,20 +62,20 @@ export class InterceptorService implements HttpInterceptor {
     return throwError(() => err.status);
   }
 
-  openLoginModal(request: HttpRequest<any>, next: HttpHandler) {
-    this.modalService.openDialog(LoginComponent, { isShowingInModal: true }, (res: any) => {
-      if (!res?.status) {
-        localStorage.clear();
-        sessionStorage.clear();
-        this.router.navigateByUrl(`login`);
-      }
-      else {
-        // this.router.navigateByUrl(this.router.url);
-        // window.location.reload();
-        next.handle(request);
-      }
-    },)
-  }
+  // openLoginModal(request: HttpRequest<any>, next: HttpHandler) {
+  //   this.modalService.openDialog(LoginComponent, { isShowingInModal: true }, (res: any) => {
+  //     if (!res?.status) {
+  //       localStorage.clear();
+  //       sessionStorage.clear();
+  //       this.router.navigateByUrl(`login`);
+  //     }
+  //     else {
+  //       // this.router.navigateByUrl(this.router.url);
+  //       // window.location.reload();
+  //       next.handle(request);
+  //     }
+  //   },)
+  // }
 
 }
 

@@ -1,23 +1,29 @@
 <div class="login-container">
   <div class="login-card">
+    <img src="assets/logo-collapsed.png" alt="App Logo" class="app-logo collapsed-logo" />
     <h2>Admin Login</h2>
 
     <form [formGroup]="loginForm" (ngSubmit)="login()" class="d-flex flex-column align-items-center">
-      <input type="text" placeholder="Username" formControlName="username" required />
+      <input type="text" placeholder="Username" formControlName="email" required />
 
-      <div class="password-wrapper">
-        <input [type]="hoveringEye ? 'text' : 'password'" placeholder="Password" 
-               formControlName="password" required />
-        <i class="fa" [ngClass]="hoveringEye ? 'fa-eye' : 'fa-eye-slash'" (mousedown)="hoveringEye = true" (mouseup)="hoveringEye = false" (mouseleave)="hoveringEye = false"></i>
-      </div>
+     <div class="password-wrapper">
+  <input [type]="hoveringEye ? 'text' : 'password'" placeholder="Password" 
+         formControlName="password" required />
+         <i class="fa"
+         [ngClass]="hoveringEye ? 'fa-eye' : 'fa-eye-slash'"
+         (click)="hoveringEye = !hoveringEye">
+      </i>
+      
+</div>
+
 
       <!-- Google reCAPTCHA -->
-      <div id="recaptcha-container" class="g-recaptcha"></div>
+      <div id="recaptcha-container" class="g-recaptcha"  ></div>
 <!-- data-sitekey="6LeoL5UpAAAAABy-sNgzr_XHc2vWl2Kpr45VHWey"
         data-callback="captchaResolved"
         data-expired-callback="captchaExpired" -->
 
-      <button type="submit" [disabled]="loginForm.invalid">Login</button>
+      <button type="submit" >Login</button>
     </form>
   </div>
 </div>

@@ -379,6 +379,12 @@ input {
 }
  
 @media (max-width: 575px) {
+
+  .content-container {
+    padding: 10px 5px;
+
+  }
+
   .header-row h2 {
     font-size: 18px;
   }
@@ -409,7 +415,10 @@ input {
   .header-row {
     gap: 8px;
   }
- 
+  .mat-mdc-card-content {
+    display: block;
+    padding: 0px 8px;
+}
   .save-button {
     font-size: 12px;
   }
@@ -425,3 +434,4 @@ input {
   }
  
 }
+

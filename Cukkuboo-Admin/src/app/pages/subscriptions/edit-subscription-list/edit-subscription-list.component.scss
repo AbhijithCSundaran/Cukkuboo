@@ -3,6 +3,8 @@
     color: black;
     padding: 20px;
     height: 100%;
+    width:100%;
+    
   }
   
   
@@ -109,37 +111,55 @@
     }
   }
 
- 
+ @media (max-width: 1366px) {
+  mat-card-content .button-container {
+    width: 100% !important;
+    justify-content: flex-end;
+  }
+}
+
   @media (max-width: 1024px) {
     mat-card-content > div {
       width: 100%;
     }
 
-    .button-container {
-      justify-content: center;
-    }
+   
   }
 
   @media (max-width: 767px) {
+    
+    // .edit-subscription-list-container {
+     
+    //   padding: 10px;
+    //   height: 100%;
+    //   width:80%;
+      
+      
+    // }
+    
+    
+    mat-card {
+   
+      padding-top: 10px;
+      padding-bottom: 8px;
+      border-radius: 8px;
+  
+    }
+   
     h2 {
-      font-size: 20px;
+      font-size: 18px;
     }
 
     .button-container {
-      flex-direction: column;
-      align-items: stretch;
+      flex-direction: row;
+      justify-content: flex-end;
 
       .w-50 {
         width: 100% !important;
       }
 
-      .save-button,
-      .cancel-button {
-        width: 100%;
-        justify-content: center;
-      }
-    }
   }
+}
 
   @media (max-width: 575px) {
    

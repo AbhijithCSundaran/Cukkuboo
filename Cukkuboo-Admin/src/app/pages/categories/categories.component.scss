@@ -76,7 +76,9 @@ input {
 
 }
 
-
+.action{
+  width:80px;
+}
 // .mat-form-field-label,
 // .mat-hint,
 // input::placeholder {
@@ -155,11 +157,13 @@ input {
 @media (max-width: 575px) {
   .form-section {
     flex-direction: column;
-    gap: 16px;
+  
   }
 
   th.mat-column-description,
-  td.mat-column-description{
+  td.mat-column-description,
+  th.mat-column-status,
+  td.mat-column-status{
     display: none !important;
   }
   .left-side,
@@ -187,17 +191,29 @@ input {
   }
 
  
+
+ 
+ 
 }
 
 
 @media (max-width: 320px) {
  
 
-  th.mat-column-status,
-  td.mat-column-status{
-    display: none !important;
-  }
+  // th.mat-column-status,
+  // td.mat-column-status{
+  //   display: none !important;
+  // }
  
 
  
+}
+.action-icons {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+
+  @media (max-width: 768px) {
+    justify-content: flex-start;
+  }
 }

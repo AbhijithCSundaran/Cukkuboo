@@ -36,14 +36,14 @@
       top: 0;
       left: 100%;
       min-width: 160px;
-      background-color:  rgba(208, 40, 40, 0.8);
+      background-color: #c71336;
       border-radius: 6px;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
       padding: 8px 0;
       display: none;
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.2s ease;
+      transition: 0.2s ease;
 
       &.open {
         list-style: none;
@@ -213,7 +213,7 @@
 
 .toggle-btn {
   position: absolute;
-  bottom: 50px;
+  bottom: 90px;
   left: 50%;
   background-color: black;
   color: white;

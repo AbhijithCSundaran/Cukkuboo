@@ -1,5 +1,5 @@
 export const environment = {
   production: true,
   imgUrl: '',   
-  apiUrl: '', 
+  apiUrl: 'https://v4cstaging.co.in/cukkuboo/cukkuboo-php/', 
 };

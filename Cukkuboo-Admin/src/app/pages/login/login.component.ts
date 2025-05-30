@@ -3,6 +3,9 @@ import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UserService } from '../../services/user.service';
+import { ValidationService } from '../../core/services/validation.service';
+import { environment } from '../../../environments/environment';
 
 declare var grecaptcha: any;
 
@@ -17,16 +20,18 @@ export class LoginComponent implements OnInit, AfterViewInit {
   loginForm!: FormGroup;
   hoveringEye = false;
   captchaToken: string | null = null;
-
+  isProd: boolean = environment.production
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private snackBar: MatSnackBar
-  ) {}
+    private snackBar: MatSnackBar,
+    private userService: UserService,
+
+  ) { }
 
   ngOnInit() {
     this.loginForm = this.fb.group({
-      username: ['', Validators.required],
+      email: ['', [Validators.required, ValidationService.emailValidator]],
       password: ['', Validators.required]
     });
   }
@@ -45,16 +50,17 @@ export class LoginComponent implements OnInit, AfterViewInit {
           'expired-callback': () => {
             this.captchaToken = null;
           },
-          theme: 'dark'
+          theme: 'light'
         });
-      } 
+      }
       // else
-        // this.renderCaptcha()
+      // this.renderCaptcha()
     }, 500);
   }
 
   login() {
-    if (!this.captchaToken) {
+    debugger;
+    if (!this.captchaToken && this.isProd) {
       this.snackBar.open('Please complete the CAPTCHA', '', {
         duration: 3000,
         verticalPosition: 'top',
@@ -63,9 +69,27 @@ export class LoginComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    const { username, password } = this.loginForm.value;
-
-    if (username === 'admin' && password === 'admin') {
+    // if (this.loginForm.invalid) {
+    //   this.snackBar.open('Please fill all required fields', '', {
+    //     duration: 3000,
+    //     verticalPosition: 'top',
+    //     panelClass: ['snackbar-error']
+    //   });
+    //   return;
+    // }
+    debugger;
+    if (this.loginForm.valid) {
+      var model = this.loginForm.value
+      this.userService.login(model).subscribe({
+        next: (response) => {
+          console.log(response)
+        },
+        error: (error) => {
+          console.error(error);
+          debugger;
+        }
+      })
+     
       localStorage.setItem('jwt', 'ebyeygfyhugnuxhzvtvzfbfbcsufs');
       this.snackBar.open('Login successful', '', {
         duration: 3000,
@@ -74,7 +98,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
       });
       this.router.navigate(['/dashboard']);
     } else {
-      this.snackBar.open('Invalid username or password', '', {
+      this.snackBar.open('Invalid email or password', '', {
         duration: 3000,
         verticalPosition: 'top',
         panelClass: ['snackbar-error']

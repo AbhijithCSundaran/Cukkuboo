@@ -24,6 +24,7 @@ class Database extends Config
      *
      * @var array<string, mixed>
      */
+
     // 'username'     => 'vcstagin_ott',
     // 'password'     => 'TZ7UZDtEB7pkUWGJSuvw',
     // 'database'     => 'vcstagin_ott',

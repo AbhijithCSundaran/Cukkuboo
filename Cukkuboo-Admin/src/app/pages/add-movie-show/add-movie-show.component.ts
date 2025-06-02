@@ -18,7 +18,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ViewChild, ElementRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ValidationMessagesComponent } from '../../core/components/validation-messsage/validaation-message.component';
-
+import { HttpClient, HttpEvent, HttpEventType } from '@angular/common/http';
 @Component({
   selector: 'app-add-movie-show',
   standalone: true,
@@ -61,7 +61,7 @@ export class AddMovieShowComponent implements OnInit {
 
 
   constructor(private router: Router, private snackBar: MatSnackBar,
-    private route: ActivatedRoute, private fb: FormBuilder) { }
+    private route: ActivatedRoute, private fb: FormBuilder, private http: HttpClient ) { }
 
 
   ngOnInit(): void {
@@ -166,14 +166,14 @@ export class AddMovieShowComponent implements OnInit {
     const file = input.files?.[0];
 
     if (file) {
-      const isMp4 = file.type === 'video/mp4';
+      const isMp4 = true;//file.type === 'video/mp4';
       if (!isMp4) {
         this.showSnackbar('Only MP4 video files are allowed for videos.', 'snackbar-error');
         input.value = '';
         return;
       }
 
-      this.simulateUpload(file);
+      this.uploadVideo(file);
     }
   }
 
@@ -193,30 +193,42 @@ export class AddMovieShowComponent implements OnInit {
         this.showSnackbar('Only MP4 video files are allowed for videos.', 'snackbar-error');
         return;
       }
-      this.simulateUpload(file);
+      this.uploadVideo(file);
     }
   }
 
-  simulateUpload(file: File): void {
-    this.videoName = file.name;
+  uploadVideo(file: File): void {
+    debugger;
+    const formData = new FormData();
+    formData.append('video', file); 
+  
     this.uploadInProgress = true;
     this.uploadProgress = 0;
-
-    const reader = new FileReader();
-    reader.onload = () => {
-      this.videoURL = reader.result as string;
-    };
-    reader.readAsDataURL(file);
-
-    const interval = setInterval(() => {
-      this.uploadProgress += 10;
-      if (this.uploadProgress >= 100) {
-        clearInterval(interval);
+    this.videoName = file.name;
+  
+    this.http.post('http://192.168.1.100/cukuboo/cukuboo-php/upload-video', formData, {
+      reportProgress: true,
+      observe: 'events'
+    }).subscribe({
+      next: (event: HttpEvent<any>) => {
+        if (event.type === HttpEventType.UploadProgress && event.total) {
+          this.uploadProgress = Math.round((event.loaded / event.total) * 100);
+        } else if (event.type === HttpEventType.Response) {
+          this.uploadInProgress = false;
+          this.uploadProgress = 100;
+          // this.videoURL = event.body?.videoUrl || ''; 
+          this.showSnackbar('Video uploaded successfully!', 'snackbar-success');
+        }
+      },
+      error: (err) => {
         this.uploadInProgress = false;
-        if (this.autoSave) this.saveVideo();
+        this.uploadProgress = 0;
+        console.error('Upload error:', err);
+        this.showSnackbar('Video upload failed.', 'snackbar-error');
       }
-    }, 200);
+    });
   }
+  
 
   removeMainVideo(): void {
     this.videoName = '';

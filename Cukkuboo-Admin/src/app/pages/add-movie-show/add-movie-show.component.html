@@ -26,7 +26,7 @@
                   </div>
                   <div *ngIf="uploadProgress === 100" class="upload-success">✅ Upload complete!</div>
                 </div>
-                <input type="file" (change)="onVideoSelected($event)" accept="video/mp4" hidden #videoInput />
+                <input type="file" (change)="onVideoSelected($event)" accept="video/*" hidden #videoInput />
               </mat-card-content>
             </mat-card>
           </div>

@@ -20,14 +20,14 @@ export class LoginComponent implements OnInit, AfterViewInit {
   loginForm!: FormGroup;
   hoveringEye = false;
   captchaToken: string | null = null;
-  isProd: boolean = environment.production;
-
+  isProd: boolean = environment.production
   constructor(
     private fb: FormBuilder,
     private router: Router,
     private snackBar: MatSnackBar,
-    private userService: UserService
-  ) {}
+    private userService: UserService,
+
+  ) { }
 
   ngOnInit() {
     this.loginForm = this.fb.group({
@@ -39,7 +39,6 @@ export class LoginComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     this.renderCaptcha();
   }
-
   renderCaptcha() {
     setTimeout(() => {
       if ((window as any).grecaptcha) {
@@ -53,23 +52,14 @@ export class LoginComponent implements OnInit, AfterViewInit {
           },
           theme: 'light'
         });
-      } else {
-        this.renderCaptcha(); // Retry rendering
       }
+      else
+      this.renderCaptcha()
     }, 500);
   }
 
   login() {
-    if (this.loginForm.invalid) {
-      this.snackBar.open('Invalid email or password', '', {
-        duration: 3000,
-        verticalPosition: 'top',
-        panelClass: ['snackbar-error']
-      });
-      return;
-    }
-
-    if (this.isProd && !this.captchaToken) {
+    if (!this.captchaToken && this.isProd) {
       this.snackBar.open('Please complete the CAPTCHA', '', {
         duration: 3000,
         verticalPosition: 'top',
@@ -78,53 +68,61 @@ export class LoginComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    const model = this.loginForm.value;
-
-    this.userService.login(model).subscribe({
-      next: (response) => {
-        if (response.status) {
-          if (response.user.user_type === 'admin') {
-            localStorage.setItem('jwt', response.user?.jwt_token);
-            this.snackBar.open('Login successful', '', {
-              duration: 3000,
-              verticalPosition: 'top',
-              panelClass: ['snackbar-success']
-            });
-            this.router.navigate(['/dashboard']);
-          } else {
-            this.snackBar.open('Not an admin', '', {
+    // if (this.loginForm.invalid) {
+    //   this.snackBar.open('Please fill all required fields', '', {
+    //     duration: 3000,
+    //     verticalPosition: 'top',
+    //     panelClass: ['snackbar-error']
+    //   });
+    //   return;
+    // }
+    debugger;
+    if (this.loginForm.valid) {
+      var model = this.loginForm.value
+      this.userService.login(model).subscribe({
+        next: (response) => {
+          if (response.status) {
+            console.log(response)
+            if (response.user.user_type == 'admin') {
+              localStorage.setItem('jwt', response.user?.jwt_token);
+              this.snackBar.open('Login successful', '', {
+                duration: 3000,
+                verticalPosition: 'top',
+                panelClass: ['snackbar-success']
+              });
+              this.router.navigate(['/dashboard']);
+            }
+            else {
+              this.snackBar.open('Not an admin', '', {
+                duration: 3000,
+                verticalPosition: 'top',
+                panelClass: ['snackbar-error']
+              });
+            }
+          }
+          else {
+            this.snackBar.open(response.message, '', {
               duration: 3000,
               verticalPosition: 'top',
               panelClass: ['snackbar-error']
             });
           }
-        } else {
-          this.snackBar.open(response.message, '', {
-            duration: 3000,
-            verticalPosition: 'top',
-            panelClass: ['snackbar-error']
-          });
+        },
+        error: (error) => {
+          console.error(error);
+          debugger;
         }
+      })
 
-        // Reset CAPTCHA after any response
-        if (this.isProd) {
-          grecaptcha.reset();
-          this.captchaToken = null;
-        }
-      },
-      error: (error) => {
-        console.error(error);
-        this.snackBar.open('Login failed. Please try again.', '', {
-          duration: 3000,
-          verticalPosition: 'top',
-          panelClass: ['snackbar-error']
-        });
+    } else {
+      this.snackBar.open('Invalid email or password', '', {
+        duration: 3000,
+        verticalPosition: 'top',
+        panelClass: ['snackbar-error']
+      });
+    }
 
-        if (this.isProd) {
-          grecaptcha.reset();
-          this.captchaToken = null;
-        }
-      }
-    });
+    grecaptcha.reset();
+    this.captchaToken = null;
   }
 }

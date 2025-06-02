@@ -136,6 +136,7 @@ input {
 @media (max-width: 768px) {
   .form-section {
     flex-direction: column;
+    gap:17px;
   }
 
   .right-side,
@@ -157,7 +158,7 @@ input {
 @media (max-width: 575px) {
   .form-section {
     flex-direction: column;
-  
+  gap:0px;
   }
 
   th.mat-column-description,

@@ -22,11 +22,7 @@ export class UserService {
 
   login(model: any): Observable<any> {
     const body = model;
-    return this.http.post(this.apiUrl + 'Login/login', body, {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json'
-      })
-    });
+    return this.http.post(this.apiUrl + 'Login/login', body);
   }
 
   register(model: any): Observable<any> {
@@ -34,12 +30,12 @@ export class UserService {
     return this.http.post(this.apiUrl + 'User/register', body);
   }
 
-  list(model: any): Observable<any> {
+ list(model: any): Observable<any> {
     const body = model;
     return this.http.post(this.apiUrl + 'User/list', body);
   }
 
-
+  
   logout(): Observable<any> {
     const body = {};
     return this.http.post(this.apiUrl + 'logout', body, { headers: this.headers });

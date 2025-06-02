@@ -38,6 +38,4 @@ $routes->post('upload-image', 'Uploads::uploadImage');
 
 $routes->post('movie/store', 'MovieDetail::store');
 
-
-
 ?>

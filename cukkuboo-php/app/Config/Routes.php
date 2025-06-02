@@ -30,4 +30,13 @@ $routes->post('Category/categories', 'Category::create');
 $routes->post('Category/categories/(:any)', 'Category::update/$1'); 
 $routes->delete('Category/categories/(:any)', 'Category::delete/$1'); 
 
+$routes->post('Staff/register', 'Staff::register');
+$routes->post('Staff/login', 'Staff::login');
+$routes->post('Staff/logout', 'Staff::logout');
+
+$routes->get('Staff/profile/(:num)', 'Staff::getStaffById/$1');  
+$routes->post('Staff/update/(:num)', 'Staff::updateStaff/$1');  
+$routes->delete('Staff/delete/(:num)', 'Staff::deleteStaff/$1');
+
+
 ?>

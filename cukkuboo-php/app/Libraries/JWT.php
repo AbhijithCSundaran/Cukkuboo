@@ -3,9 +3,7 @@
 namespace App\Libraries;
 
 use Firebase\JWT\JWT as FirebaseJWT;
-use Firebase\JWT\Key;
-
-class JWT
+class Jwt
 {
     private $key;
 

@@ -62,6 +62,7 @@ class Login extends BaseController
                 'email' => $user['email'],
                 'isBlocked' => $user['status'] !== 'active',
                 'subscription' => $user['subscription'],
+                'user_type' => 'admin',
                 'date' => date('Y-m-d'),
                 'createdAt' => $user['created_at'],
                 'updatedAt' => $user['updated_at'],

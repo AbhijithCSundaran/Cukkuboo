@@ -46,7 +46,7 @@ class User extends BaseController
             'country'      => $data['country'] ?? null,
             'status'       => 'active',
             'subscription' => 'free',
-            'user_type' => 'admin',
+            'user_type' => $data['user_type'] ??'Customer',
             'join_date'    => date('Y-m-d H:i:s')
         ];
 

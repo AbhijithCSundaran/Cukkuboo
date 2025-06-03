@@ -23,8 +23,15 @@ class Uploads extends ResourceController
     if (!$video->isValid()) {
         return $this->response->setStatusCode(400)->setJSON(['error' => $video->getErrorString()]);
     }
+      // Optional: Check file size (in bytes), e.g., max 2GB = 2 * 1024 * 1024 * 1024
+    $maxSize = 2 * 1024 * 1024 * 1024; // 2GB
+    if ($video->getSize() > $maxSize) {
+        return $this->response->setStatusCode(400)->setJSON([
+            'error' => 'Video file exceeds maximum allowed size (2GB).'
+        ]);
+    }
 
-    if (!in_array($video->getMimeType(), ['video/mp4', 'video/avi', 'video/mov'])) {
+    if (!in_array($video->getMimeType(), ['video/*','video/mp4', 'video/avi', 'video/mov'])) {
         return $this->response->setStatusCode(400)->setJSON(['error' => 'Invalid video format']);
     }
 

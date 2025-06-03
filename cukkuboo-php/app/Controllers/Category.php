@@ -3,17 +3,18 @@
 namespace App\Controllers;
 
 use App\Models\CategoryModel;
+use CodeIgniter\RESTful\ResourceController;
 
-class Category extends BaseController
+class Category extends ResourceController
 {
     protected $categoryModel;
 
     public function __construct()
     {
-        
         $this->categoryModel = new CategoryModel();
     }
 
+    // GET: List all categories
     public function categorylist()
     {
         $categories = $this->categoryModel->findAll();
@@ -21,24 +22,28 @@ class Category extends BaseController
         return $this->response->setJSON([
             'success' => true,
             'data' => $categories
-        ]);
+        ])->setStatusCode(200);
     }
+
+    // POST: Create category
     public function create()
     {
-        $category_id = $this->input->getPost('category_id');
-        $category_name = $this->input->getPost('category_name');
-
         $data = $this->request->getJSON(true);
 
-        if (empty($data['id']) || empty($data['name'])) {
-            return $this->failValidationError('Both ID and Name are required.');
+        if (
+            empty($data['category_id']) ||
+            empty($data['category_name']) ||
+            !isset($data['description']) ||
+            !isset($data['status'])
+        ) {
+            return $this->failValidationError('category_id, category_name, description, and status are required.');
         }
 
-        if ($this->categoryModel->find($data['id'])) {
-            return $this->fail('Category with this ID already exists.');
+        if ($this->categoryModel->categoryExists($data['category_id'])) {
+            return $this->fail('Category with this category_id already exists.');
         }
 
-        $this->categoryModel->insert($data);
+        $this->categoryModel->addCategory($data);
 
         return $this->respondCreated([
             'success' => true,
@@ -48,45 +53,58 @@ class Category extends BaseController
     }
 
     // PUT: Update category
-    public function update($id = null)
+    public function update($category_id = null)
     {
-        if (!$id) {
-            return $this->failValidationError('ID is required');
+        if (!$category_id) {
+            return $this->failValidationError('category_id is required.');
         }
 
         $data = $this->request->getJSON(true);
 
-        if (empty($data['name'])) {
-            return $this->failValidationError('Name is required');
+        if (
+            empty($data['category_name']) ||
+            !isset($data['description']) ||
+            !isset($data['status'])
+        ) {
+            return $this->failValidationError('category_name, description, and status are required.');
         }
 
-        if (!$this->categoryModel->find($id)) {
-            return $this->failNotFound('Category not found');
-        }
-
-        $this->categoryModel->update($id, ['name' => $data['name']]);
-
-        return $this->respond([
-            'success' => true,
-            'message' => 'Category updated successfully',
-            'data' => ['id' => $id, 'name' => $data['name']]
-        ]);
-    }
-
-    // DELETE: Delete category
-    public function delete($id = null)
-    {
-        if (!$id || !$this->categoryModel->find($id)) {
+        if (!$this->categoryModel->categoryExists($category_id)) {
             return $this->failNotFound('Category not found.');
         }
 
-        $this->categoryModel->delete($id);
+        $updateData = [
+            'category_name' => $data['category_name'],
+            'description'   => $data['description'],
+            'status'        => $data['status'],
+        ];
+
+        $this->categoryModel->updateCategory($category_id, $updateData);
+
+        return $this->respond([
+            'success' => true,
+            'message' => 'Category updated successfully.',
+            'data' => [
+                'category_id'   => $category_id,
+                'category_name' => $data['category_name'],
+                'description'   => $data['description'],
+                'status'        => $data['status'],
+            ]
+        ]);
+    }
+
+    // DELETE: Remove category
+    public function delete($category_id = null)
+    {
+        if (!$category_id || !$this->categoryModel->categoryExists($category_id)) {
+            return $this->failNotFound('Category not found.');
+        }
+
+        $this->categoryModel->deleteCategory($category_id);
 
         return $this->respondDeleted([
             'success' => true,
             'message' => 'Category deleted successfully.'
         ]);
     }
-
-
 }

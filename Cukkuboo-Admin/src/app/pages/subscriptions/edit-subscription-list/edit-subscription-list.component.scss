@@ -111,19 +111,18 @@
     }
   }
 
+
  @media (max-width: 1366px) {
   mat-card-content .button-container {
     width: 100% !important;
     justify-content: flex-end;
   }
 }
-
   @media (max-width: 1024px) {
     mat-card-content > div {
       width: 100%;
     }
 
-   
   }
 
   @media (max-width: 767px) {

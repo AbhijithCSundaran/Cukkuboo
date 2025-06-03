@@ -12,8 +12,12 @@ $routes->post('Login/logout', 'Login::logout');
 
 $routes->post('User/register','User::registerFun');
 $routes->get('User/profile', 'User::getUserDetails');
-$routes->put('User/update', 'User::updateUser');
+$routes->post('User/update', 'User::updateUser');
 $routes->delete('User/delete', 'User::deleteUser');
+$routes->get('User/profile/(:num)', 'User::getUserDetailsById/$1');
+$routes->post('User/update/(:num)', 'User::updateUserById/$1');
+$routes->delete('User/delete/(:num)', 'User::deleteUserById/$1');
+
 
 
 $routes->get('Genres/genres', 'Genres::genreList');
@@ -41,6 +45,15 @@ $routes->post('movie/delete/(:any)','MovieDetail::deleteMovieDetails/$1');
 //Home Display
 
 $routes->get('api/home', 'MovieDetail::homeDisplay');
+
+
+    // Subscription Plan Routes 
+$routes->get('subscriptionplan/list', 'SubscriptionPlan::getAll');           
+$routes->get('subscriptionplan/get/(:num)', 'SubscriptionPlan::get/$1');     
+$routes->post('subscriptionplan/create', 'SubscriptionPlan::create');        
+$routes->post('subscriptionplan/update/(:num)', 'SubscriptionPlan::edit/$1'); 
+$routes->delete('subscriptionplan/delete/(:num)', 'SubscriptionPlan::delete/$1'); 
+
 
 
 ?>

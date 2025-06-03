@@ -24,7 +24,6 @@ class Database extends Config
      *
      * @var array<string, mixed>
      */
-
     // 'username'     => 'vcstagin_ott',
     // 'password'     => 'TZ7UZDtEB7pkUWGJSuvw',
     // 'database'     => 'vcstagin_ott',
@@ -33,7 +32,7 @@ class Database extends Config
         'hostname'     => 'localhost',
         'username'     => 'root',
         'password'     => '',
-        'database'     => 'vcstagin_ott',
+        'database'     => 'cukkuboo',
         'DBDriver'     => 'MySQLi',
         'DBPrefix'     => '',
         'pConnect'     => false,

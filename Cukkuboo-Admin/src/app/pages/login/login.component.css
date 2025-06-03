@@ -2,8 +2,11 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
-  background: black;
+  min-height: 100vh; 
+  padding: 20px;     
+  background: white;
+  background: white;
+
 }
 
 .login-card {
@@ -11,8 +14,8 @@
   padding: 1rem;
   min-width: 30%;
   max-width: 95%;
-  background-color: #1c1c1c;
-  color: #fff;
+  background-color:white;
+  color: black;;
   border: 1px solid #ff1744;
   text-align: center;
 }
@@ -22,23 +25,24 @@ input {
   width: 90%;
   margin: 10px auto;
   padding: 8px;
-  background: #111;
+  background:white;
   border: 1px solid #f00;
-  color: #fff;
+  color:black;
 }
 
 button {
-  background-color: black;
-  color: white;
+
+  color:white;
   padding: 8px 16px;
   border: none;
   cursor: pointer;
   margin-top: 10px;
+  background-color: #c71336;
+  &:hover {
+    background-color: #e96238 !important;
+}
 }
 
-button:hover {
-  background-color: #c00;
-}
 
 .password-wrapper {
   position: relative;
@@ -48,17 +52,19 @@ button:hover {
 
 .password-wrapper input {
   width: 100%;
-  padding-right: 35px;
+  padding-right: 40px;
+  
 }
 
 .password-wrapper i {
   position: absolute;
   top: 50%;
   right: 10px;
-  color: #fff;
+  color: black;
   transform: translateY(-50%);
   font-size: 13px;
   cursor: pointer;
+  z-index: 10;
 }
 
 .g-recaptcha {
@@ -72,8 +78,61 @@ button:hover {
   display: flex;
   justify-content: center;
   align-items: center;
-  color: #fff;
+
   border-radius: 3px;
-  border: 1px solid rgb(158, 158, 158);
+ 
   overflow: hidden;
+}
+.logo-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-top: 30px;
+  padding-bottom: 20px;
+  gap: 10px;
+}
+
+
+
+
+.collapsed-logo {
+ 
+  width: 60px;  
+  height: auto;
+}
+
+
+@media (max-width: 767px) {
+  .login-card {
+    padding: 16px;
+    border-radius: 6px;
+  }
+
+  input,
+  .password-wrapper {
+    width: 100%;
+  }
+
+  .g-recaptcha {
+    transform: scale(0.75);
+  }
+}
+
+@media (max-width: 480px) {
+  .login-card {
+    padding: 12px;
+  }
+
+  input {
+    font-size: 14px;
+  }
+
+  .password-wrapper i {
+    font-size: 12px;
+  }
+
+  .g-recaptcha {
+    transform: scale(0.65);
+  }
 }

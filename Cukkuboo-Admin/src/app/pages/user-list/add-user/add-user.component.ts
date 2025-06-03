@@ -9,6 +9,9 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { ReactiveFormsModule } from '@angular/forms';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+
+import { UserService } from '../../../services/user.service';
 
 @Component({
   selector: 'app-add-user',
@@ -20,10 +23,11 @@ import { ReactiveFormsModule } from '@angular/forms';
     MatSelectModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatSnackBarModule
   ],
   templateUrl: './add-user.component.html',
-  styleUrl: './add-user.component.scss'
+  styleUrls: ['./add-user.component.scss']
 })
 export class AddUserComponent {
   public UserId: number = 0;
@@ -32,7 +36,9 @@ export class AddUserComponent {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private userService: UserService,
+    private snackBar: MatSnackBar
   ) {
     this.route.params.subscribe((data) => {
       if (data['id']) {
@@ -41,28 +47,55 @@ export class AddUserComponent {
     });
 
     this.userForm = this.fb.group({
-      name: ['', Validators.required],
-      contact: [
+      username: ['', Validators.required],
+      password: ['', Validators.required],
+      phone: [
         '',
         [
-          Validators.pattern(/^\d{0,15}$/), // Only numbers, max 15
+          Validators.pattern(/^\d{0,15}$/),
           Validators.maxLength(15)
         ]
       ],
       email: ['', [Validators.email]],
       country: ['', [Validators.pattern(/^[a-zA-Z\s]*$/)]],
       status: ['active', Validators.required],
-      joinDate: [''],
+      user_type: ['Customer'],
       subscription: ['free', Validators.required]
     });
   }
 
   saveUser(): void {
     if (this.userForm.valid) {
-      console.log('Form Submitted:', this.userForm.value);
-      // Submit form logic here
+      const model = this.userForm.value;
+      debugger;
+      this.userService.register(model).subscribe({
+        next: (response) => {
+          if (response.status) {
+            this.snackBar.open('User registered successfully', '', {
+              duration: 3000,
+              verticalPosition: 'top',
+              panelClass: ['snackbar-success']
+            });
+            this.router.navigate(['/user-list']);
+          }
+        },
+        error: (error) => {
+          console.error('Registration Error:', error);
+          var msg = error.error?.message || 'Something went wrong'
+          this.snackBar.open(msg, '', {
+            duration: 3000,
+            verticalPosition: 'top',
+            panelClass: ['snackbar-error']
+          });
+        }
+      });
     } else {
       this.userForm.markAllAsTouched();
+      this.snackBar.open('Please correct the form errors.', '', {
+        duration: 3000,
+        verticalPosition: 'top',
+        panelClass: ['snackbar-error']
+      });
     }
   }
 
@@ -70,7 +103,7 @@ export class AddUserComponent {
     const input = event.target;
     const filteredValue = input.value.replace(/[^0-9]/g, '').slice(0, 15);
     input.value = filteredValue;
-    this.userForm.get('contact')?.setValue(filteredValue, { emitEvent: false });
+    this.userForm.get('phone')?.setValue(filteredValue, { emitEvent: false });
   }
 
   onCountryInput(event: any): void {
@@ -79,7 +112,6 @@ export class AddUserComponent {
     input.value = filteredValue;
     this.userForm.get('country')?.setValue(filteredValue, { emitEvent: false });
   }
-  
 
   goBack(): void {
     this.router.navigate(['/user-list']);

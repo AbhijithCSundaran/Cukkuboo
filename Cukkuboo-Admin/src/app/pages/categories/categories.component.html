@@ -3,7 +3,9 @@
   <div class="header-row">
     <h2>Categories</h2>
   </div>
-  <mat-card  class="form-card">
+
+  
+  <mat-card  class="form-card form_container">
     <mat-card-content class="form-section" [formGroup]="categoryForm">
 
       <div class="left-side">
@@ -42,7 +44,7 @@
   <table mat-table [dataSource]="categories" class="mat-elevation-z2 custom-table" >
 
     <ng-container matColumnDef="name">
-      <th mat-header-cell *matHeaderCellDef> Category Name </th>
+      <th mat-header-cell *matHeaderCellDef> Category  </th>
       <td mat-cell *matCellDef="let category"> {{ category.name }} </td>
     </ng-container>
   
@@ -64,13 +66,16 @@
       </td>
     </ng-container>
   
-    <ng-container matColumnDef="action">
+    <ng-container matColumnDef="action" class="action" >
       <th mat-header-cell *matHeaderCellDef> Action </th>
       <td mat-cell *matCellDef="let category; let i = index">
-        <mat-icon class="icon" (click)="editCategory(i)">edit</mat-icon>
-        <mat-icon class="icon" (click)="deleteCategory(i)">delete</mat-icon>
+        <div class="action-icons">
+          <mat-icon class="icon" (click)="editCategory(i)">edit</mat-icon>
+          <mat-icon class="icon" (click)="deleteCategory(i)">delete</mat-icon>
+        </div>
       </td>
     </ng-container>
+    
   
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>

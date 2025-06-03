@@ -1,19 +1,28 @@
 <div class="main-layout">
-    <!-- Topbar -->
-    <header class="topbar">
-      <app-topbar></app-topbar>
-    </header>
-  
-    <div class="layout-body">
-      <!-- Sidebar -->
-      <div class="sidebar_wrpr" [class.collapsed]="isSidebarCollapsed">
-        <app-sidebar (sidebarToggle)="onSidebarToggled($event)"></app-sidebar> 
-      </div>
-  
-      <!-- Main Content -->
-      <main class="content" [class.expanded]="isSidebarCollapsed"> 
-        <router-outlet></router-outlet>
-      </main>
+  <!-- Topbar -->
+  <header class="topbar">
+    <app-topbar (sidebarToggle)="showSidebar=$event"></app-topbar>
+  </header>
+
+  <!-- Body: Sidebar + Content -->
+  <div class="layout-body">
+    <div class="sidebar_wrpr" [class.collapsed]="isSidebarCollapsed" [class.show]="showSidebar">
+      <app-sidebar
+        (sidebarToggle)="onSidebarToggled($event)"
+        (itemSelected)="onSidebarItemSelected()">
+      </app-sidebar>
     </div>
+
+    <main class="content" [class.expanded]="isSidebarCollapsed">
+      <router-outlet></router-outlet>
+       <!-- Footer  -->
+        <div class="footer">
+          <app-footer [ngClass]="{'expanded': isSidebarCollapsed}"></app-footer>
+        </div>
+ 
+    </main>
+   
   </div>
-  
+
+ 
+</div>

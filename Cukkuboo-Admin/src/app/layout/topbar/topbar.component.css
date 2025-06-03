@@ -5,8 +5,11 @@
   background: linear-gradient(to right, #c71336, #e96238);
   color: white;
   padding: 10px 20px;
-
-  position: relative;
+  top: 0;
+  left: 0;
+  right: 0;
+  position: fixed;
+  z-index: 100;
 }
 
 .title {
@@ -196,4 +199,25 @@
   font-size: 1.2em;
   font-weight: bold;
    padding: 0 10px;
+}
+
+.hamburger {
+  display: none;
+  font-size: 20px;
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+@media (max-width: 1024px) {
+  .hamburger {
+    display: block;
+  
+  }
+
+  .profile-dropdown i {
+    font-size: 22px;
+}
 }

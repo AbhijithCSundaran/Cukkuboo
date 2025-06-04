@@ -25,7 +25,7 @@ class MovieDetail extends ResourceController
      $movie_id = $data['mov_id'] ?? null;
 
     $moviedata = [
-        'upload_video_name' => $data['upload_video_name'] ?? null,
+        'video' => $data['video'] ?? null,
         'title'             => $data['title'] ?? null,
         'genre'             => $data['genre'] ?? null,
         'description'       => $data['description'] ?? null,
@@ -147,7 +147,7 @@ public function deleteMovieDetails($id)
         // exit;
         return [
             'mov_id' =>  $movie['mov_id'],
-            'video_name' => $movie['upload_video_name'],
+            'video' => $movie['video'],
             'title' => $movie['title'],
             'cast_details' => $movie['cast_details'],
             'category' => $movie['category'],
@@ -168,7 +168,7 @@ public function deleteMovieDetails($id)
     {
         return [
             'mov_id' =>  $movie['mov_id'],
-            'video_name' => $movie['upload_video_name'],
+            'video' => $movie['video'],
             'title' => $movie['title'],
             'cast_details' => $movie['cast_details'],
             'category' => $movie['category'],

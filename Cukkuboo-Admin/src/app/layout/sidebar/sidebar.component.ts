@@ -27,6 +27,17 @@ export class SidebarComponent {
 
   @Output() sidebarToggle = new EventEmitter<boolean>();
 
+  @Output() itemSelected = new EventEmitter<void>();
+
+
+  isMobileView = window.innerWidth <= 1024;
+
+@HostListener('window:resize', ['$event'])
+onResize(event: any) {
+  this.isMobileView = event.target.innerWidth <= 1024;
+}
+
+
   menuItems: MenuItem[] = [
     { name: 'Dashboard', icon: 'fa-tachometer-alt', path: '/dashboard' },
     {
@@ -49,6 +60,13 @@ export class SidebarComponent {
       subItems: [
         { name: 'Users List', path: '/user-list' },
         { name: 'Subscriptions', path: '/subscriptions' },
+      ],
+    },
+    {
+      name: 'Staff Management',
+      icon: 'fa fa-user-cog',
+      subItems: [
+        { name: 'Staff List', path: '/staff-list' },
       ],
     },
     { name: 'Reports & Analytics', icon: 'fa-chart-bar', path: '/reports' },
@@ -101,4 +119,9 @@ export class SidebarComponent {
       this.closeAllSubmenus();
     }
   }
+  onSubItemClick() {
+    this.closeAllSubmenus();
+    this.itemSelected.emit();
+  }
+  
 }

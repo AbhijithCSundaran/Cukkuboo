@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
 
@@ -8,7 +8,10 @@ import { filter } from 'rxjs/operators';
   styleUrls: ['./topbar.component.css']
 })
 export class TopbarComponent implements OnInit {
+  @Output() sidebarToggle = new EventEmitter<boolean>(); 
+
   dropdownOpen = false;
+  showSidebar = false;
   showLogoutConfirm = false;
 
   constructor(private router: Router) {}
@@ -18,10 +21,8 @@ export class TopbarComponent implements OnInit {
       .pipe(filter(event => event instanceof NavigationEnd))
       .subscribe(() => {
         const currentRoute = this.router.url.split('?')[0].split('#')[0]; 
-       
       });
   }
-
 
   toggleDropdown() {
     this.dropdownOpen = !this.dropdownOpen;
@@ -31,9 +32,14 @@ export class TopbarComponent implements OnInit {
     this.dropdownOpen = false;
   }
 
+  toggleSidebar() {
+    this.showSidebar = !this.showSidebar
+    this.sidebarToggle.emit(this.showSidebar);
+  }
+
   logout() {
-    this.dropdownOpen = false;  // close dropdown
-    this.showLogoutConfirm = true;  // show modal instead of confirm()
+    this.dropdownOpen = false;
+    this.showLogoutConfirm = true;
   }
 
   confirmLogout() {
@@ -46,6 +52,3 @@ export class TopbarComponent implements OnInit {
     this.showLogoutConfirm = false;
   }
 }
-  
- 
-

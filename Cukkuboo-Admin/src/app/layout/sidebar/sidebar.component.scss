@@ -8,7 +8,14 @@
   flex-direction: column;
   border-radius: 5px;
   position: relative;
+
+  
   transition: width 0.3s ease;
+
+  @media (max-width: 1024px) {
+    overflow-y: auto;
+    max-height: 100vh; 
+  }
 
   .menu {
     flex: 1;
@@ -29,14 +36,14 @@
       top: 0;
       left: 100%;
       min-width: 160px;
-      background-color:  rgba(208, 40, 40, 0.8);
+      background-color: #c71336;
       border-radius: 6px;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
       padding: 8px 0;
       display: none;
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.2s ease;
+      transition: 0.2s ease;
 
       &.open {
         list-style: none;
@@ -44,6 +51,13 @@
         pointer-events: auto;
         display: block;
       }
+
+       
+    @media (max-width: 1024px) {
+      top: 35px;
+      left: 10px;
+    }
+  
     }
   }
 
@@ -109,11 +123,28 @@
   gap: 10px;
 }
 
-.app-logo {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
+.full-logo {
+  display: block;
+   width: 170px;
+  height: 30px;
 }
+
+.collapsed-logo {
+  display: none;
+}
+
+.sidebar.collapsed {
+  .full-logo {
+    display: none;
+  }
+
+  .collapsed-logo {
+    display: block;
+    width: 40px;  // Optional: smaller size
+    height: auto;
+  }
+}
+
 
 .app-name {
   font-weight: bold;
@@ -152,8 +183,15 @@
     white-space: nowrap;
     margin: 0;
     margin-left: 10px;
-  }
 
+
+      
+    @media (max-width: 1024px) {
+      margin-right: 10px;
+    }
+    
+  }
+   
   &:hover,
   .active {
     // background-color: rgb(59, 2, 2);
@@ -175,7 +213,7 @@
 
 .toggle-btn {
   position: absolute;
-  bottom: 50px;
+  bottom: 90px;
   left: 50%;
   background-color: black;
   color: white;
@@ -190,6 +228,15 @@
   &:hover {
     background-color: #222;
   }
+
+
+  
+  
+    @media (max-width: 1024px) {
+      display: none;
+    }
+  
+  
 }
 
 
@@ -206,3 +253,5 @@
 .submenu-list li a:hover {
   background-color: rgba(0, 0, 0, 0.3);
 }
+
+

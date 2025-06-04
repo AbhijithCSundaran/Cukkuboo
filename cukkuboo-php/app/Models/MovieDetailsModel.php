@@ -9,7 +9,7 @@ class MovieDetailsModel extends Model
     protected $table = 'movies_details'; 
 
     protected $allowedFields = [
-        'video', 'title', 'genre', 'description', 'cast_details', 'category',
+        'upload_video_name', 'title', 'genre', 'description', 'cast_details', 'category',
         'release_date', 'age_rating', 'access', 'status', 'thumbnail', 'trailer', 'banner', 'duration', 'rating', 'user_type', 
         'created_by', 'created_on', 'modify_by', 'modify_on'
     ];

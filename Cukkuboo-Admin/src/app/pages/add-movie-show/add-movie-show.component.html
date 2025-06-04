@@ -1,4 +1,5 @@
-<div class="add-movie-show-container">
+
+<div class="content-container">
   <div class="header-row">
     <h2>{{ isEditMode ? 'Edit Movie/Show' : 'Add Movie/Show' }}</h2>
     <button class="back-to-list-button" [routerLink]="['/list-movie-show']">Back to List</button>
@@ -26,7 +27,7 @@
                   </div>
                   <div *ngIf="uploadProgress === 100" class="upload-success">✅ Upload complete!</div>
                 </div>
-                <input type="file" (change)="onVideoSelected($event)" accept="video/mp4" hidden #videoInput />
+                <input type="file" (change)="onVideoSelected($event)" accept="video/*" hidden #videoInput />
               </mat-card-content>
             </mat-card>
           </div>
@@ -47,99 +48,127 @@
 
 
       <!-- Form Inputs -->
+      <div class="form_container">
 
+        <!-- Title -->
+        <div class="width-50 px-2 pb-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Title</mat-label>
+            <input matInput placeholder="Add title" formControlName="title" />
+            <mat-error *ngIf="movieForm.controls['title'].touched && movieForm.controls['title'].invalid">
+              <Validation-Messages [control]="movieForm.controls['title']"></Validation-Messages>
+            </mat-error>
+          </mat-form-field>
+        </div>
 
-      <!-- Title -->
-      <div class="w-50 px-2 pb-3">
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Title</mat-label>
-          <input matInput placeholder="Add title" formControlName="title" />
-        </mat-form-field>
+<div class="width-50 px-2 pb-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Genre</mat-label>
+            <mat-select formControlName="genre">
+              <mat-option value="action">Action</mat-option>
+              <mat-option value="drama">Drama</mat-option>
+              <mat-option value="comedy">Comedy</mat-option>
+            </mat-select>
+            <mat-error>
+              <Validation-Messages [control]="movieForm.controls['genre']"></Validation-Messages>
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <!-- Description -->
+        <div class="width-50 px-2 pb-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Description</mat-label>
+            <textarea matInput placeholder="Add description" formControlName="description"></textarea>
+            <mat-error>
+              <Validation-Messages [control]="movieForm.controls['description']"></Validation-Messages>
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <!-- Cast Details -->
+        <div class="width-50 px-2 pb-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Cast Details</mat-label>
+            <textarea matInput placeholder="Add Cast details" formControlName="cast"></textarea>
+            <mat-error>
+              <Validation-Messages [control]="movieForm.controls['cast']"></Validation-Messages>
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <!-- Category -->
+        <div class="width-50 px-2 pb-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Category</mat-label>
+            <mat-select formControlName="category">
+              <mat-option value="movie">Movie</mat-option>
+              <mat-option value="show">Show</mat-option>
+            </mat-select>
+            <mat-error>
+              <Validation-Messages [control]="movieForm.controls['category']"></Validation-Messages>
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <!-- Release Date -->
+        <div class="width-50 px-2 pb-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Release Date</mat-label>
+            <input matInput [matDatepicker]="picker" formControlName="releaseDate" placeholder="Choose a date"
+              (click)="picker.open()" readonly />
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+            <mat-error>
+              <Validation-Messages [control]="movieForm.controls['releaseDate']"></Validation-Messages>
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <!-- Rating -->
+        <div class="width-50 px-2 pb-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Rating</mat-label>
+            <mat-select formControlName="rating">
+              <mat-option value="18+">18+</mat-option>
+              <mat-option value="16+">16+</mat-option>
+            </mat-select>
+            <mat-error>
+              <Validation-Messages [control]="movieForm.controls['rating']"></Validation-Messages>
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <!-- Access -->
+        <div class="width-50 px-2 pb-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Access</mat-label>
+            <mat-select formControlName="access">
+              <mat-option value="free">Free</mat-option>
+              <mat-option value="standard">Standard</mat-option>
+              <mat-option value="premium">Premium</mat-option>
+            </mat-select>
+            <mat-error>
+              <Validation-Messages [control]="movieForm.controls['access']"></Validation-Messages>
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <!-- Status -->
+        <div class="width-50 px-2 pb-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Status</mat-label>
+            <mat-select formControlName="status">
+              <mat-option value="active">Active</mat-option>
+              <mat-option value="inactive">Inactive</mat-option>
+            </mat-select>
+            <mat-error>
+              <Validation-Messages [control]="movieForm.controls['status']"></Validation-Messages>
+            </mat-error>
+          </mat-form-field>
+        </div>
       </div>
 
-      <!-- Genre -->
-      <div class="w-50 px-2 pb-3">
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Genre</mat-label>
-          <mat-select formControlName="genre">
-            <mat-option value="action">Action</mat-option>
-            <mat-option value="drama">Drama</mat-option>
-            <mat-option value="comedy">Comedy</mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
-
-      <!-- Description -->
-      <div class="w-50 px-2 pb-3">
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Description</mat-label>
-          <textarea matInput placeholder="Add description" formControlName="description"></textarea>
-        </mat-form-field>
-      </div>
-
-      <!-- Cast Details -->
-      <div class="w-50 px-2 pb-3">
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Cast Details</mat-label>
-          <textarea matInput placeholder="Add Cast details" formControlName="cast"></textarea>
-        </mat-form-field>
-      </div>
-
-      <!-- Category -->
-      <div class="w-50 px-2 pb-3">
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Category</mat-label>
-          <mat-select formControlName="category">
-            <mat-option value="movie">Movie</mat-option>
-            <mat-option value="show">Show</mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
-
-      <!-- Release Date -->
-      <div class="w-50 px-2 pb-3">
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Release Date</mat-label>
-          <input matInput [matDatepicker]="picker" formControlName="releaseDate" placeholder="Choose a date"
-            (click)="picker.open()" readonly />
-          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-          <mat-datepicker #picker></mat-datepicker>
-        </mat-form-field>
-      </div>
-
-      <!-- Rating -->
-      <div class="w-50 px-2 pb-3">
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Rating</mat-label>
-          <mat-select formControlName="rating">
-            <mat-option value="18+">18+</mat-option>
-            <mat-option value="16+">16+</mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
-
-      <!-- Access -->
-      <div class="w-50 px-2 pb-3">
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Access</mat-label>
-          <mat-select formControlName="access">
-            <mat-option value="free">Free</mat-option>
-            <mat-option value="standard">Standard</mat-option>
-            <mat-option value="premium">Premium</mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
-
-      <!-- Status -->
-      <div class="w-50 px-2 pb-3">
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Status</mat-label>
-          <mat-select formControlName="status">
-            <mat-option value="active">Active</mat-option>
-            <mat-option value="inactive">Inactive</mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
       <!-- Uploads -->
       <div class="uploads">
 

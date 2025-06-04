@@ -1,12 +1,8 @@
 <div class="content-container">
-  <!-- <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-    <h2>{{UserId?'Edit User':'Add User'}}</h2>
-    <button class="back-to-list-button" (click)="goBack()">Back to List</button>
-  </div> -->
 
- 
+
   <div class="header-row">
-   <h2>{{UserId?'Edit User':'Add User'}}</h2>
+    <h2>{{UserId?'Edit User':'Add User'}}</h2>
     <button class="back-to-list-button" (click)="goBack()">Back to List</button>
   </div>
   <mat-card appearance="outlined" class="form-card">
@@ -16,21 +12,17 @@
       <div class="w-50 px-2 pb-3">
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Name</mat-label>
-          <input matInput formControlName="name" placeholder="Add name" required>
-                </mat-form-field>
+          <input matInput formControlName="username" placeholder="Add name" required>
+        </mat-form-field>
       </div>
 
       <!-- Contact -->
       <div class="w-50 px-2 pb-3">
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Contact</mat-label>
-          <input
-          matInput
-          formControlName="contact"
-          placeholder="Add contact number"
-          maxlength="15"
-          (input)="onNumberInput($event)">
-                        </mat-form-field>
+          <input matInput formControlName="phone" placeholder="Add phone number" maxlength="15"
+            (input)="onNumberInput($event)">
+        </mat-form-field>
       </div>
 
       <!-- Email -->
@@ -38,19 +30,21 @@
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Email</mat-label>
           <input matInput formControlName="email" type="email" placeholder="Add email">
-                </mat-form-field>
+        </mat-form-field>
+      </div>
+      <div class="w-50 px-2 pb-3">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>password</mat-label>
+          <input matInput formControlName="password" type="password" placeholder="password">
+        </mat-form-field>
       </div>
 
       <!-- Country -->
       <div class="w-50 px-2 pb-3">
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Country</mat-label>
-          <input
-          matInput
-          formControlName="country"
-          placeholder="Enter country"
-          (input)="onCountryInput($event)">
-                        </mat-form-field>
+          <input matInput formControlName="country" placeholder="Enter country" (input)="onCountryInput($event)">
+        </mat-form-field>
       </div>
 
       <!-- Status -->
@@ -64,7 +58,7 @@
         </mat-form-field>
       </div>
 
-      <!-- Join Date -->
+      <!-- Join Date
       <div class="w-50 px-2 pb-3">
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Join Date</mat-label>
@@ -72,7 +66,7 @@
           <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
           <mat-datepicker #picker></mat-datepicker>
         </mat-form-field>
-      </div>
+      </div> -->
 
       <!-- Subscription -->
       <div class="w-50 px-2 pb-3">
@@ -86,10 +80,10 @@
         </mat-form-field>
       </div>
 
-     <!-- Action -->
-<div class="save">
-  <button class="save-button" mat-raised-button color="primary" (click)="saveUser()">Save</button>
-</div>
+      <!-- Action -->
+      <div class="save">
+        <button class="save-button" mat-raised-button color="primary" (click)="saveUser()">Save</button>
+      </div>
 
     </mat-card-content>
   </mat-card>

@@ -31,16 +31,16 @@ class Category extends ResourceController
         $data = $this->request->getJSON(true);
 
         if (
-            empty($data['category_id']) ||
+           
             empty($data['category_name']) ||
             !isset($data['description']) ||
             !isset($data['status'])
         ) {
-            return $this->failValidationError('category_id, category_name, description, and status are required.');
+            return $this->failValidationError('category_name, description, and status are required.');
         }
 
-        if ($this->categoryModel->categoryExists($data['category_id'])) {
-            return $this->fail('Category with this category_id already exists.');
+        if ($this->categoryModel->categoryExists($data['category_name'])) {
+            return $this->fail('Category with this category_name already exists.');
         }
 
         $this->categoryModel->addCategory($data);

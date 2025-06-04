@@ -17,7 +17,7 @@ class Login extends BaseController
     public function loginFun()
     {
         $data = $this->request->getJSON(true);
-
+        
         if (!isset($data['email']) || !isset($data['password'])) {
             return $this->response->setStatusCode(400)->setJSON([
                 'status' => false,
@@ -62,7 +62,7 @@ class Login extends BaseController
                 'email' => $user['email'],
                 'isBlocked' => $user['status'] !== 'active',
                 'subscription' => $user['subscription'],
-                'user_type' => 'admin',
+                'user_type' => $user['user_type'],
                 'date' => date('Y-m-d'),
                 'createdAt' => $user['created_at'],
                 'updatedAt' => $user['updated_at'],

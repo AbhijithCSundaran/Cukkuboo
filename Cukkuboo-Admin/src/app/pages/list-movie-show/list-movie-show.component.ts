@@ -9,6 +9,9 @@ import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MovieService } from '../../services/movie.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+
 
 
 type FilterColumn = 'title' | 'genre' | 'category' | 'status';
@@ -24,12 +27,15 @@ type FilterColumn = 'title' | 'genre' | 'category' | 'status';
     CommonModule,
     MatPaginatorModule,
     MatSortModule,
+       MatFormFieldModule,  
+    MatInputModule      
   ],
   templateUrl: './list-movie-show.component.html',
   styleUrls: ['./list-movie-show.component.scss']
 })
 export class ListMovieShowComponent implements OnInit, AfterViewInit {
-  displayedColumns: string[] = ['title', 'genre', 'category', 'status', 'action'];
+  displayedColumns: string[] = ['slNo','title', 'genre', 'category', 'status', 'action'];
+  
   dataSource = new MatTableDataSource<any>([]);
   confirmDeleteMovie: any = null;
 
@@ -153,13 +159,48 @@ confirmDelete(): void {
   this.confirmDeleteMovie = null;
 }
 
-
-
-
-
-
-
   addNewMovie(): void {
     this.router.navigate(['/add-movie-show']);
   }
+
+  applyGlobalFilter(event: Event): void {
+  const filterValue = (event.target as HTMLInputElement).value.trim().toLowerCase();
+
+  this.dataSource.filterPredicate = (data, filter: string) => {
+    const title = data.title?.toLowerCase() || '';
+    const genre = this.getGenreName(data.genre).toLowerCase();
+    const category = this.getCategoryName(data.category).toLowerCase();
+    const status = data.status === '1' ? 'active' : 'inactive';
+
+    return (
+      title.includes(filter) ||
+      genre.includes(filter) ||
+      category.includes(filter) ||
+      status.includes(filter)
+    );
+  };
+
+  this.dataSource.filter = filterValue;
+
+  if (this.dataSource.paginator) {
+    this.dataSource.paginator.firstPage();
+  }
+}
+getGenreName(code: string): string {
+  switch (code) {
+    case '1': return 'Action';
+    case '2': return 'Drama';
+    case '3': return 'Comedy';
+    default: return 'Other';
+  }
+}
+
+getCategoryName(code: string): string {
+  switch (code) {
+    case '1': return 'Movie';
+    case '2': return 'Show';
+    default: return 'Other';
+  }
+}
+
 }

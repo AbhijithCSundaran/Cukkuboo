@@ -525,6 +525,13 @@ cancelDelete(): void {
   this.confirmDeleteType = null;
 }
 
+capitalizeTitle() {
+  const control = this.movieForm.controls['title'];
+  const value = control.value;
+  if (value && value.length > 0) {
+    control.setValue(value.charAt(0).toUpperCase() + value.slice(1));
+  }
+}
 
 }
 

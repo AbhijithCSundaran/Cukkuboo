@@ -228,8 +228,9 @@
                 (dragover)="onTrailerDragOver($event)" (drop)="onTrailerDrop($event)"
                 (click)="!movieForm.value['trailer'] && trailerInput.click()">
                 <p *ngIf="!movieForm.value['trailer']">Drag & drop a trailer here or click to select (MP4 only)</p>
-                <video *ngIf="movieForm.value['trailer']" [src]="movieForm.value['trailer']" controls
+                <video *ngIf="movieForm.value['trailer']" [src]="videoUrl+movieForm.value['trailer']" controls
                   controlsList="nodownload" class="media-preview"></video>
+     
               </div>
 
               <input type="file" (change)="onTrailerSelected($event)" accept="video/mp4" hidden #trailerInput />

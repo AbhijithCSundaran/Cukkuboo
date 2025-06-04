@@ -52,4 +52,21 @@ public function deleteMovieDetailsById($status, $mov_id, $modified_by)
                     ->limit(5)
                     ->findAll();
     }
+    public function getMoviesWithLimit($limit, $offset)
+{
+    return $this->db->table($this->table)
+                    ->where('status !=', 9)
+                    ->orderBy('mov_id', 'DESC')
+                    ->limit($limit, $offset)
+                    ->get()
+                    ->getResultArray();
+}
+
+public function countAllMovies()
+{
+    return $this->db->table($this->table)
+                    ->where('status !=', 9)
+                    ->countAllResults();
+}
+
 }

@@ -21,10 +21,39 @@ class SubscriptionPlan extends BaseController
     }
 
     public function getAll()
-    {
-        $plans = $this->subscriptionPlanModel->getAllPlans();
-        return $this->response->setJSON(['status' => true, 'data' => $plans]);
+{
+    // Get pagination parameters from the query string
+    $pageIndex = (int) $this->request->getGet('pageIndex');
+    $pageSize = (int) $this->request->getGet('pageSize');
+
+    // Fallback values if not set or invalid
+    if ($pageIndex < 0) {
+        $pageIndex = 0;
     }
+
+    if ($pageSize <= 0) {
+        $pageSize = 10; // Default if invalid
+    }
+
+    // Calculate offset
+    $offset = $pageIndex * $pageSize;
+
+    // Get total number of records
+    $total = $this->subscriptionPlanModel->countAll();
+
+    // Get paginated data
+    $plans = $this->subscriptionPlanModel
+        ->orderBy('subscriptionplan_id', 'DESC')
+        ->findAll($pageSize, $offset);
+
+    // Return response with total and data
+    return $this->response->setJSON([
+        'status' => true,
+        'data' => $plans,
+        'total' => $total
+    ]);
+}
+
 
     public function get($id)
     {

@@ -73,23 +73,35 @@ class MovieDetail extends ResourceController
 }
 public function getAllMovieDetails()
 {
-    $movies = $this->moviedetail->getAllMoviesDetails();
+    $pageIndex = (int) $this->request->getGet('pageIndex');
+    $pageSize = (int) $this->request->getGet('pageSize');
+
+    if ($pageIndex < 0) $pageIndex = 0;
+    if ($pageSize <= 0) $pageSize = 10;
+
+    $offset = $pageIndex * $pageSize;
+
+    // Get total count of movies (excluding soft-deleted ones)
+    $total = $this->moviedetail
+                  ->where('status !=', 9)
+                  ->countAllResults(false);  // keeps query builder state
+
+    // Get paginated data
+    $movies = $this->moviedetail
+                   ->where('status !=', 9)
+                   ->orderBy('mov_id', 'DESC')
+                   ->findAll($pageSize, $offset);
 
     return $this->response->setJSON([
         'status' => true,
-        'message' => 'All movie details fetched successfully.',
-        'data' => $movies
+        'message' => 'Paginated movie details fetched successfully.',
+        'data' => $movies,
+        'total' => $total
     ]);
 }
-public function getMovieById($id){
 
-  $getmoviesdetails = $this->moviedetail->getMovieDetailsById($id);
-     return $this->response->setJSON([
-        'status' => true,
-        'message' => 'movie details fetched successfully.',
-        'data' => $getmoviesdetails
-    ]);
-}
+
+
 public function deleteMovieDetails($id)
 {
     $data = $this->request->getJSON(true); 

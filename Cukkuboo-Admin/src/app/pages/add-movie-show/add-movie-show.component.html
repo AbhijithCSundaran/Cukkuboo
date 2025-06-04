@@ -32,18 +32,20 @@
           </div>
 
           <!-- Video Preview -->
-          <div *ngIf="uploadProgress === 100 && videoURL" class="preview-wrapper">
-            <button class="trash-button-main" (click)="removeMainVideo()">
-              <i class="fa-solid fa-trash"></i>
-            </button>
-
+          <div *ngIf="movieForm.value['video']" class="preview-wrapper">
+           <button class="trash-button-main" (click)="openDeleteConfirm('video')">
+  <i class="fa-solid fa-trash"></i>
+</button>
+            <!-- {{uploadProgress}} -->
             <div class="video-preview-container">
-              <video [src]="videoURL" controls controlsList="nodownload"
+              <video [src]="videoUrl+movieForm.value['video']" controls controlsList="nodownload"
                 [ngClass]="{ 'vertical-video': isVerticalVideo, 'horizontal-video': !isVerticalVideo }"></video>
             </div>
           </div>
         </div>
       </div>
+
+
 
 
       <!-- Form Inputs -->
@@ -65,9 +67,9 @@
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Genre</mat-label>
             <mat-select formControlName="genre">
-              <mat-option value="action">Action</mat-option>
-              <mat-option value="drama">Drama</mat-option>
-              <mat-option value="comedy">Comedy</mat-option>
+              <mat-option value="1">Action</mat-option>
+              <mat-option value="2">Drama</mat-option>
+              <mat-option value="3">Comedy</mat-option>
             </mat-select>
             <mat-error>
               <Validation-Messages [control]="movieForm.controls['genre']"></Validation-Messages>
@@ -90,9 +92,9 @@
         <div class="width-50 px-2 pb-3">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Cast Details</mat-label>
-            <textarea matInput placeholder="Add Cast details" formControlName="cast"></textarea>
+            <textarea matInput placeholder="Add Cast details" formControlName="cast_details"></textarea>
             <mat-error>
-              <Validation-Messages [control]="movieForm.controls['cast']"></Validation-Messages>
+              <Validation-Messages [control]="movieForm.controls['cast_details']"></Validation-Messages>
             </mat-error>
           </mat-form-field>
         </div>
@@ -102,8 +104,8 @@
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Category</mat-label>
             <mat-select formControlName="category">
-              <mat-option value="movie">Movie</mat-option>
-              <mat-option value="show">Show</mat-option>
+              <mat-option value="1">Movie</mat-option>
+              <mat-option value="2">Show</mat-option>
             </mat-select>
             <mat-error>
               <Validation-Messages [control]="movieForm.controls['category']"></Validation-Messages>
@@ -115,12 +117,12 @@
         <div class="width-50 px-2 pb-3">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Release Date</mat-label>
-            <input matInput [matDatepicker]="picker" formControlName="releaseDate" placeholder="Choose a date"
+            <input matInput [matDatepicker]="picker" formControlName="release_date" placeholder="Choose a date"
               (click)="picker.open()" readonly />
             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
             <mat-datepicker #picker></mat-datepicker>
             <mat-error>
-              <Validation-Messages [control]="movieForm.controls['releaseDate']"></Validation-Messages>
+              <Validation-Messages [control]="movieForm.controls['release_date']"></Validation-Messages>
             </mat-error>
           </mat-form-field>
         </div>
@@ -129,12 +131,12 @@
         <div class="width-50 px-2 pb-3">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Rating</mat-label>
-            <mat-select formControlName="rating">
-              <mat-option value="18+">18+</mat-option>
-              <mat-option value="16+">16+</mat-option>
+            <mat-select formControlName="age_rating">
+              <mat-option value="1">18+</mat-option>
+              <mat-option value="2">16+</mat-option>
             </mat-select>
             <mat-error>
-              <Validation-Messages [control]="movieForm.controls['rating']"></Validation-Messages>
+              <Validation-Messages [control]="movieForm.controls['age_rating']"></Validation-Messages>
             </mat-error>
           </mat-form-field>
         </div>
@@ -144,9 +146,9 @@
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Access</mat-label>
             <mat-select formControlName="access">
-              <mat-option value="free">Free</mat-option>
-              <mat-option value="standard">Standard</mat-option>
-              <mat-option value="premium">Premium</mat-option>
+              <mat-option value="1">Free</mat-option>
+              <mat-option value="2">Standard</mat-option>
+              <mat-option value="3">Premium</mat-option>
             </mat-select>
             <mat-error>
               <Validation-Messages [control]="movieForm.controls['access']"></Validation-Messages>
@@ -159,14 +161,27 @@
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Status</mat-label>
             <mat-select formControlName="status">
-              <mat-option value="active">Active</mat-option>
-              <mat-option value="inactive">Inactive</mat-option>
+              <mat-option value="1">Active</mat-option>
+              <mat-option value="2">Inactive</mat-option>
             </mat-select>
             <mat-error>
               <Validation-Messages [control]="movieForm.controls['status']"></Validation-Messages>
             </mat-error>
           </mat-form-field>
         </div>
+        <!-- Duration -->
+        <!-- <div class="width-50 px-2 pb-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Duration</mat-label>
+            <input matInput type="text" placeholder="e.g., 2h 30m or 150 mins" formControlName="duration" />
+            <mat-error *ngIf="movieForm.controls['duration'].touched && movieForm.controls['duration'].invalid">
+              <Validation-Messages [control]="movieForm.controls['duration']"></Validation-Messages>
+            </mat-error>
+          </mat-form-field>
+        </div>
+ -->
+
+
       </div>
 
       <!-- Uploads -->
@@ -177,16 +192,17 @@
           <mat-card appearance="outlined">
             <mat-card-content>
               <label class="fw-medium d-block mb-2">Thumbnail</label>
-              <button class="trash-button" *ngIf="thumbnailPreview" (click)="removeThumbnail()">
-                <i class="fa-solid fa-trash"></i>
-              </button>
+              <button class="trash-button" *ngIf="movieForm.value['thumbnail']" (click)="openDeleteConfirm('thumbnail')">
+  <i class="fa-solid fa-trash"></i>
+</button>
 
-              <div class="drag-drop-zone" [ngClass]="{'uploaded': thumbnailPreview}" (dragover)="onDragOver($event)"
-                (drop)="onDrop($event)" (click)="!thumbnailPreview && thumbnailInput.click()">
+              <div class="drag-drop-zone" [ngClass]="{'uploaded': movieForm.value['thumbnail']}"
+                (dragover)="onDragOver($event)" (drop)="onDrop($event)"
+                (click)="!thumbnailPreview && thumbnailInput.click()">
 
-                <p *ngIf="!thumbnailPreview">Drag & drop an image here or click to select</p>
-                <div class="preview-container" *ngIf="thumbnailPreview">
-                  <img [src]="thumbnailPreview" alt="Thumbnail Preview" class="media-preview"
+                <p *ngIf="!movieForm.value['thumbnail']">Drag & drop an image here or click to select</p>
+                <div class="preview-container" *ngIf="movieForm.value['thumbnail']">
+                  <img [src]="imgUrl+movieForm.value['thumbnail']" alt="Thumbnail Preview" class="media-preview"
                     (click)="$event.stopPropagation()" #thumbnailImg />
                   <button class="fullscreen-button" (click)="openFullscreen(thumbnailImg)">
                     <i class="fa-solid fa-expand"></i>
@@ -203,17 +219,17 @@
         <div class="upload-container">
           <mat-card appearance="outlined">
             <mat-card-content>
-
               <label class="fw-medium d-block mb-2">Trailer</label>
-              <button class="trash-button" *ngIf="trailerURL" (click)="removeTrailer($event)">
-                <i class="fa-solid fa-trash"></i>
-              </button>
+              <button class="trash-button" *ngIf="movieForm.value['trailer']" (click)="openDeleteConfirm('trailer')">
+  <i class="fa-solid fa-trash"></i>
+</button>
 
-              <div class="drag-drop-zone" [ngClass]="{'uploaded': trailerName}" (dragover)="onTrailerDragOver($event)"
-                (drop)="onTrailerDrop($event)" (click)="!trailerName && trailerInput.click()">
-                <p *ngIf="!trailerName">Drag & drop a trailer here or click to select (MP4 only)</p>
-                <video *ngIf="trailerURL" [src]="trailerURL" controls controlsList="nodownload"
-                  class="media-preview"></video>
+              <div class="drag-drop-zone" [ngClass]="{'uploaded': movieForm.value['trailer']}"
+                (dragover)="onTrailerDragOver($event)" (drop)="onTrailerDrop($event)"
+                (click)="!movieForm.value['trailer'] && trailerInput.click()">
+                <p *ngIf="!movieForm.value['trailer']">Drag & drop a trailer here or click to select (MP4 only)</p>
+                <video *ngIf="movieForm.value['trailer']" [src]="movieForm.value['trailer']" controls
+                  controlsList="nodownload" class="media-preview"></video>
               </div>
 
               <input type="file" (change)="onTrailerSelected($event)" accept="video/mp4" hidden #trailerInput />
@@ -226,16 +242,17 @@
           <mat-card appearance="outlined">
             <mat-card-content>
               <label class="fw-medium d-block mb-2">Banner</label>
-              <button class="trash-button" *ngIf="bannerPreview" (click)="removeBanner()">
-                <i class="fa-solid fa-trash"></i>
-              </button>
+              <button class="trash-button" *ngIf="movieForm.value['banner']" (click)="openDeleteConfirm('banner')">
+  <i class="fa-solid fa-trash"></i>
+</button>
 
-              <div class="drag-drop-zone" [ngClass]="{ 'uploaded': bannerPreview }" (dragover)="onDragOver($event)"
-                (drop)="!bannerPreview && onBannerDrop($event)" (click)="!bannerPreview && bannerInput.click()">
-                <p *ngIf="!bannerPreview">Drag & drop an image here or click to select</p>
+              <div class="drag-drop-zone" [ngClass]="{ 'uploaded':movieForm.value['banner']}"
+                (dragover)="onDragOver($event)" (drop)="!bannerPreview && onBannerDrop($event)"
+                (click)="!bannerPreview && bannerInput.click()">
+                <p *ngIf="!movieForm.value['banner']">Drag & drop an image here or click to select</p>
 
-                <div class="preview-container" *ngIf="bannerPreview">
-                  <img [src]="bannerPreview" alt="Banner Preview" class="media-preview"
+                <div class="preview-container" *ngIf="movieForm.value['banner']">
+                  <img [src]="imgUrl+movieForm.value['banner']" alt="Banner Preview" class="media-preview"
                     (click)="$event.stopPropagation()" #bannerImg />
                   <button class="fullscreen-button" (click)="openFullscreen(bannerImg)">
                     <i class="fa-solid fa-expand"></i>
@@ -252,7 +269,20 @@
     </mat-card-content>
 
     <mat-card-actions class="d-flex justify-content-end px-4 pb-2">
-      <button class="save-button" (click)="submitForm()">Save</button>
+      <button class="save-button" (click)="submitMovie()">Save</button>
     </mat-card-actions>
   </mat-card>
+  <!-- Delete Confirmation Modal -->
+<div class="modal" [class.show]="confirmDeleteType">
+  <div class="modal-content">
+    <p>Are you sure you want to delete
+      <span class="highlight">{{ confirmDeleteType | titlecase }}</span>?
+    </p>
+    <div class="modal-actions">
+      <button class="btn-yes" (click)="confirmDelete()">Delete</button>
+      <button class="btn-no" (click)="cancelDelete()">Cancel</button>
+    </div>
+  </div>
+</div>
+
 </div>

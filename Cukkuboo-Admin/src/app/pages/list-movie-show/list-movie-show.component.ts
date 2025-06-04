@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatCardModule } from '@angular/material/card';
 import { MatTableModule } from '@angular/material/table';
@@ -7,6 +7,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
+import { MovieService } from '../../services/movie.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+
 
 type FilterColumn = 'title' | 'genre' | 'category' | 'status';
 
@@ -14,27 +17,21 @@ type FilterColumn = 'title' | 'genre' | 'category' | 'status';
   selector: 'app-list-movie-show',
   standalone: true,
   imports: [
+    RouterLink,
     MatCardModule,
     MatTableModule,
     MatIconModule,
     CommonModule,
     MatPaginatorModule,
-    MatSortModule
+    MatSortModule,
   ],
   templateUrl: './list-movie-show.component.html',
   styleUrls: ['./list-movie-show.component.scss']
 })
 export class ListMovieShowComponent implements OnInit, AfterViewInit {
   displayedColumns: string[] = ['title', 'genre', 'category', 'status', 'action'];
-
-  movies = [
-    { id: 1, title: 'Inception', genre: 'Sci-Fi', category: 'Movie', status: 'active' },
-    { id: 2, title: 'The Godfather', genre: 'Crime', category: 'Movie', status: 'inactive' },
-    { id: 3, title: 'The Dark Knight', genre: 'Action', category: 'Movie', status: 'active' },
-    { id: 4, title: 'Parasite', genre: 'Thriller', category: 'Movie', status: 'active' }
-  ];
-
-  dataSource = new MatTableDataSource(this.movies);
+  dataSource = new MatTableDataSource<any>([]);
+  confirmDeleteMovie: any = null;
 
   filterValues: { [key in FilterColumn]: string } = {
     title: '',
@@ -46,21 +43,44 @@ export class ListMovieShowComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private movieService: MovieService,private snackBar: MatSnackBar) {}
 
   ngOnInit(): void {
+    this.listMovies();
+
     this.dataSource.filterPredicate = (data, filter) => {
       const searchTerms = JSON.parse(filter);
-      return (!searchTerms.title || data.title.toLowerCase().includes(searchTerms.title))
-        && (!searchTerms.genre || data.genre.toLowerCase().includes(searchTerms.genre))
-        && (!searchTerms.category || data.category.toLowerCase().includes(searchTerms.category))
-        && (!searchTerms.status || data.status.toLowerCase().includes(searchTerms.status));
+      return (!searchTerms.title || data.title?.toLowerCase().includes(searchTerms.title))
+        && (!searchTerms.genre || data.genre?.toLowerCase().includes(searchTerms.genre))
+        && (!searchTerms.category || data.category?.toLowerCase().includes(searchTerms.category))
+        && (!searchTerms.status || data.status?.toLowerCase().includes(searchTerms.status));
     };
   }
 
+    showSnackbar(message: string, panelClass: string = 'snackbar-default'): void {
+    this.snackBar.open(message, 'Close', {
+      duration: 3000,
+      verticalPosition: 'top',
+      panelClass: [panelClass]
+    });
+  }
   ngAfterViewInit(): void {
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
+  }
+
+  listMovies(): void {
+    const model = {}; 
+    this.movieService.listmovies(model).subscribe({
+      next: (response) => {
+          console.log('API response from listmovies():', response); 
+        this.dataSource.data = response?.data || response || [];
+      },
+      error: (error) => {
+        console.error('Error fetching movies:', error);
+        this.dataSource.data = [];
+      }
+    });
   }
 
   applyFilter(column: FilterColumn, event: Event) {
@@ -73,19 +93,71 @@ export class ListMovieShowComponent implements OnInit, AfterViewInit {
     }
   }
 
+// editMovie(id: number): void {
+//   // console.log('Navigating to edit page with ID:', id); 
+//   if (id === undefined || id === null) {
+//     console.error('Invalid ID passed to editMovie()');
+//     return;
+//   }
+//   this.router.navigate(['/edit-movie-show', id]);
+// }
+
+// deleteMovie(movie: any): void {
+//   if (confirm(`Are you sure you want to delete the movie "${movie.title}"?`)) {
+//     this.movieService.deletemovies(movie.mov_id).subscribe({
+//       next: () => {
+//         const index = this.dataSource.data.findIndex(m => m.mov_id === movie.mov_id);
+//         if (index > -1) {
+//           this.dataSource.data.splice(index, 1);
+//           this.dataSource.data = [...this.dataSource.data];
+//         }
+//         this.showSnackbar('Movie deleted successfully!', 'snackbar-success');
+//       },
+//       error: (err) => {
+//         console.error('Failed to delete movie:', err);
+//         this.showSnackbar('Failed to delete movie. Please try again.', 'snackbar-error');
+//       }
+//     });
+//   }
+// }
 
 
-  editMovie(id: number): void {
-    this.router.navigate(['/edit-movie-show', id]);
-  }
 
-  deleteMovie(movie: any): void {
-    const index = this.movies.indexOf(movie);
-    if (index > -1) {
-      this.movies.splice(index, 1);
-      this.dataSource.data = [...this.movies];
+
+modalDeleteMovie(movie: any): void {
+  this.confirmDeleteMovie = movie;
+}
+
+cancelDelete(): void {
+  this.confirmDeleteMovie = null;
+}
+
+confirmDelete(): void {
+  const movie = this.confirmDeleteMovie;
+  if (!movie) return;
+
+  console.log('Deleting movie with id:', movie.mov_id);
+
+  this.movieService.deleteMovies(movie.mov_id).subscribe({
+    next: () => {
+      console.log('Delete successful, updating dataSource');
+      this.dataSource.data = this.dataSource.data.filter(m => m.mov_id !== movie.mov_id);
+      this.showSnackbar('Movie deleted successfully!', 'snackbar-success');
+    },
+    error: (err) => {
+      console.error('Failed to delete movie:', err);
+      this.showSnackbar('Failed to delete movie. Please try again.', 'snackbar-error');
     }
-  }
+  });
+
+  this.confirmDeleteMovie = null;
+}
+
+
+
+
+
+
 
   addNewMovie(): void {
     this.router.navigate(['/add-movie-show']);

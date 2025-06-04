@@ -21,22 +21,28 @@ export class MovieService {
   constructor(private http: HttpClient) { }
 
 
- listmovies(model: any): Observable<any> {
+  listmovies(model: any): Observable<any> {
     const body = model;
-    return this.http.post(this.apiUrl + 'User/register', body);
+    return this.http.get(this.apiUrl + 'get/moviedetails', body);
   }
   addmovies(model: any): Observable<any> {
     const body = model;
-    return this.http.post(this.apiUrl + 'User/register', body);
+    return this.http.post(this.apiUrl + 'movie/store', body);
   }
   updatemovies(model: any): Observable<any> {
     const body = model;
-    return this.http.post(this.apiUrl + 'User/register', body);
+    return this.http.post(this.apiUrl + 'getmovie/' + model.id, body);
   }
-  
- deletemovies(model: any): Observable<any> {
-    const body = model;
-    return this.http.post(this.apiUrl + 'User/register', body);
+
+  // for edit prefill
+  getMovieById(id: number): Observable<any> {
+    return this.http.get(this.apiUrl + 'getmovie/' + id);
   }
-  
+
+  deleteMovies(id: number): Observable<any> {
+    return this.http.post(`${this.apiUrl}movie/delete`, { mov_id: id });
+  }
+
+
+
 }

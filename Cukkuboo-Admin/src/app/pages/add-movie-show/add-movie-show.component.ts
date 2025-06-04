@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { AbstractControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -19,6 +19,10 @@ import { ViewChild, ElementRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ValidationMessagesComponent } from '../../core/components/validation-messsage/validaation-message.component';
 import { HttpClient, HttpEvent, HttpEventType } from '@angular/common/http';
+import { FileUploadService } from '../../services/upload/file-upload.service';
+import { environment } from '../../../environments/environment';
+import { MovieService } from '../../services/movie.service';
+
 @Component({
   selector: 'app-add-movie-show',
   standalone: true,
@@ -27,8 +31,8 @@ import { HttpClient, HttpEvent, HttpEventType } from '@angular/common/http';
     ReactiveFormsModule, MatSnackBarModule, MatFormFieldModule, MatInputModule, MatIconModule,
     MatCardModule, MatSelectModule, MatDatepickerModule, MatNativeDateModule, MatButtonModule,
     MatProgressBarModule, MatCheckboxModule,
-    FormsModule, RouterModule,    ValidationMessagesComponent
-    
+    FormsModule, RouterModule, ValidationMessagesComponent
+
   ],
   templateUrl: './add-movie-show.component.html',
   styleUrls: ['./add-movie-show.component.scss']
@@ -36,7 +40,7 @@ import { HttpClient, HttpEvent, HttpEventType } from '@angular/common/http';
 export class AddMovieShowComponent implements OnInit {
   movieForm!: FormGroup;
   isEditMode: boolean = false;
-  movieShowId: string | null = null;
+  Id: string | null = null;
   thumbnailPreview: string | ArrayBuffer | null = null;
   bannerPreview: string | ArrayBuffer | null = null;
   videoName: string | null = null;
@@ -50,8 +54,11 @@ export class AddMovieShowComponent implements OnInit {
   status: 'active' | 'inactive' | null = null;
   videoInput!: HTMLInputElement;
   isVerticalVideo = false;
+  confirmDeleteType: string | null = null;
 
 
+  videoUrl: string = environment.apiUrl + 'uploads/videos/'
+  imgUrl: string = environment.apiUrl + 'uploads/images/'
 
 
   @ViewChild('videoInput') videoInputRef!: ElementRef<HTMLInputElement>;
@@ -60,31 +67,93 @@ export class AddMovieShowComponent implements OnInit {
   @ViewChild('bannerInput') bannerInputRef!: ElementRef<HTMLInputElement>;
 
 
-  constructor(private router: Router, private snackBar: MatSnackBar,
-    private route: ActivatedRoute, private fb: FormBuilder, private http: HttpClient ) { }
+  constructor(
+    private cdr: ChangeDetectorRef,
+    private router: Router,
+    private snackBar: MatSnackBar,
+    private route: ActivatedRoute, private fb: FormBuilder,
+    private fileUploadService: FileUploadService,
+    private movieService: MovieService,
+    private http: HttpClient,
+  ) { }
 
 
   ngOnInit(): void {
     this.movieForm = this.fb.group({
+      mov_id: [0],
       title: ['', Validators.required],
+      video: ['', Validators.required],
+      trailer: ['', Validators.required],
+      thumbnail: ['', Validators.required],
+      banner: ['', Validators.required],
       genre: ['', Validators.required],
       description: ['', Validators.required],
-      cast: ['', Validators.required],
+      cast_details: ['', Validators.required],
       category: ['', Validators.required],
-      releaseDate: ['', Validators.required],
-      rating: ['', Validators.required],
+      release_date: ['', Validators.required],
+      age_rating: ['', Validators.required],
       access: ['', Validators.required],
-      status: ['', Validators.required]
+      status: ['', Validators.required],
+      rating: [5,],
+
+      duration: ['', ],
+
+
+
     });
-
-
-    // Check if we're in edit mode (i.e., we have an ID in the route)
-    this.movieShowId = this.route.snapshot.paramMap.get('id');
-    if (this.movieShowId) {
-      this.isEditMode = true;
-      // Load movie/show data for editing based on the ID
+    const id = this.route.snapshot.paramMap.get('id');
+    if (id) {
+      this.loadMovieData(Number(id));
     }
   }
+
+
+
+loadMovieData(id: number): void {
+  this.movieService.getMovieById(id).subscribe({
+    next: (response) => {
+      console.log('prefill API response:', response);
+
+      const data = Array.isArray(response?.data) ? response.data[0] : response.data;
+
+      if (data) {
+        this.movieForm.patchValue({
+          mov_id: data.mov_id,
+          title: data.title,
+          description: data.description,
+          category: data.category,
+          genre: data.genre,
+          cast_details: data.cast_details,
+          release_date: data.release_date,
+          age_rating: data.age_rating,
+          access: data.access,
+          status: data.status,
+          video: data.video,
+          trailer: data.trailer,
+          thumbnail: data.thumbnail,
+          banner: data.banner,
+          rating: data.rating,
+          duration: data.duration
+        });
+
+        
+        // this.trailerName = data.trailer ? data.trailer.split('/').pop() || '' : '';
+        // this.trailerURL = data.trailer ? this.videoUrl + data.trailer : null;
+
+        
+
+        this.cdr.detectChanges();
+      } else {
+        console.warn('Movie not found for ID:', id);
+      }
+    },
+    error: (error) => {
+      console.error('Error fetching movie data:', error);
+    }
+  });
+}
+
+
 
 
   showSnackbar(message: string, panelClass: string = 'snackbar-default'): void {
@@ -107,8 +176,8 @@ export class AddMovieShowComponent implements OnInit {
         input.value = '';
         return;
       }
+      this.uploadImage(file, this.movieForm.controls['thumbnail']);
 
-      this.readThumbnailFile(file);
     }
   }
 
@@ -128,26 +197,51 @@ export class AddMovieShowComponent implements OnInit {
         this.showSnackbar('Only JPEG image files are allowed for thumbnails.', 'snackbar-error');
         return;
       }
-      this.readThumbnailFile(file);
+      this.uploadImage(file, this.movieForm.controls['thumbnail']);
     }
   }
 
-  private readThumbnailFile(file: File): void {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      this.thumbnailPreview = e.target?.result ?? null;
-    };
-    reader.readAsDataURL(file);
+   uploadImage(file: File, control: AbstractControl | null = null, inProgress: boolean = true, progress: number = 0): void {
+    inProgress = true;
+    this.fileUploadService.uploadImage(file).subscribe({
+      next: (event: HttpEvent<any>) => {
+        if (event.type === HttpEventType.UploadProgress && event.total) {
+          progress = Math.round((event.loaded / event.total) * 100);
+        } else if (event.type === HttpEventType.Response) {
+          inProgress = false;
+          progress = 100;
+          this.showSnackbar('Image uploaded successfully!', 'snackbar-success');
+          if (control && event.body?.file_name)
+            control.setValue(event.body?.file_name)
+          this.cdr.detectChanges();
+        }
+        console.log(this.uploadProgress)
+      },
+      error: (err) => {
+        inProgress = false;
+        progress = 0;
+        console.error('Upload error:', err);
+        this.showSnackbar('Image upload failed.', 'snackbar-error');
+      }
+    });
   }
 
+
+
   removeThumbnail(): void {
-    debugger;
     this.thumbnailPreview = null;
+
+    // Clear form control
+    this.movieForm.controls['thumbnail'].setValue(null);
+    this.movieForm.controls['thumbnail'].markAsDirty();
+    this.movieForm.controls['thumbnail'].markAsTouched();
 
     // Reset file input
     if (this.thumbnailInputRef) {
       this.thumbnailInputRef.nativeElement.value = '';
     }
+
+    this.cdr.detectChanges();
   }
 
   openFullscreen(element: any): void {
@@ -159,7 +253,6 @@ export class AddMovieShowComponent implements OnInit {
       element.msRequestFullscreen();
     }
   }
-
 
   onVideoSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
@@ -173,7 +266,7 @@ export class AddMovieShowComponent implements OnInit {
         return;
       }
 
-      this.uploadVideo(file);
+      this.uploadMainVideo(file);
     }
   }
 
@@ -193,53 +286,66 @@ export class AddMovieShowComponent implements OnInit {
         this.showSnackbar('Only MP4 video files are allowed for videos.', 'snackbar-error');
         return;
       }
-      this.uploadVideo(file);
+
+      this.videoName = file.name;
+      this.videoURL = URL.createObjectURL(file);
+      this.movieForm.controls['video'].setValue(this.videoURL);
+
+      this.uploadMainVideo(file);
     }
   }
 
-  uploadVideo(file: File): void {
-    debugger;
-    const formData = new FormData();
-    formData.append('video', file); 
-  
+  uploadMainVideo(file: File) {
     this.uploadInProgress = true;
     this.uploadProgress = 0;
     this.videoName = file.name;
-  
-    this.http.post('http://192.168.1.100/cukuboo/cukuboo-php/upload-video', formData, {
-      reportProgress: true,
-      observe: 'events'
-    }).subscribe({
+    this.uploadVideo(file, this.movieForm.controls['video'], this.uploadInProgress, this.uploadProgress);
+  }
+
+  uploadVideo(file: File, control: AbstractControl | null = null, inProgress: boolean = true, progress: number = 0): void {
+    inProgress = true;
+    this.fileUploadService.uploadVideo(file).subscribe({
       next: (event: HttpEvent<any>) => {
         if (event.type === HttpEventType.UploadProgress && event.total) {
-          this.uploadProgress = Math.round((event.loaded / event.total) * 100);
+          progress = Math.round((event.loaded / event.total) * 100);
         } else if (event.type === HttpEventType.Response) {
-          this.uploadInProgress = false;
-          this.uploadProgress = 100;
-          // this.videoURL = event.body?.videoUrl || ''; 
+          inProgress = false;
+          progress = 100;
           this.showSnackbar('Video uploaded successfully!', 'snackbar-success');
+          if (control && event.body?.file_name)
+            control.setValue(event.body?.file_name)
+          this.cdr.detectChanges();
         }
+        console.log(this.uploadProgress)
       },
       error: (err) => {
-        this.uploadInProgress = false;
-        this.uploadProgress = 0;
+        inProgress = false;
+        progress = 0;
         console.error('Upload error:', err);
         this.showSnackbar('Video upload failed.', 'snackbar-error');
       }
     });
   }
-  
+
 
   removeMainVideo(): void {
     this.videoName = '';
     this.videoURL = '';
     this.uploadProgress = 0;
 
+    this.movieForm.controls['video'].setValue(null);
+    this.movieForm.controls['video'].markAsDirty();
+    this.movieForm.controls['video'].markAsTouched();
+
     // Reset file input
     if (this.videoInputRef) {
       this.videoInputRef.nativeElement.value = '';
     }
+
+    // Trigger change detection
+    this.cdr.detectChanges();
   }
+
 
   saveVideo(): void {
     // Add your saving logic here
@@ -260,7 +366,7 @@ export class AddMovieShowComponent implements OnInit {
         return;
       }
 
-      this.readBannerFile(file);
+      this.uploadImage(file, this.movieForm.controls['banner']);
     }
   }
 
@@ -275,26 +381,28 @@ export class AddMovieShowComponent implements OnInit {
         this.showSnackbar('Only JPEG image files are allowed for banners.', 'snackbar-error');
         return;
       }
-      this.readBannerFile(file);
+      this.uploadImage(file, this.movieForm.controls['banner']);
     }
   }
 
-  private readBannerFile(file: File): void {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      this.bannerPreview = e.target?.result ?? null;
-    };
-    reader.readAsDataURL(file);
-  }
+
 
   removeBanner(): void {
     this.bannerPreview = null;
+
+    // Clear form control
+    this.movieForm.controls['banner'].setValue(null);
+    this.movieForm.controls['banner'].markAsDirty();
+    this.movieForm.controls['banner'].markAsTouched();
 
     // Reset file input
     if (this.bannerInputRef) {
       this.bannerInputRef.nativeElement.value = '';
     }
+
+    this.cdr.detectChanges();
   }
+
 
   onTrailerSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
@@ -310,6 +418,9 @@ export class AddMovieShowComponent implements OnInit {
 
       this.trailerName = file.name;
       this.trailerURL = URL.createObjectURL(file);
+      this.uploadVideo(file, this.movieForm.controls['trailer']);
+
+
     }
   }
 
@@ -323,40 +434,97 @@ export class AddMovieShowComponent implements OnInit {
         this.showSnackbar('Only MP4 video files are allowed for trailers.', 'snackbar-error');
         return;
       }
+      this.uploadVideo(file, this.movieForm.controls['trailer']);
+
       this.trailerName = file.name;
       this.trailerURL = URL.createObjectURL(file);
+
     }
+
+
   }
 
   onTrailerDragOver(event: DragEvent) {
     event.preventDefault();
   }
 
-  removeTrailer(event: MouseEvent): void {
-    event.stopPropagation();  // Prevents the click event from propagating to the parent
-    this.trailerURL = '';
-    this.trailerName = '';
- 
 
-    // Reset file input
-    if (this.trailerInputRef) {
-      this.trailerInputRef.nativeElement.value = '';
-    }
+  //  removeTrailer(event: MouseEvent): void {
+  // event.stopPropagation();  
+
+  removeTrailer(): void {
+   
+
+  this.trailerURL = '';
+  this.trailerName = '';
+
+  
+  this.movieForm.controls['trailer'].setValue(null);
+  this.movieForm.controls['trailer'].markAsDirty();
+  this.movieForm.controls['trailer'].markAsTouched();
+
+  // Reset file input
+  if (this.trailerInputRef) {
+    this.trailerInputRef.nativeElement.value = '';
   }
 
-  submitForm(): void {
+  this.cdr.detectChanges();
+}
+
+
+  submitMovie() {
     if (this.movieForm.invalid) {
       this.movieForm.markAllAsTouched();
       return;
     }
 
-    const formData = {
-      ...this.movieForm.value,
-      videoName: this.videoName,
-      thumbnail: this.thumbnailPreview,
-      trailer: this.trailerURL,
-      banner: this.bannerPreview
-    };
 
+    const model = this.movieForm.value;
+
+    this.movieService.addmovies(model).subscribe({
+      next: (response) => {
+        console.log('Movie submitted successfully:', response);
+        this.router.navigate(['/list-movie-show']);
+
+      },
+      error: (error) => {
+        console.error('Error submitting movie:', error);
+      }
+    });
   }
+
+
+  // When user clicks a trash button, call this with the media type string
+openDeleteConfirm(type: string): void {
+  this.confirmDeleteType = type;
 }
+
+// Confirm deletion logic depending on the media type
+confirmDelete(): void {
+  if (!this.confirmDeleteType) return;
+
+  switch (this.confirmDeleteType) {
+    case 'video':
+      this.removeMainVideo();
+      break;
+    case 'thumbnail':
+      this.removeThumbnail();
+      break;
+    case 'trailer':
+      this.removeTrailer();
+      break;
+    case 'banner':
+      this.removeBanner();
+      break;
+  }
+  this.cancelDelete();
+}
+
+// Cancel modal and reset
+cancelDelete(): void {
+  this.confirmDeleteType = null;
+}
+
+
+}
+

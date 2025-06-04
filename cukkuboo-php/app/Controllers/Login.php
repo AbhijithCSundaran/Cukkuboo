@@ -17,7 +17,7 @@ class Login extends BaseController
     public function loginFun()
     {
         $data = $this->request->getJSON(true);
-
+        
         if (!isset($data['email']) || !isset($data['password'])) {
             return $this->response->setStatusCode(400)->setJSON([
                 'status' => false,

@@ -1,39 +1,40 @@
 <?php
- 
+
 namespace App\Libraries;
- 
+
 use Firebase\JWT\JWT as FirebaseJWT;
- 
-class JWT
+class Jwt
 {
-    private $key = 'your_secret_key'; // Replace with your secret key
- 
+    private $key;
+
+    public function __construct()
+    {
+        $this->key = getenv('JWT_SECRET') ?: 'your_fallback_secret_key';
+    }
+
     public function encode($data, $exp = 3600)
     {
         $issuedAt = time();
         $expirationTime = $issuedAt + $exp;
- 
-        $token = FirebaseJWT::encode(
-            array(
+
+        return FirebaseJWT::encode(
+            [
                 'iat' => $issuedAt,
                 'exp' => $expirationTime,
                 'data' => $data,
-            ),
+            ],
             $this->key,
             'HS256'
         );
- 
-        return $token;
     }
- 
+
     public function decode($token)
     {
         try {
-            $decoded = FirebaseJWT::decode($token, $this->key, array('HS256'));
+            $decoded = FirebaseJWT::decode($token, new Key($this->key, 'HS256'));
             return $decoded->data;
         } catch (\Exception $e) {
             return false;
         }
     }
 }
- 

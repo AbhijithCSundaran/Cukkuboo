@@ -3,85 +3,109 @@
 namespace App\Controllers;
 
 use App\Models\GenresModel;
+use CodeIgniter\RESTful\ResourceController;
 
-class Genres extends BaseController
+class Genres extends ResourceController
 {
-    protected $modelName = GenreModel::class;
-    protected $format = 'json';
+    protected $genresModel;
 
-    // GET /genres - List all genres
-    public function index()
+    public function __construct()
     {
-        $genres = $this->model->getAllGenres();
-        return $this->respond(['success' => true, 'data' => $genres]);
+        // Correct model instance name & class
+        $this->genresModel = new GenresModel();
     }
 
+    // GET: List all genres
+    public function genreList()
+    {
+        $genres = $this->genresModel->findAll();
 
-    // POST /genres - Create new genre
+        return $this->response->setJSON([
+            'success' => true,
+            'data' => $genres
+        ])->setStatusCode(200);
+    }
+
+    // POST: Create new genre
     public function create()
     {
-        $genres_id = $this->input->getPost('genres_id');
-        $genres_name = $this->input->getPost('genres_name');
-        
         $data = $this->request->getJSON(true);
 
-        if (!isset($data['id']) || !isset($data['name'])) {
-            return $this->failValidationError('Missing id or name');
+        if (
+            empty($data['genre_id']) ||
+            empty($data['genre_name']) ||
+            !isset($data['description']) ||
+            !isset($data['status'])
+        ) {
+            return $this->fail('genre_id, genre_name, description, and status are required.');
         }
 
-        if ($this->model->find($data['id'])) {
-            return $this->fail('Genre with this ID already exists');
+        if ($this->genresModel->genreExists($data['genre_id'])) {
+            return $this->fail('Genre with this genre_id already exists.');
         }
 
-        $this->model->insert($data);
+        $this->genresModel->addGenre($data);
 
         return $this->respondCreated([
             'success' => true,
-            'message' => 'Genre created successfully',
+            'message' => 'Genre created successfully.',
             'data' => $data
         ]);
     }
 
-    // PUT /genres/{id} - Update genre
-    public function update($id = null)
+    // PUT: Update genre by genre_id
+    public function update($genre_id = null)
     {
-        if (!$id) {
-            return $this->failValidationError('No ID provided');
+        if (!$genre_id) {
+            return $this->fail('genre_id is required.');
         }
 
         $data = $this->request->getJSON(true);
 
-        $genre = $this->model->find($id);
-        if (!$genre) {
-            return $this->failNotFound('Genre not found');
+        if (
+            empty($data['genre_name']) ||
+            !isset($data['description']) ||
+            !isset($data['status'])
+        ) {
+            return $this->fail('genre_name, description, and status are required.');
         }
 
-        $this->model->update($id, $data);
+        if (!$this->genresModel->genreExists($genre_id)) {
+            return $this->failNotFound('Genre not found.');
+        }
+
+        $updateData = [
+            'genre_name' => $data['genre_name'],
+            'description' => $data['description'],
+            'status' => $data['status'],
+        ];
+
+        $this->genresModel->updateGenre($genre_id, $updateData);
 
         return $this->respond([
             'success' => true,
-            'message' => 'Genre updated successfully',
-            'data' => $this->model->find($id)
+            'message' => 'Genre updated successfully.',
+            'data' => [
+                'genre_id' => $genre_id,
+                'genre_name' => $data['genre_name'],
+                'description' => $data['description'],
+                'status' => $data['status'],
+            ]
         ]);
     }
 
-    // DELETE /genres/{id} - Delete genre
-    public function delete($id = null)
+    // DELETE: Delete genre by genre_id
+    public function delete($genre_id = null)
     {
-        if (!$id) {
-            return $this->failValidationError('No ID provided');
+        if (!$genre_id || !$this->genresModel->genreExists($genre_id)) {
+            return $this->failNotFound('Genre not found.');
         }
 
-        $genre = $this->model->find($id);
-        if (!$genre) {
-            return $this->failNotFound('Genre not found');
-        }
-
-        $this->model->delete($id);
+        $this->genresModel->deleteGenre($genre_id);
 
         return $this->respondDeleted([
             'success' => true,
-            'message' => 'Genre deleted successfully'
+            'message' => 'Genre deleted successfully.'
         ]);
     }
 }

@@ -10,13 +10,14 @@ $routes->post('Login/login', 'Login::loginFun',['filter' => 'cors']);
 $routes->post('Login/logout', 'Login::logout');
 
 
-$routes->post('User/register','User::registerFun');
-$routes->get('User/profile', 'User::getUserDetails');
-$routes->post('User/update', 'User::updateUser');
-$routes->delete('User/delete', 'User::deleteUser');
-$routes->get('User/profile/(:num)', 'User::getUserDetailsById/$1');
-$routes->post('User/update/(:num)', 'User::updateUserById/$1');
-$routes->delete('User/delete/(:num)', 'User::deleteUserById/$1');
+// $routes->post('User/register','User::registerFun');
+ $routes->post('user/store-jwt', 'User::storeByJwt');
+$routes->get('user/profile', 'User::getUserDetails');
+$routes->post('user/update', 'User::updateUser');
+$routes->delete('user/delete', 'User::deleteUser');
+ $routes->post('user/store', 'User::storeById'); 
+$routes->get('user/profile/(:num)', 'User::getUserDetailsById/$1');
+$routes->delete('user/delete/(:num)', 'User::deleteUserById/$1');
 
 
 

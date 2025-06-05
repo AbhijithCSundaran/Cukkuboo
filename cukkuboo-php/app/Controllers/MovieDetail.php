@@ -81,16 +81,17 @@ public function getAllMovieDetails()
 
     $offset = $pageIndex * $pageSize;
 
-    // Get total count of movies (excluding soft-deleted ones)
-    $total = $this->moviedetail
-                  ->where('status !=', 9)
-                  ->countAllResults(false);  // keeps query builder state
+   $total = $this->moviedetail
+              ->where('status', 1)
+              ->where('release_date <=', date('Y-m-d'))
+              ->countAllResults(false); // keeps query builder state
 
-    // Get paginated data
-    $movies = $this->moviedetail
-                   ->where('status !=', 9)
-                   ->orderBy('mov_id', 'DESC')
-                   ->findAll($pageSize, $offset);
+// Get paginated data
+$movies = $this->moviedetail
+               ->where('status', 1)
+               ->where('release_date <=', date('Y-m-d'))
+               ->orderBy('mov_id', 'DESC')
+               ->findAll($pageSize, $offset);
 
     return $this->response->setJSON([
         'status' => true,
@@ -100,23 +101,33 @@ public function getAllMovieDetails()
     ]);
 }
 
+public function getMovieById($id){
+
+  $getmoviesdetails = $this->moviedetail->getMovieDetailsById($id);
+     return $this->response->setJSON([
+        'status' => true,
+        'message' => 'movie details fetched successfully.',
+        'data' => $getmoviesdetails
+    ]);
+}
 
 
-public function deleteMovieDetails($id)
+public function deleteMovieDetails()
 {
     $data = $this->request->getJSON(true); 
+    
 
-    $modified_by = $data['modified_by'] ?? null;
+    //$modified_by = $data['modified_by'] ?? null;
 
-    if (!$modified_by) {
-        return $this->respond([
-            'status' => 400,
-            'message' => 'Modified by (user ID) is required.'
-        ]);
-    }
+    // if (!$modified_by) {
+    //     return $this->respond([
+    //         'status' => 400,
+    //          'message' => 'Modified by (user ID) is required.'
+    //     ]);
+    // }
     $status = 9;
 
-    if ($this->moviedetail->deleteMovieDetailsById($status, $id, $modified_by)) {
+    if ($this->moviedetail->deleteMovieDetailsById($status, $data['mov_id'])) {
         return $this->respond([
             'status' => 200,
             'message' => 'Movie marked as deleted successfully.'

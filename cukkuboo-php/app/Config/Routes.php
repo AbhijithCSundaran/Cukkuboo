@@ -11,12 +11,11 @@ $routes->post('Login/logout', 'Login::logout');
 
 
 // $routes->post('User/register','User::registerFun');
- $routes->post('user/store-jwt', 'User::storeByJwt');
 $routes->get('user/profile', 'User::getUserDetails');
 $routes->post('user/update', 'User::updateUser');
 $routes->delete('user/delete', 'User::deleteUser');
- $routes->post('user/store', 'User::storeById'); 
 $routes->get('user/profile/(:num)', 'User::getUserDetailsById/$1');
+$routes->post('user/update/(:num)', 'User::updateUserById/$1');
 $routes->delete('user/delete/(:num)', 'User::deleteUserById/$1');
 
 
@@ -40,7 +39,7 @@ $routes->post('upload-image', 'Uploads::uploadImage');
 $routes->post('movie/store', 'MovieDetail::store');
 $routes->get('get/moviedetails','MovieDetail::getAllMovieDetails');
 $routes->get('getmovie/(:any)', 'MovieDetail::getMovieById/$1');
-$routes->post('movie/delete','MovieDetail::deleteMovieDetails');
+$routes->post('movie/delete/(:any)','MovieDetail::deleteMovieDetails/$1');
 
 
 //Home Display

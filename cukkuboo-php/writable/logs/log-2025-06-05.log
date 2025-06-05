@@ -1,0 +1,53 @@
+ERROR - 2025-06-05 05:08:54 --> Error connecting to the database: mysqli_sql_exception: Unknown database 'cukkuboo' in C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\Database\MySQLi\Connection.php:201
+Stack trace:
+#0 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\Database\MySQLi\Connection.php(201): mysqli->real_connect('localhost', 'root', Object(SensitiveParameterValue), 'cukkuboo', 3306, '', 0)
+#1 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\Database\BaseConnection.php(421): CodeIgniter\Database\MySQLi\Connection->connect(false)
+#2 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\Database\BaseConnection.php(620): CodeIgniter\Database\BaseConnection->initialize()
+#3 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `mo...', Array, false)
+#4 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\Model.php(394): CodeIgniter\Database\BaseBuilder->insert()
+#5 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\BaseModel.php(843): CodeIgniter\Model->doInsert(Array)
+#6 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\Model.php(800): CodeIgniter\BaseModel->insert(Array, true)
+#7 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\app\Models\MovieDetailsModel.php(19): CodeIgniter\Model->insert(Array)
+#8 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\app\Controllers\MovieDetail.php(52): App\Models\MovieDetailsModel->addMovie(Array)
+#9 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\CodeIgniter.php(933): App\Controllers\MovieDetail->store()
+#10 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MovieDetail))
+#11 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#12 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\Boot.php(334): CodeIgniter\CodeIgniter->run()
+#13 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#14 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#15 {main}
+
+Next CodeIgniter\Database\Exceptions\DatabaseException: Unknown database 'cukkuboo' in C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\Database\MySQLi\Connection.php:246
+Stack trace:
+#0 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\Database\BaseConnection.php(421): CodeIgniter\Database\MySQLi\Connection->connect(false)
+#1 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\Database\BaseConnection.php(620): CodeIgniter\Database\BaseConnection->initialize()
+#2 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `mo...', Array, false)
+#3 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\Model.php(394): CodeIgniter\Database\BaseBuilder->insert()
+#4 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\BaseModel.php(843): CodeIgniter\Model->doInsert(Array)
+#5 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\Model.php(800): CodeIgniter\BaseModel->insert(Array, true)
+#6 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\app\Models\MovieDetailsModel.php(19): CodeIgniter\Model->insert(Array)
+#7 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\app\Controllers\MovieDetail.php(52): App\Models\MovieDetailsModel->addMovie(Array)
+#8 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\CodeIgniter.php(933): App\Controllers\MovieDetail->store()
+#9 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MovieDetail))
+#10 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#11 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\Boot.php(334): CodeIgniter\CodeIgniter->run()
+#12 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#13 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#14 {main}
+CRITICAL - 2025-06-05 05:08:54 --> CodeIgniter\Database\Exceptions\DatabaseException: Unable to connect to the database.
+Main connection [MySQLi]: Unknown database 'cukkuboo'
+[Method: POST, Route: movie/store]
+in SYSTEMPATH\Database\BaseConnection.php on line 467.
+ 1 SYSTEMPATH\Database\BaseConnection.php(620): CodeIgniter\Database\BaseConnection->initialize()
+ 2 SYSTEMPATH\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `movies_details` (`title`, `genre`, `description`, `cast_details`, `category`, `release_date`, `age_rating`, `access`, `status`, `thumbnail`, `trailer`, `banner`, `duration`, `rating`, `modify_on`, `created_by`, `created_on`) VALUES (:title:, :genre:, :description:, :cast_details:, :category:, :release_date:, :age_rating:, :access:, :status:, :thumbnail:, :trailer:, :banner:, :duration:, :rating:, :modify_on:, :created_by:, :created_on:)', [...], false)
+ 3 SYSTEMPATH\Model.php(394): CodeIgniter\Database\BaseBuilder->insert()
+ 4 SYSTEMPATH\BaseModel.php(843): CodeIgniter\Model->doInsert([...])
+ 5 SYSTEMPATH\Model.php(800): CodeIgniter\BaseModel->insert([...], true)
+ 6 APPPATH\Models\MovieDetailsModel.php(19): CodeIgniter\Model->insert([...])
+ 7 APPPATH\Controllers\MovieDetail.php(52): App\Models\MovieDetailsModel->addMovie([...])
+ 8 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\MovieDetail->store()
+ 9 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MovieDetail))
+10 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+11 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+12 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+13 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))

@@ -81,17 +81,16 @@ public function getAllMovieDetails()
 
     $offset = $pageIndex * $pageSize;
 
-   $total = $this->moviedetail
-              ->where('status', 1)
-              ->where('release_date <=', date('Y-m-d'))
-              ->countAllResults(false); // keeps query builder state
+    // Get total count of movies (excluding soft-deleted ones)
+    $total = $this->moviedetail
+                  ->where('status !=', 9)
+                  ->countAllResults(false);  
 
-// Get paginated data
-$movies = $this->moviedetail
-               ->where('status', 1)
-               ->where('release_date <=', date('Y-m-d'))
-               ->orderBy('mov_id', 'DESC')
-               ->findAll($pageSize, $offset);
+    // Get paginated data
+    $movies = $this->moviedetail
+                   ->where('status !=', 9)
+                   ->orderBy('mov_id', 'DESC')
+                   ->findAll($pageSize, $offset);
 
     return $this->response->setJSON([
         'status' => true,

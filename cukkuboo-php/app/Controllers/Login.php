@@ -28,7 +28,7 @@ class Login extends BaseController
         $user = $this->loginModel->findUserByEmail($data['email']);
 
         if (!$user || !password_verify($data['password'], $user['password'])) {
-            return $this->response->setStatusCode(401)->setJSON([
+            return $this->response->setStatusCode(200)->setJSON([
                 'status' => false,
                 'message' => 'Invalid email or password'
             ]);
@@ -67,7 +67,7 @@ class Login extends BaseController
                 'createdAt' => $user['created_at'],
                 'updatedAt' => $user['updated_at'],
                 'lastLogin' => $now,
-                'jwt_token'=>$user['jwt_token']
+                'jwt_token'=>$token
             ]
         ]);
     }

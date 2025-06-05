@@ -39,7 +39,7 @@ $routes->post('upload-image', 'Uploads::uploadImage');
 $routes->post('movie/store', 'MovieDetail::store');
 $routes->get('get/moviedetails','MovieDetail::getAllMovieDetails');
 $routes->get('getmovie/(:any)', 'MovieDetail::getMovieById/$1');
-$routes->post('movie/delete/(:any)','MovieDetail::deleteMovieDetails/$1');
+$routes->post('movie/delete','MovieDetail::deleteMovieDetails');
 
 
 //Home Display

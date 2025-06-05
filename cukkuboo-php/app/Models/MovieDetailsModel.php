@@ -25,15 +25,17 @@ class MovieDetailsModel extends Model
                     ->update($data);
 }
 public function getAllMoviesDetails() {
-      return $this->db->query('SELECT * FROM movies_details WHERE status != 9')->getResult();
+       return $this->db->query("SELECT * FROM movies_details WHERE status = 1 AND release_date < CURDATE()" )->getResult();
+
 }
 public function getMovieDetailsById($id){
      return $this->db->query('select * from movies_details where mov_id="'.$id.'"')->getRowArray();
 
 }
-public function deleteMovieDetailsById($status, $mov_id, $modified_by)
+public function deleteMovieDetailsById($status, $mov_id)
 		{
-			return $this->db->query("update movies_details set status = '".$status."', modify_on=NOW(), modify_by='".$modified_by."' where mov_id = '".$mov_id."'");
+			// return $this->db->query("update movies_details set status = '".$status."', modify_on=NOW(), modify_by='".$modified_by."' where mov_id = '".$mov_id."'");
+			return $this->db->query("update movies_details set status = '".$status."', modify_on=NOW() where mov_id = '".$mov_id."'");
 		}
 
            

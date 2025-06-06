@@ -59,7 +59,7 @@ export class AddUserComponent {
       email: ['', [Validators.email]],
       country: ['', [Validators.pattern(/^[a-zA-Z\s]*$/)]],
       status: ['active', Validators.required],
-      user_type: ['Customer'],
+      user_type: ['customer'],
       subscription: ['free', Validators.required]
     });
   }

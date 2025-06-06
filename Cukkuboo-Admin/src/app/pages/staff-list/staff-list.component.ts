@@ -22,7 +22,7 @@ import { MatTableDataSource } from '@angular/material/table';
   styleUrls: ['./staff-list.component.scss']
 })
 export class StaffListComponent implements OnInit {
-  displayedColumns: string[] = ['name', 'role', 'email', 'phone', 'status', 'joiningDate', 'action'];
+  displayedColumns: string[] = ['slNo','name', 'role', 'email', 'phone', 'status', 'joiningDate', 'action'];
 
   staffMembers = [
     {

@@ -13,7 +13,7 @@ export const appConfig: ApplicationConfig = {
     importProvidersFrom(
       BrowserModule,
       BrowserAnimationsModule,
-      RouterModule.forRoot(routes, { useHash: false })
+      RouterModule.forRoot(routes, { useHash: true })
     ),
     provideHttpClient(withInterceptorsFromDi()),
   ]

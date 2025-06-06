@@ -74,32 +74,47 @@ class MovieDetail extends ResourceController
 public function getAllMovieDetails()
 {
     $pageIndex = (int) $this->request->getGet('pageIndex');
-    $pageSize = (int) $this->request->getGet('pageSize');
+    $pageSize  = (int) $this->request->getGet('pageSize');
 
-    if ($pageIndex < 0) $pageIndex = 0;
-    if ($pageSize <= 0) $pageSize = 10;
+    // If pageIndex is negative, return all movies without pagination
+    if ($pageIndex < 0) {
+        $movies = $this->moviedetail
+            ->orderBy('mov_id', 'DESC')
+            ->findAll();
+
+        return $this->response->setJSON([
+            'status' => true,
+            'message' => 'All movies fetched (no pagination).',
+            'data' => $movies,
+            'total' => count($movies)
+        ]);
+    }
+
+    // Set fallback/default values
+    if ($pageSize <= 0) {
+        $pageSize = 10;
+    }
 
     $offset = $pageIndex * $pageSize;
 
-   $total = $this->moviedetail
-              ->where('status', 1)
-              ->where('release_date <=', date('Y-m-d'))
-              ->countAllResults(false); // keeps query builder state
+    // Get total matching movies
+    $total = $this->moviedetail
+        ->countAllResults(false); // don't reset builder
 
-// Get paginated data
-$movies = $this->moviedetail
-               ->where('status', 1)
-               ->where('release_date <=', date('Y-m-d'))
-               ->orderBy('mov_id', 'DESC')
-               ->findAll($pageSize, $offset);
+    // Fetch paginated data
+    $movies = $this->moviedetail
+        ->orderBy('mov_id', 'DESC')
+        ->findAll($pageSize, $offset);
 
+    // Return response
     return $this->response->setJSON([
         'status' => true,
-        'message' => 'Paginated movie details fetched successfully.',
+        'message' => 'Paginated movies fetched successfully.',
         'data' => $movies,
         'total' => $total
     ]);
 }
+
 
 public function getMovieById($id){
 
@@ -112,9 +127,9 @@ public function getMovieById($id){
 }
 
 
-public function deleteMovieDetails()
-{
-    $data = $this->request->getJSON(true); 
+// public function deleteMovieDetails()
+// {
+//     $data = $this->request->getJSON(true); 
     
 
     //$modified_by = $data['modified_by'] ?? null;
@@ -125,17 +140,33 @@ public function deleteMovieDetails()
     //          'message' => 'Modified by (user ID) is required.'
     //     ]);
     // }
+    // $status = 9;
+
+    // if ($this->moviedetail->deleteMovieDetailsById($status, $data['mov_id'])) {
+    //     return $this->respond([
+    //         'status' => 200,
+    //         'message' => 'Movie marked as deleted successfully.'
+    //     ]);
+    // } else {
+    //     return $this->failServerError('Failed to delete movie.');
+    // }
+// }
+public function deleteMovieDetails($mov_id)
+{
+    // Set status to 9 for soft delete
     $status = 9;
 
-    if ($this->moviedetail->deleteMovieDetailsById($status, $data['mov_id'])) {
+    // Call model method to update the status
+    if ($this->moviedetail->deleteMovieDetailsById($status, $mov_id)) {
         return $this->respond([
             'status' => 200,
-            'message' => 'Movie marked as deleted successfully.'
+            'message' => "Movie with ID $mov_id marked as deleted successfully."
         ]);
     } else {
-        return $this->failServerError('Failed to delete movie.');
+        return $this->failServerError("Failed to delete movie with ID $mov_id.");
     }
 }
+
 
   public function homeDisplay()
     {
@@ -209,6 +240,7 @@ public function deleteMovieDetails()
             'description' => $movie['description']
         ];
     }
+
 
 
 }

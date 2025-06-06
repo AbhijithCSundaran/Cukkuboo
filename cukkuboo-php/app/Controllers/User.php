@@ -1,39 +1,18 @@
 <?php
 
-
 namespace App\Controllers;
 
 use App\Models\UserModel;
 use App\Libraries\Jwt;
-use CodeIgniter\API\ResponseTrait;  // <-- add this
 
 class User extends BaseController
 {
-    use ResponseTrait; // <-- add this
-
     protected $UserModel;
 
     public function __construct()
     {
         $this->UserModel = new UserModel();
     }
-
-    // rest of your code...
-
-
-// namespace App\Controllers;
-
-// use App\Models\UserModel;
-// use App\Libraries\Jwt;
-
-// class User extends BaseController
-// {
-//     protected $UserModel;
-
-//     public function __construct()
-//     {
-//         $this->UserModel = new UserModel();
-//     }
 
     public function index(): string
     {
@@ -67,7 +46,6 @@ class User extends BaseController
     //         'country'      => $data['country'] ?? null,
     //         'status'       => 'active',
     //         'subscription' => 'free',
-    //         'user_type' => $data['user_type'] ??'Customer',
     //         'join_date'    => date('Y-m-d H:i:s')
     //     ];
 
@@ -88,7 +66,6 @@ class User extends BaseController
     //             'email'               => $user['email'],
     //             'phone'               => $user['phone'],
     //             'subscription_status' => $user['subscription'],
-    //             'user_type'           => $user['user_type'],
     //             'created_at'          => $user['join_date'],
     //             'jwt_token'           => $token
     //         ]
@@ -96,85 +73,151 @@ class User extends BaseController
     // }
 
     // // Auth helper
+    // public function getAuthenticatedUser()
+    // {
+    //     $authHeader = $this->request->getHeaderLine('Authorization');
+    //     if (!$authHeader || !str_starts_with($authHeader, 'Bearer ')) {
+    //         return null;
+    //     }
+
+    //     $token = trim(str_replace('Bearer', '', $authHeader));
+
+    //     try {
+    //         $jwt     = new Jwt();
+    //         $payload = $jwt->decode($token);
+    //         $userId  = $payload->user_id ?? null;
+
+    //         $user = $this->UserModel->find($userId);
+
+    //         if (!$user || $user['jwt_token'] !== $token) {
+    //             return null;
+    //         }
+
+    //         return $user;
+
+    //     } catch (\Exception $e) {
+    //         return null;
+    //     }
+    // }
     public function getAuthenticatedUser()
-    {
-        $authHeader = $this->request->getHeaderLine('Authorization');
-        if (!$authHeader || !str_starts_with($authHeader, 'Bearer ')) {
-            return null;
-        }
-
-        $token = trim(str_replace('Bearer', '', $authHeader));
-
-        try {
-            $jwt     = new Jwt();
-            $payload = $jwt->decode($token);
-            $userId  = $payload->user_id ?? null;
-
-            $user = $this->UserModel->find($userId);
-
-            if (!$user || $user['jwt_token'] !== $token) {
-                return null;
-            }
-
-            return $user;
-
-        } catch (\Exception $e) {
-            return null;
-        }
+{
+    $authHeader = $this->request->getHeaderLine('Authorization');
+    if (!$authHeader || !str_starts_with($authHeader, 'Bearer ')) {
+        return null;
     }
 
-    public function storeByJwt()
+    $token = trim(str_replace('Bearer', '', $authHeader));
+
+    try {
+        $jwt     = new Jwt();
+        $payload = $jwt->decode($token);
+        $userId  = $payload->user_id ?? null;
+
+        $user = $this->UserModel->find($userId);
+
+        if (!$user || $user['jwt_token'] !== $token) {
+            return null;
+        }
+
+        return $user;
+
+    } catch (\Exception $e) {
+        return null;
+    }
+}
+
+    public function registerFun()
 {
-    $user = $this->getAuthenticatedUser(); // Get user from JWT
     $data = $this->request->getJSON(true);
 
-     $userData = [
-            'username'     => $data['username'] ?? null,
-            'phone'        => $data['phone'] ?? null,
-            'email'        => $data['email'] ?? null,
-            'password'     => !empty($data['password']) ? password_hash($data['password'], PASSWORD_BCRYPT) : null,
-            'country'      => $data['country'] ?? null,
-            'status'       => 'active',
-            'subscription' => 'free',
-            'join_date'    => date('Y-m-d H:i:s')
-        ];
+    // Try to get authenticated user from JWT
+    $authenticatedUser = $this->getAuthenticatedUser();
 
+    // Shared user data structure
+    $userData = array_filter([
+        'username'     => $data['username'] ?? null,
+        'phone'        => $data['phone'] ?? null,
+        'email'        => $data['email'] ?? null,
+        'country'      => $data['country'] ?? null,
+        'subscription' => $data['subscription'] ?? 'free',
+        'status'       => $data['status'] ?? 'active',
+    ]);
 
     if (!empty($data['password'])) {
         $userData['password'] = password_hash($data['password'], PASSWORD_BCRYPT);
     }
 
-    if ($user) {
-        // Update existing user
-        $this->UserModel->updateUser($user['user_id'], $userData);
+    // ✅ If NOT authenticated → Register new user
+    if (!$authenticatedUser) {
+        if (empty($data['phone']) && empty($data['email'])) {
+            return $this->response->setJSON([
+                'status' => false,
+                'message' => 'Phone or email is required.'
+            ])->setStatusCode(400);
+        }
 
-        return $this->respond([
-            'status'  => true,
-            'message' => 'User updated successfully (JWT).',
-            'data'    => $this->UserModel->find($user['user_id'])
-        ]);
-    } else {
-        // Create new user
-        if ($this->UserModel->isUserExists($userData['phone'], $userData['email'])) {
-            return $this->failValidationErrors('User already exists.');
+        if ($this->UserModel->isUserExists($data['phone'] ?? null, $data['email'] ?? null)) {
+            return $this->response->setJSON([
+                'status' => false,
+                'message' => 'User already exists.'
+            ])->setStatusCode(409);
         }
 
         $userData['join_date'] = date('Y-m-d H:i:s');
-        $newUserId = $this->UserModel->addUser($userData);
 
-        // Generate and store JWT
-        $jwt = new Jwt();
-        $token = $jwt->encode(['user_id' => $newUserId]);
-        $this->UserModel->update($newUserId, ['jwt_token' => $token]);
+        $userId = $this->UserModel->addUser($userData);
+        $user   = $this->UserModel->find($userId);
 
-        return $this->respondCreated([
+        $jwt   = new Jwt();
+        $token = $jwt->encode(['user_id' => $user['user_id']]);
+
+        $this->UserModel->update($user['user_id'], ['jwt_token' => $token]);
+
+        return $this->response->setJSON([
             'status'  => true,
-            'message' => 'User created successfully (JWT).',
-            'data'    => array_merge($this->UserModel->find($newUserId), ['jwt_token' => $token])
+            'message' => 'User registered successfully.',
+            'data'    => [
+                'user_id'             => $user['user_id'],
+                'username'            => $user['username'],
+                'email'               => $user['email'],
+                'phone'               => $user['phone'],
+                'subscription_status' => $user['subscription'],
+                'created_at'          => $user['join_date'],
+                'jwt_token'           => $token
+            ]
+        ])->setStatusCode(201);
+    } 
+
+    // ✅ If authenticated → Update existing user
+    else {
+        $this->UserModel->updateUser($authenticatedUser['user_id'], $userData);
+
+        return $this->response->setJSON([
+            'status' => true,
+            'message' => 'User updated successfully.',
+            'data' => $userData
         ]);
     }
 }
 
+
+    //  Get user details
+    public function getUserDetails()
+    {
+        $user = $this->getAuthenticatedUser();
+
+        if (!$user) {
+            return $this->response->setJSON([
+                'status' => false,
+                'message' => 'Unauthorized'
+            ])->setStatusCode(401);
+        }
+
+        return $this->response->setJSON([
+            'status' => true,
+            'data' => $user
+        ]);
+    }
 
     // Update user details
     // public function updateUser()
@@ -245,78 +288,46 @@ public function getUserDetailsById($userId)
         'data' => $user
     ]);
 }
-
-// Update user details by user_id
-// 
-public function storeById()
+public function getUserList()
 {
-    $data   = $this->request->getJSON(true);
-    $userId = $data['user_id'] ?? null;
+    // Get pagination parameters from the query string
+    $pageIndex = (int) $this->request->getGet('pageIndex');
+    $pageSize  = (int) $this->request->getGet('pageSize');
 
-    $userData = [
-        'username'     => $data['username'] ?? null,
-        'phone'        => $data['phone'] ?? null,
-        'email'        => $data['email'] ?? null,
-        'country'      => $data['country'] ?? null,
-        'user_type'    => $data['user_type'] ?? 'Customer',
-        'subscription' => $data['subscription'] ?? 'free',
-        'status'       => $data['status'] ?? 'active',
-    ];
+    // If pageIndex is negative, return all users without pagination
+    if ($pageIndex < 0) {
+        $users = $this->UserModel->getAllUsers();
+        $total = count($users);
 
-    if (!empty($data['password'])) {
-        $userData['password'] = password_hash($data['password'], PASSWORD_BCRYPT);
-    }
-
-    if (empty($userId)) {
-        // Create new user
-        if ($this->UserModel->isUserExists($userData['phone'], $userData['email'])) {
-            return $this->failValidationErrors('User already exists.');
-        }
-
-        $userData['join_date'] = date('Y-m-d H:i:s');
-        $newUserId = $this->UserModel->addUser($userData);
-
-        return $this->respondCreated([
-            'status'  => true,
-            'message' => 'User created successfully.',
-            'data'    => $this->UserModel->find($newUserId)
-        ]);
-    } else {
-        // Update existing user
-        $existingUser = $this->UserModel->find($userId);
-        if (!$existingUser) {
-            return $this->failNotFound('User not found.');
-        }
-
-        $this->UserModel->updateUser($userId, $userData);
-
-        return $this->respond([
-            'status'  => true,
-            'message' => 'User updated successfully.',
-            'data'    => $this->UserModel->find($userId)
-        ]);
-    }
-}
-
-
-// Delete user by user_id
-public function deleteUserById($userId)
-{
-    $user = $this->UserModel->getUserById($userId);
-
-    if (!$user) {
         return $this->response->setJSON([
-            'status' => false,
-            'message' => 'User not found'
-        ])->setStatusCode(404);
+            'status' => true,
+            'data'   => $users,
+            'total'  => $total
+        ]);
     }
 
-    $this->UserModel->deleteUserById($userId);
+    // Validate and fallback
+    if ($pageSize <= 0) {
+        $pageSize = 10; // default size
+    }
+
+    // Calculate offset
+    $offset = $pageIndex * $pageSize;
+
+    // Get total user count
+    $total = $this->UserModel->countAll();
+
+    // Get paginated users
+    $users = $this->UserModel
+        ->orderBy('user_id', 'DESC')
+        ->findAll($pageSize, $offset);
 
     return $this->response->setJSON([
         'status' => true,
-        'message' => 'User deleted successfully.'
+        'data'   => $users,
+        'total'  => $total
     ]);
 }
+
 
 }

@@ -9,7 +9,7 @@ class MovieDetailsModel extends Model
     protected $table = 'movies_details'; 
 
     protected $allowedFields = [
-        'upload_video_name', 'title', 'genre', 'description', 'cast_details', 'category',
+        'video', 'title', 'genre', 'description', 'cast_details', 'category',
         'release_date', 'age_rating', 'access', 'status', 'thumbnail', 'trailer', 'banner', 'duration', 'rating', 'user_type', 
         'created_by', 'created_on', 'modify_by', 'modify_on'
     ];
@@ -25,7 +25,10 @@ class MovieDetailsModel extends Model
                     ->update($data);
 }
 public function getAllMoviesDetails() {
-       return $this->db->query("SELECT * FROM movies_details WHERE status = 1 AND release_date < CURDATE()" )->getResult();
+      return $this->db->query('SELECT * FROM movies_details WHERE status != 9')->getResult();
+      
+    // return $this->db->query("SELECT * FROM movies_details WHERE status = 1 AND release_date <= CURDATE()"
+    // )->getResult();
 
 }
 public function getMovieDetailsById($id){
@@ -37,32 +40,38 @@ public function deleteMovieDetailsById($status, $mov_id)
 			// return $this->db->query("update movies_details set status = '".$status."', modify_on=NOW(), modify_by='".$modified_by."' where mov_id = '".$mov_id."'");
 			return $this->db->query("update movies_details set status = '".$status."', modify_on=NOW() where mov_id = '".$mov_id."'");
 		}
-
+        
            
-    public function getFeaturedMovies()
-    {
-        return $this->where('status', 1)
-                    ->orderBy('created_on', 'DESC')
-                    ->limit(5)
-                    ->findAll();
-    }
+  public function getFeaturedMovies()
+{
+    return $this->where('status', 1)
+                ->where('release_date <=', date('Y-m-d')) // compare against today's date
+                ->orderBy('created_on', 'DESC')
+                ->limit(5)
+                ->findAll();
+}
 
-      public function getTrendingMovies()
-    {
-        return $this->where('status', 1)
-                    ->orderBy('rating', 'DESC')
-                    ->limit(5)
-                    ->findAll();
-    }
-    public function getMoviesWithLimit($limit, $offset)
+
+     public function getTrendingMovies()
+{
+    return $this->where('status', 1)
+                ->where('release_date <=', date('Y-m-d')) // optional: exclude future movies
+                ->orderBy('rating', 'DESC')
+                ->limit(5)
+                ->findAll();
+}
+
+  public function getMoviesWithLimit($limit, $offset)
 {
     return $this->db->table($this->table)
-                    ->where('status !=', 9)
+                    ->where('status', 1)
+                    ->where('release_date <=', date('Y-m-d'))
                     ->orderBy('mov_id', 'DESC')
                     ->limit($limit, $offset)
                     ->get()
                     ->getResultArray();
 }
+
 
 public function countAllMovies()
 {

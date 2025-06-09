@@ -11,7 +11,7 @@
  
 mat-card {
   padding-top: 15px;
-  padding-bottom: 17px;
+  padding-bottom:8px;
   background-color: white;
   border: 1px solid black;
   border-radius: 8px;
@@ -291,6 +291,7 @@ input {
  
  
 .outer-wrapper {
+  display: flex;
   width: 100%;
   padding: 0 10px 20px;
   box-sizing: border-box;
@@ -298,6 +299,7 @@ input {
  
 .main-upload-container {
   display: flex;
+  
   width: 100%;
   gap: 24px;
   align-items: stretch;

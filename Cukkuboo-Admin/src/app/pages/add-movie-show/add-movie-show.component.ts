@@ -101,10 +101,11 @@ export class AddMovieShowComponent implements OnInit {
 
 
     });
-    const id = this.route.snapshot.paramMap.get('id');
-    if (id) {
-      this.loadMovieData(Number(id));
-    }
+ const id = this.route.snapshot.paramMap.get('id');
+  this.isEditMode = !!id;
+  if (id) {
+    this.loadMovieData(Number(id));
+  }
   }
 
 
@@ -299,18 +300,18 @@ loadMovieData(id: number): void {
     this.uploadInProgress = true;
     this.uploadProgress = 0;
     this.videoName = file.name;
-    this.uploadVideo(file, this.movieForm.controls['video'], this.uploadInProgress, this.uploadProgress);
+    this.uploadVideo(file, this.movieForm.controls['video'], this.uploadInProgress, "uploadProgress");
   }
 
-  uploadVideo(file: File, control: AbstractControl | null = null, inProgress: boolean = true, progress: number = 0): void {
+  uploadVideo(file: File, control: AbstractControl | null = null, inProgress: boolean = true, progress: string = ''): void {
     inProgress = true;
     this.fileUploadService.uploadVideo(file).subscribe({
       next: (event: HttpEvent<any>) => {
         if (event.type === HttpEventType.UploadProgress && event.total) {
-          progress = Math.round((event.loaded / event.total) * 100);
+          (this as any)[progress] = Math.round((event.loaded / event.total) * 100);
         } else if (event.type === HttpEventType.Response) {
           inProgress = false;
-          progress = 100;
+          (this as any)[progress] = 100;
           this.showSnackbar('Video uploaded successfully!', 'snackbar-success');
           if (control && event.body?.file_name)
             control.setValue(event.body?.file_name)
@@ -320,7 +321,7 @@ loadMovieData(id: number): void {
       },
       error: (err) => {
         inProgress = false;
-        progress = 0;
+        (this as any)[progress] = 0;
         console.error('Upload error:', err);
         this.showSnackbar('Video upload failed.', 'snackbar-error');
       }
@@ -472,34 +473,33 @@ loadMovieData(id: number): void {
 }
 
 
-  submitMovie() {
-    if (this.movieForm.invalid) {
-      this.movieForm.markAllAsTouched();
-      return;
-    }
-
-
-    const model = this.movieForm.value;
-
-    this.movieService.addmovies(model).subscribe({
-      next: (response) => {
-        console.log('Movie submitted successfully:', response);
-        this.router.navigate(['/list-movie-show']);
-
-      },
-      error: (error) => {
-        console.error('Error submitting movie:', error);
-      }
-    });
+submitMovie() {
+  if (this.movieForm.invalid) {
+    this.movieForm.markAllAsTouched();
+    return;
   }
 
+  const model = this.movieForm.value;
 
-  // When user clicks a trash button, call this with the media type string
+  this.movieService.addmovies(model).subscribe({
+    next: (response) => {
+      this.showSnackbar('Movie saved successfully!', 'snackbar-success');
+      this.router.navigate(['/list-movie-show']);
+    },
+    error: (error) => {
+      this.showSnackbar('Failed to save movie. Please try again.', 'snackbar-error');
+    }
+  });
+}
+
+
+
+
+  
 openDeleteConfirm(type: string): void {
   this.confirmDeleteType = type;
 }
 
-// Confirm deletion logic depending on the media type
 confirmDelete(): void {
   if (!this.confirmDeleteType) return;
 
@@ -534,4 +534,5 @@ capitalizeTitle() {
 }
 
 }
+
 

@@ -16,6 +16,7 @@ import { MatInputModule } from '@angular/material/input';
 
 type FilterColumn = 'title' | 'genre' | 'category' | 'status';
 
+
 @Component({
   selector: 'app-list-movie-show',
   standalone: true,

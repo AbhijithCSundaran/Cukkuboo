@@ -35,7 +35,7 @@ export class GenresComponent implements OnInit {
     { name: 'Drama', description: 'Serious, plot-driven stories with emotional themes', status: 'disabled' }
   ];
 
-  displayedColumns: string[] = ['name', 'description', 'status', 'action'];
+  displayedColumns: string[] = ['slNo','name', 'description', 'status', 'action'];
 
   constructor(private fb: FormBuilder) {}
 

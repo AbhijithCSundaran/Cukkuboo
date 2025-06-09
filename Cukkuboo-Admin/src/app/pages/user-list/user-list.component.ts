@@ -5,12 +5,13 @@ import { MatIconModule } from '@angular/material/icon';
 import { Router, RouterLink } from '@angular/router';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
-
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 
 
 @Component({
   selector: 'app-user-list',
-  imports: [RouterLink, MatTableModule, CommonModule, MatIconModule, MatPaginatorModule],
+  imports: [RouterLink, MatTableModule, CommonModule, MatIconModule, MatPaginatorModule,MatFormFieldModule,MatInputModule],
   templateUrl: './user-list.component.html',
   styleUrl: './user-list.component.scss'
 })
@@ -48,7 +49,13 @@ export class UserListComponent implements OnInit {
 
   dataSource = new MatTableDataSource(this.users);
 
-  ngOnInit(): void { }
+  ngOnInit(): void {
+    this.dataSource.filterPredicate = (data: any, filter: string) => {
+    const dataStr = `${data.name} ${data.role} ${data.email} ${data.phone} ${data.status}`
+      .toLowerCase();
+    return dataStr.includes(filter);
+  };
+   }
 
   editUser(user: any): void {
 
@@ -69,5 +76,10 @@ export class UserListComponent implements OnInit {
 
   addNewUser(): void {
     this.router.navigate(['/add-user']);
+  }
+
+  applyGlobalFilter(event: KeyboardEvent): void {
+    const input = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = input.trim().toLowerCase();
   }
 }

@@ -46,3 +46,65 @@ in SYSTEMPATH\BaseModel.php on line 1014.
  7 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
  8 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
  9 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-06-09 10:43:38 --> CodeIgniter\Database\Exceptions\DataException: There is no data to update.
+[Method: POST, Route: Login/forgot-password]
+in SYSTEMPATH\BaseModel.php on line 1014.
+ 1 SYSTEMPATH\BaseModel.php(1014): CodeIgniter\Database\Exceptions\DataException::forEmptyDataset('update')
+ 2 SYSTEMPATH\Model.php(863): CodeIgniter\BaseModel->update([...], [])
+ 3 APPPATH\Controllers\Login.php(164): CodeIgniter\Model->update('39', [...])
+ 4 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Login->sendOtp()
+ 5 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Login))
+ 6 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 9 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-06-09 10:51:00 --> CodeIgniter\Exceptions\BadMethodCallException: Call to undefined method App\Models\ReelsModel::getReelById
+[Method: GET, Route: reels/get/2]
+in SYSTEMPATH\Model.php on line 930.
+ 1 APPPATH\Controllers\Reels.php(123): CodeIgniter\Model->__call('getReelById', [...])
+ 2 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Reels->getReelById('2')
+ 3 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Reels))
+ 4 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 5 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+ 6 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 7 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-06-09 10:56:31 --> CodeIgniter\Exceptions\BadMethodCallException: Call to undefined method App\Models\ReelsModel::softDeleteReelById
+[Method: DELETE, Route: reels/delete/3]
+in SYSTEMPATH\Model.php on line 930.
+ 1 APPPATH\Controllers\Reels.php(138): CodeIgniter\Model->__call('softDeleteReelById', [...])
+ 2 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Reels->deleteReel('3')
+ 3 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Reels))
+ 4 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 5 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+ 6 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 7 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-06-09 10:59:25 --> ErrorException: Undefined variable $modified_by
+[Method: DELETE, Route: reels/delete/3]
+in APPPATH\Controllers\Reels.php on line 139.
+ 1 APPPATH\Controllers\Reels.php(139): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined variable $modified_by', 'C:\\xampp\\htdocs\\Cukkuboo\\cukkuboo-php\\app\\Controllers\\Reels.php', 139)
+ 2 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Reels->deleteReel('3')
+ 3 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Reels))
+ 4 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 5 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+ 6 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 7 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-06-09 10:59:28 --> ErrorException: Undefined variable $modified_by
+[Method: DELETE, Route: reels/delete/3]
+in APPPATH\Controllers\Reels.php on line 139.
+ 1 APPPATH\Controllers\Reels.php(139): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined variable $modified_by', 'C:\\xampp\\htdocs\\Cukkuboo\\cukkuboo-php\\app\\Controllers\\Reels.php', 139)
+ 2 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Reels->deleteReel('3')
+ 3 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Reels))
+ 4 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 5 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+ 6 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 7 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-06-09 11:06:34 --> ErrorException: Undefined variable $status
+[Method: DELETE, Route: reels/delete/9]
+in APPPATH\Controllers\Reels.php on line 138.
+ 1 APPPATH\Controllers\Reels.php(138): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined variable $status', 'C:\\xampp\\htdocs\\Cukkuboo\\cukkuboo-php\\app\\Controllers\\Reels.php', 138)
+ 2 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Reels->deleteReel('9')
+ 3 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Reels))
+ 4 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 5 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+ 6 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 7 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))

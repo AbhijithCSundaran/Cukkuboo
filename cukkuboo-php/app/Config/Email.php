@@ -119,19 +119,19 @@ class Email extends BaseConfig
     //  */
     // public bool $DSN = false;
 
-    public string $fromEmail  = 'your_email@gmail.com';
-    public string $fromName   = 'Your Name';
-    public string $recipients = ''; // Optional default
+    public string $fromEmail  = 'abhijith.c.sundaran@gmail.com';
+    public string $fromName   = 'Abhijith';
+    public string $recipients = '';
 
     public string $protocol   = 'smtp';
     public string $SMTPHost   = 'smtp.gmail.com';
-    public string $SMTPUser   = 'your_email@gmail.com';
-    public string $SMTPPass   = 'your_app_password'; // See below for Gmail App Password note
+    public string $SMTPUser   = 'abhijith.c.sundaran@gmail.com';
+    public string $SMTPPass   = 'fhdzckogvanzmulo'; // 🔒 Use app password here
     public int    $SMTPPort   = 587;
     public int    $SMTPTimeout = 10;
-    public string $SMTPCrypto = 'tls'; // use 'ssl' for port 465
+    public string $SMTPCrypto = 'tls';
 
-    public string $mailType   = 'html'; // or 'text'
+    public string $mailType   = 'html';
     public string $charset    = 'UTF-8';
 
     public bool   $validate   = true;

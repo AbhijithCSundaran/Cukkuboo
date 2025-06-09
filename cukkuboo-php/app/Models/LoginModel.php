@@ -10,28 +10,24 @@ class LoginModel extends Model
     protected $primaryKey = 'user_id';
 
     protected $useTimestamps = true;
-    protected $createdField  = 'created_at';
-    protected $updatedField  = 'updated_at';
+    protected $createdField = 'created_at';
+    protected $updatedField = 'updated_at';
 
     protected $allowedFields = [
         'username',
-        'phone',
         'email',
-        'password',
-        'status',
+        'phone',
+        'join_date',
         'subscription',
+        'created_at',
+        'updated_at',
         'last_login',
-        'jwt_token',
-        'fcm_token' 
+        'jwt_token'
     ];
 
-    public function findUserByEmail($email)
+    // Optional: Clear all jwt_tokens
+    public function updateAllTokensNull()
     {
-        return $this->where('email', $email)->first();
-    }
-
-    public function updateLoginData($userId, $data)
-    {
-        return $this->update($userId, $data);
+        return $this->builder()->update(['jwt_token' => null]);
     }
 }

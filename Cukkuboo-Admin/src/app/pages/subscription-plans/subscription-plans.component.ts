@@ -29,7 +29,7 @@ interface SubscriptionPlan {
 })
 export class SubscriptionPlansComponent {
 
-  displayedColumns: string[] = ['name', 'price', 'period', 'features', 'action'];
+  displayedColumns: string[] = ['slNo','name', 'price', 'period', 'features', 'action'];
 
   constructor(private router: Router) {}
 

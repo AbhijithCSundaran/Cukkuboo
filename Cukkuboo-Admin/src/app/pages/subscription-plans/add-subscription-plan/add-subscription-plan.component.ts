@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatCardModule } from '@angular/material/card';
@@ -9,6 +9,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { CommonModule } from '@angular/common';
 import { ValidationMessagesComponent } from '../../../core/components/validation-messsage/validaation-message.component';
+import { ValidationService } from '../../../core/services/validation.service';
 
 @Component({
   selector: 'app-add-subscription-plan',
@@ -36,7 +37,7 @@ export class AddSubscriptionPlanComponent implements OnInit {
   ngOnInit(): void {
     this.dataForm = this.fb.group({
       name: ['', Validators.required],
-      price: [null, [Validators.required, Validators.min(0)]],
+      price: [null, [Validators.required, Validators.min(0),ValidationService.floatValidator]],
       period: ['', Validators.required],
       features: ['', Validators.required]
     });

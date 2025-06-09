@@ -30,7 +30,7 @@ interface Subscription {
   styleUrls: ['./subscriptions.component.scss']
 })
 export class SubscriptionsComponent implements AfterViewInit {
-  displayedColumns: string[] = ['user', 'plan', 'startDate', 'endDate', 'status', 'action'];
+  displayedColumns: string[] = ['slNo','user', 'plan', 'startDate', 'endDate', 'status', 'action'];
 
   dataSource = new MatTableDataSource<Subscription>([
     { userName: 'John Doe', plan: 'Premium', startDate: new Date('2024-01-01'), endDate: new Date('2025-01-01'), status: 'active' },

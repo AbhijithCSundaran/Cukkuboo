@@ -1,0 +1,169 @@
+
+
+
+
+.table-card {
+    background-color: #f2f2f2;
+    color: black;
+    border-radius: 8px;
+    padding: 1rem;
+  }
+  
+  
+  
+  .add-button {
+    background-color: #c71336; 
+    width: 75px;
+      justify-content: center;
+    color: white;
+    border-radius: 24px;
+    height: 36px;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 0 16px;
+    
+    border: none;
+    transition: background-color 0.3s ease;
+    display: flex;
+    align-items: center;
+  
+    &:hover {
+      background-color: #e96238 !important;
+    }
+  }
+  
+  .pagination {
+    background-color: #f2f2f2;
+    color: black;
+  }
+  
+  .filter-icon {
+    cursor: pointer;
+    font-size: 18px;
+    color: #666;
+    margin-left: 8px;
+    user-select: none;
+  }
+  
+  /*  Media Queries  */
+  
+  @media (max-width: 1200px) {
+    .header-row h2 {
+      font-size: 22px;
+    }
+  
+    
+  }
+  
+  @media (max-width: 1024px) {
+    .header-row {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  
+    
+  }
+  
+  @media (max-width: 991px) {
+    .custom-table {
+      font-size: 14px;
+  
+      th,
+      td {
+        padding: 8px;
+      }
+    }
+  }
+  
+  @media (max-width: 767px) {
+    .custom-table {
+      th,
+      td {
+        white-space: nowrap;
+      }
+    }
+  
+    .pagination {
+      font-size: 12px;
+    }
+  
+    th.mat-column-joiningDate,
+    td.mat-column-joiningDate,
+    th.mat-column-phone,
+    td.mat-column-phone{
+      display: none !important;
+    }
+  }
+  
+  @media (max-width: 575px) {
+    .header-row {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  
+    
+    .custom-table input[matInput] {
+      font-size: 12px;
+      padding: 3px 6px;
+    }
+  
+   
+    th.mat-column-email,
+    td.mat-column-email,
+    th.mat-column-status,
+    td.mat-column-status {
+      display: none !important;
+    }
+  }
+  
+  @media (max-width: 320px) {
+    .header-row h2 {
+      font-size: 18px;
+    }
+  
+    .custom-table {
+      font-size: 12px;
+    }
+  }
+  
+  /* Responsive New Button */
+  @media (max-width: 1024px) {
+    .add-button {
+      font-size: 13px;
+      padding: 0 14px;
+      width: 75px;
+      justify-content: center;
+    }
+    
+  }
+  
+  @media (max-width: 767px) {
+    .add-button {
+      font-size: 12px;
+      padding: 0 12px;
+      height: 34px;
+      width: 75px;
+      justify-content: center;
+    }
+  }
+  
+  @media (max-width: 575px) {
+    .add-button {
+      font-size: 12px;
+      padding: 0 12px;
+      height: 34px;
+      width: 75px;
+      justify-content: center;
+    }
+  }
+  
+  @media (max-width: 320px) {
+    .add-button {
+      font-size: 13px;
+      height: 36px;
+      padding: 0 10px;
+      width: 75px;
+      justify-content: center;
+    }
+  }
+  

@@ -17,7 +17,7 @@ class Login extends BaseController
     public function loginFun()
     {
         $data = $this->request->getJSON(true);
-
+        
         if (!isset($data['email']) || !isset($data['password'])) {
             return $this->response->setJSON([
                 'status' => false,
@@ -28,7 +28,7 @@ class Login extends BaseController
         $user = $this->loginModel->where('email', $data['email'])->first();
 
         if (!$user || !password_verify($data['password'], $user['password'])) {
-            return $this->response->setJSON([
+            return $this->response->setStatusCode(200)->setJSON([
                 'status' => false,
                 'message' => 'Invalid email or password.'
             ]);
@@ -49,16 +49,18 @@ class Login extends BaseController
             'status' => true,
             'message' => 'Login successful',
             'user' => [
-                'user_id'     => 'user' . $user['user_id'],
-                'username'    => $user['username'],
-                'phone'       => $user['phone'],
-                'email'       => $user['email'],
-                'subscription'=> $user['subscription'],
-                'join_date'   => $user['join_date'],
-                'createdAt'   => $user['created_at'],   
-                'updatedAt'   => $user['updated_at'],   
-                'lastLogin'   => $now,                  
-                'jwt_token'   => $token
+                'user_id' => 'user' . $user['user_id'],
+                'username' => $user['username'],
+                'phone' => $user['phone'],
+                'email' => $user['email'],
+                'isBlocked' => $user['status'] !== 'active',
+                'subscription' => $user['subscription'],
+                'user_type' => $user['user_type'],
+                'date' => date('Y-m-d'),
+                'createdAt' => $user['created_at'],
+                'updatedAt' => $user['updated_at'],
+                'lastLogin' => $now,
+                'jwt_token'=>$token
             ]
         ]);
     }

@@ -65,3 +65,9 @@ html {
         color: #9b9b9b !important;
     }
 }
+
+
+.mat-mdc-dialog-container.mdc-dialog{
+    max-height: 80vh;
+    overflow-y: auto;
+}

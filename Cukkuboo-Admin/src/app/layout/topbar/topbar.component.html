@@ -1,0 +1,46 @@
+<nav class="navbar">
+  <div class="navbar-left">
+    <button class="hamburger" (click)="toggleSidebar()" aria-label="Toggle Sidebar">
+      <i class="fas fa-bars"></i>
+    </button>
+       <span class="admin-panel-label">Admin  Control Panel</span>
+  </div>
+
+  <div class="navbar-right">
+   
+
+<div class="profile-dropdown" (click)="toggleDropdown()" (mouseleave)="closeDropdown()">
+  <i class="fas fa-user-circle profile-icon"></i>
+
+  <ul class="dropdown-menu" [class.show]="dropdownOpen">
+    <!-- <li>
+      <a href="#">
+        <i class="fas fa-user"></i> Profile
+      </a>
+    </li>
+    <li>
+      <a href="#">
+        <i class="fas fa-cog"></i> Settings
+      </a>
+    </li> -->
+    <li>
+      <a (click)="logout()">
+        <i class="fas fa-sign-out-alt"></i> Logout
+      </a>
+    </li>
+  </ul>
+</div>
+
+
+  </div>
+</nav>
+<!-- Confirmation Modal -->
+<div class="modal" [class.show]="showLogoutConfirm">
+  <div class="modal-content">
+    <p>Are you sure you want to <span class="highlight">logout</span>?</p>
+    <div class="modal-actions">
+      <button class="btn-yes" (click)="confirmLogout()">Logout</button>
+      <button class="btn-no" (click)="cancelLogout()">Cancel</button>
+    </div>
+  </div>
+</div>

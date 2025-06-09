@@ -14,7 +14,10 @@ export const routes: Routes = [
       { path: 'dashboard', loadComponent: () => import('./pages/dashboard/dashboard.component').then((m) => m.DashboardComponent) },
       { path: 'list-movie-show', loadComponent: () => import('./pages/list-movie-show/list-movie-show.component').then((m) => m.ListMovieShowComponent) },
       { path: 'add-movie-show', loadComponent: () => import('./pages/add-movie-show/add-movie-show.component').then((m) => m.AddMovieShowComponent) },
-      { path: 'edit-movie-show/:id', loadComponent: () => import('./pages/add-movie-show/add-movie-show.component').then((m) => m.AddMovieShowComponent) },  // For edit m)ode
+{
+  path: 'edit-movie-show/:id',
+  loadComponent: () => import('./pages/add-movie-show/add-movie-show.component').then(m => m.AddMovieShowComponent)
+},
       { path: 'categories', loadComponent: () => import('./pages/categories/categories.component').then((m) => m.CategoriesComponent) },
       { path: 'genres', loadComponent: () => import('./pages/genres/genres.component').then((m) => m.GenresComponent) },
       {
@@ -22,6 +25,13 @@ export const routes: Routes = [
           { path: '', loadComponent: () => import('./pages/user-list/user-list.component').then((m) => m.UserListComponent) },
           { path: 'add-user', loadComponent: () => import('./pages/user-list/add-user/add-user.component').then((m) => m.AddUserComponent) },
           { path: 'edit-user/:id', loadComponent: () => import('./pages/user-list/add-user/add-user.component').then((m) => m.AddUserComponent) },
+        ]
+      },
+      {
+        path: 'staff-list', children: [
+          { path: '', loadComponent: () => import('./pages/staff-list/staff-list.component').then((m) => m.StaffListComponent) },
+          { path: 'add-staff', loadComponent: () => import('./pages/staff-list/add-staff/add-staff.component').then((m) => m.AddStaffComponent) },
+          { path: 'edit-staff/:id', loadComponent: () => import('./pages/staff-list/add-staff/add-staff.component').then((m) => m.AddStaffComponent) },
         ]
       },
       // { path: 'user-list', loadComponent: () => import('./pages/user-list/user-list.component').then((m) => m.UserListComponent) },

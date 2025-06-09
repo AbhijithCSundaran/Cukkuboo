@@ -18,7 +18,7 @@ export class UserListComponent implements OnInit {
 
   constructor(private router: Router) { }
 
-  displayedColumns: string[] = ['name', 'contact', 'email', 'country', 'status', 'joindate', 'subscription', 'action'];
+  displayedColumns: string[] = ['slNo','name', 'contact', 'email', 'country', 'status', 'joindate', 'subscription', 'action'];
 
 
   users = [

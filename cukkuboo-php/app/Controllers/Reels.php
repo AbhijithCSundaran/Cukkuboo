@@ -14,24 +14,29 @@ class Reels extends ResourceController
     }
 
     public function addReel()
-    {
-        $data = $this->request->getJSON(true);
+{
+    $data = $this->request->getJSON(true);
 
-        $reelData = [
-            'title' => $data['title'] ?? null,
-            'description' => $data['description'] ?? null,
-            'release_date' => $data['release_date'] ?? null,
-            'access' => $data['access'] ?? null,
-            'status' => $data['status'] ?? null,
-            'thumbnail' => $data['thumbnail'] ?? null,
-            'views' => $data['views'] ?? 0,
-            'likes' => $data['likes'] ?? 0,
-            'created_by' => $data['created_by'] ?? null,
-            'created_on' => date('Y-m-d H:i:s'),
-            'modify_on' => date('Y-m-d H:i:s')
-        ];
+    $reels_id = $data['reels_id'] ?? null;
 
-        if ($this->reelsModel->addReel($reelData)) {
+    $reelData = [
+        'title' => $data['title'] ?? null,
+        'description' => $data['description'] ?? null,
+        'release_date' => $data['release_date'] ?? null,
+        'access' => $data['access'] ?? null,
+        'status' => $data['status'] ?? null,
+        'thumbnail' => $data['thumbnail'] ?? null,
+        'views' => $data['views'] ?? 0,
+        'likes' => $data['likes'] ?? 0,
+        'modify_on' => date('Y-m-d H:i:s')
+    ];
+
+    if (empty($reels_id)) {
+        // New insert
+        $reelData['created_by'] = $data['created_by'] ?? null;
+        $reelData['created_on'] = date('Y-m-d H:i:s');
+
+        if ($this->reelsModel->insert($reelData)) {
             return $this->respond([
                 'status' => 200,
                 'message' => 'Reel added successfully',
@@ -40,7 +45,20 @@ class Reels extends ResourceController
         } else {
             return $this->failServerError('Failed to add reel');
         }
+    } else {
+        // Update existing
+        if ($this->reelsModel->update($reels_id, $reelData)) {
+            return $this->respond([
+                'status' => 200,
+                'message' => 'Reel updated successfully',
+                'data' => $reelData
+            ]);
+        } else {
+            return $this->failServerError('Failed to update reel');
+        }
     }
+}
+
 
    
 

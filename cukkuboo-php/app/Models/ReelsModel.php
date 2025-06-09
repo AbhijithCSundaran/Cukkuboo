@@ -25,9 +25,17 @@ class ReelsModel extends Model
     ];
 
     public function addReel($data)
-    {
-        return $this->insert($data);
-    }
+{
+    return $this->insert($data);
+}
+
+public function updateReel($reels_id, $data)
+{
+    return $this->db->table('reels') 
+                    ->where('reels_id', $reels_id)
+                    ->update($data);
+}
+
 
     
     public function getAllReels()

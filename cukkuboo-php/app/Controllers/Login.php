@@ -104,5 +104,86 @@ class Login extends BaseController
         'message' => 'Logout successful. Token removed.'
     ]);
 }
+ public function sendOtp()
+{
+    $data = $this->request->getJSON(true);
+
+    if (empty($data['email'])) {
+        return $this->response->setJSON([
+            'status' => false,
+            'message' => 'Email is required.'
+        ]);
+    }
+
+    $user = $this->loginModel->where('email', $data['email'])->first();
+
+    if (!$user) {
+        return $this->response->setJSON([
+            'status' => false,
+            'message' => 'User not found.'
+        ]);
+    }
+
+    $otp = rand(100000, 999999);
+    $otpString = (string) $otp;
+
+    // Check if current value is different before updating
+    if ($user['password'] !== $otpString) {
+        $update = ['password' => $otpString];
+        $this->loginModel->update($user['user_id'], ['password' => $otpString]);
+
+    }
+
+
+    // Send OTP via email
+    $emailService = \Config\Services::email();
+    $emailService->setTo($data['email']);
+    $emailService->setSubject('Password Reset OTP');
+    $emailService->setMessage("Your OTP for resetting your password is: <b>$otp</b>");
+
+    if ($emailService->send()) {
+        return $this->response->setJSON([
+            'status' => true,
+            'message' => 'OTP sent to your email.'
+        ]);
+    } else {
+        return $this->response->setJSON([
+            'status' => false,
+            'message' => 'Failed to send OTP email.'
+        ]);
+    }
 }
 
+public function resetPassword()
+{
+    $data = $this->request->getJSON(true);
+
+    if (empty($data['email']) || empty($data['otp']) || empty($data['new_password'])) {
+        return $this->response->setJSON([
+            'status' => false,
+            'message' => 'Email, OTP, and new password are required.'
+        ]);
+    }
+
+    $user = $this->loginModel->where('email', $data['email'])->first();
+
+    if (!$user || $user['password'] !== $data['otp']) {
+        return $this->response->setJSON([
+            'status' => false,
+            'message' => 'Invalid OTP or email.'
+        ]);
+    }
+
+    $hashedPassword = password_hash($data['new_password'], PASSWORD_DEFAULT);
+
+    // Only update if new password is different from current password (which is OTP right now)
+    if ($user['password'] !== $hashedPassword) {
+        $this->loginModel->update($user['user_id'], ['password' => $hashedPassword]);
+    }
+
+    return $this->response->setJSON([
+        'status' => true,
+        'message' => 'Password reset successful.'
+    ]);
+}
+}

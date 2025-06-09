@@ -107,7 +107,7 @@ class Login extends BaseController
  public function sendOtp()
 {
     $data = $this->request->getJSON(true);
-
+    
     if (empty($data['email'])) {
         return $this->response->setJSON([
             'status' => false,
@@ -126,32 +126,37 @@ class Login extends BaseController
 
     $otp = rand(100000, 999999);
     $otpString = (string) $otp;
-
     // Check if current value is different before updating
-    if ($user['password'] !== $otpString) {
-        $update = ['password' => $otpString];
-        $this->loginModel->update($user['user_id'], ['password' => $otpString]);
+    // if ($user['password'] !== $otpString) {
+    //     $update = ['password' => $otpString];
+    //     $this->loginModel->update($user['user_id'], ['password' => $otpString]);
+    // }
 
-    }
-
-
+// print_r($otpString);
+// exit;
+    return $this->response->setJSON([
+        'status' => true,
+        'message' => 'User found.',
+        'data' => $otpString
+    ]);
     // Send OTP via email
-    $emailService = \Config\Services::email();
-    $emailService->setTo($data['email']);
-    $emailService->setSubject('Password Reset OTP');
-    $emailService->setMessage("Your OTP for resetting your password is: <b>$otp</b>");
+    // $emailService = \Config\Services::email();
+    // // $emailService->setTo($data['email']);
+    // $emailService->setTo('mufeedahidaya@gmail.com');
+    // $emailService->setSubject('Password Reset OTP');
+    // $emailService->setMessage("Your OTP for resetting your password is: <b>$otp</b>");
 
-    if ($emailService->send()) {
-        return $this->response->setJSON([
-            'status' => true,
-            'message' => 'OTP sent to your email.'
-        ]);
-    } else {
-        return $this->response->setJSON([
-            'status' => false,
-            'message' => 'Failed to send OTP email.'
-        ]);
-    }
+    // if ($emailService->send()) {
+    //     return $this->response->setJSON([
+    //         'status' => true,
+    //         'message' => 'OTP sent to your email.'
+    //     ]);
+    // } else {
+    //     return $this->response->setJSON([
+    //         'status' => false,
+    //         'message' => 'Failed to send OTP email.'
+    //     ]);
+    // }
 }
 
 public function resetPassword()

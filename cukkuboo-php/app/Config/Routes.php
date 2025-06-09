@@ -57,7 +57,6 @@ $routes->delete('subscriptionplan/delete/(:num)', 'SubscriptionPlan::delete/$1')
 //reels details
 
 $routes->post('reels/add', 'Reels::addReel');
-$routes->post('reels/update', 'Reels::updateReel');
 $routes->get('reels/details', 'Reels::getAllReels');
 $routes->get('reels/get/(:any)', 'Reels::getReelById/$1');
 $routes->delete('reels/delete/(:any)', 'Reels::deleteReel/$1');

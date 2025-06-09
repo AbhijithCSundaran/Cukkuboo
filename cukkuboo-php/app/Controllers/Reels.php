@@ -42,37 +42,7 @@ class Reels extends ResourceController
         }
     }
 
-    public function updateReel()
-    {
-        $data = $this->request->getJSON(true);
-        $reels_id = $data['reels_id'] ?? null;
-
-        if (!$reels_id) {
-            return $this->failValidationErrors('reels_id is required for update.');
-        }
-
-        $reelData = [
-            'title' => $data['title'] ?? null,
-            'description' => $data['description'] ?? null,
-            'release_date' => $data['release_date'] ?? null,
-            'access' => $data['access'] ?? null,
-            'status' => $data['status'] ?? null,
-            'thumbnail' => $data['thumbnail'] ?? null,
-            'views' => $data['views'] ?? 0,
-            'likes' => $data['likes'] ?? 0,
-            'modify_on' => date('Y-m-d H:i:s')
-        ];
-
-        if ($this->reelsModel->updateReel($reels_id, $reelData)) {
-            return $this->respond([
-                'status' => 200,
-                'message' => 'Reel updated successfully',
-                'data' => $reelData
-            ]);
-        } else {
-            return $this->failServerError('Failed to update reel');
-        }
-    }
+   
 
     public function getAllReels()
     {
@@ -128,14 +98,23 @@ public function getReelById($id)
 }
 
 public function deleteReel($reels_id)
-    {
-        if ($this->reelsModel->deleteReel($reels_id)) {
-            return $this->respond([
-                'status' => 200,
-                'message' => "Reel with ID $reels_id deleted successfully."
-            ]);
-        } else {
-            return $this->failNotFound("Reel with ID $reels_id not found or failed to delete.");
-        }
+{
+    // Check if the reel exists before attempting to delete
+    $reel = $this->reelsModel->find($reels_id);
+
+    if (!$reel) {
+        return $this->failNotFound("Reel with ID $reels_id not found.");
     }
+
+    // Proceed with deletion
+    if ($this->reelsModel->deleteReel($reels_id)) {
+        return $this->respond([
+            'status' => 200,
+            'message' => "Reel with ID $reels_id deleted successfully."
+        ]);
+    } else {
+        return $this->failServerError("Failed to delete reel with ID $reels_id.");
+    }
+}
+
 }

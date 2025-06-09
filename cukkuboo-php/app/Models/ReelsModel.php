@@ -29,13 +29,7 @@ class ReelsModel extends Model
         return $this->insert($data);
     }
 
-    public function updateReel($reels_id, $data)
-    {
-        return $this->db->table($this->table)
-                        ->where($this->primaryKey, $reels_id)
-                        ->update($data);
-    }
-
+    
     public function getAllReels()
     {
         return $this->db->query('SELECT * FROM reels WHERE status != 9')->getResult();
@@ -49,7 +43,7 @@ class ReelsModel extends Model
         ->getRowArray();
 }
 public function deleteReel($reels_id)
-    {
-        return $this->where('reels_id', $reels_id)->delete();
-    }
+{
+    return $this->where('reels_id', $reels_id)->delete();
+}
 }

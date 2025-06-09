@@ -18,7 +18,9 @@ class UserModel extends Model
         'status',
         'join_date',
         'subscription',
-        'jwt_token'
+        'user_type',
+        'jwt_token',
+        'fcm_token','created_by','created_at','updated_by','updated_at'
     ];
 
     public function isUserExists($phone = null, $email = null)

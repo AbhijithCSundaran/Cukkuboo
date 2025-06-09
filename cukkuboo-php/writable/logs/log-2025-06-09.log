@@ -46,3 +46,87 @@ in SYSTEMPATH\BaseModel.php on line 1014.
  7 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
  8 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
  9 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-06-09 09:49:35 --> ErrorException: Undefined array key "user_id"
+[Method: POST, Route: user/register]
+in APPPATH\Controllers\User.php on line 134.
+ 1 APPPATH\Controllers\User.php(134): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined array key "user_id"', 'C:\\xampp\\htdocs\\Cukkuboo\\cukkuboo-php\\app\\Controllers\\User.php', 134)
+ 2 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\User->registerFun()
+ 3 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\User))
+ 4 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 5 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+ 6 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 7 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-06-09 09:50:25 --> ErrorException: Undefined array key "user_id"
+[Method: POST, Route: user/register]
+in APPPATH\Controllers\User.php on line 134.
+ 1 APPPATH\Controllers\User.php(134): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined array key "user_id"', 'C:\\xampp\\htdocs\\Cukkuboo\\cukkuboo-php\\app\\Controllers\\User.php', 134)
+ 2 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\User->registerFun()
+ 3 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\User))
+ 4 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 5 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+ 6 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 7 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-06-09 09:52:50 --> ArgumentCountError: Too few arguments to function App\Models\UserModel::updateUser(), 1 passed in C:\xampp\htdocs\Cukkuboo\cukkuboo-php\app\Controllers\User.php on line 194 and exactly 2 expected
+[Method: POST, Route: user/register]
+in APPPATH\Models\UserModel.php on line 39.
+ 1 APPPATH\Controllers\User.php(194): App\Models\UserModel->updateUser([...])
+ 2 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\User->registerFun()
+ 3 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\User))
+ 4 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 5 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+ 6 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 7 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-06-09 09:54:12 --> ErrorException: Undefined variable $authenticatedUser
+[Method: POST, Route: user/register]
+in APPPATH\Controllers\User.php on line 195.
+ 1 APPPATH\Controllers\User.php(195): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined variable $authenticatedUser', 'C:\\xampp\\htdocs\\Cukkuboo\\cukkuboo-php\\app\\Controllers\\User.php', 195)
+ 2 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\User->registerFun()
+ 3 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\User))
+ 4 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 5 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+ 6 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 7 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-06-09 09:55:01 --> ErrorException: Undefined variable $authenticatedUser
+[Method: POST, Route: user/register]
+in APPPATH\Controllers\User.php on line 195.
+ 1 APPPATH\Controllers\User.php(195): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined variable $authenticatedUser', 'C:\\xampp\\htdocs\\Cukkuboo\\cukkuboo-php\\app\\Controllers\\User.php', 195)
+ 2 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\User->registerFun()
+ 3 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\User))
+ 4 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 5 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+ 6 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 7 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-06-09 09:59:02 --> ErrorException: Trying to access array offset on value of type null
+[Method: POST, Route: user/register]
+in APPPATH\Controllers\User.php on line 196.
+ 1 APPPATH\Controllers\User.php(196): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Trying to access array offset on value of type null', 'C:\\xampp\\htdocs\\Cukkuboo\\cukkuboo-php\\app\\Controllers\\User.php', 196)
+ 2 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\User->registerFun()
+ 3 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\User))
+ 4 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 5 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+ 6 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 7 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-06-09 10:21:47 --> CodeIgniter\Database\Exceptions\DataException: There is no data to update.
+[Method: POST, Route: user/register]
+in SYSTEMPATH\BaseModel.php on line 1014.
+ 1 SYSTEMPATH\BaseModel.php(1014): CodeIgniter\Database\Exceptions\DataException::forEmptyDataset('update')
+ 2 SYSTEMPATH\Model.php(863): CodeIgniter\BaseModel->update([...], [])
+ 3 APPPATH\Controllers\User.php(176): CodeIgniter\Model->update('43', [...])
+ 4 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\User->registerFun()
+ 5 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\User))
+ 6 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 9 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-06-09 10:26:58 --> CodeIgniter\Database\Exceptions\DataException: There is no data to update.
+[Method: POST, Route: user/register]
+in SYSTEMPATH\BaseModel.php on line 1014.
+ 1 SYSTEMPATH\BaseModel.php(1014): CodeIgniter\Database\Exceptions\DataException::forEmptyDataset('update')
+ 2 SYSTEMPATH\Model.php(863): CodeIgniter\BaseModel->update([...], [])
+ 3 APPPATH\Controllers\User.php(174): CodeIgniter\Model->update('46', [...])
+ 4 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\User->registerFun()
+ 5 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\User))
+ 6 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 9 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))

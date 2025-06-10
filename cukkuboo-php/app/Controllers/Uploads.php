@@ -25,10 +25,10 @@ class Uploads extends ResourceController
     {
         ini_set('max_execution_time', '0');
         ini_set('upload_max_filesize', '20000M');
-        // $authHeader = $this->request->getHeaderLine('Authorization');
-        // $user = $this->authService->getAuthenticatedUser($authHeader);
-        // if(!$user) 
-        //     return $this->failUnauthorized('Invalid or missing token.');
+        $authHeader = $this->request->getHeaderLine('Authorization');
+        $user = $this->authService->getAuthenticatedUser($authHeader);
+        if(!$user) 
+            return $this->failUnauthorized('Invalid or missing token.');
 
         $video = $this->request->getFile('video');
         if (!$video || !$video->isValid()) {
@@ -60,6 +60,10 @@ class Uploads extends ResourceController
     }
     public function uploadImage()
 {
+    $authHeader = $this->request->getHeaderLine('Authorization');
+        $user = $this->authService->getAuthenticatedUser($authHeader);
+        if(!$user) 
+            return $this->failUnauthorized('Invalid or missing token.');
     $image = $this->request->getFile('image');
 
     

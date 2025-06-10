@@ -80,4 +80,17 @@ public function countAllMovies()
                     ->countAllResults();
 }
 
+  public function latestMovies()
+{
+    return $this->db->table($this->table)
+                    ->where('status', 1)
+                    ->where('release_date <=', date('Y-m-d'))
+                    ->orderBy('created_on', 'DESC') 
+                    ->limit(10)
+                    ->get()
+                    ->getResultArray();
+}
+
+
+
 }

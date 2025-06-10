@@ -41,6 +41,8 @@ $routes->post('movie/store', 'MovieDetail::store');
 $routes->get('movie/moviedetails','MovieDetail::getAllMovieDetails');
 $routes->get('movie/get/(:any)', 'MovieDetail::getMovieById/$1');
 $routes->delete('movie/delete/(:any)','MovieDetail::deleteMovieDetails/$1');
+$routes->get('api/movies/latest', 'MovieDetail::getLatestMovies');
+
 
 
 //Home Display

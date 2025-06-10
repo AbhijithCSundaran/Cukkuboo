@@ -72,51 +72,57 @@ class MovieDetail extends ResourceController
         }
     }
     public function getAllMovieDetails()
-    {
-        $pageIndex = (int) $this->request->getGet('pageIndex');
-        $pageSize = (int) $this->request->getGet('pageSize');
+{
+    $pageIndex = (int) $this->request->getGet('pageIndex');
+    $pageSize = (int) $this->request->getGet('pageSize');
+    $search = $this->request->getGet('search'); // optional search keyword
 
-        // If pageIndex is negative, return all movies without pagination
-        if ($pageIndex < 0) {
-            $movies = $this->moviedetail
-                ->where('status !=', 9)
-                ->orderBy('mov_id', 'DESC')
-                ->findAll();
+    // Set fallback/default values
+    if ($pageSize <= 0) {
+        $pageSize = 10;
+    }
 
-            return $this->response->setJSON([
-                'status' => true,
-                'message' => 'All movies fetched (no pagination).',
-                'data' => $movies,
-                'total' => count($movies)
-            ]);
-        }
+    $offset = $pageIndex * $pageSize;
 
-        // Set fallback/default values
-        if ($pageSize <= 0) {
-            $pageSize = 10;
-        }
+    $builder = $this->moviedetail
+        ->where('status !=', 9);
 
-        $offset = $pageIndex * $pageSize;
+    // If search keyword is provided, apply LIKE condition
+    if (!empty($search)) {
+        $builder = $builder->like('title', 'genre', 'cast_details', 'category',  $search);
+    }
 
-        // Get total matching movies
-        $total = $this->moviedetail
-            ->where('status !=', 9)
-            ->countAllResults(false); // don't reset builder
-
-        // Fetch paginated data
-        $movies = $this->moviedetail
-            ->where('status !=', 9)
+    // If pageIndex is negative, return all (filtered) movies without pagination
+    if ($pageIndex < 0) {
+        $movies = $builder
             ->orderBy('mov_id', 'DESC')
-            ->findAll($pageSize, $offset);
+            ->findAll();
 
-        // Return response
         return $this->response->setJSON([
             'status' => true,
-            'message' => 'Paginated movies fetched successfully.',
+            'message' => 'All movies fetched (no pagination).',
             'data' => $movies,
-            'total' => $total
+            'total' => count($movies)
         ]);
     }
+
+    // Clone builder for count
+    $countBuilder = clone $builder;
+    $total = $countBuilder->countAllResults(false);
+
+    // Fetch paginated data
+    $movies = $builder
+        ->orderBy('mov_id', 'DESC')
+        ->findAll($pageSize, $offset);
+
+    // Return response
+    return $this->response->setJSON([
+        'status' => true,
+        'message' => 'Paginated movies fetched successfully.',
+        'data' => $movies,
+        'total' => $total
+    ]);
+}
 
 
     public function getMovieById($id)
@@ -172,7 +178,18 @@ class MovieDetail extends ResourceController
     }
 
 
-    public function homeDisplay()
+
+
+
+
+
+
+
+// --------------------------------- mobile--------------------------------------//
+
+
+
+   public function homeDisplay()
     {
         $movieModel = new MovieDetailsModel();
 
@@ -244,6 +261,17 @@ class MovieDetail extends ResourceController
             'description' => $movie['description']
         ];
     }
+
+ public function getLatestMovies()
+{
+    $movieModel = new \App\Models\MovieDetailsModel();
+    $latestmovies = $movieModel->latestMovies();
+
+    return $this->response->setJSON([
+        'success' => true,
+        'data' => $latestmovies
+    ]);
+}
 
 
 

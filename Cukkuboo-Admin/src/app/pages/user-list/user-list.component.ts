@@ -13,7 +13,7 @@ import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-user-list',
-  imports: [RouterLink, MatTableModule, CommonModule, MatIconModule, MatPaginatorModule,MatFormFieldModule,MatInputModule],
+  imports: [RouterLink, MatTableModule, CommonModule, MatIconModule, MatPaginatorModule, MatFormFieldModule, MatInputModule],
   templateUrl: './user-list.component.html',
   styleUrl: './user-list.component.scss'
 })
@@ -25,7 +25,7 @@ export class UserListComponent implements OnInit {
     'email',
     'country',
     'status',
-   
+
     'subscription',
     'action',
   ];
@@ -33,7 +33,7 @@ export class UserListComponent implements OnInit {
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  constructor(private router: Router, private userService: UserService) {}
+  constructor(private router: Router, private userService: UserService) { }
 
   ngOnInit(): void {
     this.loadUsers();
@@ -49,15 +49,12 @@ export class UserListComponent implements OnInit {
   }
 
   loadUsers(): void {
-    const model = {}; 
-    this.userService.list(model).subscribe({
+    this.userService.list().subscribe({
       next: (response) => {
-                  console.log('API response from loadUsers():', response); 
-
-       
-          this.dataSource.data = response.data;
-        } ,
-         error: (error) => {
+        console.log('API response from loadUsers():', response);
+        this.dataSource.data = response.data;
+      },
+      error: (error) => {
         console.error('Failed to fetch user list:', error);
       },
     });
@@ -67,7 +64,7 @@ export class UserListComponent implements OnInit {
     const index = this.dataSource.data.indexOf(user);
     if (index > -1) {
       this.dataSource.data.splice(index, 1);
-      this.dataSource._updateChangeSubscription(); 
+      this.dataSource._updateChangeSubscription();
     }
   }
 

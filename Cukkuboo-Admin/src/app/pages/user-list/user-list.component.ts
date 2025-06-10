@@ -83,11 +83,14 @@ cancelDelete(): void {
 }
 
 confirmDelete(): void {
+   
   if (!this.confirmDeleteUserId) return;
 
   const id = this.confirmDeleteUserId;
+    
   this.userService.deleteUser(id).subscribe({
     next: (response) => {
+        console.log('Delete API success:', response);
       this.dataSource.data = this.dataSource.data.filter(user => user.id !== id);
       this.dataSource._updateChangeSubscription();
       this.cancelDelete();

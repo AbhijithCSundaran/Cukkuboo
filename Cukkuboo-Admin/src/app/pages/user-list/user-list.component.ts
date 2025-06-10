@@ -8,8 +8,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { UserService } from '../../services/user.service';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
-import { MatSnackBar } from '@angular/material/snack-bar';
 
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 
 
@@ -27,7 +27,6 @@ export class UserListComponent implements OnInit {
     'email',
     'country',
     'status',
-
     'subscription',
     'action',
   ];
@@ -35,8 +34,9 @@ export class UserListComponent implements OnInit {
   confirmDeleteUserId: number | null = null;
   confirmDeleteUserName: string = '';
 
-
   @ViewChild(MatPaginator) paginator!: MatPaginator;
+
+@ViewChild(MatPaginator) paginator!: MatPaginator;
 
   constructor(private router: Router, private userService: UserService,private snackBar: MatSnackBar) { }
 
@@ -60,7 +60,7 @@ export class UserListComponent implements OnInit {
     this.dataSource.paginator = this.paginator;
   }
 
-  loadUsers(): void {
+loadUsers(): void {
     this.userService.list().subscribe({
       next: (response) => {
         console.log('API response from loadUsers():', response);
@@ -100,7 +100,7 @@ confirmDelete(): void {
     }
   });
 }
-
+  
   addNewUser(): void {
     this.router.navigate(['/add-user']);
   }

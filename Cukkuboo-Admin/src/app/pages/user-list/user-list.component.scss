@@ -121,8 +121,6 @@
   background-color: #e53935; 
   color: white;
 }
-
-
 /*  Media Queries  */
 
 @media (max-width: 1200px) {
@@ -172,7 +170,18 @@
   .mat-paginator-range-actions,
   .mat-paginator-page-size {
     flex-wrap: wrap;
+ }
+
+  .mat-paginator-page-size-label,
+  .mat-select-trigger {
+    font-size: 14px;
   }
+
+  .mat-icon-button {
+    width: 36px;
+    height: 36px;
+  }
+}
 
   .mat-paginator-page-size-label,
   .mat-select-trigger {

@@ -43,10 +43,11 @@ export class AddUserComponent implements OnInit {
     private fb: FormBuilder,
     private userService: UserService,
     private snackBar: MatSnackBar
+
   ) { }
 
   ngOnInit(): void {
-
+    
     this.userForm = this.fb.group({
       user_id: [0],
       username: ['', Validators.required],
@@ -116,7 +117,7 @@ export class AddUserComponent implements OnInit {
     debugger;
     if (this.userForm.valid) {
       const model = this.userForm.value;
-      console.log('Submitting User Model:', model);
+ console.log('Submitting User Model:', model);
       this.userService.register(model).subscribe({
         next: (response) => {
           if (response.status) {

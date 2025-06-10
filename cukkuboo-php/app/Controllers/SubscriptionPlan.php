@@ -2,81 +2,83 @@
 
 namespace App\Controllers;
 
-use App\Models\SubscriptionPlanModel; 
-
+use App\Controllers\BaseController;
+use App\Models\SubscriptionPlanModel;
 
 class SubscriptionPlan extends BaseController
 {
     protected $subscriptionPlanModel;
 
     protected $periodMap = [
-        'Monthly' => 1,
-        'Quarterly' => 2,
-        'Yearly' => 3
+        '3 days'   => 3,
+        '30 days'  => 30,
+        '90 days'  => 90,
+        '1 Year'   => 365
     ];
 
     public function __construct()
     {
-        $this->subscriptionPlanModel = new SubscriptionPlanModel(); 
+        $this->subscriptionPlanModel = new SubscriptionPlanModel();
     }
-public function savePlan()
-{
-    $data = $this->request->getJSON(true);
 
-    $id = $data['id'] ?? null;  // get id if passed, null otherwise
+    public function savePlan()
+    {
+        $data = $this->request->getJSON(true);
+        $id = $data['id'] ?? null;
 
-    // Validate required fields for create
-    if (empty($id)) {
-        if (empty($data['plan_name']) || empty($data['price']) || empty($data['period'])) {
+        // Validate required fields for creation
+        if (empty($id)) {
+            if (empty($data['plan_name']) || empty($data['price']) || empty($data['period'])) {
+                return $this->response->setJSON([
+                    'status' => false,
+                    'message' => 'Plan name, price, and period are required for creating a plan'
+                ])->setStatusCode(400);
+            }
+        }
+
+        // Map period string to number
+        if (isset($data['period'])) {
+            if (!isset($this->periodMap[$data['period']])) {
+                return $this->response->setJSON([
+                    'status' => false,
+                    'message' => 'Invalid period option'
+                ])->setStatusCode(400);
+            }
+            $data['period'] = $this->periodMap[$data['period']];
+        }
+
+        // Handle optional fields
+        // $data['discount_price'] = $data['discount_price'] ?? null;
+        // $data['features'] = $data['features'] ?? null;
+
+        if (empty($id)) {
+            // Create new plan
+            $this->subscriptionPlanModel->addPlan($data);
             return $this->response->setJSON([
-                'status' => false,
-                'message' => 'Plan name, price, and period are required for creating a plan'
-            ])->setStatusCode(400);
+                'status' => true,
+                'message' => 'Plan created successfully'
+            ]);
+        } else {
+            // Update existing plan
+            $plan = $this->subscriptionPlanModel->getPlanById($id);
+            if (!$plan) {
+                return $this->response->setJSON([
+                    'status' => false,
+                    'message' => 'Plan not found'
+                ])->setStatusCode(404);
+            }
+
+            $this->subscriptionPlanModel->updatePlan($id, $data);
+            return $this->response->setJSON([
+                'status' => true,
+                'message' => 'Plan updated successfully'
+            ]);
         }
     }
 
-    // For both create and update, validate period if provided
-    if (isset($data['period'])) {
-        if (!isset($this->periodMap[$data['period']])) {
-            return $this->response->setJSON([
-                'status' => false,
-                'message' => 'Invalid period option'
-            ])->setStatusCode(400);
-        }
-        $data['period_id'] = $this->periodMap[$data['period']];
-        unset($data['period']);
-    }
-
-    if (empty($id)) {
-        // Create new plan
-        $this->subscriptionPlanModel->addPlan($data);
-
-        return $this->response->setJSON([
-            'status' => true,
-            'message' => 'Plan created successfully'
-        ]);
-    } else {
-        // Update existing plan
-
-        $plan = $this->subscriptionPlanModel->getPlanById($id);
-        if (!$plan) {
-            return $this->response->setJSON([
-                'status' => false,
-                'message' => 'Plan not found'
-            ])->setStatusCode(404);
-        }
-
-        $this->subscriptionPlanModel->updatePlan($id, $data);
-
-        return $this->response->setJSON([
-            'status' => true,
-            'message' => 'Plan updated successfully'
-        ]);
-    }
-}
 
     public function getAll()
-{
+    {
     // Get pagination parameters from the query string
     $pageIndex = (int) $this->request->getGet('pageIndex');
     $pageSize  = (int) $this->request->getGet('pageSize');
@@ -122,9 +124,15 @@ public function savePlan()
     {
         $plan = $this->subscriptionPlanModel->getPlanById($id);
         if (!$plan) {
-            return $this->response->setJSON(['status' => false, 'message' => 'Plan not found'])->setStatusCode(404);
+            return $this->response->setJSON([
+                'status' => false,
+                'message' => 'Plan not found'
+            ])->setStatusCode(404);
         }
-        return $this->response->setJSON(['status' => true, 'data' => $plan]);
+        return $this->response->setJSON([
+            'status' => true,
+            'data' => $plan
+        ]);
     }
 
     // public function create()
@@ -182,11 +190,16 @@ public function savePlan()
     {
         $plan = $this->subscriptionPlanModel->getPlanById($id);
         if (!$plan) {
-            return $this->response->setJSON(['status' => false, 'message' => 'Plan not found'])->setStatusCode(404);
+            return $this->response->setJSON([
+                'status' => false,
+                'message' => 'Plan not found'
+            ])->setStatusCode(404);
         }
 
         $this->subscriptionPlanModel->deletePlan($id);
-
-        return $this->response->setJSON(['status' => true, 'message' => 'Plan deleted successfully']);
+        return $this->response->setJSON([
+            'status' => true,
+            'message' => 'Plan deleted successfully'
+        ]);
     }
 }

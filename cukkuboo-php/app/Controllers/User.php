@@ -20,87 +20,200 @@ class User extends BaseController
     }
 
     //Register new user
+    // public function registerFun()
+    // {
+    //     $data = $this->request->getJSON(true);
+
+    //     if (empty($data['phone']) && empty($data['email'])) {
+    //         return $this->response->setJSON([
+    //             'status' => false,
+    //             'message' => 'Phone or email is required.'
+    //         ])->setStatusCode(400);
+    //     }
+
+    //     if ($this->UserModel->isUserExists($data['phone'] ?? null, $data['email'] ?? null)) {
+    //         return $this->response->setJSON([
+    //             'status' => false,
+    //             'message' => 'User already exists.'
+    //         ])->setStatusCode(409);
+    //     }
+
+    //     $userData = [
+    //         'username'     => $data['username'] ?? null,
+    //         'phone'        => $data['phone'] ?? null,
+    //         'email'        => $data['email'] ?? null,
+    //         'password'     => !empty($data['password']) ? password_hash($data['password'], PASSWORD_BCRYPT) : null,
+    //         'country'      => $data['country'] ?? null,
+    //         'status'       => 'active',
+    //         'subscription' => 'free',
+    //         'join_date'    => date('Y-m-d H:i:s')
+    //     ];
+
+    //     $userId = $this->UserModel->addUser($userData);
+    //     $user   = $this->UserModel->find($userId);
+
+    //     $jwt    = new Jwt();
+    //     $token  = $jwt->encode(['user_id' => $user['user_id']]);
+
+    //     $this->UserModel->update($user['user_id'], ['jwt_token' => $token]);
+
+    //     return $this->response->setJSON([
+    //         'status'  => true,
+    //         'message' => 'User registered successfully.',
+    //         'data'    => [
+    //             'user_id'             => $user['user_id'],
+    //             'username'            => $user['username'],
+    //             'email'               => $user['email'],
+    //             'phone'               => $user['phone'],
+    //             'subscription_status' => $user['subscription'],
+    //             'created_at'          => $user['join_date'],
+    //             'jwt_token'           => $token
+    //         ]
+    //     ])->setStatusCode(201);
+    // }
+
+    // // Auth helper
+    // public function getAuthenticatedUser()
+    // {
+    //     $authHeader = $this->request->getHeaderLine('Authorization');
+    //     if (!$authHeader || !str_starts_with($authHeader, 'Bearer ')) {
+    //         return null;
+    //     }
+
+    //     $token = trim(str_replace('Bearer', '', $authHeader));
+
+    //     try {
+    //         $jwt     = new Jwt();
+    //         $payload = $jwt->decode($token);
+    //         $userId  = $payload->user_id ?? null;
+
+    //         $user = $this->UserModel->find($userId);
+
+    //         if (!$user || $user['jwt_token'] !== $token) {
+    //             return null;
+    //         }
+
+    //         return $user;
+
+    //     } catch (\Exception $e) {
+    //         return null;
+    //     }
+    // }
+    public function getAuthenticatedUser()
+{
+    $authHeader = $this->request->getHeaderLine('Authorization');
+    if (!$authHeader || !str_starts_with($authHeader, 'Bearer ')) {
+        return null;
+    }
+
+    $token = trim(str_replace('Bearer', '', $authHeader));
+
+    try {
+        $jwt     = new Jwt();
+        $payload = $jwt->decode($token);
+        $userId  = $payload->user_id ?? null;
+
+        $user = $this->UserModel->find($userId);
+
+        if (!$user || $user['jwt_token'] !== $token) {
+            return null;
+        }
+
+        return $user;
+
+    } catch (\Exception $e) {
+        return null;
+    }
+}
+
     public function registerFun()
     {
         $data = $this->request->getJSON(true);
 
-        if (empty($data['phone']) && empty($data['email'])) {
-            return $this->response->setJSON([
-                'status' => false,
-                'message' => 'Phone or email is required.'
-            ])->setStatusCode(400);
-        }
+        // Try to get authenticated user from JWT
+        $user_id =  $data['user_id'];//$this->getAuthenticatedUser();
+        $authenticatedUser=$this->getAuthenticatedUser();
 
-        if ($this->UserModel->isUserExists($data['phone'] ?? null, $data['email'] ?? null)) {
-            return $this->response->setJSON([
-                'status' => false,
-                'message' => 'User already exists.'
-            ])->setStatusCode(409);
-        }
-
-        $userData = [
+        // Shared user data structure
+        $userData = array_filter([
             'username'     => $data['username'] ?? null,
             'phone'        => $data['phone'] ?? null,
             'email'        => $data['email'] ?? null,
-            'password'     => !empty($data['password']) ? password_hash($data['password'], PASSWORD_BCRYPT) : null,
             'country'      => $data['country'] ?? null,
-            'status'       => 'active',
-            'subscription' => 'free',
+            'subscription' => $data['subscription'] ?? 'free',
+            'status'       => $data['status'] ?? 'active',
             'user_type' => $data['user_type'] ??'Customer',
-            'join_date'    => date('Y-m-d H:i:s')
-        ];
+        ]);
 
-        $userId = $this->UserModel->addUser($userData);
-        $user   = $this->UserModel->find($userId);
-
-        $jwt    = new Jwt();
-        $token  = $jwt->encode(['user_id' => $user['user_id']]);
-
-        $this->UserModel->update($user['user_id'], ['jwt_token' => $token]);
-
-        return $this->response->setJSON([
-            'status'  => true,
-            'message' => 'User registered successfully.',
-            'data'    => [
-                'user_id'             => $user['user_id'],
-                'username'            => $user['username'],
-                'email'               => $user['email'],
-                'phone'               => $user['phone'],
-                'subscription_status' => $user['subscription'],
-                'user_type'           => $user['user_type'],
-                'created_at'          => $user['join_date'],
-                'jwt_token'           => $token
-            ]
-        ])->setStatusCode(201);
-    }
-
-    // Auth helper
-    public function getAuthenticatedUser()
-    {
-        $authHeader = $this->request->getHeaderLine('Authorization');
-        if (!$authHeader || !str_starts_with($authHeader, 'Bearer ')) {
-            return null;
+        if (!empty($data['password'])) {
+            $userData['password'] = password_hash($data['password'], PASSWORD_BCRYPT);
         }
 
-        $token = trim(str_replace('Bearer', '', $authHeader));
-
-        try {
-            $jwt     = new Jwt();
-            $payload = $jwt->decode($token);
-            $userId  = $payload->user_id ?? null;
-
-            $user = $this->UserModel->find($userId);
-
-            if (!$user || $user['jwt_token'] !== $token) {
-                return null;
+        // ✅ If NOT authenticated → Register new user
+        if (!$user_id) {
+            if (empty($data['phone']) && empty($data['email'])) {
+                return $this->response->setJSON([
+                    'status' => false,
+                    'message' => 'Phone or email is required.'
+                ])->setStatusCode(400);
             }
 
-            return $user;
+            if ($this->UserModel->isUserExists($data['phone'] ?? null, $data['email'] ?? null)) {
+                return $this->response->setJSON([
+                    'status' => false,
+                    'message' => 'User already exists.'
+                ])->setStatusCode(409);
+            }
 
-        } catch (\Exception $e) {
-            return null;
+            $userData['created_at'] = date('Y-m-d H:i:s');
+            $userId = $this->UserModel->addUser($userData);
+            $user   = $this->UserModel->find($userId);
+
+            $jwt   = new Jwt();
+            $token = $jwt->encode(['user_id' => $user['user_id']]);
+            $created_by = $authenticatedUser?$authenticatedUser['user_id']:$userId;
+            $this->UserModel->update($user['user_id'], ['created_by' => $created_by]);
+            $this->UserModel->update($user['user_id'], ['jwt_token' => $token]);
+
+            return $this->response->setJSON([
+                'status'  => true,
+                'message' => 'User registered successfully.',
+                'data'    => [
+                    'user_id'             => $user['user_id'],
+                    'username'            => $user['username'],
+                    'email'               => $user['email'],
+                    'phone'               => $user['phone'],
+                    'subscription_status' => $user['subscription'],
+                    'user_type'           => $user['user_type'],
+                    'created_at'          => $user['created_at'],
+                    'created_by'          => $created_by,
+                    'jwt_token'           => $token
+                ]
+            ])->setStatusCode(201);
+        } 
+
+        // ✅ If authenticated → Update existing user
+        else {
+            if($authenticatedUser){
+                $userData['updated_at'] = date('Y-m-d H:i:s');
+                $userData['updated_by'] = $authenticatedUser['user_id'];
+                $this->UserModel->updateUser($user_id, $userData);
+                return $this->response->setJSON([
+                    'status' => true,
+                    'message' => 'User updated successfully.',
+                    'data' => $userData
+                ]);
+            }
+            else{
+                return $this->response->setJSON([
+                    'status' => false,
+                    'message' => 'Unauthorised User',
+                    'data' => null
+                ]);
+            }
         }
     }
+
 
     //  Get user details
     public function getUserDetails()
@@ -121,37 +234,37 @@ class User extends BaseController
     }
 
     // Update user details
-    public function updateUser()
-    {
-        $user = $this->getAuthenticatedUser();
+    // public function updateUser()
+    // {
+    //     $user = $this->getAuthenticatedUser();
 
-        if (!$user) {
-            return $this->response->setJSON([
-                'status' => false,
-                'message' => 'Unauthorized'
-            ])->setStatusCode(401);
-        }
+    //     if (!$user) {
+    //         return $this->response->setJSON([
+    //             'status' => false,
+    //             'message' => 'Unauthorized'
+    //         ])->setStatusCode(401);
+    //     }
 
-        $data = $this->request->getJSON(true);
+    //     $data = $this->request->getJSON(true);
 
-        $updateData = array_filter([
-            'username' => $data['username'] ?? null,
-            'phone'    => $data['phone'] ?? null,
-            'email'    => $data['email'] ?? null,
-            'country'  => $data['country'] ?? null
-        ]);
+    //     $updateData = array_filter([
+    //         'username' => $data['username'] ?? null,
+    //         'phone'    => $data['phone'] ?? null,
+    //         'email'    => $data['email'] ?? null,
+    //         'country'  => $data['country'] ?? null
+    //     ]);
 
-        if (!empty($data['password'])) {
-            $updateData['password'] = password_hash($data['password'], PASSWORD_BCRYPT);
-        }
+    //     if (!empty($data['password'])) {
+    //         $updateData['password'] = password_hash($data['password'], PASSWORD_BCRYPT);
+    //     }
 
-        $this->UserModel->updateUser($user['user_id'], $updateData);
+    //     $this->UserModel->updateUser($user['user_id'], $updateData);
 
-        return $this->response->setJSON([
-            'status' => true,
-            'message' => 'User updated successfully.'
-        ]);
-    }
+    //     return $this->response->setJSON([
+    //         'status' => true,
+    //         'message' => 'User updated successfully.'
+    //     ]);
+    // }
 
     //  Delete user
     public function deleteUser()
@@ -189,58 +302,46 @@ public function getUserDetailsById($userId)
         'data' => $user
     ]);
 }
-
-// Update user details by user_id
-public function updateUserById($userId)
+public function getUserList()
 {
-    $user = $this->UserModel->getUserById($userId);
+    // Get pagination parameters from the query string
+    $pageIndex = (int) $this->request->getGet('pageIndex');
+    $pageSize  = (int) $this->request->getGet('pageSize');
 
-    if (!$user) {
+    // If pageIndex is negative, return all users without pagination
+    if ($pageIndex < 0) {
+        $users = $this->UserModel->getAllUsers();
+        $total = count($users);
+
         return $this->response->setJSON([
-            'status' => false,
-            'message' => 'User not found'
-        ])->setStatusCode(404);
+            'status' => true,
+            'data'   => $users,
+            'total'  => $total
+        ]);
     }
 
-    $data = $this->request->getJSON(true);
-
-    $updateData = array_filter([
-        'username' => $data['username'] ?? null,
-        'phone'    => $data['phone'] ?? null,
-        'email'    => $data['email'] ?? null,
-        'country'  => $data['country'] ?? null
-    ]);
-
-    if (!empty($data['password'])) {
-        $updateData['password'] = password_hash($data['password'], PASSWORD_BCRYPT);
+    // Validate and fallback
+    if ($pageSize <= 0) {
+        $pageSize = 10; // default size
     }
 
-    $this->UserModel->updateUserById($userId, $updateData);
+    // Calculate offset
+    $offset = $pageIndex * $pageSize;
+
+    // Get total user count
+    $total = $this->UserModel->countAll();
+
+    // Get paginated users
+    $users = $this->UserModel
+        ->orderBy('user_id', 'DESC')
+        ->findAll($pageSize, $offset);
 
     return $this->response->setJSON([
         'status' => true,
-        'message' => 'User updated successfully.'
+        'data'   => $users,
+        'total'  => $total
     ]);
 }
 
-// Delete user by user_id
-public function deleteUserById($userId)
-{
-    $user = $this->UserModel->getUserById($userId);
-
-    if (!$user) {
-        return $this->response->setJSON([
-            'status' => false,
-            'message' => 'User not found'
-        ])->setStatusCode(404);
-    }
-
-    $this->UserModel->deleteUserById($userId);
-
-    return $this->response->setJSON([
-        'status' => true,
-        'message' => 'User deleted successfully.'
-    ]);
-}
 
 }

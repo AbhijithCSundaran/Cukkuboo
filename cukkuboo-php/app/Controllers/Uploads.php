@@ -1,62 +1,69 @@
 <?php
 
 namespace App\Controllers;
+
 use CodeIgniter\RESTful\ResourceController;
-
-use App\Models\VideoModel;
-
+use App\Models\UserModel;
+use App\Libraries\Jwt;
+use App\Libraries\AuthService;
 
 class Uploads extends ResourceController
 {
-   
+    protected $UserModel;
+    protected $authService;
 
     public function __construct()
     {
         $this->session = \Config\Services::session();
         $this->input = \Config\Services::request();
+        $this->UserModel = new UserModel();	
+        $this->authService = new AuthService();
+
     }
 
     public function uploadVideo()
+    {
+        ini_set('max_execution_time', '0');
+        ini_set('upload_max_filesize', '20000M');
+        $authHeader = $this->request->getHeaderLine('Authorization');
+        $user = $this->authService->getAuthenticatedUser($authHeader);
+        if(!$user) 
+            return $this->failUnauthorized('Invalid or missing token.');
+
+        $video = $this->request->getFile('video');
+        if (!$video || !$video->isValid()) {
+            return $this->failValidationErrors($video ? $video->getErrorString() : 'No video uploaded.');
+        }
+
+        $allowedTypes = ['video/mp4', 'video/avi', 'video/quicktime'];
+        if (!in_array($video->getMimeType(), $allowedTypes)) {
+            return $this->failValidationErrors('Invalid video format.');
+        }
+
+        // Move uploaded file
+        $newName = $video->getRandomName();
+        $uploadPath = ROOTPATH . 'uploads/videos/';
+        if (!is_dir($uploadPath)) {
+            mkdir($uploadPath, 0777, true);
+        }
+
+        if ($video->move($uploadPath, $newName)) {
+            return $this->respond([
+                'status'    => 200,
+                'message'   => 'Video uploaded successfully',
+                'file_name' => $newName,
+                'path'      => base_url("uploads/videos/$newName")
+            ]);
+        } else {
+            return $this->failServerError('Failed to move uploaded video.');
+        }
+    }
+    public function uploadImage()
 {
-    $video = $this->request->getFile('video');
-
-    if (!$video->isValid()) {
-        return $this->response->setStatusCode(400)->setJSON(['error' => $video->getErrorString()]);
-    }
-      // Optional: Check file size (in bytes), e.g., max 2GB = 2 * 1024 * 1024 * 1024
-    $maxSize = 2 * 1024 * 1024 * 1024; // 2GB
-    if ($video->getSize() > $maxSize) {
-        return $this->response->setStatusCode(400)->setJSON([
-            'error' => 'Video file exceeds maximum allowed size (2GB).'
-        ]);
-    }
-
-    if (!in_array($video->getMimeType(), ['video/*','video/mp4', 'video/avi', 'video/mov'])) {
-        return $this->response->setStatusCode(400)->setJSON(['error' => 'Invalid video format']);
-    }
-
-    $newName = $video->getRandomName();
-
-    
-    $targetPath = ROOTPATH . 'uploads/videos';
-    if (!is_dir($targetPath)) {
-        mkdir($targetPath, 0777, true); 
-    }
-
-    if ($video->move($targetPath, $newName)) {
-        return $this->response->setJSON([
-            'status' => 200,
-            'message' => 'Video uploaded successfully',
-            'file_name' => $newName,
-            'path' => base_url("uploads/videos/$newName")
-        ]);
-    } else {
-        return $this->response->setStatusCode(500)->setJSON(['error' => 'Failed to move the uploaded video']);
-    }
-}
-
-public function uploadImage()
-{
+    $authHeader = $this->request->getHeaderLine('Authorization');
+        $user = $this->authService->getAuthenticatedUser($authHeader);
+        if(!$user) 
+            return $this->failUnauthorized('Invalid or missing token.');
     $image = $this->request->getFile('image');
 
     
@@ -91,7 +98,4 @@ public function uploadImage()
         return $this->response->setStatusCode(500)->setJSON(['error' => 'Failed to move the uploaded image']);
     }
 }
-   
-
-   
 }

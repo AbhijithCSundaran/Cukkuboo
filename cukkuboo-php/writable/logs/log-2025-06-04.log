@@ -1,0 +1,713 @@
+ERROR - 2025-06-04 06:30:40 --> Error connecting to the database: mysqli_sql_exception: Unknown database 'cukkuboo' in C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\Database\MySQLi\Connection.php:201
+Stack trace:
+#0 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\Database\MySQLi\Connection.php(201): mysqli->real_connect('localhost', 'root', Object(SensitiveParameterValue), 'cukkuboo', 3306, '', 0)
+#1 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\Database\BaseConnection.php(421): CodeIgniter\Database\MySQLi\Connection->connect(false)
+#2 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\Database\BaseConnection.php(620): CodeIgniter\Database\BaseConnection->initialize()
+#3 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\Database\BaseBuilder.php(1678): CodeIgniter\Database\BaseConnection->query('SELECT COUNT(*)...', NULL, false)
+#4 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\Model.php(928): CodeIgniter\Database\BaseBuilder->countAll()
+#5 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\app\Controllers\SubscriptionPlan.php(42): CodeIgniter\Model->__call('countAll', Array)
+#6 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\CodeIgniter.php(933): App\Controllers\SubscriptionPlan->getAll()
+#7 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\SubscriptionPlan))
+#8 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#9 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\Boot.php(334): CodeIgniter\CodeIgniter->run()
+#10 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#11 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#12 {main}
+
+Next CodeIgniter\Database\Exceptions\DatabaseException: Unknown database 'cukkuboo' in C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\Database\MySQLi\Connection.php:246
+Stack trace:
+#0 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\Database\BaseConnection.php(421): CodeIgniter\Database\MySQLi\Connection->connect(false)
+#1 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\Database\BaseConnection.php(620): CodeIgniter\Database\BaseConnection->initialize()
+#2 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\Database\BaseBuilder.php(1678): CodeIgniter\Database\BaseConnection->query('SELECT COUNT(*)...', NULL, false)
+#3 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\Model.php(928): CodeIgniter\Database\BaseBuilder->countAll()
+#4 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\app\Controllers\SubscriptionPlan.php(42): CodeIgniter\Model->__call('countAll', Array)
+#5 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\CodeIgniter.php(933): App\Controllers\SubscriptionPlan->getAll()
+#6 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\SubscriptionPlan))
+#7 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#8 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\Boot.php(334): CodeIgniter\CodeIgniter->run()
+#9 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#10 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#11 {main}
+CRITICAL - 2025-06-04 06:30:40 --> CodeIgniter\Database\Exceptions\DatabaseException: Unable to connect to the database.
+Main connection [MySQLi]: Unknown database 'cukkuboo'
+[Method: GET, Route: subscriptionplan/list]
+in SYSTEMPATH\Database\BaseConnection.php on line 467.
+ 1 SYSTEMPATH\Database\BaseConnection.php(620): CodeIgniter\Database\BaseConnection->initialize()
+ 2 SYSTEMPATH\Database\BaseBuilder.php(1678): CodeIgniter\Database\BaseConnection->query('SELECT COUNT(*) AS `numrows` FROM `subscriptionplan`', null, false)
+ 3 SYSTEMPATH\Model.php(928): CodeIgniter\Database\BaseBuilder->countAll()
+ 4 APPPATH\Controllers\SubscriptionPlan.php(42): CodeIgniter\Model->__call('countAll', [])
+ 5 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\SubscriptionPlan->getAll()
+ 6 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\SubscriptionPlan))
+ 7 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 8 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+ 9 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+10 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+ERROR - 2025-06-04 06:31:18 --> mysqli_sql_exception: Table 'vcstagin_ott.subscriptionplan' doesn't exist in C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\Database\MySQLi\Connection.php(327): mysqli->query('SELECT COUNT(*)...', 0)
+#1 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\Database\BaseConnection.php(738): CodeIgniter\Database\MySQLi\Connection->execute('SELECT COUNT(*)...')
+#2 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\Database\BaseConnection.php(652): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT COUNT(*)...')
+#3 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\Database\BaseBuilder.php(1678): CodeIgniter\Database\BaseConnection->query('SELECT COUNT(*)...', NULL, false)
+#4 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\Model.php(928): CodeIgniter\Database\BaseBuilder->countAll()
+#5 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\app\Controllers\SubscriptionPlan.php(42): CodeIgniter\Model->__call('countAll', Array)
+#6 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\CodeIgniter.php(933): App\Controllers\SubscriptionPlan->getAll()
+#7 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\SubscriptionPlan))
+#8 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#9 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\Boot.php(334): CodeIgniter\CodeIgniter->run()
+#10 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#11 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#12 {main}
+CRITICAL - 2025-06-04 06:31:18 --> CodeIgniter\Database\Exceptions\DatabaseException: Table 'vcstagin_ott.subscriptionplan' doesn't exist
+[Method: GET, Route: subscriptionplan/list]
+in SYSTEMPATH\Database\BaseConnection.php on line 692.
+ 1 SYSTEMPATH\Database\BaseBuilder.php(1678): CodeIgniter\Database\BaseConnection->query('SELECT COUNT(*) AS `numrows` FROM `subscriptionplan`', null, false)
+ 2 SYSTEMPATH\Model.php(928): CodeIgniter\Database\BaseBuilder->countAll()
+ 3 APPPATH\Controllers\SubscriptionPlan.php(42): CodeIgniter\Model->__call('countAll', [])
+ 4 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\SubscriptionPlan->getAll()
+ 5 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\SubscriptionPlan))
+ 6 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 9 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-06-04 06:31:18 --> [Caused by] CodeIgniter\Database\Exceptions\DatabaseException: Table 'vcstagin_ott.subscriptionplan' doesn't exist
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 332.
+ 1 SYSTEMPATH\Database\BaseConnection.php(738): CodeIgniter\Database\MySQLi\Connection->execute('SELECT COUNT(*) AS `numrows` FROM `subscriptionplan`')
+ 2 SYSTEMPATH\Database\BaseConnection.php(652): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT COUNT(*) AS `numrows` FROM `subscriptionplan`')
+ 3 SYSTEMPATH\Database\BaseBuilder.php(1678): CodeIgniter\Database\BaseConnection->query('SELECT COUNT(*) AS `numrows` FROM `subscriptionplan`', null, false)
+ 4 SYSTEMPATH\Model.php(928): CodeIgniter\Database\BaseBuilder->countAll()
+ 5 APPPATH\Controllers\SubscriptionPlan.php(42): CodeIgniter\Model->__call('countAll', [])
+ 6 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\SubscriptionPlan->getAll()
+ 7 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\SubscriptionPlan))
+ 8 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-06-04 06:31:18 --> [Caused by] mysqli_sql_exception: Table 'vcstagin_ott.subscriptionplan' doesn't exist
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 327.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(327): mysqli->query('SELECT COUNT(*) AS `numrows` FROM `subscriptionplan`', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(738): CodeIgniter\Database\MySQLi\Connection->execute('SELECT COUNT(*) AS `numrows` FROM `subscriptionplan`')
+ 3 SYSTEMPATH\Database\BaseConnection.php(652): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT COUNT(*) AS `numrows` FROM `subscriptionplan`')
+ 4 SYSTEMPATH\Database\BaseBuilder.php(1678): CodeIgniter\Database\BaseConnection->query('SELECT COUNT(*) AS `numrows` FROM `subscriptionplan`', null, false)
+ 5 SYSTEMPATH\Model.php(928): CodeIgniter\Database\BaseBuilder->countAll()
+ 6 APPPATH\Controllers\SubscriptionPlan.php(42): CodeIgniter\Model->__call('countAll', [])
+ 7 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\SubscriptionPlan->getAll()
+ 8 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\SubscriptionPlan))
+ 9 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+10 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+11 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+12 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-06-04 07:51:20 --> Error: Class "App\Libraries\Key" not found
+[Method: POST, Route: upload-video]
+in APPPATH\Libraries\JWT.php on line 34.
+ 1 APPPATH\Controllers\Uploads.php(36): App\Libraries\Jwt->decode('eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3NDg0OTc2NTMsImV4cCI6MTc0ODUwMTI1MywiZGF0YSI6eyJ1c2VyX2lkIjoiMjcifX0.n7JDSo46PBGR_AHczI5u7cDfcy8pZfXcAmJKFU2YdPY')
+ 2 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Uploads->uploadVideo()
+ 3 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Uploads))
+ 4 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 5 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+ 6 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 7 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-06-04 07:52:10 --> Error: Class "App\Libraries\Key" not found
+[Method: POST, Route: upload-video]
+in APPPATH\Libraries\JWT.php on line 34.
+ 1 APPPATH\Controllers\Uploads.php(36): App\Libraries\Jwt->decode('eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3NDg5NDQyNzMsImV4cCI6MTc0ODk0Nzg3MywiZGF0YSI6eyJ1c2VyX2lkIjoiMzIifX0.0vGT5tUtBaBHHGMv6sMVh-XynxCibVPp4OVUllwions')
+ 2 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Uploads->uploadVideo()
+ 3 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Uploads))
+ 4 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 5 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+ 6 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 7 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-06-04 07:52:26 --> Error: Class "App\Libraries\Key" not found
+[Method: POST, Route: upload-video]
+in APPPATH\Libraries\JWT.php on line 34.
+ 1 APPPATH\Controllers\Uploads.php(36): App\Libraries\Jwt->decode('eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3NDg5NDQyNzMsImV4cCI6MTc0ODk0Nzg3MywiZGF0YSI6eyJ1c2VyX2lkIjoiMzIifX0.0vGT5tUtBaBHHGMv6sMVh-XynxCibVPp4OVUllwions')
+ 2 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Uploads->uploadVideo()
+ 3 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Uploads))
+ 4 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 5 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+ 6 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 7 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-06-04 07:53:00 --> Error: Class "App\Libraries\Key" not found
+[Method: POST, Route: upload-video]
+in APPPATH\Libraries\JWT.php on line 34.
+ 1 APPPATH\Controllers\Uploads.php(36): App\Libraries\Jwt->decode('eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3NDg5NDQyNzMsImV4cCI6MTc0ODk0Nzg3MywiZGF0YSI6eyJ1c2VyX2lkIjoiMzIifX0.0vGT5tUtBaBHHGMv6sMVh-XynxCibVPp4OVUllwions')
+ 2 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Uploads->uploadVideo()
+ 3 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Uploads))
+ 4 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 5 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+ 6 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 7 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-06-04 07:57:47 --> ErrorException: Undefined property: App\Controllers\Uploads::$tokenModel
+[Method: POST, Route: upload-video]
+in APPPATH\Controllers\Uploads.php on line 43.
+ 1 APPPATH\Controllers\Uploads.php(43): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined property: App\\Controllers\\Uploads::$tokenModel', 'C:\\xampp\\htdocs\\Cukkuboo\\cukkuboo-php\\app\\Controllers\\Uploads.php', 43)
+ 2 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Uploads->uploadVideo()
+ 3 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Uploads))
+ 4 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 5 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+ 6 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 7 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-06-04 08:07:07 --> ErrorException: Undefined variable $eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3NDkwMjM0OTcsImV4cCI6MTc0OTAyNzA5NywiZGF0YSI6eyJ1c2VyX2lkIjoiMzIifX0.VjkuGjRGJqqKhCwmQAy2OK64aZbUXKL-E2j-LVLJW5g
+[Method: POST, Route: upload-video]
+in APPPATH\Controllers\Uploads.php on line 33.
+ 1 APPPATH\Controllers\Uploads.php(33): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined variable $eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3NDkwMjM0OTcsImV4cCI6MTc0OTAyNzA5NywiZGF0YSI6eyJ1c2VyX2lkIjoiMzIifX0.VjkuGjRGJqqKhCwmQAy2OK64aZbUXKL-E2j-LVLJW5g', 'C:\\xampp\\htdocs\\Cukkuboo\\cukkuboo-php\\app\\Controllers\\Uploads.php', 33)
+ 2 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Uploads->uploadVideo()
+ 3 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Uploads))
+ 4 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 5 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+ 6 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 7 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-06-04 09:19:41 --> ErrorException: Undefined variable $modified_by
+[Method: POST, Route: movie/delete/3]
+in APPPATH\Controllers\MovieDetail.php on line 111.
+ 1 APPPATH\Controllers\MovieDetail.php(111): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined variable $modified_by', 'C:\\xampp\\htdocs\\Cukkuboo\\cukkuboo-php\\app\\Controllers\\MovieDetail.php', 111)
+ 2 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\MovieDetail->deleteMovieDetails('3')
+ 3 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MovieDetail))
+ 4 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 5 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+ 6 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 7 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+ERROR - 2025-06-04 09:20:02 --> mysqli_sql_exception: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'where mov_id = '3'' at line 1 in C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\Database\MySQLi\Connection.php(327): mysqli->query('update movies_d...', 0)
+#1 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\Database\BaseConnection.php(738): CodeIgniter\Database\MySQLi\Connection->execute('update movies_d...')
+#2 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\Database\BaseConnection.php(652): CodeIgniter\Database\BaseConnection->simpleQuery('update movies_d...')
+#3 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\app\Models\MovieDetailsModel.php(37): CodeIgniter\Database\BaseConnection->query('update movies_d...')
+#4 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\app\Controllers\MovieDetail.php(119): App\Models\MovieDetailsModel->deleteMovieDetailsById(9, '3')
+#5 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\CodeIgniter.php(933): App\Controllers\MovieDetail->deleteMovieDetails('3')
+#6 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MovieDetail))
+#7 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#8 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\Boot.php(334): CodeIgniter\CodeIgniter->run()
+#9 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#10 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#11 {main}
+CRITICAL - 2025-06-04 09:20:02 --> CodeIgniter\Database\Exceptions\DatabaseException: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'where mov_id = '3'' at line 1
+[Method: POST, Route: movie/delete/3]
+in SYSTEMPATH\Database\BaseConnection.php on line 692.
+ 1 APPPATH\Models\MovieDetailsModel.php(37): CodeIgniter\Database\BaseConnection->query('update movies_details set status = \'9\', modify_on=NOW(), where mov_id = \'3\'')
+ 2 APPPATH\Controllers\MovieDetail.php(119): App\Models\MovieDetailsModel->deleteMovieDetailsById(9, '3')
+ 3 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\MovieDetail->deleteMovieDetails('3')
+ 4 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MovieDetail))
+ 5 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 6 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+ 7 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 8 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-06-04 09:20:02 --> [Caused by] CodeIgniter\Database\Exceptions\DatabaseException: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'where mov_id = '3'' at line 1
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 332.
+ 1 SYSTEMPATH\Database\BaseConnection.php(738): CodeIgniter\Database\MySQLi\Connection->execute('update movies_details set status = \'9\', modify_on=NOW(), where mov_id = \'3\'')
+ 2 SYSTEMPATH\Database\BaseConnection.php(652): CodeIgniter\Database\BaseConnection->simpleQuery('update movies_details set status = \'9\', modify_on=NOW(), where mov_id = \'3\'')
+ 3 APPPATH\Models\MovieDetailsModel.php(37): CodeIgniter\Database\BaseConnection->query('update movies_details set status = \'9\', modify_on=NOW(), where mov_id = \'3\'')
+ 4 APPPATH\Controllers\MovieDetail.php(119): App\Models\MovieDetailsModel->deleteMovieDetailsById(9, '3')
+ 5 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\MovieDetail->deleteMovieDetails('3')
+ 6 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MovieDetail))
+ 7 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 8 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+ 9 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+10 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-06-04 09:20:02 --> [Caused by] mysqli_sql_exception: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'where mov_id = '3'' at line 1
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 327.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(327): mysqli->query('update movies_details set status = \'9\', modify_on=NOW(), where mov_id = \'3\'', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(738): CodeIgniter\Database\MySQLi\Connection->execute('update movies_details set status = \'9\', modify_on=NOW(), where mov_id = \'3\'')
+ 3 SYSTEMPATH\Database\BaseConnection.php(652): CodeIgniter\Database\BaseConnection->simpleQuery('update movies_details set status = \'9\', modify_on=NOW(), where mov_id = \'3\'')
+ 4 APPPATH\Models\MovieDetailsModel.php(37): CodeIgniter\Database\BaseConnection->query('update movies_details set status = \'9\', modify_on=NOW(), where mov_id = \'3\'')
+ 5 APPPATH\Controllers\MovieDetail.php(119): App\Models\MovieDetailsModel->deleteMovieDetailsById(9, '3')
+ 6 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\MovieDetail->deleteMovieDetails('3')
+ 7 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MovieDetail))
+ 8 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+ERROR - 2025-06-04 09:20:24 --> mysqli_sql_exception: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'where mov_id = '11'' at line 1 in C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\Database\MySQLi\Connection.php(327): mysqli->query('update movies_d...', 0)
+#1 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\Database\BaseConnection.php(738): CodeIgniter\Database\MySQLi\Connection->execute('update movies_d...')
+#2 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\Database\BaseConnection.php(652): CodeIgniter\Database\BaseConnection->simpleQuery('update movies_d...')
+#3 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\app\Models\MovieDetailsModel.php(37): CodeIgniter\Database\BaseConnection->query('update movies_d...')
+#4 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\app\Controllers\MovieDetail.php(119): App\Models\MovieDetailsModel->deleteMovieDetailsById(9, '11')
+#5 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\CodeIgniter.php(933): App\Controllers\MovieDetail->deleteMovieDetails('11')
+#6 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MovieDetail))
+#7 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#8 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\Boot.php(334): CodeIgniter\CodeIgniter->run()
+#9 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#10 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#11 {main}
+CRITICAL - 2025-06-04 09:20:24 --> CodeIgniter\Database\Exceptions\DatabaseException: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'where mov_id = '11'' at line 1
+[Method: POST, Route: movie/delete/11]
+in SYSTEMPATH\Database\BaseConnection.php on line 692.
+ 1 APPPATH\Models\MovieDetailsModel.php(37): CodeIgniter\Database\BaseConnection->query('update movies_details set status = \'9\', modify_on=NOW(), where mov_id = \'11\'')
+ 2 APPPATH\Controllers\MovieDetail.php(119): App\Models\MovieDetailsModel->deleteMovieDetailsById(9, '11')
+ 3 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\MovieDetail->deleteMovieDetails('11')
+ 4 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MovieDetail))
+ 5 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 6 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+ 7 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 8 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-06-04 09:20:24 --> [Caused by] CodeIgniter\Database\Exceptions\DatabaseException: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'where mov_id = '11'' at line 1
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 332.
+ 1 SYSTEMPATH\Database\BaseConnection.php(738): CodeIgniter\Database\MySQLi\Connection->execute('update movies_details set status = \'9\', modify_on=NOW(), where mov_id = \'11\'')
+ 2 SYSTEMPATH\Database\BaseConnection.php(652): CodeIgniter\Database\BaseConnection->simpleQuery('update movies_details set status = \'9\', modify_on=NOW(), where mov_id = \'11\'')
+ 3 APPPATH\Models\MovieDetailsModel.php(37): CodeIgniter\Database\BaseConnection->query('update movies_details set status = \'9\', modify_on=NOW(), where mov_id = \'11\'')
+ 4 APPPATH\Controllers\MovieDetail.php(119): App\Models\MovieDetailsModel->deleteMovieDetailsById(9, '11')
+ 5 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\MovieDetail->deleteMovieDetails('11')
+ 6 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MovieDetail))
+ 7 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 8 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+ 9 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+10 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-06-04 09:20:24 --> [Caused by] mysqli_sql_exception: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'where mov_id = '11'' at line 1
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 327.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(327): mysqli->query('update movies_details set status = \'9\', modify_on=NOW(), where mov_id = \'11\'', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(738): CodeIgniter\Database\MySQLi\Connection->execute('update movies_details set status = \'9\', modify_on=NOW(), where mov_id = \'11\'')
+ 3 SYSTEMPATH\Database\BaseConnection.php(652): CodeIgniter\Database\BaseConnection->simpleQuery('update movies_details set status = \'9\', modify_on=NOW(), where mov_id = \'11\'')
+ 4 APPPATH\Models\MovieDetailsModel.php(37): CodeIgniter\Database\BaseConnection->query('update movies_details set status = \'9\', modify_on=NOW(), where mov_id = \'11\'')
+ 5 APPPATH\Controllers\MovieDetail.php(119): App\Models\MovieDetailsModel->deleteMovieDetailsById(9, '11')
+ 6 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\MovieDetail->deleteMovieDetails('11')
+ 7 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MovieDetail))
+ 8 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+ERROR - 2025-06-04 09:20:29 --> mysqli_sql_exception: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'where mov_id = '11'' at line 1 in C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\Database\MySQLi\Connection.php(327): mysqli->query('update movies_d...', 0)
+#1 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\Database\BaseConnection.php(738): CodeIgniter\Database\MySQLi\Connection->execute('update movies_d...')
+#2 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\Database\BaseConnection.php(652): CodeIgniter\Database\BaseConnection->simpleQuery('update movies_d...')
+#3 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\app\Models\MovieDetailsModel.php(37): CodeIgniter\Database\BaseConnection->query('update movies_d...')
+#4 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\app\Controllers\MovieDetail.php(119): App\Models\MovieDetailsModel->deleteMovieDetailsById(9, '11')
+#5 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\CodeIgniter.php(933): App\Controllers\MovieDetail->deleteMovieDetails('11')
+#6 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MovieDetail))
+#7 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#8 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\Boot.php(334): CodeIgniter\CodeIgniter->run()
+#9 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#10 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#11 {main}
+CRITICAL - 2025-06-04 09:20:29 --> CodeIgniter\Database\Exceptions\DatabaseException: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'where mov_id = '11'' at line 1
+[Method: POST, Route: movie/delete/11]
+in SYSTEMPATH\Database\BaseConnection.php on line 692.
+ 1 APPPATH\Models\MovieDetailsModel.php(37): CodeIgniter\Database\BaseConnection->query('update movies_details set status = \'9\', modify_on=NOW(), where mov_id = \'11\'')
+ 2 APPPATH\Controllers\MovieDetail.php(119): App\Models\MovieDetailsModel->deleteMovieDetailsById(9, '11')
+ 3 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\MovieDetail->deleteMovieDetails('11')
+ 4 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MovieDetail))
+ 5 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 6 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+ 7 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 8 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-06-04 09:20:29 --> [Caused by] CodeIgniter\Database\Exceptions\DatabaseException: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'where mov_id = '11'' at line 1
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 332.
+ 1 SYSTEMPATH\Database\BaseConnection.php(738): CodeIgniter\Database\MySQLi\Connection->execute('update movies_details set status = \'9\', modify_on=NOW(), where mov_id = \'11\'')
+ 2 SYSTEMPATH\Database\BaseConnection.php(652): CodeIgniter\Database\BaseConnection->simpleQuery('update movies_details set status = \'9\', modify_on=NOW(), where mov_id = \'11\'')
+ 3 APPPATH\Models\MovieDetailsModel.php(37): CodeIgniter\Database\BaseConnection->query('update movies_details set status = \'9\', modify_on=NOW(), where mov_id = \'11\'')
+ 4 APPPATH\Controllers\MovieDetail.php(119): App\Models\MovieDetailsModel->deleteMovieDetailsById(9, '11')
+ 5 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\MovieDetail->deleteMovieDetails('11')
+ 6 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MovieDetail))
+ 7 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 8 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+ 9 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+10 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-06-04 09:20:29 --> [Caused by] mysqli_sql_exception: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'where mov_id = '11'' at line 1
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 327.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(327): mysqli->query('update movies_details set status = \'9\', modify_on=NOW(), where mov_id = \'11\'', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(738): CodeIgniter\Database\MySQLi\Connection->execute('update movies_details set status = \'9\', modify_on=NOW(), where mov_id = \'11\'')
+ 3 SYSTEMPATH\Database\BaseConnection.php(652): CodeIgniter\Database\BaseConnection->simpleQuery('update movies_details set status = \'9\', modify_on=NOW(), where mov_id = \'11\'')
+ 4 APPPATH\Models\MovieDetailsModel.php(37): CodeIgniter\Database\BaseConnection->query('update movies_details set status = \'9\', modify_on=NOW(), where mov_id = \'11\'')
+ 5 APPPATH\Controllers\MovieDetail.php(119): App\Models\MovieDetailsModel->deleteMovieDetailsById(9, '11')
+ 6 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\MovieDetail->deleteMovieDetails('11')
+ 7 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MovieDetail))
+ 8 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+ERROR - 2025-06-04 09:20:52 --> mysqli_sql_exception: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'where mov_id = '11'' at line 1 in C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\Database\MySQLi\Connection.php(327): mysqli->query('update movies_d...', 0)
+#1 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\Database\BaseConnection.php(738): CodeIgniter\Database\MySQLi\Connection->execute('update movies_d...')
+#2 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\Database\BaseConnection.php(652): CodeIgniter\Database\BaseConnection->simpleQuery('update movies_d...')
+#3 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\app\Models\MovieDetailsModel.php(37): CodeIgniter\Database\BaseConnection->query('update movies_d...')
+#4 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\app\Controllers\MovieDetail.php(119): App\Models\MovieDetailsModel->deleteMovieDetailsById(9, '11')
+#5 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\CodeIgniter.php(933): App\Controllers\MovieDetail->deleteMovieDetails('11')
+#6 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MovieDetail))
+#7 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#8 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\Boot.php(334): CodeIgniter\CodeIgniter->run()
+#9 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#10 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#11 {main}
+CRITICAL - 2025-06-04 09:20:52 --> CodeIgniter\Database\Exceptions\DatabaseException: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'where mov_id = '11'' at line 1
+[Method: POST, Route: movie/delete/11]
+in SYSTEMPATH\Database\BaseConnection.php on line 692.
+ 1 APPPATH\Models\MovieDetailsModel.php(37): CodeIgniter\Database\BaseConnection->query('update movies_details set status = \'9\', modify_on=NOW(), where mov_id = \'11\'')
+ 2 APPPATH\Controllers\MovieDetail.php(119): App\Models\MovieDetailsModel->deleteMovieDetailsById(9, '11')
+ 3 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\MovieDetail->deleteMovieDetails('11')
+ 4 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MovieDetail))
+ 5 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 6 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+ 7 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 8 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-06-04 09:20:52 --> [Caused by] CodeIgniter\Database\Exceptions\DatabaseException: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'where mov_id = '11'' at line 1
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 332.
+ 1 SYSTEMPATH\Database\BaseConnection.php(738): CodeIgniter\Database\MySQLi\Connection->execute('update movies_details set status = \'9\', modify_on=NOW(), where mov_id = \'11\'')
+ 2 SYSTEMPATH\Database\BaseConnection.php(652): CodeIgniter\Database\BaseConnection->simpleQuery('update movies_details set status = \'9\', modify_on=NOW(), where mov_id = \'11\'')
+ 3 APPPATH\Models\MovieDetailsModel.php(37): CodeIgniter\Database\BaseConnection->query('update movies_details set status = \'9\', modify_on=NOW(), where mov_id = \'11\'')
+ 4 APPPATH\Controllers\MovieDetail.php(119): App\Models\MovieDetailsModel->deleteMovieDetailsById(9, '11')
+ 5 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\MovieDetail->deleteMovieDetails('11')
+ 6 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MovieDetail))
+ 7 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 8 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+ 9 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+10 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-06-04 09:20:52 --> [Caused by] mysqli_sql_exception: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'where mov_id = '11'' at line 1
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 327.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(327): mysqli->query('update movies_details set status = \'9\', modify_on=NOW(), where mov_id = \'11\'', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(738): CodeIgniter\Database\MySQLi\Connection->execute('update movies_details set status = \'9\', modify_on=NOW(), where mov_id = \'11\'')
+ 3 SYSTEMPATH\Database\BaseConnection.php(652): CodeIgniter\Database\BaseConnection->simpleQuery('update movies_details set status = \'9\', modify_on=NOW(), where mov_id = \'11\'')
+ 4 APPPATH\Models\MovieDetailsModel.php(37): CodeIgniter\Database\BaseConnection->query('update movies_details set status = \'9\', modify_on=NOW(), where mov_id = \'11\'')
+ 5 APPPATH\Controllers\MovieDetail.php(119): App\Models\MovieDetailsModel->deleteMovieDetailsById(9, '11')
+ 6 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\MovieDetail->deleteMovieDetails('11')
+ 7 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MovieDetail))
+ 8 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+ERROR - 2025-06-04 09:22:55 --> mysqli_sql_exception: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'where mov_id = '12'' at line 1 in C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\Database\MySQLi\Connection.php(327): mysqli->query('update movies_d...', 0)
+#1 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\Database\BaseConnection.php(738): CodeIgniter\Database\MySQLi\Connection->execute('update movies_d...')
+#2 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\Database\BaseConnection.php(652): CodeIgniter\Database\BaseConnection->simpleQuery('update movies_d...')
+#3 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\app\Models\MovieDetailsModel.php(37): CodeIgniter\Database\BaseConnection->query('update movies_d...')
+#4 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\app\Controllers\MovieDetail.php(119): App\Models\MovieDetailsModel->deleteMovieDetailsById(9, '12')
+#5 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\CodeIgniter.php(933): App\Controllers\MovieDetail->deleteMovieDetails()
+#6 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MovieDetail))
+#7 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#8 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\Boot.php(334): CodeIgniter\CodeIgniter->run()
+#9 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#10 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#11 {main}
+CRITICAL - 2025-06-04 09:22:55 --> CodeIgniter\Database\Exceptions\DatabaseException: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'where mov_id = '12'' at line 1
+[Method: POST, Route: movie/delete]
+in SYSTEMPATH\Database\BaseConnection.php on line 692.
+ 1 APPPATH\Models\MovieDetailsModel.php(37): CodeIgniter\Database\BaseConnection->query('update movies_details set status = \'9\', modify_on=NOW(), where mov_id = \'12\'')
+ 2 APPPATH\Controllers\MovieDetail.php(119): App\Models\MovieDetailsModel->deleteMovieDetailsById(9, '12')
+ 3 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\MovieDetail->deleteMovieDetails()
+ 4 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MovieDetail))
+ 5 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 6 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+ 7 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 8 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-06-04 09:22:55 --> [Caused by] CodeIgniter\Database\Exceptions\DatabaseException: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'where mov_id = '12'' at line 1
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 332.
+ 1 SYSTEMPATH\Database\BaseConnection.php(738): CodeIgniter\Database\MySQLi\Connection->execute('update movies_details set status = \'9\', modify_on=NOW(), where mov_id = \'12\'')
+ 2 SYSTEMPATH\Database\BaseConnection.php(652): CodeIgniter\Database\BaseConnection->simpleQuery('update movies_details set status = \'9\', modify_on=NOW(), where mov_id = \'12\'')
+ 3 APPPATH\Models\MovieDetailsModel.php(37): CodeIgniter\Database\BaseConnection->query('update movies_details set status = \'9\', modify_on=NOW(), where mov_id = \'12\'')
+ 4 APPPATH\Controllers\MovieDetail.php(119): App\Models\MovieDetailsModel->deleteMovieDetailsById(9, '12')
+ 5 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\MovieDetail->deleteMovieDetails()
+ 6 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MovieDetail))
+ 7 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 8 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+ 9 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+10 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-06-04 09:22:55 --> [Caused by] mysqli_sql_exception: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'where mov_id = '12'' at line 1
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 327.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(327): mysqli->query('update movies_details set status = \'9\', modify_on=NOW(), where mov_id = \'12\'', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(738): CodeIgniter\Database\MySQLi\Connection->execute('update movies_details set status = \'9\', modify_on=NOW(), where mov_id = \'12\'')
+ 3 SYSTEMPATH\Database\BaseConnection.php(652): CodeIgniter\Database\BaseConnection->simpleQuery('update movies_details set status = \'9\', modify_on=NOW(), where mov_id = \'12\'')
+ 4 APPPATH\Models\MovieDetailsModel.php(37): CodeIgniter\Database\BaseConnection->query('update movies_details set status = \'9\', modify_on=NOW(), where mov_id = \'12\'')
+ 5 APPPATH\Controllers\MovieDetail.php(119): App\Models\MovieDetailsModel->deleteMovieDetailsById(9, '12')
+ 6 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\MovieDetail->deleteMovieDetails()
+ 7 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MovieDetail))
+ 8 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+ERROR - 2025-06-04 09:27:20 --> mysqli_sql_exception: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'where mov_id = '12'' at line 1 in C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\Database\MySQLi\Connection.php(327): mysqli->query('update movies_d...', 0)
+#1 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\Database\BaseConnection.php(738): CodeIgniter\Database\MySQLi\Connection->execute('update movies_d...')
+#2 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\Database\BaseConnection.php(652): CodeIgniter\Database\BaseConnection->simpleQuery('update movies_d...')
+#3 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\app\Models\MovieDetailsModel.php(37): CodeIgniter\Database\BaseConnection->query('update movies_d...')
+#4 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\app\Controllers\MovieDetail.php(121): App\Models\MovieDetailsModel->deleteMovieDetailsById(9, '12')
+#5 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\CodeIgniter.php(933): App\Controllers\MovieDetail->deleteMovieDetails()
+#6 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MovieDetail))
+#7 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#8 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\Boot.php(334): CodeIgniter\CodeIgniter->run()
+#9 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\system\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#10 C:\xampp\htdocs\Cukkuboo\cukkuboo-php\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#11 {main}
+CRITICAL - 2025-06-04 09:27:20 --> CodeIgniter\Database\Exceptions\DatabaseException: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'where mov_id = '12'' at line 1
+[Method: POST, Route: movie/delete]
+in SYSTEMPATH\Database\BaseConnection.php on line 692.
+ 1 APPPATH\Models\MovieDetailsModel.php(37): CodeIgniter\Database\BaseConnection->query('update movies_details set status = \'9\', modify_on=NOW(), where mov_id = \'12\'')
+ 2 APPPATH\Controllers\MovieDetail.php(121): App\Models\MovieDetailsModel->deleteMovieDetailsById(9, '12')
+ 3 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\MovieDetail->deleteMovieDetails()
+ 4 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MovieDetail))
+ 5 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 6 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+ 7 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 8 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-06-04 09:27:20 --> [Caused by] CodeIgniter\Database\Exceptions\DatabaseException: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'where mov_id = '12'' at line 1
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 332.
+ 1 SYSTEMPATH\Database\BaseConnection.php(738): CodeIgniter\Database\MySQLi\Connection->execute('update movies_details set status = \'9\', modify_on=NOW(), where mov_id = \'12\'')
+ 2 SYSTEMPATH\Database\BaseConnection.php(652): CodeIgniter\Database\BaseConnection->simpleQuery('update movies_details set status = \'9\', modify_on=NOW(), where mov_id = \'12\'')
+ 3 APPPATH\Models\MovieDetailsModel.php(37): CodeIgniter\Database\BaseConnection->query('update movies_details set status = \'9\', modify_on=NOW(), where mov_id = \'12\'')
+ 4 APPPATH\Controllers\MovieDetail.php(121): App\Models\MovieDetailsModel->deleteMovieDetailsById(9, '12')
+ 5 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\MovieDetail->deleteMovieDetails()
+ 6 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MovieDetail))
+ 7 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 8 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+ 9 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+10 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-06-04 09:27:20 --> [Caused by] mysqli_sql_exception: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'where mov_id = '12'' at line 1
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 327.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(327): mysqli->query('update movies_details set status = \'9\', modify_on=NOW(), where mov_id = \'12\'', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(738): CodeIgniter\Database\MySQLi\Connection->execute('update movies_details set status = \'9\', modify_on=NOW(), where mov_id = \'12\'')
+ 3 SYSTEMPATH\Database\BaseConnection.php(652): CodeIgniter\Database\BaseConnection->simpleQuery('update movies_details set status = \'9\', modify_on=NOW(), where mov_id = \'12\'')
+ 4 APPPATH\Models\MovieDetailsModel.php(37): CodeIgniter\Database\BaseConnection->query('update movies_details set status = \'9\', modify_on=NOW(), where mov_id = \'12\'')
+ 5 APPPATH\Controllers\MovieDetail.php(121): App\Models\MovieDetailsModel->deleteMovieDetailsById(9, '12')
+ 6 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\MovieDetail->deleteMovieDetails()
+ 7 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MovieDetail))
+ 8 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-06-04 09:43:50 --> Error: Class "App\Libraries\UserModel" not found
+[Method: POST, Route: upload-video]
+in APPPATH\Libraries\AuthService.php on line 14.
+ 1 APPPATH\Controllers\Uploads.php(20): App\Libraries\AuthService->__construct()
+ 2 SYSTEMPATH\CodeIgniter.php(903): App\Controllers\Uploads->__construct()
+ 3 SYSTEMPATH\CodeIgniter.php(498): CodeIgniter\CodeIgniter->createController()
+ 4 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 5 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+ 6 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 7 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-06-04 09:47:24 --> Error: Class "App\Libraries\UserModel" not found
+[Method: POST, Route: upload-video]
+in APPPATH\Libraries\AuthService.php on line 14.
+ 1 APPPATH\Controllers\Uploads.php(20): App\Libraries\AuthService->__construct()
+ 2 SYSTEMPATH\CodeIgniter.php(903): App\Controllers\Uploads->__construct()
+ 3 SYSTEMPATH\CodeIgniter.php(498): CodeIgniter\CodeIgniter->createController()
+ 4 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 5 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+ 6 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 7 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-06-04 09:48:19 --> Error: Class "App\Libraries\UserModel" not found
+[Method: POST, Route: upload-video]
+in APPPATH\Libraries\AuthService.php on line 14.
+ 1 APPPATH\Controllers\Uploads.php(20): App\Libraries\AuthService->__construct()
+ 2 SYSTEMPATH\CodeIgniter.php(903): App\Controllers\Uploads->__construct()
+ 3 SYSTEMPATH\CodeIgniter.php(498): CodeIgniter\CodeIgniter->createController()
+ 4 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 5 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+ 6 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 7 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-06-04 09:48:22 --> Error: Class "App\Libraries\UserModel" not found
+[Method: POST, Route: upload-video]
+in APPPATH\Libraries\AuthService.php on line 14.
+ 1 APPPATH\Controllers\Uploads.php(20): App\Libraries\AuthService->__construct()
+ 2 SYSTEMPATH\CodeIgniter.php(903): App\Controllers\Uploads->__construct()
+ 3 SYSTEMPATH\CodeIgniter.php(498): CodeIgniter\CodeIgniter->createController()
+ 4 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 5 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+ 6 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 7 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-06-04 09:48:35 --> Error: Class "App\Libraries\UserModel" not found
+[Method: POST, Route: upload-video]
+in APPPATH\Libraries\AuthService.php on line 14.
+ 1 APPPATH\Controllers\Uploads.php(20): App\Libraries\AuthService->__construct()
+ 2 SYSTEMPATH\CodeIgniter.php(903): App\Controllers\Uploads->__construct()
+ 3 SYSTEMPATH\CodeIgniter.php(498): CodeIgniter\CodeIgniter->createController()
+ 4 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 5 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+ 6 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 7 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-06-04 09:50:07 --> Error: Class "App\Controllers\TokenVerifyModel" not found
+[Method: POST, Route: upload-video]
+in APPPATH\Controllers\Uploads.php on line 19.
+ 1 SYSTEMPATH\CodeIgniter.php(903): App\Controllers\Uploads->__construct()
+ 2 SYSTEMPATH\CodeIgniter.php(498): CodeIgniter\CodeIgniter->createController()
+ 3 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 4 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+ 5 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 6 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-06-04 09:50:28 --> Error: Class "App\Libraries\UserModel" not found
+[Method: POST, Route: upload-video]
+in APPPATH\Libraries\AuthService.php on line 14.
+ 1 APPPATH\Controllers\Uploads.php(20): App\Libraries\AuthService->__construct()
+ 2 SYSTEMPATH\CodeIgniter.php(903): App\Controllers\Uploads->__construct()
+ 3 SYSTEMPATH\CodeIgniter.php(498): CodeIgniter\CodeIgniter->createController()
+ 4 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 5 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+ 6 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 7 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-06-04 09:51:16 --> Error: Class "App\Libraries\UserModel" not found
+[Method: POST, Route: upload-video]
+in APPPATH\Libraries\AuthService.php on line 14.
+ 1 APPPATH\Controllers\Uploads.php(22): App\Libraries\AuthService->__construct()
+ 2 SYSTEMPATH\CodeIgniter.php(903): App\Controllers\Uploads->__construct()
+ 3 SYSTEMPATH\CodeIgniter.php(498): CodeIgniter\CodeIgniter->createController()
+ 4 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 5 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+ 6 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 7 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-06-04 09:51:46 --> Error: Class "App\Libraries\UserModel" not found
+[Method: POST, Route: upload-video]
+in APPPATH\Libraries\AuthService.php on line 14.
+ 1 APPPATH\Controllers\Uploads.php(22): App\Libraries\AuthService->__construct()
+ 2 SYSTEMPATH\CodeIgniter.php(903): App\Controllers\Uploads->__construct()
+ 3 SYSTEMPATH\CodeIgniter.php(498): CodeIgniter\CodeIgniter->createController()
+ 4 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 5 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+ 6 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 7 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-06-04 09:52:29 --> Error: Class "App\Libraries\Key" not found
+[Method: POST, Route: upload-video]
+in APPPATH\Libraries\JWT.php on line 35.
+ 1 APPPATH\Libraries\AuthService.php(28): App\Libraries\Jwt->decode('eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3NDkwMjM5MzksImV4cCI6MTc0OTAyNzUzOSwiZGF0YSI6eyJ1c2VyX2lkIjoiMzIifX0.grUl_P9pzPZitXtvU_ZziknECIBYKavS6DR-MrJ41S0')
+ 2 APPPATH\Controllers\Uploads.php(30): App\Libraries\AuthService->getAuthenticatedUser('Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3NDkwMjM5MzksImV4cCI6MTc0OTAyNzUzOSwiZGF0YSI6eyJ1c2VyX2lkIjoiMzIifX0.grUl_P9pzPZitXtvU_ZziknECIBYKavS6DR-MrJ41S0')
+ 3 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Uploads->uploadVideo()
+ 4 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Uploads))
+ 5 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 6 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+ 7 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 8 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-06-04 10:01:34 --> ErrorException: Undefined variable $user
+[Method: POST, Route: upload-video]
+in APPPATH\Controllers\Uploads.php on line 29.
+ 1 APPPATH\Controllers\Uploads.php(29): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined variable $user', 'C:\\xampp\\htdocs\\Cukkuboo\\cukkuboo-php\\app\\Controllers\\Uploads.php', 29)
+ 2 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Uploads->uploadVideo()
+ 3 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Uploads))
+ 4 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 5 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+ 6 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 7 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-06-04 10:34:38 --> ErrorException: Undefined variable $userId
+[Method: POST, Route: upload-video]
+in APPPATH\Controllers\Uploads.php on line 42.
+ 1 APPPATH\Controllers\Uploads.php(42): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined variable $userId', 'C:\\xampp\\htdocs\\Cukkuboo\\cukkuboo-php\\app\\Controllers\\Uploads.php', 42)
+ 2 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Uploads->uploadVideo()
+ 3 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Uploads))
+ 4 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 5 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+ 6 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 7 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-06-04 10:38:00 --> ErrorException: Undefined variable $userId
+[Method: POST, Route: upload-video]
+in APPPATH\Controllers\Uploads.php on line 43.
+ 1 APPPATH\Controllers\Uploads.php(43): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined variable $userId', 'C:\\xampp\\htdocs\\Cukkuboo\\cukkuboo-php\\app\\Controllers\\Uploads.php', 43)
+ 2 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Uploads->uploadVideo()
+ 3 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Uploads))
+ 4 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 5 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+ 6 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 7 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-06-04 10:39:02 --> ErrorException: Undefined variable $userId
+[Method: POST, Route: upload-video]
+in APPPATH\Controllers\Uploads.php on line 43.
+ 1 APPPATH\Controllers\Uploads.php(43): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined variable $userId', 'C:\\xampp\\htdocs\\Cukkuboo\\cukkuboo-php\\app\\Controllers\\Uploads.php', 43)
+ 2 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Uploads->uploadVideo()
+ 3 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Uploads))
+ 4 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 5 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+ 6 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 7 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-06-04 10:40:16 --> ErrorException: Undefined variable $userId
+[Method: POST, Route: upload-video]
+in APPPATH\Controllers\Uploads.php on line 38.
+ 1 APPPATH\Controllers\Uploads.php(38): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined variable $userId', 'C:\\xampp\\htdocs\\Cukkuboo\\cukkuboo-php\\app\\Controllers\\Uploads.php', 38)
+ 2 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Uploads->uploadVideo()
+ 3 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Uploads))
+ 4 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 5 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+ 6 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 7 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-06-04 10:41:59 --> ErrorException: Undefined variable $userId
+[Method: POST, Route: upload-video]
+in APPPATH\Controllers\Uploads.php on line 38.
+ 1 APPPATH\Controllers\Uploads.php(38): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined variable $userId', 'C:\\xampp\\htdocs\\Cukkuboo\\cukkuboo-php\\app\\Controllers\\Uploads.php', 38)
+ 2 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Uploads->uploadVideo()
+ 3 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Uploads))
+ 4 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 5 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+ 6 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 7 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-06-04 10:56:45 --> ErrorException: ini_set(): Session ini settings cannot be changed after headers have already been sent
+[Method: POST, Route: upload-video]
+in SYSTEMPATH\Session\Handlers\FileHandler.php on line 74.
+ 1 [internal function]: CodeIgniter\Debug\Exceptions->errorHandler(2, 'ini_set(): Session ini settings cannot be changed after headers have already been sent', 'C:\\xampp\\htdocs\\Cukkuboo\\cukkuboo-php\\system\\Session\\Handlers\\FileHandler.php', 74)
+ 2 SYSTEMPATH\Session\Handlers\FileHandler.php(74): ini_set('session.save_path', 'C:\\xampp\\htdocs\\Cukkuboo\\cukkuboo-php\\writable\\session')
+ 3 SYSTEMPATH\Config\Services.php(697): CodeIgniter\Session\Handlers\FileHandler->__construct(Object(Config\Session), '::1')
+ 4 SYSTEMPATH\Config\BaseService.php(312): CodeIgniter\Config\Services::session(Object(Config\Session), false)
+ 5 SYSTEMPATH\Config\BaseService.php(251): CodeIgniter\Config\BaseService::__callStatic('session', [...])
+ 6 SYSTEMPATH\Config\Services.php(668): CodeIgniter\Config\BaseService::getSharedInstance('session', null)
+ 7 SYSTEMPATH\Config\BaseService.php(321): CodeIgniter\Config\Services::session()
+ 8 APPPATH\Controllers\Uploads.php(17): CodeIgniter\Config\BaseService::__callStatic('session', [])
+ 9 SYSTEMPATH\CodeIgniter.php(903): App\Controllers\Uploads->__construct()
+10 SYSTEMPATH\CodeIgniter.php(498): CodeIgniter\CodeIgniter->createController()
+11 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+12 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+13 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+14 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-06-04 11:20:19 --> ErrorException: ini_set(): Session ini settings cannot be changed after headers have already been sent
+[Method: POST, Route: upload-video]
+in SYSTEMPATH\Session\Handlers\FileHandler.php on line 74.
+ 1 [internal function]: CodeIgniter\Debug\Exceptions->errorHandler(2, 'ini_set(): Session ini settings cannot be changed after headers have already been sent', 'C:\\xampp\\htdocs\\Cukkuboo\\cukkuboo-php\\system\\Session\\Handlers\\FileHandler.php', 74)
+ 2 SYSTEMPATH\Session\Handlers\FileHandler.php(74): ini_set('session.save_path', 'C:\\xampp\\htdocs\\Cukkuboo\\cukkuboo-php\\writable\\session')
+ 3 SYSTEMPATH\Config\Services.php(697): CodeIgniter\Session\Handlers\FileHandler->__construct(Object(Config\Session), '::1')
+ 4 SYSTEMPATH\Config\BaseService.php(312): CodeIgniter\Config\Services::session(Object(Config\Session), false)
+ 5 SYSTEMPATH\Config\BaseService.php(251): CodeIgniter\Config\BaseService::__callStatic('session', [...])
+ 6 SYSTEMPATH\Config\Services.php(668): CodeIgniter\Config\BaseService::getSharedInstance('session', null)
+ 7 SYSTEMPATH\Config\BaseService.php(321): CodeIgniter\Config\Services::session()
+ 8 APPPATH\Controllers\Uploads.php(17): CodeIgniter\Config\BaseService::__callStatic('session', [])
+ 9 SYSTEMPATH\CodeIgniter.php(903): App\Controllers\Uploads->__construct()
+10 SYSTEMPATH\CodeIgniter.php(498): CodeIgniter\CodeIgniter->createController()
+11 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+12 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+13 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+14 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-06-04 11:20:32 --> ErrorException: ini_set(): Session ini settings cannot be changed after headers have already been sent
+[Method: POST, Route: upload-video]
+in SYSTEMPATH\Session\Handlers\FileHandler.php on line 74.
+ 1 [internal function]: CodeIgniter\Debug\Exceptions->errorHandler(2, 'ini_set(): Session ini settings cannot be changed after headers have already been sent', 'C:\\xampp\\htdocs\\Cukkuboo\\cukkuboo-php\\system\\Session\\Handlers\\FileHandler.php', 74)
+ 2 SYSTEMPATH\Session\Handlers\FileHandler.php(74): ini_set('session.save_path', 'C:\\xampp\\htdocs\\Cukkuboo\\cukkuboo-php\\writable\\session')
+ 3 SYSTEMPATH\Config\Services.php(697): CodeIgniter\Session\Handlers\FileHandler->__construct(Object(Config\Session), '::1')
+ 4 SYSTEMPATH\Config\BaseService.php(312): CodeIgniter\Config\Services::session(Object(Config\Session), false)
+ 5 SYSTEMPATH\Config\BaseService.php(251): CodeIgniter\Config\BaseService::__callStatic('session', [...])
+ 6 SYSTEMPATH\Config\Services.php(668): CodeIgniter\Config\BaseService::getSharedInstance('session', null)
+ 7 SYSTEMPATH\Config\BaseService.php(321): CodeIgniter\Config\Services::session()
+ 8 APPPATH\Controllers\Uploads.php(17): CodeIgniter\Config\BaseService::__callStatic('session', [])
+ 9 SYSTEMPATH\CodeIgniter.php(903): App\Controllers\Uploads->__construct()
+10 SYSTEMPATH\CodeIgniter.php(498): CodeIgniter\CodeIgniter->createController()
+11 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+12 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+13 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+14 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-06-04 11:31:02 --> ErrorException: ini_set(): Session ini settings cannot be changed after headers have already been sent
+[Method: POST, Route: upload-video]
+in SYSTEMPATH\Session\Handlers\FileHandler.php on line 74.
+ 1 [internal function]: CodeIgniter\Debug\Exceptions->errorHandler(2, 'ini_set(): Session ini settings cannot be changed after headers have already been sent', 'C:\\xampp\\htdocs\\Cukkuboo\\cukkuboo-php\\system\\Session\\Handlers\\FileHandler.php', 74)
+ 2 SYSTEMPATH\Session\Handlers\FileHandler.php(74): ini_set('session.save_path', 'C:\\xampp\\htdocs\\Cukkuboo\\cukkuboo-php\\writable\\session')
+ 3 SYSTEMPATH\Config\Services.php(697): CodeIgniter\Session\Handlers\FileHandler->__construct(Object(Config\Session), '::1')
+ 4 SYSTEMPATH\Config\BaseService.php(312): CodeIgniter\Config\Services::session(Object(Config\Session), false)
+ 5 SYSTEMPATH\Config\BaseService.php(251): CodeIgniter\Config\BaseService::__callStatic('session', [...])
+ 6 SYSTEMPATH\Config\Services.php(668): CodeIgniter\Config\BaseService::getSharedInstance('session', null)
+ 7 SYSTEMPATH\Config\BaseService.php(321): CodeIgniter\Config\Services::session()
+ 8 APPPATH\Controllers\Uploads.php(17): CodeIgniter\Config\BaseService::__callStatic('session', [])
+ 9 SYSTEMPATH\CodeIgniter.php(903): App\Controllers\Uploads->__construct()
+10 SYSTEMPATH\CodeIgniter.php(498): CodeIgniter\CodeIgniter->createController()
+11 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+12 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+13 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+14 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-06-04 11:32:13 --> ErrorException: ini_set(): Session ini settings cannot be changed after headers have already been sent
+[Method: POST, Route: upload-video]
+in SYSTEMPATH\Session\Handlers\FileHandler.php on line 74.
+ 1 [internal function]: CodeIgniter\Debug\Exceptions->errorHandler(2, 'ini_set(): Session ini settings cannot be changed after headers have already been sent', 'C:\\xampp\\htdocs\\Cukkuboo\\cukkuboo-php\\system\\Session\\Handlers\\FileHandler.php', 74)
+ 2 SYSTEMPATH\Session\Handlers\FileHandler.php(74): ini_set('session.save_path', 'C:\\xampp\\htdocs\\Cukkuboo\\cukkuboo-php\\writable\\session')
+ 3 SYSTEMPATH\Config\Services.php(697): CodeIgniter\Session\Handlers\FileHandler->__construct(Object(Config\Session), '::1')
+ 4 SYSTEMPATH\Config\BaseService.php(312): CodeIgniter\Config\Services::session(Object(Config\Session), false)
+ 5 SYSTEMPATH\Config\BaseService.php(251): CodeIgniter\Config\BaseService::__callStatic('session', [...])
+ 6 SYSTEMPATH\Config\Services.php(668): CodeIgniter\Config\BaseService::getSharedInstance('session', null)
+ 7 SYSTEMPATH\Config\BaseService.php(321): CodeIgniter\Config\Services::session()
+ 8 APPPATH\Controllers\Uploads.php(17): CodeIgniter\Config\BaseService::__callStatic('session', [])
+ 9 SYSTEMPATH\CodeIgniter.php(903): App\Controllers\Uploads->__construct()
+10 SYSTEMPATH\CodeIgniter.php(498): CodeIgniter\CodeIgniter->createController()
+11 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+12 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+13 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+14 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))

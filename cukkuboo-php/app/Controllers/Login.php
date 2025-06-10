@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Models\LoginModel;
 use App\Libraries\Jwt;
+use App\Config\Email;
 
 class Login extends BaseController
 {
@@ -15,46 +16,32 @@ class Login extends BaseController
     }
 
     public function loginFun()
-    {
-        $data = $this->request->getJSON(true);
-        
-        if (!isset($data['email']) || !isset($data['password'])) {
-            return $this->response->setStatusCode(400)->setJSON([
-                'status' => false,
-                'message' => 'Email and password are required.'
-            ]);
-        }
+{
+    $data = $this->request->getJSON(true);
 
-        $user = $this->loginModel->findUserByEmail($data['email']);
+    if (!isset($data['email']) || !isset($data['password'])) {
+        return $this->response->setJSON([
+            'status' => false,
+            'message' => 'Email and password are required.'
+        ]);
+    }
 
-        if (!$user || !password_verify($data['password'], $user['password'])) {
-            return $this->response->setStatusCode(401)->setJSON([
-                'status' => false,
-                'message' => 'Invalid email or password'
-            ]);
-        }
+    $user = $this->loginModel->where('email', $data['email'])->first();
 
-        // Generate JWT token
-        $jwt = new Jwt();
-        $token = $jwt->encode(['user_id' => $user['user_id']]);
-        $now = date('Y-m-d H:i:s');
+    if (!$user || !password_verify($data['password'], $user['password'])) {
+        return $this->response->setStatusCode(200)->setJSON([
+            'status' => false,
+            'message' => 'Invalid email or password.'
+        ]);
+    }
 
-        // Prepare update data
-        $updateData = [
-            'last_login' => $now,
-            'jwt_token' => $token,
-        ];
+    $now = date('Y-m-d H:i:s');
 
-        // If fcm_token is provided, store it
-        if (!empty($data['fcm_token'])) {
-            $updateData['fcm_token'] = $data['fcm_token'];
-        }
-
-        $this->loginModel->updateLoginData($user['user_id'], $updateData);
-
+    // Login Type 1: No fcm_token → just return existing token, no update
+    if (empty($data['fcm_token'])) {
         return $this->response->setJSON([
             'status' => true,
-            'message' => 'Login successful',
+            'message' => 'Login successful (type 1)',
             'user' => [
                 'user_id' => 'user' . $user['user_id'],
                 'username' => $user['username'],
@@ -66,43 +53,228 @@ class Login extends BaseController
                 'date' => date('Y-m-d'),
                 'createdAt' => $user['created_at'],
                 'updatedAt' => $user['updated_at'],
-                'lastLogin' => $now,
-                'jwt_token'=>$user['jwt_token']
+                'lastLogin' => $user['last_login'],
+                'jwt_token' => $user['jwt_token']
             ]
         ]);
     }
 
+    // Login Type 2: Email + Password + fcm_token → update token and fcm_token
+    $jwt = new Jwt();
+    $token = $jwt->encode(['user_id' => $user['user_id']]);
+
+    $updateData = [
+        'jwt_token' => $token,
+        'last_login' => $now,
+        'fcm_token' => $data['fcm_token']
+    ];
+
+    $this->loginModel->update($user['user_id'], $updateData);
+
+    return $this->response->setJSON([
+        'status' => true,
+        'message' => 'Login successful (type 2)',
+        'user' => [
+            'user_id' => 'user' . $user['user_id'],
+            'username' => $user['username'],
+            'phone' => $user['phone'],
+            'email' => $user['email'],
+            'isBlocked' => $user['status'] !== 'active',
+            'subscription' => $user['subscription'],
+            'user_type' => $user['user_type'],
+            'date' => date('Y-m-d'),
+            'createdAt' => $user['created_at'],
+            'updatedAt' => $user['updated_at'],
+            'lastLogin' => $now,
+            'jwt_token' => $token,
+            'fcm_token' => $data['fcm_token']
+        ]
+    ]);
+}
+
+    // public function logout()
+    // {
+    //     // Clear all tokens from all users (or apply condition if needed)
+    //     $this->loginModel->updateAllTokensNull();
+
+    //     return $this->response->setJSON([
+    //         'status' => true,
+    //         'message' => 'Logout successful.'
+    //     ]);
+    // }
     public function logout()
-    {
-        $data = $this->request->getJSON(true);
+{
+    $authHeader = $this->request->getHeaderLine('Authorization');
 
-        if (!isset($data['email'])) {
-            return $this->response->setStatusCode(400)->setJSON([
-                'status' => false,
-                'message' => 'Email is required to logout.'
-            ]);
-        }
-
-        $user = $this->loginModel->findUserByEmail($data['email']);
-
-        if (!$user) {
-            return $this->response->setStatusCode(404)->setJSON([
-                'status' => false,
-                'message' => 'User not found.'
-            ]);
-        }
-
-        // Generate a new JWT to invalidate old one
-        $jwt = new Jwt();
-        $newToken = $jwt->encode(['user_id' => $user['user_id'], 'logout' => true]);
-
-        $this->loginModel->updateLoginData($user['user_id'], [
-            'jwt_token' => $newToken
-        ]);
-
+    if (!$authHeader || !preg_match('/Bearer\s(\S+)/', $authHeader, $matches)) {
         return $this->response->setJSON([
-            'status' => true,
-            'message' => 'Logout successful. Token has been updated.'
+            'status' => false,
+            'message' => 'Authorization token missing or invalid.'
         ]);
     }
+
+    $token = $matches[1];
+
+    // Find user by token
+    $user = $this->loginModel->where('jwt_token', $token)->first();
+
+    if (!$user) {
+        return $this->response->setJSON([
+            'status' => false,
+            'message' => 'Invalid token or user not found.'
+        ]);
+    }
+
+    // Clear the token from the DB
+    $this->loginModel->update($user['user_id'], ['jwt_token' => null]);
+
+    return $this->response->setJSON([
+        'status' => true,
+        'message' => 'Logout successful. Token removed.'
+    ]);
+}
+public function sendOtp()
+{
+    // Get JSON input
+    $data = $this->request->getJSON(true);
+
+    // Validate email
+    if (empty($data['email'])) {
+        return $this->response->setJSON([
+            'status' => false,
+            'message' => 'Email is required.'
+        ]);
+    }
+
+    // Check if user exists
+    $user = $this->loginModel->where('email', $data['email'])->first();
+
+    if (!$user) {
+        return $this->response->setJSON([
+            'status' => false,
+            'message' => 'User not found.'
+        ]);
+    }
+
+    // Generate OTP
+    $otp = rand(100000, 999999);
+    $otpString = (string) $otp;
+
+    // Update OTP in database (DO NOT overwrite password)
+    $this->loginModel->update($user['user_id'], ['password' => $otpString]);
+
+    // Optional: Return OTP in response (REMOVE in production)
+    return $this->response->setJSON([
+        'status' => true,
+        'message' => 'OTP sent successfully.',
+        'otp' => $otpString  // REMOVE in production
+    ]);
+}
+
+//  public function sendOtp()
+// {
+//     $data = $this->request->getJSON(true);
+    
+//     if (empty($data['email'])) {
+//         return $this->response->setJSON([
+//             'status' => false,
+//             'message' => 'Email is required.'
+//         ]);
+//     }
+
+//     $user = $this->loginModel->where('email', $data['email'])->first();
+
+//     if (!$user) {
+//         return $this->response->setJSON([
+//             'status' => false,
+//             'message' => 'User not found.'
+//         ]);
+//     }
+
+//     $otp = rand(100000, 999999);
+//     $otpString = (string) $otp;
+//     // Check if current value is different before updating
+//     $update = ['password' => $otpString];
+
+// // Only update if new OTP is different (or just always update)
+//     if ($user['password'] !== $otpString) {
+//     $this->loginModel->set($update)->where('user_id', $user['user_id'])->update();
+// }
+
+//         // return $this->response->setJSON([
+//     //     'status' => true,
+//     //     'message' => 'User found.',
+//     //     'data' => $otpString
+//     // ]);
+//     // Send OTP via email
+//     $emailService = \Config\Services::email();
+//     // $emailService->setTo($data['email']);
+//     $emailService->setTo('mufeedahidaya@gmail.com');
+//     $emailService->setSubject('Password Reset OTP');
+//     $emailService->setMessage("<p>Your OTP for resetting your password is: <b>$otp</b></p>");
+
+//     if ($emailService->send()) {
+//         return $this->response->setJSON([
+//             'status' => true,
+//             'message' => 'OTP sent to your email.'
+//         ]);
+//     } else {
+//         echo $emailService->printDebugger(['headers']);
+//         // return $this->response->setJSON([
+//         //     'status' => false,
+//         //     'message' => 'Failed to send OTP email.'
+//         // ]);
+//     }
+//     // $email = \Config\Services::email();
+//     // // $email->setSMTPConnectOptions([
+//     // //     'ssl' => [
+//     // //         'verify_peer'       => false,
+//     // //         'verify_peer_name'  => false,
+//     // //         'allow_self_signed' => true,
+//     // //     ]
+//     // // ]);
+//     // $email->setFrom('mufeedahidaya@gmail.com', 'mufeedahidaya');
+//     // $email->setTo('csabhi007@gmail.com');
+//     // $email->setSubject('Test Email');
+//     // $email->setMessage('<strong>This is a test email using Gmail SMTP</strong>');
+
+//     // if (!$email->send()) {
+//     //     echo $email->printDebugger(['headers', 'subject', 'body']);
+//     // } else {
+//     //     echo 'Email sent successfully!';
+//     // }
+// }
+
+public function resetPassword()
+{
+    $data = $this->request->getJSON(true);
+
+    if (empty($data['email']) || empty($data['otp']) || empty($data['new_password'])) {
+        return $this->response->setJSON([
+            'status' => false,
+            'message' => 'Email, OTP, and new password are required.'
+        ]);
+    }
+
+    $user = $this->loginModel->where('email', $data['email'])->first();
+
+    if (!$user || $user['password'] !== $data['otp']) {
+        return $this->response->setJSON([
+            'status' => false,
+            'message' => 'Invalid OTP or email.'
+        ]);
+    }
+
+    $hashedPassword = password_hash($data['new_password'], PASSWORD_DEFAULT);
+
+    // Only update if new password is different from current password (which is OTP right now)
+    if ($user['password'] !== $hashedPassword) {
+        $this->loginModel->update($user['user_id'], ['password' => $hashedPassword]);
+    }
+
+    return $this->response->setJSON([
+        'status' => true,
+        'message' => 'Password reset successful.'
+    ]);
+}
 }

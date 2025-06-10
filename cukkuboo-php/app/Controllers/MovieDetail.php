@@ -7,7 +7,7 @@ use App\Models\MovieDetailsModel;
 
 class MovieDetail extends ResourceController
 {
-   
+
 
     public function __construct()
     {
@@ -16,117 +16,163 @@ class MovieDetail extends ResourceController
         $this->moviedetail = new MovieDetailsModel();
     }
 
-   
+
 
     public function store()
-{
-    $data = $this->request->getJSON(true);
+    {
+        $data = $this->request->getJSON(true);
 
-     $movie_id = $data['mov_id'] ?? null;
+        $movie_id = $data['mov_id'] ?? null;
 
-    $moviedata = [
+        $moviedata = [
 
-        'video' => $data['video'] ?? null,
+            'video' => $data['video'] ?? null,
 
-        'title'             => $data['title'] ?? null,
-        'genre'             => $data['genre'] ?? null,
-        'description'       => $data['description'] ?? null,
-        'cast_details'      => $data['cast_details'] ?? null,
-        'category'          => $data['category'] ?? null,
-        'release_date'      => $data['release_date'] ?? null,
-        'age_rating'        => $data['age_rating'] ?? null,
-        'access'            => $data['access'] ?? null,
-        'status'            => $data['status'] ?? null,
-        'thumbnail'         => $data['thumbnail'] ?? null,
-        'trailer'           => $data['trailer'] ?? null,
-        'banner'            => $data['banner'] ?? null,
-        'duration'          => $data['duration'] ?? null,
-        'rating'            => $data['rating'] ?? null,
-        'modify_on'         => date('Y-m-d H:i:s'),
-    ];
-    if (empty($movie_id)) {
-        $moviedata['created_by'] = 
-        $data['created_by'] ?? null;
-        $moviedata['created_on'] = date('Y-m-d H:i:s');
-        
-        if ($this->moviedetail->addMovie($moviedata)) {
-            return $this->respond([
-                'status' => 200,
-                'message' => 'Movie added successfully',
-                'data' => $moviedata
-            ]);
+            'title' => $data['title'] ?? null,
+            'genre' => $data['genre'] ?? null,
+            'description' => $data['description'] ?? null,
+            'cast_details' => $data['cast_details'] ?? null,
+            'category' => $data['category'] ?? null,
+            'release_date' => $data['release_date'] ?? null,
+            'age_rating' => $data['age_rating'] ?? null,
+            'access' => $data['access'] ?? null,
+            'status' => $data['status'] ?? null,
+            'thumbnail' => $data['thumbnail'] ?? null,
+            'trailer' => $data['trailer'] ?? null,
+            'banner' => $data['banner'] ?? null,
+            'duration' => $data['duration'] ?? null,
+            'rating' => $data['rating'] ?? null,
+            'modify_on' => date('Y-m-d H:i:s'),
+        ];
+        if (empty($movie_id)) {
+            $moviedata['created_by'] =
+                $data['created_by'] ?? null;
+            $moviedata['created_on'] = date('Y-m-d H:i:s');
+
+            if ($this->moviedetail->addMovie($moviedata)) {
+                return $this->respond([
+                    'status' => 200,
+                    'message' => 'Movie added successfully',
+                    'data' => $moviedata
+                ]);
+            } else {
+                return $this->failServerError('Failed to add movie');
+            }
         } else {
-            return $this->failServerError('Failed to add movie');
-        }
-    } else {
-       
-        if ($this->moviedetail->updateMovie($movie_id, $moviedata)) {
-            return $this->respond([
-                'status' => 200,
-                'message' => 'Movie updated successfully',
-                'data' => $moviedata
-            ]);
-        } else {
-            return $this->failServerError('Failed to update movie');
+
+            if ($this->moviedetail->updateMovie($movie_id, $moviedata)) {
+                return $this->respond([
+                    'status' => 200,
+                    'message' => 'Movie updated successfully',
+                    'data' => $moviedata
+                ]);
+            } else {
+                return $this->failServerError('Failed to update movie');
+            }
         }
     }
-}
-public function getAllMovieDetails()
-{
-    $pageIndex = (int) $this->request->getGet('pageIndex');
-    $pageSize = (int) $this->request->getGet('pageSize');
+    public function getAllMovieDetails()
+    {
+        $pageIndex = (int) $this->request->getGet('pageIndex');
+        $pageSize = (int) $this->request->getGet('pageSize');
 
-    if ($pageIndex < 0) $pageIndex = 0;
-    if ($pageSize <= 0) $pageSize = 10;
+        // If pageIndex is negative, return all movies without pagination
+        if ($pageIndex < 0) {
+            $movies = $this->moviedetail
+                ->where('status !=', 9)
+                ->orderBy('mov_id', 'DESC')
+                ->findAll();
 
-    $offset = $pageIndex * $pageSize;
+            return $this->response->setJSON([
+                'status' => true,
+                'message' => 'All movies fetched (no pagination).',
+                'data' => $movies,
+                'total' => count($movies)
+            ]);
+        }
 
-    // Get total count of movies (excluding soft-deleted ones)
-    $total = $this->moviedetail
-                  ->where('status !=', 9)
-                  ->countAllResults(false);  // keeps query builder state
+        // Set fallback/default values
+        if ($pageSize <= 0) {
+            $pageSize = 10;
+        }
 
-    // Get paginated data
-    $movies = $this->moviedetail
-                   ->where('status !=', 9)
-                   ->orderBy('mov_id', 'DESC')
-                   ->findAll($pageSize, $offset);
+        $offset = $pageIndex * $pageSize;
 
-    return $this->response->setJSON([
-        'status' => true,
-        'message' => 'Paginated movie details fetched successfully.',
-        'data' => $movies,
-        'total' => $total
-    ]);
-}
+        // Get total matching movies
+        $total = $this->moviedetail
+            ->where('status !=', 9)
+            ->countAllResults(false); // don't reset builder
 
+        // Fetch paginated data
+        $movies = $this->moviedetail
+            ->where('status !=', 9)
+            ->orderBy('mov_id', 'DESC')
+            ->findAll($pageSize, $offset);
 
-
-public function deleteMovieDetails($id)
-{
-    $data = $this->request->getJSON(true); 
-
-    $modified_by = $data['modified_by'] ?? null;
-
-    if (!$modified_by) {
-        return $this->respond([
-            'status' => 400,
-            'message' => 'Modified by (user ID) is required.'
+        // Return response
+        return $this->response->setJSON([
+            'status' => true,
+            'message' => 'Paginated movies fetched successfully.',
+            'data' => $movies,
+            'total' => $total
         ]);
     }
-    $status = 9;
 
-    if ($this->moviedetail->deleteMovieDetailsById($status, $id, $modified_by)) {
-        return $this->respond([
-            'status' => 200,
-            'message' => 'Movie marked as deleted successfully.'
+
+    public function getMovieById($id)
+    {
+
+        $getmoviesdetails = $this->moviedetail->getMovieDetailsById($id);
+        return $this->response->setJSON([
+            'status' => true,
+            'message' => 'movie details fetched successfully.',
+            'data' => $getmoviesdetails
         ]);
-    } else {
-        return $this->failServerError('Failed to delete movie.');
     }
-}
 
-  public function homeDisplay()
+
+    // public function deleteMovieDetails()
+// {
+//     $data = $this->request->getJSON(true); 
+
+
+    //$modified_by = $data['modified_by'] ?? null;
+
+    // if (!$modified_by) {
+    //     return $this->respond([
+    //         'status' => 400,
+    //          'message' => 'Modified by (user ID) is required.'
+    //     ]);
+    // }
+    // $status = 9;
+
+    // if ($this->moviedetail->deleteMovieDetailsById($status, $data['mov_id'])) {
+    //     return $this->respond([
+    //         'status' => 200,
+    //         'message' => 'Movie marked as deleted successfully.'
+    //     ]);
+    // } else {
+    //     return $this->failServerError('Failed to delete movie.');
+    // }
+// }
+    public function deleteMovieDetails($mov_id)
+    {
+        // Set status to 9 for soft delete
+        $status = 9;
+
+        // Call model method to update the status
+        if ($this->moviedetail->deleteMovieDetailsById($status, $mov_id)) {
+            return $this->respond([
+                'status' => 200,
+                'message' => "Movie with ID $mov_id marked as deleted successfully."
+            ]);
+        } else {
+            return $this->failServerError("Failed to delete movie with ID $mov_id.");
+        }
+    }
+
+
+    public function homeDisplay()
     {
         $movieModel = new MovieDetailsModel();
 
@@ -149,7 +195,7 @@ public function deleteMovieDetails($id)
             'success' => true,
             'data' => [
                 'featured' => array_map([$this, 'formatMovie'], $featured),
-               // 'resume_watching' => $resumeWatching,
+                // 'resume_watching' => $resumeWatching,
                 'trending_now' => array_map([$this, 'formatTrending'], $trending),
             ]
         ]);
@@ -160,9 +206,9 @@ public function deleteMovieDetails($id)
         // print_r($movie);
         // exit;
         return [
-            'mov_id' =>  $movie['mov_id'],
+            'mov_id' => $movie['mov_id'],
             'video' => $movie['video'],
-             'title' => $movie['title'],
+            'title' => $movie['title'],
             'cast_details' => $movie['cast_details'],
             'category' => $movie['category'],
             'release_date' => $movie['release_date'],
@@ -181,7 +227,7 @@ public function deleteMovieDetails($id)
     private function formatTrending($movie)
     {
         return [
-            'mov_id' =>  $movie['mov_id'],
+            'mov_id' => $movie['mov_id'],
             'video' => $movie['video'],
             'title' => $movie['title'],
             'cast_details' => $movie['cast_details'],
@@ -198,6 +244,7 @@ public function deleteMovieDetails($id)
             'description' => $movie['description']
         ];
     }
+
 
 
 }

@@ -245,6 +245,17 @@ class MovieDetail extends ResourceController
         ];
     }
 
+ public function getLatestMovies()
+{
+    $movieModel = new \App\Models\MovieDetailsModel();
+    $movies = $movieModel->latestMovies();
+
+    return $this->response->setJSON([
+        'success' => true,
+        'data' => $movies
+    ]);
+}
+
 
 
 }

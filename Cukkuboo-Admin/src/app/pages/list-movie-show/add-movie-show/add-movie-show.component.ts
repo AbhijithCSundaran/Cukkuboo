@@ -17,11 +17,11 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ViewChild, ElementRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ValidationMessagesComponent } from '../../core/components/validation-messsage/validaation-message.component';
+import { ValidationMessagesComponent } from '../../../core/components/validation-messsage/validaation-message.component';
 import { HttpClient, HttpEvent, HttpEventType } from '@angular/common/http';
-import { FileUploadService } from '../../services/upload/file-upload.service';
-import { environment } from '../../../environments/environment';
-import { MovieService } from '../../services/movie.service';
+import { FileUploadService } from '../../../services/upload/file-upload.service';
+import { environment } from '../../../../environments/environment';
+import { MovieService } from '../../../services/movie.service';
 
 @Component({
   selector: 'app-add-movie-show',
@@ -101,6 +101,13 @@ export class AddMovieShowComponent implements OnInit {
 
 
     });
+
+
+      const token = localStorage.getItem('token');
+  console.log('Token from localStorage:', token);
+
+
+  
  const id = this.route.snapshot.paramMap.get('id');
   this.isEditMode = !!id;
   if (id) {
@@ -201,6 +208,8 @@ loadMovieData(id: number): void {
       this.uploadImage(file, this.movieForm.controls['thumbnail']);
     }
   }
+
+  
 
    uploadImage(file: File, control: AbstractControl | null = null, inProgress: boolean = true, progress: number = 0): void {
     inProgress = true;

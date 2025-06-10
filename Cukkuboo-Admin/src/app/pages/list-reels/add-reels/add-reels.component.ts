@@ -37,6 +37,8 @@ export class AddReelsComponent implements OnInit {
   isEditMode = false;
   videoUrl: string = '';
   isVerticalVideo: boolean = false;
+  confirmDeleteType: 'video' | 'thumbnail' | null = null;
+
 
 
 
@@ -145,23 +147,28 @@ handleThumbnailFile(file: File): void {
   this.thumbnailPreview = this.sanitizer.bypassSecurityTrustUrl(objectUrl);
   this.reelForm.patchValue({ thumbnail: file.name }); // Dummy value to trigger *ngIf
 }
-
-openDeleteConfirm(type: 'video' | 'thumbnail'): void {
-  const confirmed = confirm(`Are you sure you want to delete the ${type}?`);
-  if (!confirmed) return;
-
-  if (type === 'video') {
-    this.selectedReelFile = null;
-    this.reelPreviewUrl = null;
-    this.uploadProgress = 0;
-    this.uploadError = '';
-  } else if (type === 'thumbnail') {
-    this.thumbnailFile = null;
-    this.thumbnailPreview = null;
-    this.reelForm.patchValue({ thumbnail: null });
+  openDeleteConfirm(type: 'video' | 'thumbnail'): void {
+    this.confirmDeleteType = type;
   }
-}
 
+  confirmDelete(): void {
+    if (this.confirmDeleteType === 'video') {
+      this.selectedReelFile = null;
+      this.reelPreviewUrl = null;
+      this.uploadProgress = 0;
+      this.uploadError = '';
+    } else if (this.confirmDeleteType === 'thumbnail') {
+      this.thumbnailFile = null;
+      this.thumbnailPreview = null;
+      this.reelForm.patchValue({ thumbnail: null });
+    }
+
+    this.confirmDeleteType = null;
+  }
+
+  cancelDelete(): void {
+    this.confirmDeleteType = null;
+  }
 openFullscreen(element: HTMLElement): void {
   if (element.requestFullscreen) {
     element.requestFullscreen();

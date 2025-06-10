@@ -10,8 +10,8 @@ export class FileUploadService {
   apiUrl: string = environment.apiUrl
   constructor(private http: HttpClient) { }
 
-    get token() { return localStorage.getItem('token') || sessionStorage.getItem('token'); }
- 
+  get token() { return localStorage.getItem('token') || sessionStorage.getItem('token'); }
+
   // Set headers including the authorization token
   get headers() {
     return new HttpHeaders({
@@ -19,7 +19,7 @@ export class FileUploadService {
       'Authorization': `Bearer ${this.token}`, // Add Bearer token
     });
   }
- 
+
   uploadVideo(file: File): Observable<HttpEvent<any>> {
     const formData = new FormData();
     formData.append('video', file);
@@ -27,10 +27,10 @@ export class FileUploadService {
     //   reportProgress: true,
     //   observe: 'events'
     // });
-    return this.http.post(this.apiUrl +'upload-video', formData, {
+    return this.http.post(this.apiUrl + 'upload-video', formData, {
       reportProgress: true,
       observe: 'events',
-        headers: this.headers 
+      headers: this.headers
     })
   }
   uploadImage(file: File): Observable<HttpEvent<any>> {
@@ -40,10 +40,12 @@ export class FileUploadService {
     //   reportProgress: true,
     //   observe: 'events'
     // });
-    return this.http.post(this.apiUrl +'upload-image', formData, {
-      reportProgress: true,
+    this.token
+    debugger;
+    return this.http.post(this.apiUrl + 'upload-image', formData, {
+      // reportProgress: true,
       observe: 'events',
-       headers: this.headers 
+      headers: this.headers
     })
   }
 }

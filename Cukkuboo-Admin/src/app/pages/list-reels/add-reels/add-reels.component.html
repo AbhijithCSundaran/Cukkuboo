@@ -150,4 +150,19 @@
       </mat-card-content>
     </form>
   </mat-card>
+
+  <!-- Delete Confirmation Modal -->
+<div class="modal" [class.show]="confirmDeleteType">
+  <div class="modal-content">
+    <p>
+      Are you sure you want to delete
+      <span class="highlight">"{{ confirmDeleteType }}"</span>?
+    </p>
+    <div class="modal-actions">
+      <button class="btn-yes" (click)="confirmDelete()">Delete</button>
+      <button class="btn-no" (click)="cancelDelete()">Cancel</button>
+    </div>
+  </div>
+</div>
+
 </div>

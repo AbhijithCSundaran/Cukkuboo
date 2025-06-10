@@ -1,12 +1,14 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import { Router, RouterLink } from '@angular/router';
 import { MatTableDataSource } from '@angular/material/table';
-import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { UserService } from '../../services/user.service';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+
 
 
 @Component({
@@ -16,63 +18,58 @@ import { MatInputModule } from '@angular/material/input';
   styleUrl: './user-list.component.scss'
 })
 export class UserListComponent implements OnInit {
-
-  constructor(private router: Router) { }
-
-  displayedColumns: string[] = ['slNo','name', 'contact', 'email', 'country', 'status', 'joindate', 'subscription', 'action'];
-
-
-  users = [
-    {
-      id: 1,
-      name: 'John Doe',
-      contact: '123-456-7890',
-      email: 'john@example.com',
-      country: 'USA',
-      status: 'active',
-      joindate: new Date('2023-05-01'),
-      subscription: 'Premium'
-    },
-    {
-      id: 2,
-      name: 'Jane Smith',
-      contact: '987-654-3210',
-      email: 'jane@example.com',
-      country: 'UK',
-      status: 'inactive',
-      joindate: new Date('2024-01-15'),
-      subscription: 'Basic'
-    }
-
+  displayedColumns: string[] = [
+    'slNo',
+    'username',
+    'phone',
+    'email',
+    'country',
+    'status',
+   
+    'subscription',
+    'action',
   ];
+  dataSource = new MatTableDataSource<any>([]);
 
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  dataSource = new MatTableDataSource(this.users);
+  constructor(private router: Router, private userService: UserService) {}
 
   ngOnInit(): void {
+    this.loadUsers();
+
     this.dataSource.filterPredicate = (data: any, filter: string) => {
-    const dataStr = `${data.name} ${data.role} ${data.email} ${data.phone} ${data.status}`
-      .toLowerCase();
-    return dataStr.includes(filter);
-  };
-   }
+      const dataStr = `${data.username} ${data.email} ${data.phone} ${data.status} ${data.country}`.toLowerCase();
+      return dataStr.includes(filter);
+    };
+  }
 
-  editUser(user: any): void {
+  ngAfterViewInit(): void {
+    this.dataSource.paginator = this.paginator;
+  }
 
-    this.router.navigate(['/add-user'], {
+  loadUsers(): void {
+    const model = {}; 
+    this.userService.list(model).subscribe({
+      next: (response) => {
+                  console.log('API response from loadUsers():', response); 
 
+       
+          this.dataSource.data = response.data;
+        } ,
+         error: (error) => {
+        console.error('Failed to fetch user list:', error);
+      },
     });
   }
 
   deleteUser(user: any): void {
-
-    const index = this.users.indexOf(user);
+    const index = this.dataSource.data.indexOf(user);
     if (index > -1) {
-      this.users.splice(index, 1);
-      this.dataSource.data = [...this.users];
+      this.dataSource.data.splice(index, 1);
+      this.dataSource._updateChangeSubscription(); 
     }
   }
-
 
   addNewUser(): void {
     this.router.navigate(['/add-user']);

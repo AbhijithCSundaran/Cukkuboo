@@ -32,10 +32,19 @@ export class UserService {
 
  list(model: any): Observable<any> {
     const body = model;
-    return this.http.post(this.apiUrl + 'User/list', body);
+    return this.http.get(this.apiUrl + 'User/list', body);
   }
 
-  
+
+  // for edit prefill
+  getUserById(id: number): Observable<any> {
+    return this.http.get(this.apiUrl + 'getuser/' + id);
+  }
+
+  deleteUser(id: number): Observable<any> {
+    return this.http.post(`${this.apiUrl} user/delete`, { mov_id: id });
+  }
+
   logout(): Observable<any> {
     const body = {};
     return this.http.post(this.apiUrl + 'logout', body, { headers: this.headers });

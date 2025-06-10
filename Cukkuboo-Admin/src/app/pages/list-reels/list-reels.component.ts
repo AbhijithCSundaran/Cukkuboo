@@ -9,6 +9,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTableDataSource } from '@angular/material/table';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-list-reels',
@@ -16,6 +18,7 @@ import { MatTableDataSource } from '@angular/material/table';
   templateUrl: './list-reels.component.html',
   styleUrls: ['./list-reels.component.scss'],
   imports: [
+    MatSnackBarModule,
     CommonModule,
     RouterModule,
     MatTableModule,
@@ -35,7 +38,7 @@ displayedColumns: string[] = ['slNo', 'title', 'access', 'likes', 'views', 'stat
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router,private snackBar: MatSnackBar) {}
 
   ngOnInit(): void {
     this.loadReels();
@@ -71,12 +74,25 @@ displayedColumns: string[] = ['slNo', 'title', 'access', 'likes', 'views', 'stat
   cancelDelete(): void {
     this.confirmDeleteReel = null;
   }
-
-  confirmDelete(): void {
-    const id = this.confirmDeleteReel?.id;
-    if (id) {
-      this.dataSource.data = this.dataSource.data.filter(r => r.id !== id);
-    }
-    this.confirmDeleteReel = null;
+   showSnackbar(message: string, panelClass: string = 'snackbar-default'): void {
+    this.snackBar.open(message, 'Close', {
+      duration: 3000,
+      verticalPosition: 'top',
+      panelClass: [panelClass]
+    });
   }
+confirmDelete(): void {
+  const id = this.confirmDeleteReel?.id;
+  if (id) {
+    try {
+      this.dataSource.data = this.dataSource.data.filter(r => r.id !== id);
+      this.showSnackbar('Reel deleted successfully!', 'snackbar-success');
+    } catch (error) {
+      console.error('Failed to delete reel:', error);
+      this.showSnackbar('Failed to delete reel. Please try again.', 'snackbar-error');
+    }
+  }
+  this.confirmDeleteReel = null;
+}
+
 }

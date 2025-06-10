@@ -43,21 +43,21 @@ displayedColumns: string[] = ['slNo', 'plan', 'price', 'period', 'features', 'ac
       id: 1,
       name: '1 Year',
       price: '₹693',
-      period: 'Yearly',
+      period: '365-days',
       features: 'All content + 4 screens + HD'
     },
     {
       id: 2,
       name: '3 Months',
       price: '₹297',
-      period: 'Monthly', 
+      period: '90-days', 
       features: 'Access to standard content + 2 screen'
     },
     {
       id: 3,
       name: '1 Month',
       price: '₹198',
-      period: 'Monthly', 
+      period: '30-days', 
       features: 'Access to standard content + 1 screen'
     },
 
@@ -65,7 +65,7 @@ displayedColumns: string[] = ['slNo', 'plan', 'price', 'period', 'features', 'ac
       id: 4,
       name: '3 Days',
       price: '₹99',
-      period: 'Monthly', 
+      period: '3-days', 
       features: 'Feature 1, Feature 2'
     }
   ];

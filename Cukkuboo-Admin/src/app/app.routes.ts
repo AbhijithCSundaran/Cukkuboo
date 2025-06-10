@@ -13,10 +13,10 @@ export const routes: Routes = [
     children: [
       { path: 'dashboard', loadComponent: () => import('./pages/dashboard/dashboard.component').then((m) => m.DashboardComponent) },
       { path: 'list-movie-show', loadComponent: () => import('./pages/list-movie-show/list-movie-show.component').then((m) => m.ListMovieShowComponent) },
-      { path: 'add-movie-show', loadComponent: () => import('./pages/add-movie-show/add-movie-show.component').then((m) => m.AddMovieShowComponent) },
+      { path: 'add-movie-show', loadComponent: () => import('./pages/list-movie-show/add-movie-show/add-movie-show.component').then((m) => m.AddMovieShowComponent) },
 {
   path: 'edit-movie-show/:id',
-  loadComponent: () => import('./pages/add-movie-show/add-movie-show.component').then(m => m.AddMovieShowComponent)
+  loadComponent: () => import('./pages/list-movie-show/add-movie-show/add-movie-show.component').then(m => m.AddMovieShowComponent)
 },
       { path: 'categories', loadComponent: () => import('./pages/categories/categories.component').then((m) => m.CategoriesComponent) },
       { path: 'genres', loadComponent: () => import('./pages/genres/genres.component').then((m) => m.GenresComponent) },

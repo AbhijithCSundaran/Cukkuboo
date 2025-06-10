@@ -28,11 +28,9 @@ class GenresModel extends Model
     }
 
     // Delete genre
-    public function deleteGenre($genre_id)
+    public function deleteGenere($status,$genre_id)
     {
-        return $this->db->table($this->table)
-                        ->where('genre_id', $genre_id)
-                        ->delete();
+      return $this->db->query("update genres set status = '".$status."', updated_at=NOW() where genre_id = '".$genre_id."'");
     }
 
     // Check if genre exists by genre_id

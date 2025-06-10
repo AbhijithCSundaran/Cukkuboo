@@ -14,7 +14,7 @@ $routes->post('Login/reset-password', 'Login::resetPassword');
 
 $routes->post('user/register','User::registerFun');
 $routes->get('user/profile', 'User::getUserDetails');
-$routes->delete('user/delete', 'User::deleteUser');
+$routes->delete('user/delete/(:any)', 'User::deleteUser/$1');
 $routes->get('user/profile/(:num)', 'User::getUserDetailsById/$1');
 $routes->get('user/list', 'User::getUserList');
 
@@ -25,7 +25,7 @@ $routes->get('user/list', 'User::getUserList');
 $routes->get('Genres/genres', 'Genres::genreList');
 $routes->post('Genres/genres', 'Genres::create');              
 $routes->post('Genres/genres/(:any)', 'Genres::update/$1');
-$routes->delete('Genres/genres/(:any)', 'Genres::delete/$1');
+$routes->delete('Genres/genres/(:any)', 'Genres::deleteGenere/$1');
 
 $routes->get('category/categories', 'Category::categorylist');
 $routes->post('category/categories', 'Category::saveCategory');               

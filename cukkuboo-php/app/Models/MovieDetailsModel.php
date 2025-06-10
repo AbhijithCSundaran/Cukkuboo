@@ -36,10 +36,9 @@ public function getMovieDetailsById($id){
 
 }
 public function deleteMovieDetailsById($status, $mov_id)
-		{
-			// return $this->db->query("update movies_details set status = '".$status."', modify_on=NOW(), modify_by='".$modified_by."' where mov_id = '".$mov_id."'");
-			return $this->db->query("update movies_details set status = '".$status."', modify_on=NOW() where mov_id = '".$mov_id."'");
-		}
+{
+  return $this->db->query("update movies_details set status = '".$status."', modify_on=NOW() where mov_id = '".$mov_id."'");
+}
         
            
   public function getFeaturedMovies()

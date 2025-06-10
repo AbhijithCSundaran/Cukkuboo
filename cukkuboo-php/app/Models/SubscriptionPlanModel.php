@@ -42,6 +42,7 @@ class SubscriptionPlanModel extends Model
 
     public function deletePlan($id)
     {
-        return $this->delete($id);
+        return $this->update($id, ['status' => 9]);
     }
+
 }

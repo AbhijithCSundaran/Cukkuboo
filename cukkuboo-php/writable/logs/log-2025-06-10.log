@@ -38,3 +38,13 @@ in SYSTEMPATH\Router\Router.php on line 741.
  5 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
  6 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
  7 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-06-10 12:49:07 --> ErrorException: Undefined property: App\Controllers\SubscriptionPlan::$authService
+[Method: DELETE, Route: subscriptionplan/delete/12]
+in APPPATH\Controllers\SubscriptionPlan.php on line 185.
+ 1 APPPATH\Controllers\SubscriptionPlan.php(185): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined property: App\\Controllers\\SubscriptionPlan::$authService', 'C:\\xampp\\htdocs\\Cukkuboo\\cukkuboo-php\\app\\Controllers\\SubscriptionPlan.php', 185)
+ 2 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\SubscriptionPlan->delete('12')
+ 3 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\SubscriptionPlan))
+ 4 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 5 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+ 6 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 7 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))

@@ -50,8 +50,13 @@ public function updateReel($reels_id, $data)
         ->get()
         ->getRowArray();
 }
+
 public function deleteReel($reels_id)
 {
-    return $this->where('reels_id', $reels_id)->delete();
+    return $this->update($reels_id, [
+        'status' => 9,
+        'modify_on' => date('Y-m-d H:i:s')
+    ]);
 }
+
 }

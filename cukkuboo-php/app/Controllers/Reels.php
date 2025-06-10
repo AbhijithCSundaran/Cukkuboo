@@ -3,6 +3,9 @@
 namespace App\Controllers;
 use CodeIgniter\RESTful\ResourceController;
 use App\Models\ReelsModel;
+use App\Models\UserModel;
+use App\Libraries\Jwt;
+use App\Libraries\AuthService;
 
 class Reels extends ResourceController
 {
@@ -11,6 +14,8 @@ class Reels extends ResourceController
         $this->session = \Config\Services::session();
         $this->input = \Config\Services::request();
         $this->reelsModel = new ReelsModel();
+        $this->UserModel = new UserModel();	
+        $this->authService = new AuthService();
     }
 
     public function addReel()
@@ -106,7 +111,7 @@ class Reels extends ResourceController
    
 public function getReelById($id)
 {
-    $data = $this->reelsModel->getReelById($id);
+    $data = $this->reelsModel->getReelDetailsById($id);
 
     return $this->response->setJSON([
         'status' => true,
@@ -115,24 +120,33 @@ public function getReelById($id)
     ]);
 }
 
+
 public function deleteReel($reels_id)
 {
-    // Check if the reel exists before attempting to delete
+    $authHeader = $this->request->getHeaderLine('Authorization');
+    $user = $this->authService->getAuthenticatedUser($authHeader);
+    if (!$user) {
+        return $this->failUnauthorized('Invalid or missing token.');
+    }
     $reel = $this->reelsModel->find($reels_id);
-
     if (!$reel) {
         return $this->failNotFound("Reel with ID $reels_id not found.");
     }
 
-    // Proceed with deletion
-    if ($this->reelsModel->deleteReel($reels_id)) {
+    $updateData = [
+        'status' => 9,
+        'modify_on' => date('Y-m-d H:i:s')
+    ];
+
+    if ($this->reelsModel->update($reels_id, $updateData)) {
         return $this->respond([
             'status' => 200,
-            'message' => "Reel with ID $reels_id deleted successfully."
+            'message' => "Reel with ID $reels_id marked as deleted successfully."
         ]);
     } else {
         return $this->failServerError("Failed to delete reel with ID $reels_id.");
     }
 }
+
 
 }

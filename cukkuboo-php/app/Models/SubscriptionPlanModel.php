@@ -8,7 +8,16 @@ class SubscriptionPlanModel extends Model
 {
     protected $table = 'subscriptionplan';
     protected $primaryKey = 'subscriptionplan_id';
-    protected $allowedFields = ['plan_name', 'price', 'period_id', 'features'];
+    
+   
+    protected $allowedFields = [
+        'plan_name',
+        'price',
+        'discount_price',
+        'period',
+        'features'
+    ];
+
     protected $useTimestamps = false;
 
     public function getAllPlans()

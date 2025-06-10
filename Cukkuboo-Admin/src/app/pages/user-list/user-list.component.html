@@ -72,7 +72,7 @@
           <th mat-header-cell *matHeaderCellDef> Action </th>
           <td mat-cell *matCellDef="let user">
             <mat-icon class="icon" [routerLink]="['edit-user',user.user_id]">edit</mat-icon>
-            <mat-icon class="icon" (click)="openDeleteModal(user.id, user.username)">delete</mat-icon>
+            <mat-icon class="icon" (click)="openDeleteModal(user.user_id, user.username)">delete</mat-icon>
           </td>
         </ng-container>
       

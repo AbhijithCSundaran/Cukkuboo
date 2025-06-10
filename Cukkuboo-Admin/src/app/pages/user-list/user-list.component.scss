@@ -45,6 +45,17 @@
   user-select: none;
 }
 
+.pagination-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 9px 0 10px;
+  overflow-x: auto;
+  width: 100%;
+}
+
+
+
 /*  Media Queries  */
 
 @media (max-width: 1200px) {
@@ -84,8 +95,28 @@
   }
 
   .pagination {
-    font-size: 12px;
+  .mat-paginator-container {
+    flex-wrap: wrap;
+    justify-content: center;
+    
+    
   }
+
+  .mat-paginator-range-actions,
+  .mat-paginator-page-size {
+    flex-wrap: wrap;
+  }
+
+  .mat-paginator-page-size-label,
+  .mat-select-trigger {
+    font-size: 14px;
+  }
+
+  .mat-icon-button {
+    width: 36px;
+    height: 36px;
+  }
+}
 
   th.mat-column-email,
   td.mat-column-email,
@@ -106,7 +137,8 @@
     font-size: 12px;
     padding: 3px 6px;
   }
-
+th.mat-column-slNo,
+  td.mat-column-slNo,
   th.mat-column-contact,
   td.mat-column-contact,
   th.mat-column-email,

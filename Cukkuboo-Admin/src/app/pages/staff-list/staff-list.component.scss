@@ -45,6 +45,57 @@
     user-select: none;
   }
   
+.pagination-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 9px 0 10px;
+  overflow-x: auto;
+  width: 100%;
+}
+
+.search-bar-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 3rem;
+   height: 10px;
+  
+}
+
+.custom-search {
+  width: 250px;
+  height: 10px;
+ 
+
+  .mat-form-field-wrapper {
+    background-color: rgba(0, 0, 0, 0.05);
+    border-radius: 8px;
+    padding: 0 8px;
+    transition: box-shadow 0.3s ease;
+  }
+
+  .mat-form-field-flex {
+    padding: 4px 0;
+    
+  }
+
+  .mat-input-element {
+    padding: 8px 4px;
+    font-size: 14px;
+    color: #444;
+  }
+
+  mat-icon {
+    color: #666;
+    margin-right: 6px;
+  }
+
+  &:hover .mat-form-field-wrapper {
+    box-shadow: 0 0 6px 2px rgba(25, 118, 210, 0.3);
+  }
+}
+
+
   /*  Media Queries  */
   
   @media (max-width: 1200px) {
@@ -83,10 +134,24 @@
       }
     }
   
-    .pagination {
-      font-size: 12px;
+     .pagination {
+    font-size: 12px;
+
+    .mat-paginator-container {
+      flex-direction: column;
+      align-items: center;
     }
-  
+
+    .mat-paginator-page-size,
+    .mat-paginator-range-actions {
+      width: 100%;
+      justify-content: space-around;
+    }
+
+    .mat-select {
+      width: 100px;
+    }
+  }
     th.mat-column-joiningDate,
     td.mat-column-joiningDate,
     th.mat-column-phone,
@@ -107,7 +172,8 @@
       padding: 3px 6px;
     }
   
-   
+   th.mat-column-slNo,
+  td.mat-column-slNo,
     th.mat-column-email,
     td.mat-column-email,
     th.mat-column-status,

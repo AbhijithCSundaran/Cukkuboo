@@ -54,6 +54,16 @@
   user-select: none;
 }
 
+.pagination-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 9px 0 10px;
+  overflow-x: auto;
+  width: 100%;
+}
+
+
 /*  Media Queries  */
 
 @media (max-width: 1200px) {
@@ -92,10 +102,29 @@
     }
   }
 
-  .pagination {
-    font-size: 12px;
+ .pagination {
+  .mat-paginator-container {
+    flex-wrap: wrap;
+    justify-content: center;
+    
+    
   }
 
+  .mat-paginator-range-actions,
+  .mat-paginator-page-size {
+    flex-wrap: wrap;
+  }
+
+  .mat-paginator-page-size-label,
+  .mat-select-trigger {
+    font-size: 14px;
+  }
+
+  .mat-icon-button {
+    width: 36px;
+    height: 36px;
+  }
+}
 
 }
 
@@ -111,7 +140,8 @@
     padding: 3px 6px;
   }
 
-
+th.mat-column-slNo,
+  td.mat-column-slNo,
   th.mat-column-status,
   td.mat-column-status,
   th.mat-column-startDate,

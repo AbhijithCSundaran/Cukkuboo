@@ -8,6 +8,8 @@ import { Router } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog } from '@angular/material/dialog';
 import { EditSubscriptionListComponent } from './edit-subscription-list/edit-subscription-list.component';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 
 interface Subscription {
   userName: string;
@@ -21,10 +23,12 @@ interface Subscription {
   selector: 'app-subscriptions',
   standalone: true,
   imports: [
+    MatFormFieldModule,
     CommonModule,
     MatIconModule,
     MatTableModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    MatInputModule 
   ],
   templateUrl: './subscriptions.component.html',
   styleUrls: ['./subscriptions.component.scss']
@@ -71,7 +75,18 @@ export class SubscriptionsComponent implements AfterViewInit {
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
   }
+    ngOnInit(): void {
+    
 
+
+     
+
+  this.dataSource.filterPredicate = (data: any, filter: string) => {
+    const dataStr = `${data.name} ${data.role} ${data.email} ${data.phone} ${data.status}`
+      .toLowerCase();
+    return dataStr.includes(filter);
+  };
+  }
   editSubscription(sub: Subscription): void {
     // this.router.navigate(['/edit-subscription-list']);
     const dialogRef = this.dialog.open(EditSubscriptionListComponent, {
@@ -89,5 +104,8 @@ export class SubscriptionsComponent implements AfterViewInit {
     this.dataSource.data = this.dataSource.data.filter(s => s !== sub);
   }
 
-
+applyGlobalFilter(event: KeyboardEvent): void {
+    const input = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = input.trim().toLowerCase();
+  }
 }

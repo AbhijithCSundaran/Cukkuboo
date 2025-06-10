@@ -392,7 +392,12 @@ input {
   background-color: #e53935; 
   color: white;
 }
- 
+ .text-muted {
+  color: #6c757d;
+  font-size: 0.85rem;
+  font-weight: normal;
+}
+
 // Media Queries
 @media (max-width: 1200px) {
  

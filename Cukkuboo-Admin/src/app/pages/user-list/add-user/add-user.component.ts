@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -29,9 +29,10 @@ import { UserService } from '../../../services/user.service';
   templateUrl: './add-user.component.html',
   styleUrls: ['./add-user.component.scss']
 })
-export class AddUserComponent {
+export class AddUserComponent implements OnInit {
   public UserId: number = 0;
-  public userForm: FormGroup;
+public userForm!: FormGroup;
+
 
   constructor(
     private router: Router,
@@ -39,22 +40,16 @@ export class AddUserComponent {
     private fb: FormBuilder,
     private userService: UserService,
     private snackBar: MatSnackBar
-  ) {
-    this.route.params.subscribe((data) => {
-      if (data['id']) {
-        this.UserId = Number(data['id']);
-      }
-    });
+  ) {}
 
+  ngOnInit(): void {
+    
     this.userForm = this.fb.group({
+      user_id: [0],
       username: ['', Validators.required],
       password: ['', Validators.required],
       phone: [
-        '',
-        [
-          Validators.pattern(/^\d{0,15}$/),
-          Validators.maxLength(15)
-        ]
+        '', [Validators.pattern(/^\d{0,15}$/), Validators.maxLength(15)]
       ],
       email: ['', [Validators.email]],
       country: ['', [Validators.pattern(/^[a-zA-Z\s]*$/)]],
@@ -62,12 +57,54 @@ export class AddUserComponent {
       user_type: ['customer'],
       subscription: ['free', Validators.required]
     });
+
+    const id = this.route.snapshot.paramMap.get('id');
+    this.UserId = id ? +id : 0;
+
+    if (this.UserId) {
+      this.loadUserData(this.UserId);
+    }
+
+    const token = localStorage.getItem('token');
+    console.log('Token from localStorage:', token);
+  }
+
+  loadUserData(id: number): void {
+    this.userService.getUserById(id).subscribe({
+      next: (response) => {
+        console.log('User prefill API response:', response);
+        const data = Array.isArray(response?.data) ? response.data[0] : response.data;
+
+        if (data) {
+          this.userForm.patchValue({
+            user_id: data.user_id,
+            username: data.username,
+          
+            phone: data.phone,
+            email: data.email,
+            country: data.country,
+            status: data.status,
+            user_type: data.user_type,
+            subscription: data.subscription
+          });
+        } else {
+          console.warn('User not found for ID:', id);
+        }
+      },
+      error: (error) => {
+        console.error('Error fetching user data:', error);
+        this.snackBar.open('Failed to load user data', '', {
+          duration: 3000,
+          verticalPosition: 'top',
+          panelClass: ['snackbar-error']
+        });
+      }
+    });
   }
 
   saveUser(): void {
     if (this.userForm.valid) {
       const model = this.userForm.value;
-      debugger;
       this.userService.register(model).subscribe({
         next: (response) => {
           if (response.status) {
@@ -81,7 +118,7 @@ export class AddUserComponent {
         },
         error: (error) => {
           console.error('Registration Error:', error);
-          var msg = error.error?.message || 'Something went wrong'
+          const msg = error.error?.message || 'Something went wrong';
           this.snackBar.open(msg, '', {
             duration: 3000,
             verticalPosition: 'top',

@@ -147,8 +147,8 @@
             <mat-label>Access</mat-label>
             <mat-select formControlName="access">
               <mat-option value="1">Free</mat-option>
-              <mat-option value="2">Standard</mat-option>
-              <mat-option value="3">Premium</mat-option>
+              <mat-option value="2">Premium</mat-option>
+             
             </mat-select>
             <mat-error>
               <Validation-Messages [control]="movieForm.controls['access']"></Validation-Messages>
@@ -191,7 +191,13 @@
         <div class="upload-container">
           <mat-card appearance="outlined">
             <mat-card-content>
-              <label class="fw-medium d-block mb-2">Thumbnail</label>
+<label class="fw-medium d-block mb-2">
+  Thumbnail 
+  <small class="text-muted" *ngIf="!movieForm.value['thumbnail']">
+    (Portrait – 300×450px, JPEG)
+  </small>
+</label>
+
               <button class="trash-button" *ngIf="movieForm.value['thumbnail']" (click)="openDeleteConfirm('thumbnail')">
   <i class="fa-solid fa-trash"></i>
 </button>
@@ -242,7 +248,13 @@
         <div class="upload-container">
           <mat-card appearance="outlined">
             <mat-card-content>
-              <label class="fw-medium d-block mb-2">Banner</label>
+ <label class="fw-medium d-block mb-2">
+  Banner 
+  <small class="text-muted" *ngIf="!movieForm.value['banner']">
+    (Landscape – 1200×400px, JPEG)
+  </small>
+</label>
+
               <button class="trash-button" *ngIf="movieForm.value['banner']" (click)="openDeleteConfirm('banner')">
   <i class="fa-solid fa-trash"></i>
 </button>

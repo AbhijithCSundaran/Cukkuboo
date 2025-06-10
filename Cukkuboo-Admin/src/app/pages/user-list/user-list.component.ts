@@ -36,8 +36,6 @@ export class UserListComponent implements OnInit {
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-@ViewChild(MatPaginator) paginator!: MatPaginator;
-
   constructor(private router: Router, private userService: UserService,private snackBar: MatSnackBar) { }
 
   ngOnInit(): void {

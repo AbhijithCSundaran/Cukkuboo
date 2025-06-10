@@ -3,6 +3,9 @@
 namespace App\Controllers;
 use CodeIgniter\RESTful\ResourceController;
 use App\Models\MovieDetailsModel;
+use App\Models\UserModel;
+use App\Libraries\Jwt;
+use App\Libraries\AuthService;
 
 
 class MovieDetail extends ResourceController
@@ -14,6 +17,8 @@ class MovieDetail extends ResourceController
         $this->session = \Config\Services::session();
         $this->input = \Config\Services::request();
         $this->moviedetail = new MovieDetailsModel();
+        $this->UserModel = new UserModel();	
+        $this->authService = new AuthService();
     }
 
 
@@ -136,34 +141,13 @@ class MovieDetail extends ResourceController
         ]);
     }
 
-
-    // public function deleteMovieDetails()
-// {
-//     $data = $this->request->getJSON(true); 
-
-
-    //$modified_by = $data['modified_by'] ?? null;
-
-    // if (!$modified_by) {
-    //     return $this->respond([
-    //         'status' => 400,
-    //          'message' => 'Modified by (user ID) is required.'
-    //     ]);
-    // }
-    // $status = 9;
-
-    // if ($this->moviedetail->deleteMovieDetailsById($status, $data['mov_id'])) {
-    //     return $this->respond([
-    //         'status' => 200,
-    //         'message' => 'Movie marked as deleted successfully.'
-    //     ]);
-    // } else {
-    //     return $this->failServerError('Failed to delete movie.');
-    // }
-// }
     public function deleteMovieDetails($mov_id)
     {
-        // Set status to 9 for soft delete
+        $authHeader = $this->request->getHeaderLine('Authorization');
+        $user = $this->authService->getAuthenticatedUser($authHeader);
+        if(!$user) 
+            return $this->failUnauthorized('Invalid or missing token.');
+
         $status = 9;
 
         // Call model method to update the status

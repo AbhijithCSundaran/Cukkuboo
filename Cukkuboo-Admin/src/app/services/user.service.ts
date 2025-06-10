@@ -27,7 +27,7 @@ export class UserService {
 
   register(model: any): Observable<any> {
     const body = model;
-    return this.http.post(this.apiUrl + 'User/register', body);
+    return this.http.post(this.apiUrl + 'user/register', body, { headers: this.headers });
   }
 
   list(pageIndex: number = 0, pageSize: number = 10, searchText: string = ''): Observable<any> {
@@ -41,7 +41,7 @@ export class UserService {
   }
 
   deleteUser(id: number): Observable<any> {
-    return this.http.delete(`${this.apiUrl}user/dalete/${id}`, { headers: this.headers });
+    return this.http.delete(`${this.apiUrl}user/delete/${id}`, { headers: this.headers });
   }
 
   logout(): Observable<any> {

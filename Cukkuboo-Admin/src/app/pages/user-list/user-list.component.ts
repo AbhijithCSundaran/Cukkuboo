@@ -8,6 +8,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { UserService } from '../../services/user.service';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatSnackBar } from '@angular/material/snack-bar';
+
 
 
 
@@ -29,11 +31,14 @@ export class UserListComponent implements OnInit {
     'subscription',
     'action',
   ];
-  dataSource = new MatTableDataSource<any>([]);
+  dataSource = new MatTableDataSource<any>([]);  
+  confirmDeleteUserId: number | null = null;
+  confirmDeleteUserName: string = '';
+
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  constructor(private router: Router, private userService: UserService) { }
+  constructor(private router: Router, private userService: UserService,private snackBar: MatSnackBar) { }
 
   ngOnInit(): void {
     this.loadUsers();
@@ -44,6 +49,13 @@ export class UserListComponent implements OnInit {
     };
   }
 
+    showSnackbar(message: string, panelClass: string = 'snackbar-default'): void {
+    this.snackBar.open(message, 'Close', {
+      duration: 3000,
+      verticalPosition: 'top',
+      panelClass: [panelClass]
+    });
+  }
   ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator;
   }
@@ -60,13 +72,31 @@ export class UserListComponent implements OnInit {
     });
   }
 
-  deleteUser(user: any): void {
-    const index = this.dataSource.data.indexOf(user);
-    if (index > -1) {
-      this.dataSource.data.splice(index, 1);
+openDeleteModal(id: number, username: string): void {
+  this.confirmDeleteUserId = id;
+  this.confirmDeleteUserName = username;
+}
+
+cancelDelete(): void {
+  this.confirmDeleteUserId = null;
+  this.confirmDeleteUserName = '';
+}
+
+confirmDelete(): void {
+  if (!this.confirmDeleteUserId) return;
+
+  const id = this.confirmDeleteUserId;
+  this.userService.deleteUser(id).subscribe({
+    next: (response) => {
+      this.dataSource.data = this.dataSource.data.filter(user => user.id !== id);
       this.dataSource._updateChangeSubscription();
+      this.cancelDelete();
+    },
+    error: (error) => {
+      console.error('Delete failed:', error);
     }
-  }
+  });
+}
 
   addNewUser(): void {
     this.router.navigate(['/add-user']);

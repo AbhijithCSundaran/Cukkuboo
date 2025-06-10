@@ -50,7 +50,7 @@ $routes->get('movies/latest', 'MovieDetail::getLatestMovies');
 $routes->get('api/home', 'MovieDetail::homeDisplay');
 
 
-    // Subscription Plan Routes 
+// Subscription Plan Routes 
 $routes->get('subscriptionplan/list', 'SubscriptionPlan::getAll');           
 $routes->get('subscriptionplan/get/(:num)', 'SubscriptionPlan::get/$1');     
 $routes->post('subscriptionplan/save', 'SubscriptionPlan::savePlan');         
@@ -63,6 +63,7 @@ $routes->get('reels/details', 'Reels::getAllReels');
 $routes->get('reels/get/(:any)', 'Reels::getReelById/$1');
 $routes->delete('reels/delete/(:any)', 'Reels::deleteReel/$1');
 
+$routes->post('usersub/create', 'Usersub::create');
 
 
 

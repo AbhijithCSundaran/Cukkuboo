@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { MatIconModule } from '@angular/material/icon';
 
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -24,14 +25,16 @@ import { UserService } from '../../../services/user.service';
     MatDatepickerModule,
     MatNativeDateModule,
     ReactiveFormsModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatIconModule
   ],
   templateUrl: './add-user.component.html',
   styleUrls: ['./add-user.component.scss']
 })
 export class AddUserComponent implements OnInit {
   public UserId: number = 0;
-public userForm!: FormGroup;
+  public userForm!: FormGroup;
+  public hidePassword = true;
 
 
   constructor(
@@ -40,7 +43,8 @@ public userForm!: FormGroup;
     private fb: FormBuilder,
     private userService: UserService,
     private snackBar: MatSnackBar
-  ) {}
+
+  ) { }
 
   ngOnInit(): void {
     
@@ -79,7 +83,7 @@ public userForm!: FormGroup;
           this.userForm.patchValue({
             user_id: data.user_id,
             username: data.username,
-          
+            password: '',//data.password,
             phone: data.phone,
             email: data.email,
             country: data.country,
@@ -87,6 +91,9 @@ public userForm!: FormGroup;
             user_type: data.user_type,
             subscription: data.subscription
           });
+          const passwordControl = this.userForm.get('password') as FormControl;
+          passwordControl.setValidators([]);
+          passwordControl.updateValueAndValidity();
         } else {
           console.warn('User not found for ID:', id);
         }
@@ -102,9 +109,15 @@ public userForm!: FormGroup;
     });
   }
 
+
+  togglePasswordVisibility(): void {
+    this.hidePassword = !this.hidePassword;
+  }
   saveUser(): void {
+    debugger;
     if (this.userForm.valid) {
       const model = this.userForm.value;
+ console.log('Submitting User Model:', model);
       this.userService.register(model).subscribe({
         next: (response) => {
           if (response.status) {

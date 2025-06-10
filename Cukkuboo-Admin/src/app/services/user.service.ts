@@ -27,26 +27,25 @@ export class UserService {
 
   register(model: any): Observable<any> {
     const body = model;
-    return this.http.post(this.apiUrl + 'User/register', body);
+    return this.http.post(this.apiUrl + 'user/register', body, { headers: this.headers });
   }
 
- list(model: any): Observable<any> {
-    const body = model;
-    return this.http.get(this.apiUrl + 'User/list', body);
+  list(pageIndex: number = 0, pageSize: number = 10, searchText: string = ''): Observable<any> {
+    return this.http.get(`${this.apiUrl}user/list?pageIndex=${pageIndex}&pageSize=${pageSize}searchText=${searchText}`,
+      { headers: this.headers });
   }
-
 
   // for edit prefill
   getUserById(id: number): Observable<any> {
-    return this.http.get(this.apiUrl + 'getuser/' + id);
+    return this.http.get(`${this.apiUrl}user/profile/${id}`, { headers: this.headers });
   }
 
   deleteUser(id: number): Observable<any> {
-    return this.http.post(`${this.apiUrl} user/delete`, { mov_id: id });
+    return this.http.delete(`${this.apiUrl}user/delete/${id}`, { headers: this.headers });
   }
 
   logout(): Observable<any> {
     const body = {};
-    return this.http.post(this.apiUrl + 'logout', body, { headers: this.headers });
+    return this.http.post(this.apiUrl + 'Login/logout', body, { headers: this.headers });
   }
 }

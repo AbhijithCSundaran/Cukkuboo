@@ -9,11 +9,13 @@ import { MatInputModule } from '@angular/material/input';
 import { UserService } from '../../services/user.service';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 
+import { MatSnackBar } from '@angular/material/snack-bar';
+
 
 
 @Component({
   selector: 'app-user-list',
-  imports: [RouterLink, MatTableModule, CommonModule, MatIconModule, MatPaginatorModule,MatFormFieldModule,MatInputModule],
+  imports: [RouterLink, MatTableModule, CommonModule, MatIconModule, MatPaginatorModule, MatFormFieldModule, MatInputModule],
   templateUrl: './user-list.component.html',
   styleUrl: './user-list.component.scss'
 })
@@ -25,15 +27,18 @@ export class UserListComponent implements OnInit {
     'email',
     'country',
     'status',
-   
     'subscription',
     'action',
   ];
-  dataSource = new MatTableDataSource<any>([]);
+  dataSource = new MatTableDataSource<any>([]);  
+  confirmDeleteUserId: number | null = null;
+  confirmDeleteUserName: string = '';
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  constructor(private router: Router, private userService: UserService) {}
+@ViewChild(MatPaginator) paginator!: MatPaginator;
+
+  constructor(private router: Router, private userService: UserService,private snackBar: MatSnackBar) { }
 
   ngOnInit(): void {
     this.loadUsers();
@@ -44,33 +49,58 @@ export class UserListComponent implements OnInit {
     };
   }
 
+    showSnackbar(message: string, panelClass: string = 'snackbar-default'): void {
+    this.snackBar.open(message, 'Close', {
+      duration: 3000,
+      verticalPosition: 'top',
+      panelClass: [panelClass]
+    });
+  }
   ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator;
   }
 
-  loadUsers(): void {
-    const model = {}; 
-    this.userService.list(model).subscribe({
+loadUsers(): void {
+    this.userService.list().subscribe({
       next: (response) => {
-                  console.log('API response from loadUsers():', response); 
-
-       
-          this.dataSource.data = response.data;
-        } ,
-         error: (error) => {
+        console.log('API response from loadUsers():', response);
+        this.dataSource.data = response.data;
+      },
+      error: (error) => {
         console.error('Failed to fetch user list:', error);
       },
     });
   }
 
-  deleteUser(user: any): void {
-    const index = this.dataSource.data.indexOf(user);
-    if (index > -1) {
-      this.dataSource.data.splice(index, 1);
-      this.dataSource._updateChangeSubscription(); 
-    }
-  }
+openDeleteModal(id: number, username: string): void {
+  this.confirmDeleteUserId = id;
+  this.confirmDeleteUserName = username;
+}
 
+cancelDelete(): void {
+  this.confirmDeleteUserId = null;
+  this.confirmDeleteUserName = '';
+}
+
+confirmDelete(): void {
+   
+  if (!this.confirmDeleteUserId) return;
+
+  const id = this.confirmDeleteUserId;
+    
+  this.userService.deleteUser(id).subscribe({
+    next: (response) => {
+        console.log('Delete API success:', response);
+      this.dataSource.data = this.dataSource.data.filter(user => user.id !== id);
+      this.dataSource._updateChangeSubscription();
+      this.cancelDelete();
+    },
+    error: (error) => {
+      console.error('Delete failed:', error);
+    }
+  });
+}
+  
   addNewUser(): void {
     this.router.navigate(['/add-user']);
   }

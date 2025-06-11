@@ -15,7 +15,7 @@ export class FileUploadService {
   // Set headers including the authorization token
   get headers() {
     return new HttpHeaders({
-      'Content-Type': 'application/json',
+      // 'Content-Type': 'application/json', // strictly not needed for file uploads
       'Authorization': `Bearer ${this.token}`, // Add Bearer token
     });
   }
@@ -40,10 +40,8 @@ export class FileUploadService {
     //   reportProgress: true,
     //   observe: 'events'
     // });
-    this.token
-    debugger;
     return this.http.post(this.apiUrl + 'upload-image', formData, {
-      // reportProgress: true,
+      reportProgress: true,
       observe: 'events',
       headers: this.headers
     })

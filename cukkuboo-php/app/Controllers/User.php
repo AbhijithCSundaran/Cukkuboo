@@ -1,17 +1,22 @@
 <?php
 
 namespace App\Controllers;
+use CodeIgniter\RESTful\ResourceController;
 
 use App\Models\UserModel;
 use App\Libraries\Jwt;
+use App\Libraries\AuthService;
 
-class User extends BaseController
+class User extends ResourceController
 {
     protected $UserModel;
 
     public function __construct()
     {
+         $this->session = \Config\Services::session();
+        $this->input = \Config\Services::request();
         $this->UserModel = new UserModel();
+         $this->authService = new AuthService();
     }
 
     public function index(): string
@@ -269,24 +274,47 @@ class User extends BaseController
     // }
 
     //  Delete user
-    public function deleteUser()
+    // public function deleteUser()
+    // {
+    //     $user = $this->getAuthenticatedUser();
+
+    //     if (!$user) {
+    //         return $this->response->setJSON([
+    //             'status' => false,
+    //             'message' => 'Unauthorized'
+    //         ])->setStatusCode(401);
+    //     }
+
+    //     $this->UserModel->deleteUser($user['user_id']);
+
+    //     return $this->response->setJSON([
+    //         'status' => true,
+    //         'message' => 'User deleted successfully.'
+    //     ]);
+    // }
+
+
+ public function deleteUser($user_id)
     {
-        $user = $this->getAuthenticatedUser();
+        $authHeader = $this->request->getHeaderLine('Authorization');
+        $user = $this->authService->getAuthenticatedUser($authHeader);
+        if(!$user) 
+            return $this->failUnauthorized('Invalid or missing token.');
 
-        if (!$user) {
-            return $this->response->setJSON([
-                'status' => false,
-                'message' => 'Unauthorized'
-            ])->setStatusCode(401);
+        $status = 9;
+
+        // Call model method to update the status
+        if ($this->UserModel->deleteUserById($status, $user_id)) {
+            return $this->respond([
+                'status' => 200,
+                'message' => "Movie with ID $user_id marked as deleted successfully."
+            ]);
+        } else {
+            return $this->failServerError("Failed to delete movie with ID $user_id.");
         }
-
-        $this->UserModel->deleteUser($user['user_id']);
-
-        return $this->response->setJSON([
-            'status' => true,
-            'message' => 'User deleted successfully.'
-        ]);
     }
+
+
     // Get user details by user_id
 public function getUserDetailsById($userId)
 {
@@ -304,15 +332,57 @@ public function getUserDetailsById($userId)
         'data' => $user
     ]);
 }
+// public function getUserList()
+// {
+//     // Get pagination parameters from the query string
+//     $pageIndex = (int) $this->request->getGet('pageIndex');
+//     $pageSize  = (int) $this->request->getGet('pageSize');
+
+//     // If pageIndex is negative, return all users without pagination
+//     if ($pageIndex < 0) {
+//         $users = $this->UserModel->getAllUsers();
+//         $total = count($users);
+
+//         return $this->response->setJSON([
+//             'status' => true,
+//             'data'   => $users,
+//             'total'  => $total
+//         ]);
+//     }
+
+//     // Validate and fallback
+//     if ($pageSize <= 0) {
+//         $pageSize = 10; // default size
+//     }
+
+//     // Calculate offset
+//     $offset = $pageIndex * $pageSize;
+
+//     // Get total user count
+//     $total = $this->UserModel->countAll();
+
+//     // Get paginated users
+//     $users = $this->UserModel
+//         ->orderBy('user_id', 'DESC')
+//         ->findAll($pageSize, $offset);
+
+//     return $this->response->setJSON([
+//         'status' => true,
+//         'data'   => $users,
+//         'total'  => $total
+//     ]);
+// }
 public function getUserList()
 {
-    // Get pagination parameters from the query string
     $pageIndex = (int) $this->request->getGet('pageIndex');
     $pageSize  = (int) $this->request->getGet('pageSize');
 
-    // If pageIndex is negative, return all users without pagination
+    // Apply status filter
+    $userQuery = $this->UserModel->where('status !=', 9);
+
     if ($pageIndex < 0) {
-        $users = $this->UserModel->getAllUsers();
+        // Get all filtered users
+        $users = $userQuery->orderBy('user_id', 'DESC')->findAll();
         $total = count($users);
 
         return $this->response->setJSON([
@@ -322,19 +392,17 @@ public function getUserList()
         ]);
     }
 
-    // Validate and fallback
     if ($pageSize <= 0) {
-        $pageSize = 10; // default size
+        $pageSize = 10;
     }
 
-    // Calculate offset
     $offset = $pageIndex * $pageSize;
 
-    // Get total user count
-    $total = $this->UserModel->countAll();
+    // Get total count for filtered users
+    $total = $userQuery->countAllResults(false); // false prevents query reset
 
-    // Get paginated users
-    $users = $this->UserModel
+    // Get paginated, filtered users
+    $users = $userQuery
         ->orderBy('user_id', 'DESC')
         ->findAll($pageSize, $offset);
 
@@ -344,6 +412,7 @@ public function getUserList()
         'total'  => $total
     ]);
 }
+
 
 
 }

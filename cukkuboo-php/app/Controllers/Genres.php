@@ -4,6 +4,9 @@ namespace App\Controllers;
 
 use App\Models\GenresModel;
 use CodeIgniter\RESTful\ResourceController;
+use App\Models\UserModel;
+use App\Libraries\Jwt;
+use App\Libraries\AuthService;
 
 class Genres extends ResourceController
 {
@@ -13,6 +16,8 @@ class Genres extends ResourceController
     {
         // Correct model instance name & class
         $this->genresModel = new GenresModel();
+         $this->UserModel = new UserModel();	
+        $this->authService = new AuthService();
     }
 
     // GET: List all genres
@@ -95,17 +100,23 @@ class Genres extends ResourceController
     }
 
     // DELETE: Delete genre by genre_id
-    public function delete($genre_id = null)
+ public function deleteGenere($genere_id)
     {
-        if (!$genre_id || !$this->genresModel->genreExists($genre_id)) {
-            return $this->failNotFound('Genre not found.');
+        $authHeader = $this->request->getHeaderLine('Authorization');
+        $user = $this->authService->getAuthenticatedUser($authHeader);
+        if(!$user) 
+            return $this->failUnauthorized('Invalid or missing token.');
+
+        $status = 9;
+
+        // Call model method to update the status
+        if ($this->moviedetail->deleteGenere($status, $genere_id)) {
+            return $this->respond([
+                'status' => 200,
+                'message' => "Genere with ID $genere_id marked as deleted successfully."
+            ]);
+        } else {
+            return $this->failServerError("Failed to delete Genere with ID $genere_id.");
         }
-
-        $this->genresModel->deleteGenre($genre_id);
-
-        return $this->respondDeleted([
-            'success' => true,
-            'message' => 'Genre deleted successfully.'
-        ]);
     }
 }

@@ -206,12 +206,23 @@ public function getUserList()
 {
     $pageIndex = (int) $this->request->getGet('pageIndex');
     $pageSize  = (int) $this->request->getGet('pageSize');
+    $search    = $this->request->getGet('search');
+   
 
-    // Apply status filter
-    $userQuery = $this->UserModel->where('status !=', 9 );
+    $userQuery = $this->UserModel->where('status !=', 9)
+                                 ->where('user_type', 'customer');
+
+   
+    if (!empty($search)) {
+        $userQuery->groupStart()
+                  ->like('username', $search)         
+                  ->orLike('email', $search)
+                  ->orLike('phone', $search)
+                  ->orLike('country', $search)
+                 ->groupEnd();
+    }
 
     if ($pageIndex < 0) {
-        // Get all filtered users
         $users = $userQuery->orderBy('user_id', 'DESC')->findAll();
         $total = count($users);
 
@@ -228,13 +239,9 @@ public function getUserList()
 
     $offset = $pageIndex * $pageSize;
 
-    // Get total count for filtered users
-    $total = $userQuery->countAllResults(false); // false prevents query reset
-
-    // Get paginated, filtered users
-    $users = $userQuery
-        ->orderBy('user_id', 'DESC')
-        ->findAll($pageSize, $offset);
+    $total = $userQuery->countAllResults(false); 
+    $users = $userQuery->orderBy('user_id', 'DESC')
+                       ->findAll($pageSize, $offset);
 
     return $this->response->setJSON([
         'status' => true,
@@ -243,6 +250,54 @@ public function getUserList()
     ]);
 }
 
+public function getStaffList()
+{
+    $pageIndex = (int) $this->request->getGet('pageIndex');
+    $pageSize  = (int) $this->request->getGet('pageSize');
+    $search    = $this->request->getGet('search');
+   
+
+    $userQuery = $this->UserModel->where('status !=', 9)
+                                 ->where('user_type !=', 'customer');
+
+   
+    if (!empty($search)) {
+        $userQuery->groupStart()
+                  ->like('username', $search)         
+                  ->orLike('email', $search)
+                  ->orLike('phone', $search)
+                  ->orLike('country', $search)
+                  ->orLike('user_type', $search)
+                 ->groupEnd();
+    }
+
+    if ($pageIndex < 0) {
+        $users = $userQuery->orderBy('user_id', 'DESC')->findAll();
+        $total = count($users);
+
+        return $this->response->setJSON([
+            'status' => true,
+            'data'   => $users,
+            'total'  => $total
+        ]);
+    }
+
+    if ($pageSize <= 0) {
+        $pageSize = 10;
+    }
+
+    $offset = $pageIndex * $pageSize;
+
+    $total = $userQuery->countAllResults(false); 
+    $users = $userQuery->orderBy('user_id', 'DESC')
+                       ->findAll($pageSize, $offset);
+
+    return $this->response->setJSON([
+        'status' => true,
+        'data'   => $users,
+        'total'  => $total
+    ]);
+}
 
 
 }

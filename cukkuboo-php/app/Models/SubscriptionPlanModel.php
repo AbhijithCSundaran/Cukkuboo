@@ -40,8 +40,12 @@ class SubscriptionPlanModel extends Model
         return $this->update($id, $data);
     }
 
-    public function deletePlan($id)
-    {
-        return $this->delete($id);
-    }
+    public function deletePlanById($status, $id,)
+{
+    return $this->update($id, [
+        'status'     => $status,
+        'modify_on'  => date('Y-m-d H:i:s')
+    ]);
+}
+
 }

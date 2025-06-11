@@ -51,12 +51,13 @@ public function updateReel($reels_id, $data)
         ->getRowArray();
 }
 
-public function deleteReel($reels_id)
+public function softDeleteReelById($status, $reels_id)
 {
     return $this->update($reels_id, [
-        'status' => 9,
-        'modify_on' => date('Y-m-d H:i:s')
+        'status'     => $status,
+        'modify_on'  => date('Y-m-d H:i:s')
     ]);
 }
+
 
 }

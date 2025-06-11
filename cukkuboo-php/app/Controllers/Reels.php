@@ -21,53 +21,59 @@ class Reels extends ResourceController
     public function addReel()
 {
     $data = $this->request->getJSON(true);
-
     $reels_id = $data['reels_id'] ?? null;
 
+    
+    if (empty($reels_id)) {
+        if (empty($data['title']) || empty($data['release_date']) || empty($data['access'])) {
+            return $this->failValidationErrors('Title, release date, and access are required.');
+        }
+    }
+
+    
     $reelData = [
-        'title' => $data['title'] ?? null,
-        'description' => $data['description'] ?? null,
-        'release_date' => $data['release_date'] ?? null,
-        'access' => $data['access'] ?? null,
-        'status' => $data['status'] ?? null,
-        'thumbnail' => $data['thumbnail'] ?? null,
-        'views' => $data['views'] ?? 0,
-        'likes' => $data['likes'] ?? 0,
-        'modify_on' => date('Y-m-d H:i:s')
+        'title'         => $data['title'] ?? null,
+        'description'   => $data['description'] ?? null,
+        'release_date'  => $data['release_date'] ?? null,
+        'access'        => $data['access'] ?? null,
+        'thumbnail'     => $data['thumbnail'] ?? null,
+        'views'         => $data['views'] ?? 0,
+        'likes'         => $data['likes'] ?? 0,
+        'modify_on'     => date('Y-m-d H:i:s')
     ];
 
     if (empty($reels_id)) {
-        // New insert
-        $reelData['created_by'] = $data['created_by'] ?? null;
+        // Set default status and creation timestamps
+        $reelData['status']     = 1;
         $reelData['created_on'] = date('Y-m-d H:i:s');
+        $reelData['created_by'] = $data['created_by'] ?? null;
 
-        if ($this->reelsModel->insert($reelData)) {
-            return $this->respond([
-                'status' => 200,
-                'message' => 'Reel added successfully',
-                'data' => $reelData
-            ]);
-        } else {
-            return $this->failServerError('Failed to add reel');
-        }
+        $this->reelsModel->addReel($reelData);
+
+        return $this->respond([
+            'status'  => true,
+            'message' => 'Reel created successfully',
+            'data'    => $reelData
+        ]);
     } else {
-        // Update existing
-        if ($this->reelsModel->update($reels_id, $reelData)) {
-            return $this->respond([
-                'status' => 200,
-                'message' => 'Reel updated successfully',
-                'data' => $reelData
-            ]);
-        } else {
-            return $this->failServerError('Failed to update reel');
+        $existing = $this->reelsModel->find($reels_id);
+        if (!$existing) {
+            return $this->failNotFound("Reel with ID $reels_id not found.");
         }
+
+        $reelData['status'] = $data['status'] ?? $existing['status'];
+
+        $this->reelsModel->updateReel($reels_id, $reelData);
+
+        return $this->respond([
+            'status'  => true,
+            'message' => 'Reel updated successfully',
+            'data'    => $reelData
+        ]);
     }
 }
 
-
-   
-
-    public function getAllReels()
+  public function getAllReels()
     {
         $pageIndex = (int) $this->request->getGet('pageIndex');
         $pageSize = (int) $this->request->getGet('pageSize');
@@ -125,20 +131,12 @@ public function deleteReel($reels_id)
 {
     $authHeader = $this->request->getHeaderLine('Authorization');
     $user = $this->authService->getAuthenticatedUser($authHeader);
-    if (!$user) {
+    if (!$user)
         return $this->failUnauthorized('Invalid or missing token.');
-    }
-    $reel = $this->reelsModel->find($reels_id);
-    if (!$reel) {
-        return $this->failNotFound("Reel with ID $reels_id not found.");
-    }
 
-    $updateData = [
-        'status' => 9,
-        'modify_on' => date('Y-m-d H:i:s')
-    ];
+    $status = 9;
 
-    if ($this->reelsModel->update($reels_id, $updateData)) {
+    if ($this->reelsModel->softDeleteReelById($status, $reels_id)) {
         return $this->respond([
             'status' => 200,
             'message' => "Reel with ID $reels_id marked as deleted successfully."
@@ -147,6 +145,7 @@ public function deleteReel($reels_id)
         return $this->failServerError("Failed to delete reel with ID $reels_id.");
     }
 }
+
 
 
 }

@@ -13,7 +13,7 @@ $routes->post('Login/reset-password', 'Login::resetPassword');
 
 
 $routes->post('user/register','User::registerFun');
-$routes->get('user/profile', 'User::getUserDetails');
+//$routes->get('user/profile', 'User::getUserDetails');
 $routes->delete('user/delete/(:any)', 'User::deleteUser/$1');
 $routes->get('user/profile/(:num)', 'User::getUserDetailsById/$1');
 $routes->get('user/list', 'User::getUserList');

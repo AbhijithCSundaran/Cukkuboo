@@ -90,47 +90,54 @@ class Usersub extends ResourceController
 }
 
   public function getAllSubscriptions()
-    {
-        $pageIndex = (int) $this->request->getGet('pageIndex');
-        $pageSize  = (int) $this->request->getGet('pageSize');
+{
+    $pageIndex = (int) $this->request->getGet('pageIndex');
+    $pageSize  = (int) $this->request->getGet('pageSize');
+    $search    = $this->request->getGet('search'); // optional search keyword
 
-        if ($pageIndex < 0) {
-            $subscriptions = $this->usersubModel
-                ->where('status !=', 'deleted')
-                ->orderBy('user_subscription_id', 'DESC')
-                ->findAll();
+    if ($pageSize <= 0) {
+        $pageSize = 10;
+    }
 
-            return $this->respond([
-                'status' => true,
-                'data'   => $subscriptions,
-                'total'  => count($subscriptions)
-            ]);
-        }
+    $offset = $pageIndex * $pageSize;
 
-        if ($pageSize <= 0) {
-            $pageSize = 10;
-        }
+    // Build base query
+    $builder = $this->usersubModel->where('status !=', 'deleted');
 
-        $offset = $pageIndex * $pageSize;
+    // Apply search filter if provided
+    if (!empty($search)) {
+        $builder->groupStart()
+            ->like('user_id', $search)
+            ->orLike('subscription_id', $search)
+            ->groupEnd();
+    }
 
-        $total = $this->usersubModel
-            ->where('status !=', 'deleted')
-            ->countAllResults(false); 
-
-        $subscriptions = $this->usersubModel
-            ->where('status !=', 'deleted')
+    if ($pageIndex < 0) {
+        $subscriptions = $builder
             ->orderBy('user_subscription_id', 'DESC')
-            ->findAll($pageSize, $offset);
+            ->findAll();
 
         return $this->respond([
             'status' => true,
             'data'   => $subscriptions,
-            'total'  => $total
+            'total'  => count($subscriptions)
         ]);
     }
- 
-    public function getSubscriptionById($id = null)
-{
+
+    $total = $builder->countAllResults(false);
+    // Get paginated result
+    $subscriptions = $builder
+        ->orderBy('user_subscription_id', 'DESC')
+        ->findAll($pageSize, $offset);
+
+    return $this->respond([
+        'status' => true,
+        'data'   => $subscriptions,
+        'total'  => $total
+    ]);
+}
+  public function getSubscriptionById($id = null)
+    {
     $record = $this->usersubModel->find($id);
 
     if (!$record) {

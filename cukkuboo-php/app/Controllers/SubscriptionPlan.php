@@ -78,51 +78,41 @@ class SubscriptionPlan extends BaseController
         ]);
     }
 }
-
-
-    public function getAll()
+   public function getAll()
 {
-    // Get pagination parameters from the query string
     $pageIndex = (int) $this->request->getGet('pageIndex');
     $pageSize  = (int) $this->request->getGet('pageSize');
+    $search    = $this->request->getGet('search');
 
-    // If pageIndex is negative, return all plans without pagination
-    if ($pageIndex < 0) {
-        $plans = $this->subscriptionPlanModel
-            ->orderBy('subscriptionplan_id', 'DESC')
-            ->findAll();
-
-        return $this->response->setJSON([
-            'status' => true,
-            'data'   => $plans,
-            'total'  => count($plans)
-        ]);
-    }
-
-    // Apply fallback/default values if invalid
     if ($pageSize <= 0) {
-        $pageSize = 10; // Default page size
+        $pageSize = 10;
     }
 
     $offset = $pageIndex * $pageSize;
 
-    // Get total number of records
-    $total = $this->subscriptionPlanModel->countAll();
+    $builder = $this->subscriptionPlanModel
+        ->where('status !=', 9);
+    // Add search functionality
+    if (!empty($search)) {
+        $builder->groupStart()
+            ->like('plan_name', $search)
+            ->orLike('features', $search)
+            ->groupEnd();
+    }
 
-    // Get paginated plans
-    $plans = $this->subscriptionPlanModel
+    // Clone builder to get total count before applying pagination
+    $total = $builder->countAllResults(false);
+    // Apply pagination and ordering
+    $plans = $builder
         ->orderBy('subscriptionplan_id', 'DESC')
         ->findAll($pageSize, $offset);
 
-    // Return response
     return $this->response->setJSON([
         'status' => true,
         'data'   => $plans,
         'total'  => $total
     ]);
 }
-
-
     public function get($id)
     {
         $plan = $this->subscriptionPlanModel->getPlanById($id);

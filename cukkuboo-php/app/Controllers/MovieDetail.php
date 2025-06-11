@@ -76,61 +76,65 @@ class MovieDetail extends ResourceController
             }
         }
     }
-    public function getAllMovieDetails()
+   public function getAllSubscriptions()
 {
     $pageIndex = (int) $this->request->getGet('pageIndex');
-    $pageSize = (int) $this->request->getGet('pageSize');
-    $search = $this->request->getGet('search'); // optional search keyword
+    $pageSize  = (int) $this->request->getGet('pageSize');
+    $search    = $this->request->getGet('search'); 
+    $userId = $this->request->getGet('user_id');
+    $subscriptionId = $this->request->getGet('subscription_id');
 
-    // Set fallback/default values
     if ($pageSize <= 0) {
         $pageSize = 10;
     }
 
     $offset = $pageIndex * $pageSize;
 
-    $builder = $this->moviedetail
-        ->where('status !=', 9);
+    // Build query
+    $builder = $this->usersubModel->where('status !=', 9);
 
-    // If search keyword is provided, apply LIKE condition
-    if (!empty($search)) {
-        $builder = $builder->like('title', 'genre', 'cast_details', 'category',  $search);
+    if (!empty($userId)) {
+        $builder->where('user_id', $userId);
     }
 
-    // If pageIndex is negative, return all (filtered) movies without pagination
+    if (!empty($subscriptionId)) {
+        $builder->where('subscription_id', $subscriptionId);
+    }
+
+    if (!empty($search)) {
+        $builder->groupStart()
+            ->orWhere('user_id', $search)
+            ->orWhere('subscription_id', $search)
+        ->groupEnd();
+    }
+
+    // If no pagination
     if ($pageIndex < 0) {
-        $movies = $builder
-            ->orderBy('mov_id', 'DESC')
+        $subscriptions = $builder
+            ->orderBy('user_subscription_id', 'DESC')
             ->findAll();
 
-        return $this->response->setJSON([
+        return $this->respond([
             'status' => true,
-            'message' => 'All movies fetched (no pagination).',
-            'data' => $movies,
-            'total' => count($movies)
+            'data'   => $subscriptions,
+            'total'  => count($subscriptions)
         ]);
     }
 
-    // Clone builder for count
-    $countBuilder = clone $builder;
-    $total = $countBuilder->countAllResults(false);
+    $total = $builder->countAllResults(false); // keep builder state
 
-    // Fetch paginated data
-    $movies = $builder
-        ->orderBy('mov_id', 'DESC')
+    $subscriptions = $builder
+        ->orderBy('user_subscription_id', 'DESC')
         ->findAll($pageSize, $offset);
 
-    // Return response
-    return $this->response->setJSON([
+    return $this->respond([
         'status' => true,
-        'message' => 'Paginated movies fetched successfully.',
-        'data' => $movies,
-        'total' => $total
+        'data'   => $subscriptions,
+        'total'  => $total
     ]);
 }
 
-
-    public function getMovieById($id)
+   public function getMovieById($id)
     {
 
         $getmoviesdetails = $this->moviedetail->getMovieDetailsById($id);

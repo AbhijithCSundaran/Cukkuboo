@@ -49,11 +49,19 @@ export class ListReelsComponent implements OnInit, AfterViewInit {
     this.listReels(0, 10, '');
   }
 
-  ngAfterViewInit(): void {
-    this.paginator.page.subscribe(() => {
-      this.listReels(this.paginator.pageIndex, this.paginator.pageSize, this.searchText);
-    });
-  }
+ ngAfterViewInit(): void {
+  this.dataSource.paginator = this.paginator;
+  this.dataSource.sort = this.sort;
+
+  // Now call listReels only ONCE using paginator values
+  this.listReels(this.paginator.pageIndex, this.paginator.pageSize, this.searchText);
+
+  // Listen for pagination
+  this.paginator.page.subscribe(() => {
+    this.listReels(this.paginator.pageIndex, this.paginator.pageSize, this.searchText);
+  });
+}
+
 
   listReels(pageIndex: number = 0, pageSize: number = 10, search: string = ''): void {
     this.reelsService.listReels(pageIndex, pageSize, search).subscribe({
@@ -89,19 +97,29 @@ export class ListReelsComponent implements OnInit, AfterViewInit {
     this.confirmDeleteReel = null;
   }
 
-  confirmDelete(): void {
-    const id = this.confirmDeleteReel?.id;
-    if (id) {
-      try {
-        this.dataSource.data = this.dataSource.data.filter(r => r.id !== id);
-        this.showSnackbar('Reel deleted successfully!', 'snackbar-success');
-      } catch (error) {
-        console.error('Failed to delete reel:', error);
-        this.showSnackbar('Failed to delete reel. Please try again.', 'snackbar-error');
-      }
+confirmDelete(): void {
+  const reel = this.confirmDeleteReel;
+
+  if (!reel) return;
+
+  console.log('Deleting reel with id:', reel.id);
+
+  this.reelsService.deleteReels(reel.reels_id).subscribe({
+    next: () => {
+      console.log('Delete successful, updating dataSource');
+      this.dataSource.data = this.dataSource.data.filter(r => r.reels_id !== reel.reels_id);
+      this.showSnackbar('Reel deleted successfully!', 'snackbar-success');
+    },
+    error: (err) => {
+      console.error('Failed to delete reel:', err);
+      this.showSnackbar('Failed to delete reel. Please try again.', 'snackbar-error');
     }
-    this.confirmDeleteReel = null;
-  }
+  });
+
+  this.confirmDeleteReel = null;
+}
+
+
 
   showSnackbar(message: string, panelClass: string = 'snackbar-default'): void {
     this.snackBar.open(message, 'Close', {

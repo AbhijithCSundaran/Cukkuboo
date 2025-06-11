@@ -147,7 +147,7 @@ class User extends ResourceController
             'password'     => $data['password']?? null,
             'country'      => $data['country'] ?? null,
             'subscription' => $data['subscription'] ?? 'free',
-            'status'       => $data['status'] ?? 'active',
+            'status'       => $data['status'] ?? null,
             'user_type' => $data['user_type'] ??'Customer',
         ]);
 
@@ -190,6 +190,7 @@ class User extends ResourceController
                     'email'               => $user['email'],
                     'password'            => $user['password'],
                     'phone'               => $user['phone'],
+                    'status'               => $user['status'],
                     'subscription_status' => $user['subscription'],
                     'user_type'           => $user['user_type'],
                     'created_at'          => $user['created_at'],

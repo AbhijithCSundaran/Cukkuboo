@@ -53,11 +53,11 @@
             <span
               [ngClass]="{
                 'badge': true,
-                'badge-enabled': user.status === 'active',
-                'badge-disabled': user.status === 'inactive'
+                'badge-enabled': user.status === '1',
+                'badge-disabled': user.status === '2'
               }"
             >
-              {{ user.status }}
+            {{ user.status == 1 ? 'Active' : 'Inactive' }}
             </span>
           </td>
         </ng-container>

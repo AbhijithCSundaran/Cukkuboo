@@ -13,7 +13,8 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ValidationMessagesComponent } from '../../../core/components/validation-messsage/validaation-message.component';
-
+import { ReelsService } from '../../../services/reels.service';
+import { FileUploadService } from '../../../services/upload/file-upload.service';
 @Component({
   selector: 'app-add-reels',
   imports: [
@@ -56,7 +57,9 @@ thumbnailFile: File | null = null;
   constructor(
     private fb: FormBuilder,
     private sanitizer: DomSanitizer,
-    private http: HttpClient
+    private http: HttpClient,
+     private reelsService: ReelsService,
+      private fileUploadService: FileUploadService
   ) {}
 
   ngOnInit(): void {
@@ -185,7 +188,7 @@ saveReel(): void {
     return;
   }
 
-  const formData = new FormData(); 
+  const formData = new FormData();
 
   formData.append('title', this.reelForm.value.title);
   formData.append('description', this.reelForm.value.description);
@@ -193,9 +196,8 @@ saveReel(): void {
   formData.append('access', this.reelForm.value.access);
   formData.append('status', this.reelForm.value.status);
   formData.append('video', this.selectedReelFile);
-  formData.append('views', this.reelForm.value.views);
-formData.append('likes', this.reelForm.value.likes);
-
+  formData.append('views', this.reelForm.value.views.toString());
+  formData.append('likes', this.reelForm.value.likes.toString());
 
   if (this.thumbnailFile) {
     formData.append('thumbnail', this.thumbnailFile);
@@ -204,10 +206,7 @@ formData.append('likes', this.reelForm.value.likes);
   this.uploadInProgress = true;
   this.uploadProgress = 0;
 
-  this.http.post('', formData, {
-    reportProgress: true,
-    observe: 'events'
-  }).subscribe({
+  this.reelsService.addReels(formData).subscribe({
     next: (event: HttpEvent<any>) => {
       if (event.type === HttpEventType.UploadProgress && event.total) {
         this.uploadProgress = Math.round((event.loaded / event.total) * 100);

@@ -81,7 +81,7 @@ export class UserListComponent implements OnInit {
   }
 
   confirmDelete(): void {
-    debugger;
+
     if (!this.confirmDeleteUserId) return;
 
     const id = this.confirmDeleteUserId;
@@ -90,11 +90,16 @@ export class UserListComponent implements OnInit {
       next: (response) => {
         console.log('Delete API success:', response);
         this.dataSource.data = this.dataSource.data.filter(user => user.id !== id);
+        this.showSnackbar('User deleted successfully!', 'snackbar-success');
+
         this.dataSource._updateChangeSubscription();
         this.cancelDelete();
+         this.loadUsers(); 
       },
       error: (error) => {
         console.error('Delete failed:', error);
+                this.showSnackbar('Failed to delete user. Please try again.', 'snackbar-error');
+
       }
     });
   }

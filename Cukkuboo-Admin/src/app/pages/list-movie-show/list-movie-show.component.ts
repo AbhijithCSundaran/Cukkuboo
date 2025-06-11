@@ -141,6 +141,7 @@ export class ListMovieShowComponent implements OnInit, AfterViewInit {
 
   confirmDelete(): void {
     const movie = this.confirmDeleteMovie;
+    
     if (!movie) return;
 
     console.log('Deleting movie with id:', movie.mov_id);

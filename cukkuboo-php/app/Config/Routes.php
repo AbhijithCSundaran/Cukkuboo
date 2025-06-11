@@ -17,6 +17,7 @@ $routes->post('user/register','User::registerFun');
 $routes->delete('user/delete/(:any)', 'User::deleteUser/$1');
 $routes->get('user/profile/(:num)', 'User::getUserDetailsById/$1');
 $routes->get('user/list', 'User::getUserList');
+$routes->get('staff/list', 'User::getStaffList');
 
 
 

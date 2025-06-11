@@ -5,13 +5,16 @@ import { Router, RouterLink } from '@angular/router';
 import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import { MatPaginatorModule, MatPaginator } from '@angular/material/paginator';
-
+import { MatInputModule } from '@angular/material/input';
 import { MatTableDataSource } from '@angular/material/table';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 @Component({
   selector: 'app-staff-list',
   standalone: true,
   imports: [
+    MatInputModule ,
+    MatFormFieldModule,
     CommonModule,
     RouterLink,
     MatTableModule,
@@ -53,6 +56,15 @@ export class StaffListComponent implements OnInit {
 
   ngOnInit(): void {
     this.dataSource.paginator = this.paginator;
+
+
+     
+
+  this.dataSource.filterPredicate = (data: any, filter: string) => {
+    const dataStr = `${data.name} ${data.role} ${data.email} ${data.phone} ${data.status}`
+      .toLowerCase();
+    return dataStr.includes(filter);
+  };
   }
 
   deleteStaff(staff: any): void {
@@ -75,6 +87,10 @@ export class StaffListComponent implements OnInit {
 
 
 
+  applyGlobalFilter(event: KeyboardEvent): void {
+    const input = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = input.trim().toLowerCase();
+  }
   addNewStaff(): void {
     this.router.navigate(['/add-staff']);
   }

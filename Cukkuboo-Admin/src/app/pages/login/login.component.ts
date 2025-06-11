@@ -21,6 +21,8 @@ export class LoginComponent implements OnInit, AfterViewInit {
   hoveringEye = false;
   captchaToken: string | null = null;
   isProd: boolean = environment.production
+  localLoginMode = true; // set to `true` to bypass API call
+
   constructor(
     private fb: FormBuilder,
     private router: Router,
@@ -84,7 +86,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
           if (response.status) {
             console.log(response)
             if (response.user.user_type == 'admin') {
-              localStorage.setItem('jwt', response.user?.jwt_token);
+              localStorage.setItem('token', response.user?.jwt_token);
               this.snackBar.open('Login successful', '', {
                 duration: 3000,
                 verticalPosition: 'top',
@@ -126,3 +128,93 @@ export class LoginComponent implements OnInit, AfterViewInit {
     this.captchaToken = null;
   }
 }
+// login() {
+//   if (!this.captchaToken && this.isProd) {
+//     this.snackBar.open('Please complete the CAPTCHA', '', {
+//       duration: 3000,
+//       verticalPosition: 'top',
+//       panelClass: ['snackbar-error']
+//     });
+//     return;
+//   }
+
+//   if (this.loginForm.valid) {
+//     const model = this.loginForm.value;
+
+//     // ⬇️ Local login mode for WFH or offline
+//     if (this.localLoginMode) {
+//       const allowedUser = {
+//         email: 'admin@cukuboo.com',
+//         password: 'admin123',
+//         user_type: 'admin',
+//         jwt_token: 'dummy-jwt-token'
+//       };
+
+//       if (
+//         model.email === allowedUser.email &&
+//         model.password === allowedUser.password
+//       ) {
+//         localStorage.setItem('jwt', allowedUser.jwt_token);
+//         this.snackBar.open('Login successful (offline mode)', '', {
+//           duration: 3000,
+//           verticalPosition: 'top',
+//           panelClass: ['snackbar-success']
+//         });
+//         this.router.navigate(['/dashboard']);
+//       } else {
+//         this.snackBar.open('Invalid credentials (offline mode)', '', {
+//           duration: 3000,
+//           verticalPosition: 'top',
+//           panelClass: ['snackbar-error']
+//         });
+//       }
+
+//       grecaptcha.reset();
+//       this.captchaToken = null;
+//       return;
+//     }
+
+//     // ⬇️ Regular API login
+//     this.userService.login(model).subscribe({
+//       next: (response) => {
+//         if (response.status) {
+//           if (response.user.user_type == 'admin') {
+//             localStorage.setItem('jwt', response.user?.jwt_token);
+//             this.snackBar.open('Login successful', '', {
+//               duration: 3000,
+//               verticalPosition: 'top',
+//               panelClass: ['snackbar-success']
+//             });
+//             this.router.navigate(['/dashboard']);
+//           } else {
+//             this.snackBar.open('Not an admin', '', {
+//               duration: 3000,
+//               verticalPosition: 'top',
+//               panelClass: ['snackbar-error']
+//             });
+//           }
+//         } else {
+//           this.snackBar.open(response.message, '', {
+//             duration: 3000,
+//             verticalPosition: 'top',
+//             panelClass: ['snackbar-error']
+//           });
+//         }
+//       },
+//       error: (error) => {
+//         console.error(error);
+//       }
+//     });
+
+//   } else {
+//     this.snackBar.open('Invalid email or password', '', {
+//       duration: 3000,
+//       verticalPosition: 'top',
+//       panelClass: ['snackbar-error']
+//     });
+//   }
+
+//   grecaptcha.reset();
+//   this.captchaToken = null;
+// }
+// }

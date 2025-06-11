@@ -16,6 +16,7 @@ import { MatInputModule } from '@angular/material/input';
 
 type FilterColumn = 'title' | 'genre' | 'category' | 'status';
 
+
 @Component({
   selector: 'app-list-movie-show',
   standalone: true,
@@ -27,15 +28,15 @@ type FilterColumn = 'title' | 'genre' | 'category' | 'status';
     CommonModule,
     MatPaginatorModule,
     MatSortModule,
-       MatFormFieldModule,  
-    MatInputModule      
+    MatFormFieldModule,
+    MatInputModule
   ],
   templateUrl: './list-movie-show.component.html',
   styleUrls: ['./list-movie-show.component.scss']
 })
 export class ListMovieShowComponent implements OnInit, AfterViewInit {
-  displayedColumns: string[] = ['slNo','title', 'genre', 'category', 'status', 'action'];
-  
+  displayedColumns: string[] = ['slNo', 'title', 'genre', 'category', 'status', 'action'];
+
   dataSource = new MatTableDataSource<any>([]);
   confirmDeleteMovie: any = null;
 
@@ -48,8 +49,9 @@ export class ListMovieShowComponent implements OnInit, AfterViewInit {
 
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
-
-  constructor(private router: Router, private movieService: MovieService,private snackBar: MatSnackBar) {}
+  pageIndex: number = 0;
+  pageSize: number = 10;
+  constructor(private router: Router, private movieService: MovieService, private snackBar: MatSnackBar) { }
 
   ngOnInit(): void {
     this.listMovies();
@@ -63,7 +65,7 @@ export class ListMovieShowComponent implements OnInit, AfterViewInit {
     };
   }
 
-    showSnackbar(message: string, panelClass: string = 'snackbar-default'): void {
+  showSnackbar(message: string, panelClass: string = 'snackbar-default'): void {
     this.snackBar.open(message, 'Close', {
       duration: 3000,
       verticalPosition: 'top',
@@ -76,10 +78,9 @@ export class ListMovieShowComponent implements OnInit, AfterViewInit {
   }
 
   listMovies(): void {
-    const model = {}; 
-    this.movieService.listmovies(model).subscribe({
+    this.movieService.listmovies(this.pageIndex, this.pageSize).subscribe({
       next: (response) => {
-          console.log('API response from listmovies():', response); 
+        console.log('API response from listmovies():', response);
         this.dataSource.data = response?.data || response || [];
       },
       error: (error) => {
@@ -99,108 +100,108 @@ export class ListMovieShowComponent implements OnInit, AfterViewInit {
     }
   }
 
-// editMovie(id: number): void {
-//   // console.log('Navigating to edit page with ID:', id); 
-//   if (id === undefined || id === null) {
-//     console.error('Invalid ID passed to editMovie()');
-//     return;
-//   }
-//   this.router.navigate(['/edit-movie-show', id]);
-// }
+  // editMovie(id: number): void {
+  //   // console.log('Navigating to edit page with ID:', id); 
+  //   if (id === undefined || id === null) {
+  //     console.error('Invalid ID passed to editMovie()');
+  //     return;
+  //   }
+  //   this.router.navigate(['/edit-movie-show', id]);
+  // }
 
-// deleteMovie(movie: any): void {
-//   if (confirm(`Are you sure you want to delete the movie "${movie.title}"?`)) {
-//     this.movieService.deletemovies(movie.mov_id).subscribe({
-//       next: () => {
-//         const index = this.dataSource.data.findIndex(m => m.mov_id === movie.mov_id);
-//         if (index > -1) {
-//           this.dataSource.data.splice(index, 1);
-//           this.dataSource.data = [...this.dataSource.data];
-//         }
-//         this.showSnackbar('Movie deleted successfully!', 'snackbar-success');
-//       },
-//       error: (err) => {
-//         console.error('Failed to delete movie:', err);
-//         this.showSnackbar('Failed to delete movie. Please try again.', 'snackbar-error');
-//       }
-//     });
-//   }
-// }
-
-
+  // deleteMovie(movie: any): void {
+  //   if (confirm(`Are you sure you want to delete the movie "${movie.title}"?`)) {
+  //     this.movieService.deletemovies(movie.mov_id).subscribe({
+  //       next: () => {
+  //         const index = this.dataSource.data.findIndex(m => m.mov_id === movie.mov_id);
+  //         if (index > -1) {
+  //           this.dataSource.data.splice(index, 1);
+  //           this.dataSource.data = [...this.dataSource.data];
+  //         }
+  //         this.showSnackbar('Movie deleted successfully!', 'snackbar-success');
+  //       },
+  //       error: (err) => {
+  //         console.error('Failed to delete movie:', err);
+  //         this.showSnackbar('Failed to delete movie. Please try again.', 'snackbar-error');
+  //       }
+  //     });
+  //   }
+  // }
 
 
-modalDeleteMovie(movie: any): void {
-  this.confirmDeleteMovie = movie;
-}
 
-cancelDelete(): void {
-  this.confirmDeleteMovie = null;
-}
 
-confirmDelete(): void {
-  const movie = this.confirmDeleteMovie;
-  if (!movie) return;
+  modalDeleteMovie(movie: any): void {
+    this.confirmDeleteMovie = movie;
+  }
 
-  console.log('Deleting movie with id:', movie.mov_id);
+  cancelDelete(): void {
+    this.confirmDeleteMovie = null;
+  }
 
-  this.movieService.deleteMovies(movie.mov_id).subscribe({
-    next: () => {
-      console.log('Delete successful, updating dataSource');
-      this.dataSource.data = this.dataSource.data.filter(m => m.mov_id !== movie.mov_id);
-      this.showSnackbar('Movie deleted successfully!', 'snackbar-success');
-    },
-    error: (err) => {
-      console.error('Failed to delete movie:', err);
-      this.showSnackbar('Failed to delete movie. Please try again.', 'snackbar-error');
-    }
-  });
+  confirmDelete(): void {
+    const movie = this.confirmDeleteMovie;
+    if (!movie) return;
 
-  this.confirmDeleteMovie = null;
-}
+    console.log('Deleting movie with id:', movie.mov_id);
+
+    this.movieService.deleteMovies(movie.mov_id).subscribe({
+      next: () => {
+        console.log('Delete successful, updating dataSource');
+        this.dataSource.data = this.dataSource.data.filter(m => m.mov_id !== movie.mov_id);
+        this.showSnackbar('Movie deleted successfully!', 'snackbar-success');
+      },
+      error: (err) => {
+        console.error('Failed to delete movie:', err);
+        this.showSnackbar('Failed to delete movie. Please try again.', 'snackbar-error');
+      }
+    });
+
+    this.confirmDeleteMovie = null;
+  }
 
   addNewMovie(): void {
     this.router.navigate(['/add-movie-show']);
   }
 
   applyGlobalFilter(event: Event): void {
-  const filterValue = (event.target as HTMLInputElement).value.trim().toLowerCase();
+    const filterValue = (event.target as HTMLInputElement).value.trim().toLowerCase();
 
-  this.dataSource.filterPredicate = (data, filter: string) => {
-    const title = data.title?.toLowerCase() || '';
-    const genre = this.getGenreName(data.genre).toLowerCase();
-    const category = this.getCategoryName(data.category).toLowerCase();
-    const status = data.status === '1' ? 'active' : 'inactive';
+    this.dataSource.filterPredicate = (data, filter: string) => {
+      const title = data.title?.toLowerCase() || '';
+      const genre = this.getGenreName(data.genre).toLowerCase();
+      const category = this.getCategoryName(data.category).toLowerCase();
+      const status = data.status === '1' ? 'active' : 'inactive';
 
-    return (
-      title.includes(filter) ||
-      genre.includes(filter) ||
-      category.includes(filter) ||
-      status.includes(filter)
-    );
-  };
+      return (
+        title.includes(filter) ||
+        genre.includes(filter) ||
+        category.includes(filter) ||
+        status.includes(filter)
+      );
+    };
 
-  this.dataSource.filter = filterValue;
+    this.dataSource.filter = filterValue;
 
-  if (this.dataSource.paginator) {
-    this.dataSource.paginator.firstPage();
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
   }
-}
-getGenreName(code: string): string {
-  switch (code) {
-    case '1': return 'Action';
-    case '2': return 'Drama';
-    case '3': return 'Comedy';
-    default: return 'Other';
+  getGenreName(code: string): string {
+    switch (code) {
+      case '1': return 'Action';
+      case '2': return 'Drama';
+      case '3': return 'Comedy';
+      default: return 'Other';
+    }
   }
-}
 
-getCategoryName(code: string): string {
-  switch (code) {
-    case '1': return 'Movie';
-    case '2': return 'Show';
-    default: return 'Other';
+  getCategoryName(code: string): string {
+    switch (code) {
+      case '1': return 'Movie';
+      case '2': return 'Show';
+      default: return 'Other';
+    }
   }
-}
 
 }

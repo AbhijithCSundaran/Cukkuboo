@@ -36,10 +36,9 @@ public function getMovieDetailsById($id){
 
 }
 public function deleteMovieDetailsById($status, $mov_id)
-		{
-			// return $this->db->query("update movies_details set status = '".$status."', modify_on=NOW(), modify_by='".$modified_by."' where mov_id = '".$mov_id."'");
-			return $this->db->query("update movies_details set status = '".$status."', modify_on=NOW() where mov_id = '".$mov_id."'");
-		}
+{
+  return $this->db->query("update movies_details set status = '".$status."', modify_on=NOW() where mov_id = '".$mov_id."'");
+}
         
            
   public function getFeaturedMovies()
@@ -80,16 +79,36 @@ public function countAllMovies()
                     ->countAllResults();
 }
 
-  public function latestMovies()
+public function latestMovies($search = '', $limit = 10, $offset = 0)
 {
-    return $this->db->table($this->table)
-                    ->where('status', 1)
-                    ->where('release_date <=', date('Y-m-d'))
-                    ->orderBy('created_on', 'DESC') 
-                    ->limit(10)
-                    ->get()
-                    ->getResultArray();
+    $builder = $this->db->table($this->table)
+                        ->where('status', 1)
+                        ->where('release_date <=', date('Y-m-d'));
+
+    if (!empty($search)) {
+        $builder->groupStart()
+                ->like('title', $search)
+                ->orLike('description', $search)
+                ->orLike('cast_details', $search)
+                ->orLike('genre', $search)     // Assuming genre is searched by number or text
+                ->orLike('category', $search)  // Same for category
+                ->groupEnd();
+    }
+
+    $total = $builder->countAllResults(false); // Keeps the query state for get()
+
+    $results = $builder->orderBy('created_on', 'DESC')
+                       ->limit($limit, $offset)
+                       ->get()
+                       ->getResultArray();
+
+    return [
+        'data' => $results,
+        'total' => $total
+    ];
 }
+
+
 
 
 

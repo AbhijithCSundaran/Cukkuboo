@@ -48,6 +48,7 @@ onResize(event: any) {
      
         { name: 'Categories', path: '/categories' },
         { name: 'Genres', path: '/genres' },
+        { name: 'Reels', path: '/reels' }
         
 
        

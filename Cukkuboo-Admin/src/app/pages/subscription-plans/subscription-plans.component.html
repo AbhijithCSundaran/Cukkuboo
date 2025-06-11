@@ -7,6 +7,19 @@
       </button>
  
     </div>
+    
+
+    <!-- Search Bar -->
+  <div class="width-50    search-bar-wrapper">
+    <mat-form-field class="custom-search" appearance="outline">
+      <mat-icon matPrefix>search</mat-icon>
+      <input
+        matInput
+        placeholder="Search"
+        (keyup)="applyGlobalFilter($event)"
+      />
+    </mat-form-field>
+  </div>
     <table mat-table [dataSource]="dataSource" class="mat-elevation-z2 custom-table">
       
         <ng-container matColumnDef="slNo">
@@ -44,8 +57,9 @@
         </td>
       </ng-container>
   
-      <tr mat-header-row *matHeaderRowDef="['plan', 'price', 'period', 'features', 'action']"></tr>
-      <tr mat-row *matRowDef="let row; columns: ['plan', 'price', 'period', 'features', 'action'];"></tr>
+    <tr mat-header-row *matHeaderRowDef="['slNo', 'plan', 'price', 'period', 'features', 'action']"></tr>
+<tr mat-row *matRowDef="let row; columns: ['slNo', 'plan', 'price', 'period', 'features', 'action'];"></tr>
+
       
     </table>
 
@@ -54,6 +68,11 @@
             No Subscriptions found.
         </div>
 
-      <mat-paginator class="pagination" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
-  </div>
+ <div class="pagination-wrapper">
+  <mat-paginator
+    class="pagination"
+    [pageSizeOptions]="[10, 20, 50]"
+    showFirstLastButtons
+  ></mat-paginator>
+</div>  </div>
   

@@ -39,7 +39,7 @@ export class CategoriesComponent {
     { name: 'Documentaries', description: 'Informative and factual content', status: 'disabled' }
   ];
 
-  displayedColumns: string[] = ['name', 'description', 'status', 'action'];
+  displayedColumns: string[] = ['slNo','name', 'description', 'status', 'action'];
 
   constructor(private fb: FormBuilder) {
     this.categoryForm = this.fb.group({

@@ -21,26 +21,27 @@ export class MovieService {
   constructor(private http: HttpClient) { }
 
 
-  listmovies(model: any): Observable<any> {
-    const body = model;
-    return this.http.get(this.apiUrl + 'get/moviedetails', body);
+  listmovies(pageIndex: number = 0, pageSize: number = 10, searchText: string = ''): Observable<any> {
+    // const body = model;
+    return this.http.get(this.apiUrl + 'movie/moviedetails?pageIndex=' + pageIndex + '&pageSize=' + pageSize + '&searchText=' + searchText,
+      { headers: this.headers });
   }
   addmovies(model: any): Observable<any> {
     const body = model;
-    return this.http.post(this.apiUrl + 'movie/store', body);
+    return this.http.post(this.apiUrl + 'movie/store', body, { headers: this.headers });
   }
-  updatemovies(model: any): Observable<any> {
-    const body = model;
-    return this.http.post(this.apiUrl + 'getmovie/' + model.id, body);
-  }
+  // updatemovies(model: any): Observable<any> {
+  //   const body = model;
+  //   return this.http.post(this.apiUrl + 'getmovie/' + model.id, body);
+  // }
 
   // for edit prefill
   getMovieById(id: number): Observable<any> {
-    return this.http.get(this.apiUrl + 'getmovie/' + id);
+  return this.http.get(this.apiUrl + 'movie/get/' + id, { headers: this.headers });
   }
 
   deleteMovies(id: number): Observable<any> {
-    return this.http.post(`${this.apiUrl}movie/delete`, { mov_id: id });
+    return this.http.delete(`${this.apiUrl}movie/delete/${id}`, { headers: this.headers });
   }
 
 

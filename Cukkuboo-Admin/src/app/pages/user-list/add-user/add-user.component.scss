@@ -87,7 +87,24 @@ input {
   gap: 12px;
  }
 
+.eye-toggle-btn {
+    color: #666;
+    transition: color 0.3s ease;
+    background-color: transparent;
+  border: none;
 
+    &:hover {
+      color: #1976d2;
+    }
+  
+    mat-icon {
+      font-size: 20px;
+      user-select: none;
+      pointer-events: none;
+    
+  
+    }
+  }
 
 
 @media (max-width: 767px) {

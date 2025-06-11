@@ -14,7 +14,11 @@ class UsersubModel extends Model
         'subscription_id',
         'start_date',
         'end_date',
-        'status'
+        'status',
+        'created_by',
+        'created_on',
+        'modify_by',
+        'modify_on'
     ];
     protected $useTimestamps = false;
     protected $returnType = 'array';
@@ -46,10 +50,14 @@ class UsersubModel extends Model
     }
 
    
-    public function deleteSubscription($id)
-    {
-        return $this->delete($id);
-    }
+    public function softDeleteSubscriptionById($status, $subscriptionId, $modifiedBy = null)
+{
+    return $this->update($subscriptionId, [
+        'status'     => $status,
+        'modify_on'  => date('Y-m-d H:i:s'),
+        'modify_by'  => $modifiedBy
+    ]);
+}
 
    
 }

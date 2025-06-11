@@ -93,9 +93,15 @@ class MovieDetail extends ResourceController
         ->where('status !=', 9);
 
     // If search keyword is provided, apply LIKE condition
-    if (!empty($search)) {
-        $builder = $builder->like('title', 'genre', 'cast_details', 'category',  $search);
-    }
+  if (!empty($search)) {
+    $builder->groupStart()
+        ->like('title', $search)
+        ->orLike('genre', $search)
+        ->orLike('cast_details', $search)
+        ->orLike('category', $search)
+    ->groupEnd();
+}
+
 
     // If pageIndex is negative, return all (filtered) movies without pagination
     if ($pageIndex < 0) {
@@ -256,7 +262,6 @@ class MovieDetail extends ResourceController
         'data' => $latestmovies
     ]);
 }
-
 
 
 }

@@ -37,6 +37,7 @@ class Reels extends ResourceController
         'release_date'  => $data['release_date'] ?? null,
         'access'        => $data['access'] ?? null,
         'thumbnail'     => $data['thumbnail'] ?? null,
+        'video'     => $data['video'] ?? null,
         'views'         => $data['views'] ?? 0,
         'likes'         => $data['likes'] ?? 0,
         'modify_on'     => date('Y-m-d H:i:s')
@@ -74,47 +75,56 @@ class Reels extends ResourceController
 }
 
   public function getAllReels()
-    {
-        $pageIndex = (int) $this->request->getGet('pageIndex');
-        $pageSize = (int) $this->request->getGet('pageSize');
+{
+    $pageIndex = (int) $this->request->getGet('pageIndex');
+    $pageSize  = (int) $this->request->getGet('pageSize');
+    $search    = $this->request->getGet('search');
 
-        if ($pageIndex < 0) {
-            $reels = $this->reelsModel
-                ->where('status !=', 9)
-                ->orderBy('reels_id', 'DESC')
-                ->findAll();
+    if ($pageSize <= 0) {
+        $pageSize = 10;
+    }
 
-            return $this->response->setJSON([
-                'status' => true,
-                'message' => 'All reels fetched (no pagination).',
-                'data' => $reels,
-                'total' => count($reels)
-            ]);
-        }
+    $offset = $pageIndex * $pageSize;
 
-        if ($pageSize <= 0) {
-            $pageSize = 10;
-        }
+    $builder = $this->reelsModel->where('status !=', 9);
 
-        $offset = $pageIndex * $pageSize;
+    if (!empty($search)) {
+        $builder->groupStart()
+            ->like('title', $search)
+            ->orLike('access', $search)
+            ->groupEnd();
+    }
 
-        $total = $this->reelsModel
-            ->where('status !=', 9)
-            ->countAllResults(false);
-
-        $reels = $this->reelsModel
-            ->where('status !=', 9)
+    // If pageIndex < 0, return all (no pagination)
+    if ($pageIndex < 0) {
+        $reels = $builder
             ->orderBy('reels_id', 'DESC')
-            ->findAll($pageSize, $offset);
+            ->findAll();
 
         return $this->response->setJSON([
-            'status' => true,
-            'message' => 'Paginated reels fetched successfully.',
-            'data' => $reels,
-            'total' => $total
+            'status'  => true,
+            'message' => 'All reels fetched (no pagination).',
+            'data'    => $reels,
+            'total'   => count($reels)
         ]);
     }
-   
+
+    // Get total count
+    $total = $builder->countAllResults(false); // Don't reset the builder
+
+    // Get paginated data
+    $reels = $builder
+        ->orderBy('reels_id', 'DESC')
+        ->findAll($pageSize, $offset);
+
+    return $this->response->setJSON([
+        'status'  => true,
+        'message' => 'Paginated reels fetched successfully.',
+        'data'    => $reels,
+        'total'   => $total
+    ]);
+}
+
 public function getReelById($id)
 {
     $data = $this->reelsModel->getReelDetailsById($id);

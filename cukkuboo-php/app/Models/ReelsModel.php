@@ -16,6 +16,7 @@ class ReelsModel extends Model
         'access',
         'status',
         'thumbnail',
+        'video',
         'views',
         'likes',
         'created_by',

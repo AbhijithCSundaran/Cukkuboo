@@ -55,8 +55,14 @@ class SubscriptionPlanModel extends Model
 
 public function deletePlanById($status, $id)
 {
-  return $this->db->query("update user_subscription set status = '".$status."', modify_on=NOW() where user_subscription_id = '".$id."'");
+    return $this->db->table('user_subscription')
+        ->where('user_subscription_id', $id)
+        ->update([
+            'status'    => $status,
+            'modify_on' => date('Y-m-d H:i:s')
+        ]);
 }
+
         
 
 }

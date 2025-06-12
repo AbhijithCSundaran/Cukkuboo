@@ -58,8 +58,11 @@ class User extends ResourceController
 
         // Try to get authenticated user from JWT
         $user_id =  $data['user_id'];//$this->getAuthenticatedUser();
-        $authenticatedUser=$this->getAuthenticatedUser();
 
+        $authHeader = $this->request->getHeaderLine('Authorization');
+        $authenticatedUser=$this->getAuthenticatedUser($authHeader);
+        print_r($authHeader);
+        exit;
         // Shared user data structure
         $userData = array_filter([
             'username'     => $data['username'] ?? null,

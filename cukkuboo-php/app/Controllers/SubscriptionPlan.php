@@ -128,25 +128,25 @@ class SubscriptionPlan extends ResourceController
     }
 
     
-public function deletePlan($id)
+public function deletePlan($id = null)
 {
-
-    $authHeader = $this->request->getHeaderLine('Authorization');
-    
-    $user = $this->authService->getAuthenticatedUser($authHeader);
-     if (!$user)
-            return $this->failUnauthorized('Invalid or missing token.');
-
-    $status = 9;
-
-    if ($this->subscriptionPlanModel->deletePlanById($status, $id)) {
-        return $this->respond([
-            'status' => 200,
-            'message' => "plan with ID $id marked as deleted successfully."
-        ]);
-    } else {
-        return $this->failServerError("Failed to delete reel with ID $id.");
+    $user = $this->authService->getAuthenticatedUser(
+        $this->request->getHeaderLine('Authorization')
+    );
+    if (!$user) {
+        return $this->failUnauthorized('Invalid or missing token.');
     }
-}
 
+    $deleted = $this->subscriptionPlanModel
+        ->deletePlanById(9, (int)$id, $user['user_id'] ?? null);
+
+    if ($deleted) {
+        return $this->respond([
+            'status'  => true,
+            'message' => "Plan with ID $id marked as deleted successfully."
+        ]);
+    }
+
+    return $this->failServerError("Failed to delete plan with ID $id (no row updated).");
+}
 }

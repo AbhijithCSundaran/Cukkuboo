@@ -155,21 +155,26 @@ public function deleteSubscription($id = null)
 {
     $authHeader = $this->request->getHeaderLine('Authorization');
     $user = $this->authService->getAuthenticatedUser($authHeader);
-
     if (!$user) {
         return $this->failUnauthorized('Invalid or missing token.');
-        $status = 9;
+    }
 
-    if ($this->usersubModel->deletePlanById($status, $id)) {
+    $record = $this->usersubModel->find($id);
+    if (!$record) {
+        return $this->failNotFound("Subscription with ID $id not found.");
+    }
+
+    $status = 9;
+    $deleted = $this->usersubModel->DeleteSubscriptionById($status, $id, $user['user_id']);
+
+    if ($deleted) {
         return $this->respond([
-            'status' => 200,
-            'message' => "plan with ID $id marked as deleted successfully."
+            'status'  => true,
+            'message' => "Subscription with ID $id marked as deleted successfully."
         ]);
-        } else {
-        return $this->failServerError("Failed to delete reel with ID $id.");
+    } else {
+        return $this->failServerError("Failed to delete subscription with ID $id.");
     }
 }
 
 }
-
-} 

@@ -50,14 +50,15 @@ class UsersubModel extends Model
     }
 
    
-    public function softDeleteSubscriptionById($status, $subscriptionId, $modifiedBy = null)
+    public function DeleteSubscriptionById($status, $id, $modifiedBy = null)
 {
-    return $this->update($subscriptionId, [
+    return $this->update($id, [
         'status'     => $status,
         'modify_on'  => date('Y-m-d H:i:s'),
         'modify_by'  => $modifiedBy
     ]);
 }
+
 
    
 }

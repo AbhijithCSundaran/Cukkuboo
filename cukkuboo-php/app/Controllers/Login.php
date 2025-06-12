@@ -75,7 +75,7 @@ class Login extends BaseController
         'status' => true,
         'message' => 'Login successful (type 2)',
         'user' => [
-            'user_id' => 'user' . $user['user_id'],
+            'user_id' =>  $user['user_id'],
             'username' => $user['username'],
             'phone' => $user['phone'],
             'email' => $user['email'],

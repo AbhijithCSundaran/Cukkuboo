@@ -15,7 +15,12 @@ class SubscriptionPlanModel extends Model
         'price',
         'discount_price',
         'period',
-        'features'
+        'features',
+        'status',
+        'created_by', 
+        'created_on',
+        'modify_by',
+        'modify_on'
     ];
 
     protected $useTimestamps = false;
@@ -40,12 +45,18 @@ class SubscriptionPlanModel extends Model
         return $this->update($id, $data);
     }
 
-    public function deletePlanById($status, $id,)
+//     public function deletePlanById($status, $id)
+// {
+//     return $this->update($id, [
+//         'status'     => $status,
+//         'modify_on'  => date('Y-m-d H:i:s')
+//     ]);
+// }
+
+public function deletePlanById($status, $id)
 {
-    return $this->update($id, [
-        'status'     => $status,
-        'modify_on'  => date('Y-m-d H:i:s')
-    ]);
+  return $this->db->query("update user_subscription set status = '".$status."', modify_on=NOW() where user_subscription_id = '".$id."'");
 }
+        
 
 }

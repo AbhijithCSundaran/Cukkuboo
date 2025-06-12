@@ -101,12 +101,15 @@ class MovieDetail extends ResourceController
         $builder->where('subscription_id', $subscriptionId);
     }
 
-    if (!empty($search)) {
-        $builder->groupStart()
-            ->orWhere('user_id', $search)
-            ->orWhere('subscription_id', $search)
-        ->groupEnd();
-    }
+    // If search keyword is provided, apply LIKE condition
+  if (!empty($search)) {
+    $builder->groupStart()
+        ->like('title', $search)
+        ->orLike('genre', $search)
+        ->orLike('cast_details', $search)
+        ->orLike('category', $search)
+    ->groupEnd();
+}
 
     // If no pagination
     if ($pageIndex < 0) {
@@ -260,7 +263,6 @@ class MovieDetail extends ResourceController
         'data' => $latestmovies
     ]);
 }
-
 
 
 }

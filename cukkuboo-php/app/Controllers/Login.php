@@ -104,6 +104,8 @@ class Login extends BaseController
     // }
     public function logout()
 {
+    log_message('error', 'Logout function reached.'); // Log to debug
+
     $authHeader = $this->request->getHeaderLine('Authorization');
 
     if (!$authHeader || !preg_match('/Bearer\s(\S+)/', $authHeader, $matches)) {
@@ -114,8 +116,6 @@ class Login extends BaseController
     }
 
     $token = $matches[1];
-
-    // Find user by token
     $user = $this->loginModel->where('jwt_token', $token)->first();
 
     if (!$user) {
@@ -125,7 +125,6 @@ class Login extends BaseController
         ]);
     }
 
-    // Clear the token from the DB
     $this->loginModel->update($user['user_id'], ['jwt_token' => null]);
 
     return $this->response->setJSON([
@@ -133,6 +132,7 @@ class Login extends BaseController
         'message' => 'Logout successful. Token removed.'
     ]);
 }
+
 public function sendOtp()
 {
     // Get JSON input

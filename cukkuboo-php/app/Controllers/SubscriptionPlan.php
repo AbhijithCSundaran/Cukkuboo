@@ -31,34 +31,22 @@ class SubscriptionPlan extends ResourceController
 {
     $data = $this->request->getJSON(true);
     $id   = $data['id'] ?? null;
-
+    $authHeader = $this->request->getHeaderLine('Authorization');
+    $user = $this->authService->getAuthenticatedUser($authHeader);
+    if (!$user)
+        return $this->failUnauthorized('Invalid or missing token.');
     
-    if (!$id && (empty($data['plan_name']) || empty($data['price']) || empty($data['period']))) {
+    if ((empty($data['plan_name']) || empty($data['price']) || empty($data['period']))) {
         return $this->failValidationErrors('Plan name, price, and period are required.');
     }
 
-    $periodInput = trim($data['period']);
-
-    
-    if (array_key_exists($periodInput, $this->periodMap)) {
-        $period = $this->periodMap[$periodInput];
-    }
-    
-    elseif (in_array((int)$periodInput, $this->periodMap, true)) {
-        $period = (int)$periodInput;
-    } else {
-        return $this->failValidationErrors('Invalid period option.');
-    }
-
-    $data['period']         = $period;
-    $data['discount_price'] = $data['discount_price'] ?? null;
     $data['features']       = $data['features'] ?? null;
     $data['modify_on']      = date('Y-m-d H:i:s');
 
     if (!$id) {
         $data['status']      = 1;
         $data['created_on']  = date('Y-m-d H:i:s');
-        $data['created_by']  = $data['created_by'] ?? null;
+        $data['created_by']  = 1;
 
         $this->subscriptionPlanModel->addPlan($data);
         return $this->respond([

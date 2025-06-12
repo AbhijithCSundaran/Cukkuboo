@@ -28,6 +28,7 @@ class User extends ResourceController
     public function getAuthenticatedUser()
 {
     $authHeader = $this->request->getHeaderLine('Authorization');
+    $user = $this->authService->getAuthenticatedUser($authHeader);
     if (!$authHeader || !str_starts_with($authHeader, 'Bearer ')) {
         return null;
     }

@@ -154,7 +154,8 @@ class Usersub extends ResourceController
 public function deleteSubscription($id = null)
 {
     $authHeader = $this->request->getHeaderLine('Authorization');
-    $user = $this->authService->getAuthenticatedUser($authHeader);
+    $auth = new AuthService();
+    $user=$auth->getAuthenticatedUser($authHeader);
     if (!$user) {
         return $this->failUnauthorized('Invalid or missing token.');
     }

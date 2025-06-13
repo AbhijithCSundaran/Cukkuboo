@@ -12,11 +12,12 @@ class SubscriptionPlan extends ResourceController
     // protected $subscriptionPlanModel;
 
     protected $periodMap = [
-        '3 days' => 3,
-        '30 days' => 30,
-        '90 days' => 90,
-        '1 Year' => 365
+    '3 days' => 3,
+    '30 days' => 30,
+    '90 days' => 90,
+    '1 Year' => 365
     ];
+
 
     public function __construct()
     {
@@ -28,27 +29,43 @@ class SubscriptionPlan extends ResourceController
        
     }
     public function savePlan()
-{
-    $data = $this->request->getJSON(true);
-    $id   = $data['id'] ?? null;
-    $authHeader = $this->request->getHeaderLine('Authorization');
-    $user = $this->authService->getAuthenticatedUser($authHeader);
-    if (!$user)
-        return $this->failUnauthorized('Invalid or missing token.');
-    
-    if ((empty($data['plan_name']) || empty($data['price']) || empty($data['period']))) {
-        return $this->failValidationErrors('Plan name, price, and period are required.');
-    }
+    {
+        $data = $this->request->getJSON(true);
+        $id   = $data['id'] ?? null;
 
-    $data['features']       = $data['features'] ?? null;
-    $data['modify_on']      = date('Y-m-d H:i:s');
+        $authHeader = $this->request->getHeaderLine('Authorization');
+        $user = $this->authService->getAuthenticatedUser($authHeader);
+
+        if (!$user) {
+            return $this->failUnauthorized('Invalid or missing token.');
+        }
+
+        if (!isset($data['plan_name']) || !isset($data['price']) || !isset($data['period'])) {
+            return $this->failValidationErrors('Plan name, price, and period are required.');
+        }
+
+        
+                            if (!in_array($data['period'], $this->periodMap)) {
+                        return $this->respond([
+                            'status' => false,
+                            'message' => 'Invalid period option'
+                        ]);
+                    }
+
+                    $data['days'] = (int)$data['period']; // Already a valid day count
+
+
+    $data['days'] = $this->periodMap[$data['period']];
+    $data['features']  = $data['features'] ?? null;
+    $data['modify_on'] = date('Y-m-d H:i:s');
 
     if (!$id) {
-        $data['status']      = 1;
-        $data['created_on']  = date('Y-m-d H:i:s');
-        $data['created_by']  = 1;
+        $data['status'] = 1;
+        $data['created_on'] = date('Y-m-d H:i:s');
+        $data['created_by'] = $user['user_id'];
 
         $this->subscriptionPlanModel->addPlan($data);
+
         return $this->respond([
             'status' => true,
             'message' => 'Plan created successfully',
@@ -76,7 +93,10 @@ class SubscriptionPlan extends ResourceController
     $pageIndex = (int) $this->request->getGet('pageIndex');
     $pageSize  = (int) $this->request->getGet('pageSize');
     $search    = $this->request->getGet('search');
-
+    $authHeader = $this->request->getHeaderLine('Authorization');
+    $user = $this->authService->getAuthenticatedUser($authHeader);
+    if(!$user) 
+            return $this->failUnauthorized('Invalid or missing token.');
     if ($pageSize <= 0) {
         $pageSize = 10;
     }
@@ -108,6 +128,10 @@ class SubscriptionPlan extends ResourceController
 }
     public function get($id)
     {
+        $authHeader = $this->request->getHeaderLine('Authorization');
+        $user = $this->authService->getAuthenticatedUser($authHeader);
+        if(!$user) 
+            return $this->failUnauthorized('Invalid or missing token.');
         $plan = $this->subscriptionPlanModel->getPlanById($id);
         if (!$plan) {
             return $this->response->setJSON(['status' => false, 'message' => 'Plan not found'])->setStatusCode(404);
@@ -115,26 +139,28 @@ class SubscriptionPlan extends ResourceController
         return $this->response->setJSON(['status' => true, 'data' => $plan]);
     }
 
-    
-public function deletePlan($id = null)
-{
-    $user = $this->authService->getAuthenticatedUser(
-        $this->request->getHeaderLine('Authorization')
-    );
-    if (!$user) {
-        return $this->failUnauthorized('Invalid or missing token.');
+    public function delete($id = null)
+    {
+        // print_r('hi');
+        // exit;
+        // $auth = new AuthService();
+        $authHeader = $this->request->getHeaderLine('Authorization');
+        $user = $this->authService->getAuthenticatedUser($authHeader);
+
+        if (!$user) {
+            return $this->failUnauthorized('Invalid or missing token.');
+        }
+
+        $deleted = $this->subscriptionPlanModel
+            ->deletePlanById(9, (int)$id, $user['user_id'] ?? null);
+
+        if ($deleted) {
+            return $this->respond([
+                'status'  => true,
+                'message' => "Plan with ID $id marked as deleted successfully."
+            ]);
+        }
+
+        return $this->failServerError("Failed to delete plan with ID $id (no row updated).");
     }
-
-    $deleted = $this->subscriptionPlanModel
-        ->deletePlanById(9, (int)$id, $user['user_id'] ?? null);
-
-    if ($deleted) {
-        return $this->respond([
-            'status'  => true,
-            'message' => "Plan with ID $id marked as deleted successfully."
-        ]);
-    }
-
-    return $this->failServerError("Failed to delete plan with ID $id (no row updated).");
-}
 }

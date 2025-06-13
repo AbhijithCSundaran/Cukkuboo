@@ -55,7 +55,7 @@ $routes->get('api/home', 'MovieDetail::homeDisplay');
 $routes->get('subscriptionplan/list', 'SubscriptionPlan::getAll');           
 $routes->get('subscriptionplan/get/(:num)', 'SubscriptionPlan::get/$1');     
 $routes->post('subscriptionplan/save', 'SubscriptionPlan::savePlan');         
-$routes->delete('subscriptionplan/delete/(:num)', 'SubscriptionPlan::deletePlan/$1'); 
+$routes->delete('subscriptionplan/delete/(:num)', 'SubscriptionPlan::delete/$1'); 
 
 //reels details
 

@@ -32,7 +32,10 @@ class SubscriptionPlanModel extends Model
 
     public function getPlanById($id)
     {
-        return $this->where('subscriptionplan_id', $id)->first();
+        return $this->where('subscriptionplan_id', $id)
+            ->where('status !=', 9)
+            ->first();
+
     }
 
     public function addPlan($data)
@@ -55,13 +58,14 @@ class SubscriptionPlanModel extends Model
 
 public function deletePlanById($status, $id)
 {
-    return $this->db->table('user_subscription')
-        ->where('user_subscription_id', $id)
+    return $this->db->table($this->table)
+        ->where('subscriptionplan_id', $id)
         ->update([
             'status'    => $status,
             'modify_on' => date('Y-m-d H:i:s')
         ]);
 }
+
 
         
 

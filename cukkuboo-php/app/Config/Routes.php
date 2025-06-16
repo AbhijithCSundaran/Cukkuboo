@@ -71,5 +71,11 @@ $routes->get('usersub/details', 'Usersub::getAllSubscriptions');
 $routes->get('usersub/get/(:num)', 'Usersub::getSubscriptionById/$1');
 $routes->delete('usersub/delete/(:num)', 'Usersub::deleteSubscription/$1');
 
+$routes->post('resume/saveprogress', 'Resume::saveProgress');
+$routes->get('resume/viewhistory', 'Resume::viewHistory');
+
+$routes->post('savehistory/save', 'Savehistory::saveMovie');
+$routes->get('savehistory/history', 'Savehistory::saveHistory');
+
 
 ?>

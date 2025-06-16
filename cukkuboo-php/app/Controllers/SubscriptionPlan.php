@@ -45,14 +45,14 @@ class SubscriptionPlan extends ResourceController
         }
 
         
-                            if (!in_array($data['period'], $this->periodMap)) {
-                        return $this->respond([
-                            'status' => false,
-                            'message' => 'Invalid period option'
-                        ]);
-                    }
+        if (!in_array($data['period'], $this->periodMap)) {
+            return $this->respond([
+            'status' => false,
+            'message' => 'Invalid period option'
+            ]);
+        }
 
-                    $data['days'] = (int)$data['period']; // Already a valid day count
+    $data['days'] = (int)$data['period']; // Already a valid day count
 
 
     $data['days'] = $this->periodMap[$data['period']];
@@ -95,8 +95,9 @@ class SubscriptionPlan extends ResourceController
     $search    = $this->request->getGet('search');
     $authHeader = $this->request->getHeaderLine('Authorization');
     $user = $this->authService->getAuthenticatedUser($authHeader);
-    if(!$user) 
+    if(!$user){ 
             return $this->failUnauthorized('Invalid or missing token.');
+    }
     if ($pageSize <= 0) {
         $pageSize = 10;
     }
@@ -130,8 +131,9 @@ class SubscriptionPlan extends ResourceController
     {
         $authHeader = $this->request->getHeaderLine('Authorization');
         $user = $this->authService->getAuthenticatedUser($authHeader);
-        if(!$user) 
+        if(!$user){
             return $this->failUnauthorized('Invalid or missing token.');
+        }
         $plan = $this->subscriptionPlanModel->getPlanById($id);
         if (!$plan) {
             return $this->response->setJSON(['status' => false, 'message' => 'Plan not found'])->setStatusCode(404);

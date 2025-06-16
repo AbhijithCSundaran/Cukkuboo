@@ -40,9 +40,11 @@ $routes->post('upload-image', 'Uploads::uploadImage');
 
 $routes->post('movie/store', 'MovieDetail::store');
 $routes->get('movie/moviedetails','MovieDetail::getAllMovieDetails');
-$routes->get('movie/get/(:any)', 'MovieDetail::getMovieById/$1');
+$routes->get('getmovie/(:any)', 'MovieDetail::getMovieById/$1');
 $routes->delete('movie/delete/(:any)','MovieDetail::deleteMovieDetails/$1');
 $routes->get('movies/latest', 'MovieDetail::getLatestMovies');
+$routes->get('movies/most-watched', 'MovieDetail::mostWatchedMovies');
+
 
 
 

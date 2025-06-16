@@ -4,144 +4,100 @@ namespace App\Controllers;
 
 use App\Models\CategoryModel;
 use CodeIgniter\RESTful\ResourceController;
+use App\Libraries\Jwt;
+use App\Libraries\AuthService;
 
 class Category extends ResourceController
 {
     protected $categoryModel;
+    protected $authService;
 
     public function __construct()
     {
         $this->categoryModel = new CategoryModel();
-    }
-public function saveCategory()
-{
-    $data = $this->request->getJSON(true);
-
-    $category_id = $data['category_id'] ?? null;
-
-    if (
-        empty($data['category_name']) ||
-        !isset($data['description']) ||
-        !isset($data['status'])
-    ) {
-        return $this->failValidationError('category_name, description, and status are required.');
+        $this->authService = new AuthService();
     }
 
-    $categoryData = [
-        'category_name' => $data['category_name'],
-        'description'   => $data['description'],
-        'status'        => $data['status'],
-    ];
+    public function saveCategory()
+    {
+        $authHeader = $this->request->getHeaderLine('Authorization');
+        $user = $this->authService->getAuthenticatedUser($authHeader);
 
-    // CREATE
-    if (empty($category_id)) {
-        if ($this->categoryModel->categoryExists($data['category_name'])) {
-            return $this->fail('Category with this category_name already exists.');
+        if (!$user) {
+            return $this->failUnauthorized('Invalid or missing token.');
         }
 
-        $this->categoryModel->addCategory($categoryData);
+        $data = $this->request->getJSON(true);
+        $category_id = $data['category_id'] ?? null;
 
-        return $this->respondCreated([
-            'success' => true,
-            'message' => 'Category created successfully.',
-            'data'    => $categoryData
-        ]);
-    }
-
-    // UPDATE
-    else {
-        if (!$this->categoryModel->categoryExists($category_id)) {
-            return $this->failNotFound('Category not found.');
+        if (empty($data['category_name']) || !isset($data['description'])) {
+            return $this->failValidationError('category_name and description are required.');
         }
 
-        $this->categoryModel->updateCategory($category_id, $categoryData);
+        $categoryData = [
+            'category_name' => $data['category_name'],
+            'description'   => $data['description'],
+            'modify_on'     => date('Y-m-d H:i:s'),
+        ];
 
-        return $this->respond([
-            'success' => true,
-            'message' => 'Category updated successfully.',
-            'data'    => array_merge(['category_id' => $category_id], $categoryData)
-        ]);
+        if (empty($category_id)) {
+            if ($this->categoryModel->categoryExists($data['category_name'])) {
+                return $this->fail('Category with this category_name already exists.');
+            }
+
+            $categoryData['status']     = 1; // Active
+            $categoryData['created_on'] = date('Y-m-d H:i:s');
+            $categoryData['created_by'] = $user['user_id'];
+
+            $this->categoryModel->addCategory($categoryData);
+
+            return $this->respondCreated([
+                'success' => true,
+                'message' => 'Category created successfully.',
+                'data'    => $categoryData
+            ]);
+        } else {
+            if (!$this->categoryModel->categoryExists($category_id)) {
+                return $this->failNotFound('Category not found.');
+            }
+
+            $categoryData['modified_by'] = $user['user_id'];
+            $this->categoryModel->updateCategory($category_id, $categoryData);
+
+            return $this->respond([
+                'success' => true,
+                'message' => 'Category updated successfully.',
+                'data'    => array_merge(['category_id' => $category_id], $categoryData)
+            ]);
+        }
     }
-}
-
-    // POST: Create category
-    // public function create()
-    // {
-    //     $data = $this->request->getJSON(true);
-
-    //     if (
-           
-    //         empty($data['category_name']) ||
-    //         !isset($data['description']) ||
-    //         !isset($data['status'])
-    //     ) {
-    //         return $this->failValidationError('category_name, description, and status are required.');
-    //     }
-
-    //     if ($this->categoryModel->categoryExists($data['category_name'])) {
-    //         return $this->fail('Category with this category_name already exists.');
-    //     }
-
-    //     $this->categoryModel->addCategory($data);
-
-    //     return $this->respondCreated([
-    //         'success' => true,
-    //         'message' => 'Category created successfully.',
-    //         'data' => $data
-    //     ]);
-    // }
-
-    // // PUT: Update category
-    // public function update($category_id = null)
-    // {
-    //     if (!$category_id) {
-    //         return $this->failValidationError('category_id is required.');
-    //     }
-
-    //     $data = $this->request->getJSON(true);
-
-    //     if (
-    //         empty($data['category_name']) ||
-    //         !isset($data['description']) ||
-    //         !isset($data['status'])
-    //     ) {
-    //         return $this->failValidationError('category_name, description, and status are required.');
-    //     }
-
-    //     if (!$this->categoryModel->categoryExists($category_id)) {
-    //         return $this->failNotFound('Category not found.');
-    //     }
-
-    //     $updateData = [
-    //         'category_name' => $data['category_name'],
-    //         'description'   => $data['description'],
-    //         'status'        => $data['status'],
-    //     ];
-
-    //     $this->categoryModel->updateCategory($category_id, $updateData);
-
-    //     return $this->respond([
-    //         'success' => true,
-    //         'message' => 'Category updated successfully.',
-    //         'data' => [
-    //             'category_id'   => $category_id,
-    //             'category_name' => $data['category_name'],
-    //             'description'   => $data['description'],
-    //             'status'        => $data['status'],
-    //         ]
-    //     ]);
-    // }
 
     public function categorylist()
-{
-    // Get pagination parameters from query string
-    $pageIndex = (int) $this->request->getGet('pageIndex');
-    $pageSize  = (int) $this->request->getGet('pageSize');
+    {
+        $pageIndex = (int) $this->request->getGet('pageIndex');
+        $pageSize  = (int) $this->request->getGet('pageSize');
+        $search    = $this->request->getGet('search');
 
-    // If pageIndex is negative, return all categories
-    if ($pageIndex < 0) {
-        $categories = $this->categoryModel->orderBy('category_id', 'DESC')->findAll();
-        $total      = count($categories);
+        if ($pageSize <= 0) {
+            $pageSize = 10;
+        }
+
+        $offset = $pageIndex * $pageSize;
+
+        $builder = $this->categoryModel->where('status', 1); // Only active
+
+        if (!empty($search)) {
+            $builder->groupStart()
+                    ->like('category_name', $search)
+                    ->orLike('description', $search)
+                    ->groupEnd();
+        }
+
+        $total = $builder->countAllResults(false);
+
+        $categories = $builder
+            ->orderBy('category_id', 'DESC')
+            ->findAll($pageSize, $offset);
 
         return $this->response->setJSON([
             'success' => true,
@@ -150,39 +106,31 @@ public function saveCategory()
         ]);
     }
 
-    // Fallback/default values
-    if ($pageSize <= 0) {
-        $pageSize = 10;
-    }
-
-    $offset = $pageIndex * $pageSize;
-
-    // Total number of records
-    $total = $this->categoryModel->countAll();
-
-    // Paginated fetch
-    $categories = $this->categoryModel
-        ->orderBy('category_id', 'DESC')
-        ->findAll($pageSize, $offset);
-
-    return $this->response->setJSON([
-        'success' => true,
-        'data'    => $categories,
-        'total'   => $total
-    ]);
-}
-
     public function delete($category_id = null)
     {
+        $authHeader = $this->request->getHeaderLine('Authorization');
+        $user = $this->authService->getAuthenticatedUser($authHeader);
+
+        if (!$user) {
+            return $this->failUnauthorized('Invalid or missing token.');
+        }
+
         if (!$category_id || !$this->categoryModel->categoryExists($category_id)) {
             return $this->failNotFound('Category not found.');
         }
 
-        $this->categoryModel->deleteCategory($category_id);
+        // Soft delete
+        $updateData = [
+            'status'      => 9,
+            'modify_on'   => date('Y-m-d H:i:s'),
+            'modified_by' => $user['user_id']
+        ];
+
+        $this->categoryModel->updateCategory($category_id, $updateData);
 
         return $this->respondDeleted([
             'success' => true,
-            'message' => 'Category deleted successfully.'
+            'message' => 'Category marked as deleted successfully.'
         ]);
     }
 }

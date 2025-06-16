@@ -71,11 +71,21 @@ $routes->get('usersub/details', 'Usersub::getAllSubscriptions');
 $routes->get('usersub/get/(:num)', 'Usersub::getSubscriptionById/$1');
 $routes->delete('usersub/delete/(:num)', 'Usersub::deleteSubscription/$1');
 
+$routes->post('reellike/like', 'ReelLike::reelLike');
+$routes->post('reelview/view', 'ReelView::viewReel');
+
+$routes->post('notification/save', 'Notification::createOrUpdate'); // create or update
+$routes->get('notification/list', 'Notification::getAll');          // get by user
+$routes->delete('notification/delete/(:num)', 'Notification::delete/$1'); // soft delete
+$routes->post('notification/markall', 'Notification::markAllAsReadOrUnread'); // mark as read);
+$routes->get('notification/get/(:num)', 'Notification::getById/$1');
+
 $routes->post('resume/saveprogress', 'Resume::saveProgress');
 $routes->get('resume/viewhistory', 'Resume::viewHistory');
 
 $routes->post('savehistory/save', 'Savehistory::saveMovie');
 $routes->get('savehistory/history', 'Savehistory::saveHistory');
+
 
 
 ?>

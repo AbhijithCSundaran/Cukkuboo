@@ -70,6 +70,4 @@ $routes->get('usersub/get/(:num)', 'Usersub::getSubscriptionById/$1');
 $routes->delete('usersub/delete/(:num)', 'Usersub::deleteSubscription/$1');
 
 
-
-
 ?>

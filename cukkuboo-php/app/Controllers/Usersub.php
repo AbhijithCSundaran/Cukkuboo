@@ -21,121 +21,114 @@ class Usersub extends ResourceController
         $this->subscriptionPlanModel = new SubscriptionPlanModel();
     }
 
-    
-   public function saveSubscription()
-{
-    $data = $this->request->getJSON(true);
-    $userSubscriptionId = $data['user_subscription_id'] ?? null;
+ public function saveSubscription()
+    {
+        $data = $this->request->getJSON(true);
+        $id = $data['user_subscription_id'] ?? null;
 
-    // Validation for required fields when creating
-    if (empty($userSubscriptionId)) {
-        if (empty($data['user_id']) || empty($data['subscription_id']) || empty($data['start_date'])) {
-            return $this->failValidationErrors('User ID, subscription ID, and start date are required.');
+        // Validate required fields for create
+        if (!$id && (empty($data['user_id']) || empty($data['subscription_id']) || empty($data['start_date']))) {
+            return $this->failValidationErrors('User ID, plan ID, and start date are required.');
         }
-    }
 
-    // Get the subscription plan
-    $plan = $this->subscriptionPlanModel->getPlanById($data['subscription_id']);
-    if (!$plan) {
-        return $this->failNotFound('Invalid subscription plan.');
-    }
+        // Verify plan exists
+        $plan = $this->subscriptionPlanModel->getPlanById($data['subscription_id']);
+        if (!$plan) {
+            return $this->failNotFound('Invalid subscription plan.');
+        }
 
-    // Calculate end date
-    $startDate = date_create($data['start_date']);
-    $endDate = date_add(clone $startDate, date_interval_create_from_date_string("{$plan['period']} days"));
+        // Calculate end date
+        $start = new \DateTime($data['start_date']);
+        $end = $start->add(new \DateInterval("P{$plan['period']}D"))->format('Y-m-d');
 
-    // Base data
-    $subscriptionData = [
-        'user_id'         => $data['user_id'] ?? null,
-        'subscription_id' => $data['subscription_id'] ?? null,
-        'start_date'      => $data['start_date'],
-        'end_date'        => $endDate->format('Y-m-d'),
-        'modify_on'       => date('Y-m-d H:i:s'),
-        'modify_by' => $data['modified_by'] ?? $data['created_by'] ?? 0,
+        // Build data payload
+        $payload = [
+            'user_id'         => $data['user_id'] ?? null,
+            'subscription_id' => $data['subscription_id'] ?? null,
+            'start_date'      => $data['start_date'],
+            'end_date'        => $end,
+            'modify_on'       => date('Y-m-d H:i:s'),
+            'modify_by'       => $data['modified_by'] ?? $data['created_by'] ?? 0,
+        ];
 
-    ];
+        if (!$id) {
+            // Creating new subscription
+            $payload['status']      = 1;
+            $payload['created_on']  = date('Y-m-d H:i:s');
+            $payload['created_by']  = $data['created_by'] ?? 0;
 
-    if (empty($userSubscriptionId)) {
-        // For create
-        $subscriptionData['status']      = 1;
-        $subscriptionData['created_on'] = date('Y-m-d H:i:s');
-       $subscriptionData['created_by'] = $data['created_by'] ?? 0;
+            $id = $this->usersubModel->insert($payload);
+            $payload['user_subscription_id'] = $id;
 
-        $insertedId = $this->usersubModel->insert($subscriptionData);
-        $subscriptionData['user_subscription_id'] = $insertedId;
+            return $this->respond([
+                'status'  => true,
+                'message' => 'Subscription created successfully.',
+                'data'    => $payload
+            ]);
+        }
 
-        return $this->respond([
-            'status'  => true,
-            'message' => 'Subscription created successfully.',
-            'data'    => $subscriptionData
-        ]);
-    } else {
-        // For update
-        $existing = $this->usersubModel->find($userSubscriptionId);
+        // Update existing subscription
+        $existing = $this->usersubModel->find($id);
         if (!$existing) {
-            return $this->failNotFound("Subscription with ID $userSubscriptionId not found.");
+            return $this->failNotFound("Subscription with ID $id not found.");
         }
 
-        $subscriptionData['status'] = $data['status'] ?? $existing['status'];
-
-        $this->usersubModel->update($userSubscriptionId, $subscriptionData);
-        $subscriptionData['user_subscription_id'] = $userSubscriptionId;
+        $payload['status'] = $data['status'] ?? $existing['status'];
+        $this->usersubModel->update($id, $payload);
+        $payload['user_subscription_id'] = $id;
 
         return $this->respond([
             'status'  => true,
             'message' => 'Subscription updated successfully.',
-            'data'    => $subscriptionData
+            'data'    => $payload
         ]);
     }
-}
 
-  public function getAllSubscriptions()
-{
+
+    public function getAllSubscriptions()
+    {
     $pageIndex = (int) $this->request->getGet('pageIndex');
-    $pageSize  = (int) $this->request->getGet('pageSize');
-    $search    = $this->request->getGet('search'); // optional search keyword
-
-    if ($pageSize <= 0) {
-        $pageSize = 10;
-    }
+    $pageSize  = max(10, (int) $this->request->getGet('pageSize'));
+    $search    = $this->request->getGet('search');
 
     $offset = $pageIndex * $pageSize;
 
-    // Build base query
-    $builder = $this->usersubModel->where('status !=', 'deleted');
+    $builder = $this->usersubModel->builder(); // start fresh query builder
+    $builder->select('us.*, u.username AS username')
+        ->from('user_subscription us')
+        ->join('user u', 'u.user_id = us.user_id', 'left')
+        ->where('us.status !=', 9);
 
-    // Apply search filter if provided
     if (!empty($search)) {
-        $builder->groupStart()
-            ->like('user_id', $search)
-            ->orLike('subscription_id', $search)
-            ->groupEnd();
+        $builder->like('u.username', $search);
     }
 
     if ($pageIndex < 0) {
-        $subscriptions = $builder
-            ->orderBy('user_subscription_id', 'DESC')
-            ->findAll();
+        $rows = $builder->orderBy('us.user_subscription_id', 'DESC')
+                        ->get()
+                        ->getResultArray();
 
         return $this->respond([
             'status' => true,
-            'data'   => $subscriptions,
-            'total'  => count($subscriptions)
+            'data'   => $rows,
+            'total'  => count($rows),
         ]);
     }
 
     $total = $builder->countAllResults(false);
-    // Get paginated result
-    $subscriptions = $builder
-        ->orderBy('user_subscription_id', 'DESC')
-        ->findAll($pageSize, $offset);
+
+    $rows = $builder->orderBy('us.user_subscription_id', 'DESC')
+        ->limit($pageSize, $offset)
+        ->get()
+        ->getResultArray();
 
     return $this->respond([
         'status' => true,
-        'data'   => $subscriptions,
-        'total'  => $total
+        'data'   => $rows,
+        'total'  => $total,
     ]);
 }
+
   public function getSubscriptionById($id = null)
     {
     $record = $this->usersubModel->find($id);
@@ -161,29 +154,21 @@ class Usersub extends ResourceController
 public function deleteSubscription($id = null)
 {
     $authHeader = $this->request->getHeaderLine('Authorization');
-    $user = $this->authService->getAuthenticatedUser($authHeader);
-
+    $auth = new AuthService();
+    $user=$auth->getAuthenticatedUser($authHeader);
     if (!$user) {
         return $this->failUnauthorized('Invalid or missing token.');
     }
 
     $record = $this->usersubModel->find($id);
-
     if (!$record) {
-        return $this->respond([
-            'status' => false,
-            'message' => 'Subscription not found.'
-        ], 404);
+        return $this->failNotFound("Subscription with ID $id not found.");
     }
 
-   
-    $updated = $this->usersubModel->update($id, [
-        'status'     => 9,
-        'modify_on'  => date('Y-m-d H:i:s'),
-        'modify_by'  => $user['user_id'] ?? 0 
-    ]);
+    $status = 9;
+    $deleted = $this->usersubModel->DeleteSubscriptionById($status, $id, $user['user_id']);
 
-    if ($updated) {
+    if ($deleted) {
         return $this->respond([
             'status'  => true,
             'message' => "Subscription with ID $id marked as deleted successfully."

@@ -15,7 +15,12 @@ class SubscriptionPlanModel extends Model
         'price',
         'discount_price',
         'period',
-        'features'
+        'features',
+        'status',
+        'created_by', 
+        'created_on',
+        'modify_by',
+        'modify_on'
     ];
 
     protected $useTimestamps = false;
@@ -27,7 +32,10 @@ class SubscriptionPlanModel extends Model
 
     public function getPlanById($id)
     {
-        return $this->where('subscriptionplan_id', $id)->first();
+        return $this->where('subscriptionplan_id', $id)
+            ->where('status !=', 9)
+            ->first();
+
     }
 
     public function addPlan($data)
@@ -40,12 +48,25 @@ class SubscriptionPlanModel extends Model
         return $this->update($id, $data);
     }
 
-    public function deletePlanById($status, $id,)
+//     public function deletePlanById($status, $id)
+// {
+//     return $this->update($id, [
+//         'status'     => $status,
+//         'modify_on'  => date('Y-m-d H:i:s')
+//     ]);
+// }
+
+public function deletePlanById($status, $id)
 {
-    return $this->update($id, [
-        'status'     => $status,
-        'modify_on'  => date('Y-m-d H:i:s')
-    ]);
+    return $this->db->table($this->table)
+        ->where('subscriptionplan_id', $id)
+        ->update([
+            'status'    => $status,
+            'modify_on' => date('Y-m-d H:i:s')
+        ]);
 }
+
+
+        
 
 }

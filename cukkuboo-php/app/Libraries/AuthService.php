@@ -17,17 +17,13 @@ class AuthService
 
     public function getAuthenticatedUser($authHeader)
     {
+
         if (!$authHeader || !str_starts_with($authHeader, 'Bearer ')) {
             return null;
         }
 
         $token = trim(str_replace('Bearer', '', $authHeader));
-
         try {
-            // $jwt = new Jwt();
-            // $payload = $jwt->decode($token);
-            // $userId = $payload->user_id ?? null;
-            // $user = $this->UserModel->find($userId);
             $user = $this->UserModel->findUserByToken($token);
 
             if (!$user || $user['jwt_token'] !== $token) {

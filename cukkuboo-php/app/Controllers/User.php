@@ -13,10 +13,10 @@ class User extends ResourceController
 
     public function __construct()
     {
-         $this->session = \Config\Services::session();
+        $this->session = \Config\Services::session();
         $this->input = \Config\Services::request();
         $this->UserModel = new UserModel();
-         $this->authService = new AuthService();
+        $this->authService = new AuthService();
     }
 
     public function index(): string
@@ -24,43 +24,15 @@ class User extends ResourceController
         return view('welcome_message');
     }
 
-
-    public function getAuthenticatedUser()
-{
-    $authHeader = $this->request->getHeaderLine('Authorization');
-    if (!$authHeader || !str_starts_with($authHeader, 'Bearer ')) {
-        return null;
-    }
-
-    $token = trim(str_replace('Bearer', '', $authHeader));
-
-    try {
-        $jwt     = new Jwt();
-        $payload = $jwt->decode($token);
-        $userId  = $payload->user_id ?? null;
-
-        $user = $this->UserModel->find($userId);
-
-        if (!$user || $user['jwt_token'] !== $token) {
-            return null;
-        }
-
-        return $user;
-
-    } catch (\Exception $e) {
-        return null;
-    }
-}
-
     public function registerFun()
     {
         $data = $this->request->getJSON(true);
 
         // Try to get authenticated user from JWT
-        $user_id =  $data['user_id'];//$this->getAuthenticatedUser();
-        $authenticatedUser=$this->getAuthenticatedUser();
-
-        // Shared user data structure
+        $user_id =  $data['user_id']??0;//$this->getAuthenticatedUser();
+        $authHeader = $this->request->getHeaderLine('Authorization');
+        $authenticatedUser= $this->authService->getAuthenticatedUser($authHeader);
+        
         $userData = array_filter([
             'username'     => $data['username'] ?? null,
             'phone'        => $data['phone'] ?? null,
@@ -75,8 +47,6 @@ class User extends ResourceController
         if (!empty($data['password'])) {
             $userData['password'] = password_hash($data['password'], PASSWORD_BCRYPT);
         }
-
-        // ✅ If NOT authenticated → Register new user
         if (!$user_id) {
             if (empty($data['phone']) && empty($data['email'])) {
                 return $this->response->setJSON([
@@ -98,9 +68,17 @@ class User extends ResourceController
 
             $jwt   = new Jwt();
             $token = $jwt->encode(['user_id' => $user['user_id']]);
-            $created_by = $authenticatedUser?$authenticatedUser['user_id']:$userId;
-            $this->UserModel->update($user['user_id'], ['created_by' => $created_by]);
-            $this->UserModel->update($user['user_id'], ['jwt_token' => $token]);
+
+            $created_by = $authenticatedUser ? $authenticatedUser['user_id'] : $userId;
+
+            
+            $this->UserModel->update($user['user_id'], [
+                'created_by' => $created_by,
+                'jwt_token'  => $token
+            ]);
+
+            
+            $user = $this->UserModel->find($userId);
 
             return $this->response->setJSON([
                 'status'  => true,
@@ -111,17 +89,17 @@ class User extends ResourceController
                     'email'               => $user['email'],
                     'password'            => $user['password'],
                     'phone'               => $user['phone'],
-                    'status'               => $user['status'],
+                    'status'              => $user['status'],
                     'subscription_status' => $user['subscription'],
                     'user_type'           => $user['user_type'],
                     'created_at'          => $user['created_at'],
                     'created_by'          => $created_by,
-                    'jwt_token'           => $token
+                    'jwt_token'           => $user['jwt_token']
                 ]
             ])->setStatusCode(201);
-        } 
+         } 
 
-        // ✅ If authenticated → Update existing user
+      
         else {
             if($authenticatedUser){
                 $userData['updated_at'] = date('Y-m-d H:i:s');
@@ -187,6 +165,10 @@ class User extends ResourceController
     // Get user details by user_id
 public function getUserDetailsById($userId)
 {
+    $authHeader = $this->request->getHeaderLine('Authorization');
+    $authuser = $this->authService->getAuthenticatedUser($authHeader);
+        if(!$authuser) 
+            return $this->failUnauthorized('Invalid or missing token.');
     $user = $this->UserModel->getUserById($userId);
 
     if (!$user) {
@@ -208,7 +190,10 @@ public function getUserList()
     $pageSize  = (int) $this->request->getGet('pageSize');
     $search    = $this->request->getGet('search');
    
-
+    $authHeader = $this->request->getHeaderLine('Authorization');
+    $authuser = $this->authService->getAuthenticatedUser($authHeader);
+        if(!$authuser) 
+            return $this->failUnauthorized('Invalid or missing token.');
     $userQuery = $this->UserModel->where('status !=', 9)
                                  ->where('user_type', 'customer');
 
@@ -256,7 +241,10 @@ public function getStaffList()
     $pageSize  = (int) $this->request->getGet('pageSize');
     $search    = $this->request->getGet('search');
    
-
+    $authHeader = $this->request->getHeaderLine('Authorization');
+    $authuser = $this->authService->getAuthenticatedUser($authHeader);
+        if(!$authuser) 
+            return $this->failUnauthorized('Invalid or missing token.');
     $userQuery = $this->UserModel->where('status !=', 9)
                                  ->where('user_type !=', 'customer');
 

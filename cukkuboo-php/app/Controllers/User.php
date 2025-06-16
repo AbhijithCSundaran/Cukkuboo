@@ -41,6 +41,7 @@ class User extends ResourceController
             'country'      => $data['country'] ?? null,
             'subscription' => $data['subscription'] ?? 'free',
             'status'       => $data['status'] ?? null,
+            //  'status'       => 1,
             'user_type' => $data['user_type'] ??'Customer',
         ]);
 

@@ -25,6 +25,11 @@ class MovieDetail extends ResourceController
 
     public function store()
     {
+       $authHeader = $this->request->getHeaderLine('Authorization');
+        $user = $this->authService->getAuthenticatedUser($authHeader);
+        if(!$user) 
+            return $this->failUnauthorized('Invalid or missing token.');
+
         $data = $this->request->getJSON(true);
 
         $movie_id = $data['mov_id'] ?? null;
@@ -76,32 +81,27 @@ class MovieDetail extends ResourceController
             }
         }
     }
-   public function getAllSubscriptions()
-{
+    public function getAllMovieDetails()
+{ 
+    $authHeader = $this->request->getHeaderLine('Authorization');
+        $user = $this->authService->getAuthenticatedUser($authHeader);
+        if(!$user) 
+            return $this->failUnauthorized('Invalid or missing token.');
     $pageIndex = (int) $this->request->getGet('pageIndex');
-    $pageSize  = (int) $this->request->getGet('pageSize');
-    $search    = $this->request->getGet('search'); 
-    $userId = $this->request->getGet('user_id');
-    $subscriptionId = $this->request->getGet('subscription_id');
+    $pageSize = (int) $this->request->getGet('pageSize');
+    $search = $this->request->getGet('search'); // optional search keyword
 
+    // Set fallback/default values
     if ($pageSize <= 0) {
         $pageSize = 10;
     }
 
     $offset = $pageIndex * $pageSize;
 
-    // Build query
-    $builder = $this->usersubModel->where('status !=', 9);
+    $builder = $this->moviedetail
+        ->where('status !=', 9);
 
-    if (!empty($userId)) {
-        $builder->where('user_id', $userId);
-    }
-
-    if (!empty($subscriptionId)) {
-        $builder->where('subscription_id', $subscriptionId);
-    }
-
-    // If search keyword is provided, apply LIKE condition
+      // If search keyword is provided, apply LIKE condition
   if (!empty($search)) {
     $builder->groupStart()
         ->like('title', $search)
@@ -111,36 +111,46 @@ class MovieDetail extends ResourceController
     ->groupEnd();
 }
 
-    // If no pagination
+    // If pageIndex is negative, return all (filtered) movies without pagination
     if ($pageIndex < 0) {
-        $subscriptions = $builder
-            ->orderBy('user_subscription_id', 'DESC')
+        $movies = $builder
+            ->orderBy('mov_id', 'DESC')
             ->findAll();
 
-        return $this->respond([
+        return $this->response->setJSON([
             'status' => true,
-            'data'   => $subscriptions,
-            'total'  => count($subscriptions)
+            'message' => 'All movies fetched (no pagination).',
+            'data' => $movies,
+            'total' => count($movies)
         ]);
     }
 
-    $total = $builder->countAllResults(false); // keep builder state
+    // Clone builder for count
+    $countBuilder = clone $builder;
+    $total = $countBuilder->countAllResults(false);
 
-    $subscriptions = $builder
-        ->orderBy('user_subscription_id', 'DESC')
+    // Fetch paginated data
+    $movies = $builder
+        ->orderBy('mov_id', 'DESC')
         ->findAll($pageSize, $offset);
 
-    return $this->respond([
+    // Return response
+    return $this->response->setJSON([
         'status' => true,
-        'data'   => $subscriptions,
-        'total'  => $total
+        'message' => 'Paginated movies fetched successfully.',
+        'data' => $movies,
+        'total' => $total
     ]);
 }
 
-   public function getMovieById($id)
-    {
 
-        $getmoviesdetails = $this->moviedetail->getMovieDetailsById($id);
+    public function getMovieById($id)
+    {
+        $authHeader = $this->request->getHeaderLine('Authorization');
+        $user = $this->authService->getAuthenticatedUser($authHeader);
+        if(!$user) 
+            return $this->failUnauthorized('Invalid or missing token.');
+    $getmoviesdetails = $this->moviedetail->getMovieDetailsById($id);
         return $this->response->setJSON([
             'status' => true,
             'message' => 'movie details fetched successfully.',
@@ -263,6 +273,21 @@ class MovieDetail extends ResourceController
         'data' => $latestmovies
     ]);
 }
+public function mostWatchedMovies()
+{
+    
+    $movieModel = new MovieDetailsModel();
+
+    $movies = $movieModel->getMostWatchedMovies(); 
+
+    return $this->response->setJSON([
+        'status' => true,
+        'message' => 'Top 10 most watched movies fetched successfully.',
+        'data' => $movies
+    ]);
+}
+
+
 
 
 }

@@ -25,11 +25,6 @@ class MovieDetail extends ResourceController
 
     public function store()
     {
-       $authHeader = $this->request->getHeaderLine('Authorization');
-        $user = $this->authService->getAuthenticatedUser($authHeader);
-        if(!$user) 
-            return $this->failUnauthorized('Invalid or missing token.');
-
         $data = $this->request->getJSON(true);
 
         $movie_id = $data['mov_id'] ?? null;
@@ -82,11 +77,7 @@ class MovieDetail extends ResourceController
         }
     }
     public function getAllMovieDetails()
-{ 
-    $authHeader = $this->request->getHeaderLine('Authorization');
-        $user = $this->authService->getAuthenticatedUser($authHeader);
-        if(!$user) 
-            return $this->failUnauthorized('Invalid or missing token.');
+{
     $pageIndex = (int) $this->request->getGet('pageIndex');
     $pageSize = (int) $this->request->getGet('pageSize');
     $search = $this->request->getGet('search'); // optional search keyword
@@ -146,11 +137,10 @@ class MovieDetail extends ResourceController
 
     public function getMovieById($id)
     {
-        $authHeader = $this->request->getHeaderLine('Authorization');
-        $user = $this->authService->getAuthenticatedUser($authHeader);
-        if(!$user) 
-            return $this->failUnauthorized('Invalid or missing token.');
-    $getmoviesdetails = $this->moviedetail->getMovieDetailsById($id);
+        print_r("Haii");
+        exit;
+        
+     $getmoviesdetails = $this->moviedetail->getMovieDetailsById($id);
         return $this->response->setJSON([
             'status' => true,
             'message' => 'movie details fetched successfully.',

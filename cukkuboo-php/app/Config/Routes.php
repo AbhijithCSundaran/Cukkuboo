@@ -74,4 +74,14 @@ $routes->post('reelview/view', 'ReelView::viewReel');
 
 
 
+    $routes->post('notification/save', 'Notification::createOrUpdate'); // create or update
+    $routes->get('notification/list', 'Notification::getAll');          // get by user
+    $routes->delete('notification/delete/(:num)', 'Notification::delete/$1'); // soft delete
+    $routes->post('notification/markall', 'Notification::markAllAsReadOrUnread'); // mark as read);
+    $routes->get('notification/get/(:num)', 'Notification::getById/$1');
+
+
+
+
+
 ?>

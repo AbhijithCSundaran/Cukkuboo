@@ -1,205 +1,166 @@
 <?php
 
 namespace App\Controllers;
+use CodeIgniter\RESTful\ResourceController;
+use App\Models\SubscriptionPlanModel; 
+use App\Models\UserModel;
+use App\Libraries\Jwt;
+use App\Libraries\AuthService;
 
-use App\Controllers\BaseController;
-use App\Models\SubscriptionPlanModel;
-
-class SubscriptionPlan extends BaseController
+class SubscriptionPlan extends ResourceController
 {
-    protected $subscriptionPlanModel;
+    // protected $subscriptionPlanModel;
 
     protected $periodMap = [
-        '3 days'   => 3,
-        '30 days'  => 30,
-        '90 days'  => 90,
-        '1 Year'   => 365
+    '3 days' => 3,
+    '30 days' => 30,
+    '90 days' => 90,
+    '1 Year' => 365
     ];
+
 
     public function __construct()
     {
-        $this->subscriptionPlanModel = new SubscriptionPlanModel();
+        $this->session = \Config\Services::session();
+        $this->input = \Config\Services::request();
+        $this->subscriptionPlanModel = new SubscriptionPlanModel(); 
+        $this->UserModel = new UserModel();	
+        $this->authService = new AuthService();
+       
     }
-
     public function savePlan()
     {
         $data = $this->request->getJSON(true);
-        $id = $data['id'] ?? null;
+        $id   = $data['id'] ?? null;
 
-        // Validate required fields for creation
-        if (empty($id)) {
-            if (empty($data['plan_name']) || empty($data['price']) || empty($data['period'])) {
-                return $this->response->setJSON([
-                    'status' => false,
-                    'message' => 'Plan name, price, and period are required for creating a plan'
-                ])->setStatusCode(400);
-            }
+        $authHeader = $this->request->getHeaderLine('Authorization');
+        $user = $this->authService->getAuthenticatedUser($authHeader);
+
+        if (!$user) {
+            return $this->failUnauthorized('Invalid or missing token.');
         }
 
-        // Map period string to number
-        if (isset($data['period'])) {
-            if (!isset($this->periodMap[$data['period']])) {
-                return $this->response->setJSON([
-                    'status' => false,
-                    'message' => 'Invalid period option'
-                ])->setStatusCode(400);
-            }
-            $data['period'] = $this->periodMap[$data['period']];
+        if (!isset($data['plan_name']) || !isset($data['price']) || !isset($data['period'])) {
+            return $this->failValidationErrors('Plan name, price, and period are required.');
         }
 
-        // Handle optional fields
-        // $data['discount_price'] = $data['discount_price'] ?? null;
-        // $data['features'] = $data['features'] ?? null;
+        
+                            if (!in_array($data['period'], $this->periodMap)) {
+                        return $this->respond([
+                            'status' => false,
+                            'message' => 'Invalid period option'
+                        ]);
+                    }
 
-        if (empty($id)) {
-            // Create new plan
-            $this->subscriptionPlanModel->addPlan($data);
-            return $this->response->setJSON([
-                'status' => true,
-                'message' => 'Plan created successfully'
-            ]);
-        } else {
-            // Update existing plan
-            $plan = $this->subscriptionPlanModel->getPlanById($id);
-            if (!$plan) {
-                return $this->response->setJSON([
-                    'status' => false,
-                    'message' => 'Plan not found'
-                ])->setStatusCode(404);
-            }
-
-            $this->subscriptionPlanModel->updatePlan($id, $data);
-            return $this->response->setJSON([
-                'status' => true,
-                'message' => 'Plan updated successfully'
-            ]);
-        }
-    }
+                    $data['days'] = (int)$data['period']; // Already a valid day count
 
 
-    public function getAll()
-    {
-    // Get pagination parameters from the query string
-    $pageIndex = (int) $this->request->getGet('pageIndex');
-    $pageSize  = (int) $this->request->getGet('pageSize');
+    $data['days'] = $this->periodMap[$data['period']];
+    $data['features']  = $data['features'] ?? null;
+    $data['modify_on'] = date('Y-m-d H:i:s');
 
-    // If pageIndex is negative, return all plans without pagination
-    if ($pageIndex < 0) {
-        $plans = $this->subscriptionPlanModel
-            ->orderBy('subscriptionplan_id', 'DESC')
-            ->findAll();
+    if (!$id) {
+        $data['status'] = 1;
+        $data['created_on'] = date('Y-m-d H:i:s');
+        $data['created_by'] = $user['user_id'];
 
-        return $this->response->setJSON([
+        $this->subscriptionPlanModel->addPlan($data);
+
+        return $this->respond([
             'status' => true,
-            'data'   => $plans,
-            'total'  => count($plans)
+            'message' => 'Plan created successfully',
+            'data'    => $data
         ]);
     }
 
-    // Apply fallback/default values if invalid
+    $existing = $this->subscriptionPlanModel->getPlanById($id);
+    if (!$existing) {
+        return $this->failNotFound("Plan with ID $id not found.");
+    }
+
+    $data['status'] = $data['status'] ?? $existing['status'];
+    $this->subscriptionPlanModel->updatePlan($id, $data);
+
+    return $this->respond([
+        'status' => true,
+        'message' => 'Plan updated successfully',
+        'data'    => $data
+    ]);
+}
+
+   public function getAll()
+{
+    $pageIndex = (int) $this->request->getGet('pageIndex');
+    $pageSize  = (int) $this->request->getGet('pageSize');
+    $search    = $this->request->getGet('search');
+    $authHeader = $this->request->getHeaderLine('Authorization');
+    $user = $this->authService->getAuthenticatedUser($authHeader);
+    if(!$user) 
+            return $this->failUnauthorized('Invalid or missing token.');
     if ($pageSize <= 0) {
-        $pageSize = 10; // Default page size
+        $pageSize = 10;
     }
 
     $offset = $pageIndex * $pageSize;
 
-    // Get total number of records
-    $total = $this->subscriptionPlanModel->countAll();
+    $builder = $this->subscriptionPlanModel
+        ->where('status !=', 9);
+    // Add search functionality
+    if (!empty($search)) {
+        $builder->groupStart()
+            ->like('plan_name', $search)
+            ->orLike('features', $search)
+            ->groupEnd();
+    }
 
-    // Get paginated plans
-    $plans = $this->subscriptionPlanModel
+    // Clone builder to get total count before applying pagination
+    $total = $builder->countAllResults(false);
+    // Apply pagination and ordering
+    $plans = $builder
         ->orderBy('subscriptionplan_id', 'DESC')
         ->findAll($pageSize, $offset);
 
-    // Return response
     return $this->response->setJSON([
         'status' => true,
         'data'   => $plans,
         'total'  => $total
     ]);
 }
-
-
     public function get($id)
     {
+        $authHeader = $this->request->getHeaderLine('Authorization');
+        $user = $this->authService->getAuthenticatedUser($authHeader);
+        if(!$user) 
+            return $this->failUnauthorized('Invalid or missing token.');
         $plan = $this->subscriptionPlanModel->getPlanById($id);
         if (!$plan) {
-            return $this->response->setJSON([
-                'status' => false,
-                'message' => 'Plan not found'
-            ])->setStatusCode(404);
+            return $this->response->setJSON(['status' => false, 'message' => 'Plan not found'])->setStatusCode(404);
         }
-        return $this->response->setJSON([
-            'status' => true,
-            'data' => $plan
-        ]);
+        return $this->response->setJSON(['status' => true, 'data' => $plan]);
     }
 
-    // public function create()
-    // {
-    //     $data = $this->request->getJSON(true);
-
-    //     if (empty($data['plan_name']) || empty($data['price']) || empty($data['period'])) {
-    //         return $this->response->setJSON([
-    //             'status' => false,
-    //             'message' => 'Plan name, price, and period are required'
-    //         ])->setStatusCode(400);
-    //     }
-
-    //     if (!isset($this->periodMap[$data['period']])) {
-    //         return $this->response->setJSON([
-    //             'status' => false,
-    //             'message' => 'Invalid period option'
-    //         ])->setStatusCode(400);
-    //     }
-
-    //     $data['period_id'] = $this->periodMap[$data['period']];
-    //     unset($data['period']);
-
-    //     $this->subscriptionPlanModel->addPlan($data);
-
-    //     return $this->response->setJSON(['status' => true, 'message' => 'Plan created successfully']);
-    // }
-
-    // public function edit($id)
-    // {
-    //     $plan = $this->subscriptionPlanModel->getPlanById($id);
-    //     if (!$plan) {
-    //         return $this->response->setJSON(['status' => false, 'message' => 'Plan not found'])->setStatusCode(404);
-    //     }
-
-    //     $data = $this->request->getJSON(true);
-
-    //     if (isset($data['period'])) {
-    //         if (!isset($this->periodMap[$data['period']])) {
-    //             return $this->response->setJSON([
-    //                 'status' => false,
-    //                 'message' => 'Invalid period option'
-    //             ])->setStatusCode(400);
-    //         }
-    //         $data['period_id'] = $this->periodMap[$data['period']];
-    //         unset($data['period']);
-    //     }
-
-    //     $this->subscriptionPlanModel->updatePlan($id, $data);
-
-    //     return $this->response->setJSON(['status' => true, 'message' => 'Plan updated successfully']);
-    // }
-
-    public function delete($id)
+    public function delete($id = null)
     {
-        $plan = $this->subscriptionPlanModel->getPlanById($id);
-        if (!$plan) {
-            return $this->response->setJSON([
-                'status' => false,
-                'message' => 'Plan not found'
-            ])->setStatusCode(404);
+        // print_r('hi');
+        // exit;
+        // $auth = new AuthService();
+        $authHeader = $this->request->getHeaderLine('Authorization');
+        $user = $this->authService->getAuthenticatedUser($authHeader);
+
+        if (!$user) {
+            return $this->failUnauthorized('Invalid or missing token.');
         }
 
-        $this->subscriptionPlanModel->deletePlan($id);
-        return $this->response->setJSON([
-            'status' => true,
-            'message' => 'Plan deleted successfully'
-        ]);
+        $deleted = $this->subscriptionPlanModel
+            ->deletePlanById(9, (int)$id, $user['user_id'] ?? null);
+
+        if ($deleted) {
+            return $this->respond([
+                'status'  => true,
+                'message' => "Plan with ID $id marked as deleted successfully."
+            ]);
+        }
+
+        return $this->failServerError("Failed to delete plan with ID $id (no row updated).");
     }
 }

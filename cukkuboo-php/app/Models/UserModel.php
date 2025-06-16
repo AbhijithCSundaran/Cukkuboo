@@ -61,6 +61,6 @@ return $this->db->query("update user set status = '".$status."', updated_at=NOW(
 
     public function getAllUsers()
     {
-        return $this->db->query('SELECT * FROM user WHERE status != 9')->getResult();
+        return $this->db->query("SELECT * FROM user WHERE status != 9 and user_type = 'customer'" )->getResult();
     }
 }

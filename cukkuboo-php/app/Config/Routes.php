@@ -13,10 +13,11 @@ $routes->post('Login/reset-password', 'Login::resetPassword');
 
 
 $routes->post('user/register','User::registerFun');
-$routes->get('user/profile', 'User::getUserDetails');
+//$routes->get('user/profile', 'User::getUserDetails');
 $routes->delete('user/delete/(:any)', 'User::deleteUser/$1');
 $routes->get('user/profile/(:num)', 'User::getUserDetailsById/$1');
 $routes->get('user/list', 'User::getUserList');
+$routes->get('staff/list', 'User::getStaffList');
 
 
 
@@ -63,8 +64,10 @@ $routes->get('reels/details', 'Reels::getAllReels');
 $routes->get('reels/get/(:any)', 'Reels::getReelById/$1');
 $routes->delete('reels/delete/(:any)', 'Reels::deleteReel/$1');
 
-$routes->post('usersub/create', 'Usersub::create');
-
+$routes->post('usersub/add', 'Usersub::saveSubscription');
+$routes->get('usersub/details', 'Usersub::getAllSubscriptions');
+$routes->get('usersub/get/(:num)', 'Usersub::getSubscriptionById/$1');
+$routes->delete('usersub/delete/(:num)', 'Usersub::deleteSubscription/$1');
 
 
 ?>

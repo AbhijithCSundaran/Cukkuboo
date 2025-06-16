@@ -23,7 +23,8 @@ class Reels extends ResourceController
     $data = $this->request->getJSON(true);
     $reels_id = $data['reels_id'] ?? null;
 
-    
+    $authHeader = $this->request->getHeaderLine('Authorization');
+    $authenticatedUser= $this->authService->getAuthenticatedUser($authHeader);
     if (empty($reels_id)) {
         if (empty($data['title']) || empty($data['release_date']) || empty($data['access'])) {
             return $this->failValidationErrors('Title, release date, and access are required.');
@@ -79,7 +80,11 @@ class Reels extends ResourceController
     $pageIndex = (int) $this->request->getGet('pageIndex');
     $pageSize  = (int) $this->request->getGet('pageSize');
     $search    = $this->request->getGet('search');
-
+    $authHeader = $this->request->getHeaderLine('Authorization');
+    $user = $this->authService->getAuthenticatedUser($authHeader);
+    if(!$user){ 
+            return $this->failUnauthorized('Invalid or missing token.');
+    }
     if ($pageSize <= 0) {
         $pageSize = 10;
     }
@@ -127,6 +132,11 @@ class Reels extends ResourceController
 
 public function getReelById($id)
 {
+    $authHeader = $this->request->getHeaderLine('Authorization');
+    $user = $this->authService->getAuthenticatedUser($authHeader);
+    if(!$user){ 
+            return $this->failUnauthorized('Invalid or missing token.');
+    }
     $data = $this->reelsModel->getReelDetailsById($id);
 
     return $this->response->setJSON([

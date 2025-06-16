@@ -40,9 +40,11 @@ $routes->post('upload-image', 'Uploads::uploadImage');
 
 $routes->post('movie/store', 'MovieDetail::store');
 $routes->get('movie/moviedetails','MovieDetail::getAllMovieDetails');
-$routes->get('movie/get/(:any)', 'MovieDetail::getMovieById/$1');
+$routes->get('getmovie/(:any)', 'MovieDetail::getMovieById/$1');
 $routes->delete('movie/delete/(:any)','MovieDetail::deleteMovieDetails/$1');
 $routes->get('movies/latest', 'MovieDetail::getLatestMovies');
+$routes->get('movies/most-watched', 'MovieDetail::mostWatchedMovies');
+
 
 
 
@@ -72,15 +74,17 @@ $routes->delete('usersub/delete/(:num)', 'Usersub::deleteSubscription/$1');
 $routes->post('reellike/like', 'ReelLike::reelLike');
 $routes->post('reelview/view', 'ReelView::viewReel');
 
+$routes->post('notification/save', 'Notification::createOrUpdate'); // create or update
+$routes->get('notification/list', 'Notification::getAll');          // get by user
+$routes->delete('notification/delete/(:num)', 'Notification::delete/$1'); // soft delete
+$routes->post('notification/markall', 'Notification::markAllAsReadOrUnread'); // mark as read);
+$routes->get('notification/get/(:num)', 'Notification::getById/$1');
 
+$routes->post('resume/saveprogress', 'Resume::saveProgress');
+$routes->get('resume/viewhistory', 'Resume::viewHistory');
 
-    $routes->post('notification/save', 'Notification::createOrUpdate'); // create or update
-    $routes->get('notification/list', 'Notification::getAll');          // get by user
-    $routes->delete('notification/delete/(:num)', 'Notification::delete/$1'); // soft delete
-    $routes->post('notification/markall', 'Notification::markAllAsReadOrUnread'); // mark as read);
-    $routes->get('notification/get/(:num)', 'Notification::getById/$1');
-
-
+$routes->post('savehistory/save', 'Savehistory::saveMovie');
+$routes->get('savehistory/history', 'Savehistory::saveHistory');
 
 
 

@@ -25,7 +25,8 @@ class Usersub extends ResourceController
     {
         $data = $this->request->getJSON(true);
         $id = $data['user_subscription_id'] ?? null;
-
+        $authHeader = $this->request->getHeaderLine('Authorization');
+        $user = $this->authService->getAuthenticatedUser($authHeader);
         // Validate required fields for create
         if (!$id && (empty($data['user_id']) || empty($data['subscription_id']) || empty($data['start_date']))) {
             return $this->failValidationErrors('User ID, plan ID, and start date are required.');
@@ -90,7 +91,11 @@ class Usersub extends ResourceController
     $pageIndex = (int) $this->request->getGet('pageIndex');
     $pageSize  = max(10, (int) $this->request->getGet('pageSize'));
     $search    = $this->request->getGet('search');
-
+    $authHeader = $this->request->getHeaderLine('Authorization');
+    $user = $this->authService->getAuthenticatedUser($authHeader);
+    if(!$user) {
+            return $this->failUnauthorized('Invalid or missing token.');
+    }
     $offset = $pageIndex * $pageSize;
 
     $builder = $this->usersubModel->builder(); // start fresh query builder
@@ -131,6 +136,11 @@ class Usersub extends ResourceController
 
   public function getSubscriptionById($id = null)
     {
+    $authHeader = $this->request->getHeaderLine('Authorization');
+    $user = $this->authService->getAuthenticatedUser($authHeader);
+    if(!$user){ 
+        return $this->failUnauthorized('Invalid or missing token.');
+    }
     $record = $this->usersubModel->find($id);
 
     if (!$record) {

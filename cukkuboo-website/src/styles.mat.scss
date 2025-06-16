@@ -1,0 +1,58 @@
+@use '@angular/material' as mat;
+@include mat.core();
+
+html {
+    color-scheme: light;
+    @include mat.theme((color: (primary: mat.$chartreuse-palette,
+                tertiary: mat.$orange-palette,
+                theme-type: light,
+            ),
+            typography: Roboto,
+            density: -2));
+}
+
+
+
+// @include mat.all-component-themes($theme);
+
+.snackbar-success {
+    .mdc-snackbar__surface.mat-mdc-snackbar-surface {
+        border: 1px solid #00a100;
+        background-color: #dbffde;
+        color: #00a100;
+    }
+}
+
+.snackbar-error {
+    .mdc-snackbar__surface.mat-mdc-snackbar-surface {
+        border: 1px solid #c20000;
+        background-color: #ffebee;
+        color: #c20000;
+    }
+}
+
+.mat-mdc-snack-bar-label .mdc-snackbar__label {
+    text-align: center;
+}
+
+.mdc-button__label {
+    color: #000;
+}
+
+.mat-mdc-dialog-surface.mdc-dialog__surface {
+    border-radius: 10px;
+    // box-shadow: 0 0 2px 2px #c200005f;
+    border: 1px solid rgb(129, 0, 0);
+}
+
+.mat-calendar-header {
+    .mdc-button__label {
+        color: #9b9b9b !important;
+    }
+}
+
+
+.mat-mdc-dialog-container.mdc-dialog{
+    max-height: 80vh;
+    overflow-y: auto;
+}

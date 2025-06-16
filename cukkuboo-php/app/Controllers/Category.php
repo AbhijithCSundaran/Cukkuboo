@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Models\CategoryModel;
 use CodeIgniter\RESTful\ResourceController;
+use App\Libraries\Jwt;
 use App\Libraries\AuthService;
 
 class Category extends ResourceController

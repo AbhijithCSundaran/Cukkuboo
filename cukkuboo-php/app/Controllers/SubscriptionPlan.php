@@ -11,13 +11,12 @@ class SubscriptionPlan extends ResourceController
 {
     // protected $subscriptionPlanModel;
 
-    protected $periodMap = [
-    '3 days' => 3,
-    '30 days' => 30,
-    '90 days' => 90,
-    '1 Year' => 365
-    ];
-
+    // protected $periodMap = [
+    // '3 days' => 3,
+    // '30 days' => 30,
+    // '90 days' => 90,
+    // '1 year' => 365
+    // ];
 
     public function __construct()
     {
@@ -29,38 +28,46 @@ class SubscriptionPlan extends ResourceController
        
     }
     public function savePlan()
-    {
-        $data = $this->request->getJSON(true);
-        $id   = $data['id'] ?? null;
+{
+    $data = $this->request->getJSON(true);
+    $id   = $data['id'] ?? null;
 
-        $authHeader = $this->request->getHeaderLine('Authorization');
-        $user = $this->authService->getAuthenticatedUser($authHeader);
+    $authHeader = $this->request->getHeaderLine('Authorization');
+    $user = $this->authService->getAuthenticatedUser($authHeader);
 
-        if (!$user) {
-            return $this->failUnauthorized('Invalid or missing token.');
-        }
+    if (!$user) {
+        return $this->failUnauthorized('Invalid or missing token.');
+    }
 
-        if (!isset($data['plan_name']) || !isset($data['price']) || !isset($data['period'])) {
-            return $this->failValidationErrors('Plan name, price, and period are required.');
-        }
+    if (!isset($data['plan_name'], $data['price'], $data['period'])) {
+        return $this->failValidationErrors('Plan name, price, and period are required.');
+    }
 
-        
-        if (!in_array($data['period'], $this->periodMap)) {
-            return $this->respond([
+    // Define valid period options
+    $periodMap = [
+        '3 days'   => 3,
+        '30 days'  => 30,
+        '90 days'  => 90,
+        '1 year'   => 365
+    ];
+
+    $periodInput = strtolower(trim($data['period']));
+
+    if (!array_key_exists($periodInput, $periodMap)) {
+        return $this->respond([
             'status' => false,
             'message' => 'Invalid period option'
-            ]);
-        }
+        ]);
+    }
 
-    $data['days'] = (int)$data['period']; // Already a valid day count
-
-
-    $data['days'] = $this->periodMap[$data['period']];
+    $data['period'] = $periodMap[$periodInput]; 
     $data['features']  = $data['features'] ?? null;
+    $data['discount_price'] = $data['discount_price'] ?? null;
+    $data['status'] = $data['status'] ?? 1;
     $data['modify_on'] = date('Y-m-d H:i:s');
+    $data['modify_by'] = $user['user_id'];
 
     if (!$id) {
-        $data['status'] = 1;
         $data['created_on'] = date('Y-m-d H:i:s');
         $data['created_by'] = $user['user_id'];
 
@@ -77,8 +84,7 @@ class SubscriptionPlan extends ResourceController
     if (!$existing) {
         return $this->failNotFound("Plan with ID $id not found.");
     }
-
-    $data['status'] = $data['status'] ?? $existing['status'];
+    
     $this->subscriptionPlanModel->updatePlan($id, $data);
 
     return $this->respond([

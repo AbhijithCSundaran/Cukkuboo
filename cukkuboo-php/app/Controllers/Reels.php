@@ -25,6 +25,9 @@ class Reels extends ResourceController
 
     $authHeader = $this->request->getHeaderLine('Authorization');
     $authenticatedUser= $this->authService->getAuthenticatedUser($authHeader);
+    if (!$user) {
+            return $this->failUnauthorized('Invalid or missing token.');
+        }
     if (empty($reels_id)) {
         if (empty($data['title']) || empty($data['release_date']) || empty($data['access'])) {
             return $this->failValidationErrors('Title, release date, and access are required.');

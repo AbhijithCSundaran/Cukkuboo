@@ -46,6 +46,8 @@ $routes->get('movies/latest', 'MovieDetail::getLatestMovies');
 $routes->get('movies/most-watched', 'MovieDetail::mostWatchedMovies');
 
 
+$routes->get('movies/latestmovies', 'MovieDetail::LatestMovies');
+$routes->get('movies/mostwatchmovie', 'MovieDetail::getMostWatchMovies');
 
 
 //Home Display
@@ -85,6 +87,7 @@ $routes->get('resume/viewhistory', 'Resume::viewHistory');
 
 $routes->post('savehistory/save', 'Savehistory::saveMovie');
 $routes->get('savehistory/history', 'Savehistory::saveHistory');
+
 
 
 

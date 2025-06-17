@@ -79,16 +79,27 @@ public function countAllMovies()
                     ->countAllResults();
 }
 
-  public function latestMovies()
+//   public function latestMovies()
+// {
+//     return $this->db->table($this->table)
+//                     ->where('status', 1)
+//                     ->where('release_date <=', date('Y-m-d'))
+//                     ->orderBy('created_on', 'DESC') 
+//                     ->limit(10)
+//                     ->get()
+//                     ->getResultArray();
+// }
+public function latestMovies()
 {
     return $this->db->table($this->table)
-                    ->where('status', 1)
-                    ->where('release_date <=', date('Y-m-d'))
-                    ->orderBy('created_on', 'DESC') 
-                    ->limit(10)
-                    ->get()
-                    ->getResultArray();
+        ->where('status', 1)
+        ->where('release_date <=', date('Y-m-d')) 
+        ->orderBy('created_on', 'DESC')          
+        ->limit(10)
+        ->get()
+        ->getResultArray();
 }
+
 public function getMostWatchedMovies()
 {
     return $this->where('status', 1) 
@@ -98,5 +109,19 @@ public function getMostWatchedMovies()
 }
 
 
+// public function MostWatchedMovies($limit = 10)
+//     {
+//         return $this->where('status !=', 9)
+//                     ->orderBy('views', 'DESC')
+//                     ->limit($limit)
+//                     ->findAll();
+//     }
 
+//     public function latestTrendingMovies($limit = 10)
+//     {
+//         return $this->where('status !=', 9)
+//                     ->orderBy('release_date', 'DESC')
+//                     ->limit($limit)
+//                     ->findAll();
+//     }
 }

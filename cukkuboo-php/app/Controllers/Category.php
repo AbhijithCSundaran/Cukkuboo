@@ -61,7 +61,7 @@ class Category extends ResourceController
                 return $this->failNotFound('Category not found.');
             }
 
-            $categoryData['modified_by'] = $user['user_id'];
+            $categoryData['modify_by'] = $user['user_id'];
             $this->categoryModel->updateCategory($category_id, $categoryData);
 
             return $this->respond([
@@ -123,7 +123,7 @@ class Category extends ResourceController
         $updateData = [
             'status'      => 9,
             'modify_on'   => date('Y-m-d H:i:s'),
-            'modified_by' => $user['user_id']
+            'modify_by' => $user['user_id']
         ];
 
         $this->categoryModel->updateCategory($category_id, $updateData);

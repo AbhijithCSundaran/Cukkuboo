@@ -29,6 +29,7 @@ $routes->post('Genres/genres/(:any)', 'Genres::update/$1');
 $routes->delete('Genres/genres/(:any)', 'Genres::deleteGenere/$1');
 
 $routes->get('category/categories', 'Category::categorylist');
+$routes->get('category/categories/(:num)', 'Category::getCategoryById/$1');
 $routes->post('category/categories', 'Category::saveCategory');               
 $routes->delete('category/categories/(:any)', 'Category::delete/$1'); 
 
@@ -54,9 +55,9 @@ $routes->get('api/home', 'MovieDetail::homeDisplay');
 
 
 // Subscription Plan Routes 
+$routes->post('subscriptionplan/save', 'SubscriptionPlan::savePlan');    
 $routes->get('subscriptionplan/list', 'SubscriptionPlan::getAll');           
-$routes->get('subscriptionplan/get/(:num)', 'SubscriptionPlan::get/$1');     
-$routes->post('subscriptionplan/save', 'SubscriptionPlan::savePlan');         
+$routes->get('subscriptionplan/get/(:num)', 'SubscriptionPlan::get/$1');          
 $routes->delete('subscriptionplan/delete/(:num)', 'SubscriptionPlan::delete/$1'); 
 
 //reels details

@@ -1,9 +1,12 @@
-.footer {
-  background-color: white;
-  padding: 10px 0;
-  text-align: center;
-  width: 100%;
-  i{
-    font-size: 10px;
+:host{
+  margin-top: auto;
+  .footer {
+    background-color: white;
+    padding: 10px 0;
+    text-align: center;
+    width: 100%;
+    i{
+      font-size: 10px;
+    }
   }
 }

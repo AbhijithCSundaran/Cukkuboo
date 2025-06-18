@@ -40,9 +40,7 @@
               "src/assets/css/style.css",
               "src/assets/css/responsive.css"
             ],
-            "scripts": [
-
-            ]
+            "scripts": []
           },
           "configurations": {
             "production": {

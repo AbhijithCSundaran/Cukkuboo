@@ -8,7 +8,7 @@ import { HeaderComponent } from './header/header.component';
 @Component({
   selector: 'app-layout',
   imports: [RouterOutlet, CommonModule,
-    HeaderComponent, FooterComponent],
+    HeaderComponent, FooterComponent, ],
   templateUrl: './layout.component.html',
   styleUrl: './layout.component.scss'
 })

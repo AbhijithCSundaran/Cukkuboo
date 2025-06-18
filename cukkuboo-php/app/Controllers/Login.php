@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Models\LoginModel;
 use App\Libraries\Jwt;
+use App\Libraries\AuthService;
 use App\Config\Email;
 
 class Login extends BaseController
@@ -37,52 +38,52 @@ class Login extends BaseController
 
     $now = date('Y-m-d H:i:s');
 
+    $jwt = new Jwt();
+    $token = $jwt->encode(['user_id' => $user['user_id']]);
+    $updateData = [
+        'jwt_token' => $token,
+        'last_login' => $now,
+    ];
     // Login Type 1: No fcm_token → just return existing token, no update
     if (empty($data['fcm_token'])) {
+    $this->loginModel->update($user['user_id'], $updateData);
         return $this->response->setJSON([
             'status' => true,
             'message' => 'Login successful (type 1)',
             'user' => [
-                'user_id' => 'user' . $user['user_id'],
-                'username' => $user['username'],
-                'phone' => $user['phone'],
-                'email' => $user['email'],
-                'isBlocked' => $user['status'] !== 'active',
-                'subscription' => $user['subscription'],
-                'user_type' => $user['user_type'],
-                'date' => date('Y-m-d'),
-                'createdAt' => $user['created_at'],
-                'updatedAt' => $user['updated_at'],
-                'lastLogin' => $user['last_login'],
-                'jwt_token' => $user['jwt_token']
-            ]
-        ]);
-    }
-
-    // Login Type 2: Email + Password + fcm_token → update token and fcm_token
-    $jwt = new Jwt();
-    $token = $jwt->encode(['user_id' => $user['user_id']]);
-
-    $updateData = [
-        'jwt_token' => $token,
-        'last_login' => $now,
-        'fcm_token' => $data['fcm_token']
-    ];
-
-    $this->loginModel->update($user['user_id'], $updateData);
-
-    return $this->response->setJSON([
-        'status' => true,
-        'message' => 'Login successful (type 2)',
-        'user' => [
-            'user_id' => 'user' . $user['user_id'],
+                'user_id' =>  $user['user_id'],
             'username' => $user['username'],
             'phone' => $user['phone'],
             'email' => $user['email'],
             'isBlocked' => $user['status'] !== 'active',
             'subscription' => $user['subscription'],
             'user_type' => $user['user_type'],
-            'date' => date('Y-m-d'),
+            // 'date' => date('Y-m-d'),
+            'createdAt' => $user['created_at'],
+            'updatedAt' => $user['updated_at'],
+            'lastLogin' => $now,
+            'jwt_token' => $token
+            ]
+        ]);
+    }
+
+    // Login Type 2: Email + Password + fcm_token → update token and fcm_token
+
+    $updateData['fcm_token'] = $data['fcm_token'];
+    
+    $this->loginModel->update($user['user_id'], $updateData);
+    return $this->response->setJSON([
+        'status' => true,
+        'message' => 'Login successful (type 2)',
+        'user' => [
+            'user_id' =>  $user['user_id'],
+            'username' => $user['username'],
+            'phone' => $user['phone'],
+            'email' => $user['email'],
+            'isBlocked' => $user['status'] !== 'active',
+            'subscription' => $user['subscription'],
+            'user_type' => $user['user_type'],
+            // 'date' => date('Y-m-d'),
             'createdAt' => $user['created_at'],
             'updatedAt' => $user['updated_at'],
             'lastLogin' => $now,
@@ -92,31 +93,11 @@ class Login extends BaseController
     ]);
 }
 
-    // public function logout()
-    // {
-    //     // Clear all tokens from all users (or apply condition if needed)
-    //     $this->loginModel->updateAllTokensNull();
-
-    //     return $this->response->setJSON([
-    //         'status' => true,
-    //         'message' => 'Logout successful.'
-    //     ]);
-    // }
     public function logout()
-{
+    {
     $authHeader = $this->request->getHeaderLine('Authorization');
-
-    if (!$authHeader || !preg_match('/Bearer\s(\S+)/', $authHeader, $matches)) {
-        return $this->response->setJSON([
-            'status' => false,
-            'message' => 'Authorization token missing or invalid.'
-        ]);
-    }
-
-    $token = $matches[1];
-
-    // Find user by token
-    $user = $this->loginModel->where('jwt_token', $token)->first();
+    $auth = new AuthService();
+    $user=$auth->getAuthenticatedUser($authHeader);
 
     if (!$user) {
         return $this->response->setJSON([
@@ -125,7 +106,6 @@ class Login extends BaseController
         ]);
     }
 
-    // Clear the token from the DB
     $this->loginModel->update($user['user_id'], ['jwt_token' => null]);
 
     return $this->response->setJSON([
@@ -133,6 +113,7 @@ class Login extends BaseController
         'message' => 'Logout successful. Token removed.'
     ]);
 }
+
 public function sendOtp()
 {
     // Get JSON input

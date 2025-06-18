@@ -89,6 +89,13 @@ public function countAllMovies()
                     ->get()
                     ->getResultArray();
 }
+public function getMostWatchedMovies()
+{
+    return $this->where('status', 1) 
+                ->orderBy('views', 'DESC')
+                ->limit(10)
+                ->findAll();
+}
 
 
 

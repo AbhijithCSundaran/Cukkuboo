@@ -41,19 +41,7 @@
               "src/assets/css/responsive.css"
             ],
             "scripts": [
-                "src/assets/js/jquery-3.6.0.min.js",
-                "src/assets/js/asyncloader.min.js",
-                "src/assets/js/bootstrap.min.js",
-                "src/assets/js/owl.carousel.min.js",
-                "src/assets/js/jquery.waypoints.min.js",
-                "src/assets/js/jquery.counterup.min.js",
-                "src/assets/js/popper.min.js",
-                "src/assets/js/swiper-bundle.min.js",
-                "src/assets/js/isotope.pkgd.min.js",
-                "src/assets/js/jquery.magnific-popup.min.js",
-                "src/assets/js/slick.min.js",
-                "src/assets/js/streamlab-core.js",
-                "src/assets/js/script.js"
+
             ]
           },
           "configurations": {

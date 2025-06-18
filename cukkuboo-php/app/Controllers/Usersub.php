@@ -28,12 +28,12 @@ class Usersub extends ResourceController
         $authHeader = $this->request->getHeaderLine('Authorization');
         $user = $this->authService->getAuthenticatedUser($authHeader);
         // Validate required fields for create
-        if (!$id && (empty($data['user_id']) || empty($data['subscription_id']) || empty($data['start_date']))) {
+        if (!$id && (empty($data['user_id']) || empty($data['subscriptionplan_id']) || empty($data['start_date']))) {
             return $this->failValidationErrors('User ID, plan ID, and start date are required.');
         }
 
         // Verify plan exists
-        $plan = $this->subscriptionPlanModel->getPlanById($data['subscription_id']);
+        $plan = $this->subscriptionPlanModel->getPlanById($data['subscriptionplan_id']);
         if (!$plan) {
             return $this->failNotFound('Invalid subscription plan.');
         }
@@ -45,7 +45,7 @@ class Usersub extends ResourceController
         // Build data payload
         $payload = [
             'user_id'         => $data['user_id'] ?? null,
-            'subscription_id' => $data['subscription_id'] ?? null,
+            'subscriptionplan_id' => $data['subscriptionplan_id'] ?? null,
             'start_date'      => $data['start_date'],
             'end_date'        => $end,
             'modify_on'       => date('Y-m-d H:i:s'),

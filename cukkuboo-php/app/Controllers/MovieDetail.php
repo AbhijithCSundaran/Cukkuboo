@@ -288,32 +288,28 @@ public function mostWatchedMovies()
 
 // --------------------------------- website--------------------------------------//
 
-public function LatestMovies()
+public function latestMovies()
 {
     $movieModel = new \App\Models\MovieDetailsModel();
-    $latestmovies = $movieModel->latestMovies();
+    $latestMovies = $movieModel->latestAddedMovies();
 
-    $response = [
+    return $this->response->setJSON([
         'status' => true,
         'message' => 'Latest movies fetched successfully.',
-        'data' => $latestmovies
-    ];
-
-    return $this->response->setJSON($response);
+        'data' => $latestMovies
+    ]);
 }
+    public function getMostWatchMovies()
+    {
+        $movieModel = new MovieDetailsModel();
+        $mostWatched = $movieModel->getMostWatchMovies();
 
-public function getMostWatchMovies()
-{
-    $movieModel = new \App\Models\MovieDetailsModel();
-    $movies = $movieModel->getMostWatchedMovies(); 
+        return $this->response->setJSON([
+            'status'  => true,
+            'message' => 'Most watched movies fetched successfully.',
+            'data'    => $mostWatched
+        ]);
+    }
 
-    $response = [
-        'status' => true,
-        'message' => 'Most watched movies fetched successfully.',
-        'data' => $movies
-    ];
-
-    return $this->response->setJSON($response);
-}
 
 }

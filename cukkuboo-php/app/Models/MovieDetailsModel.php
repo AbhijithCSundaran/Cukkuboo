@@ -109,19 +109,25 @@ public function getMostWatchedMovies()
 }
 
 
-// public function MostWatchedMovies($limit = 10)
-//     {
-//         return $this->where('status !=', 9)
-//                     ->orderBy('views', 'DESC')
-//                     ->limit($limit)
-//                     ->findAll();
-//     }
 
-//     public function latestTrendingMovies($limit = 10)
-//     {
-//         return $this->where('status !=', 9)
-//                     ->orderBy('release_date', 'DESC')
-//                     ->limit($limit)
-//                     ->findAll();
-//     }
+public function latestAddedMovies()
+{
+    return $this->select('title, release_date')
+                ->where('status', 1)
+                ->where('release_date <=', date('Y-m-d'))
+                ->orderBy('created_on', 'DESC')
+                ->limit(10)
+                ->findAll();
+}
+
+
+ public function getMostWatchMovies()
+    {
+        return $this->select('title,views')  
+                    ->where('status', 1)
+                    ->orderBy('views', 'DESC')
+                    ->limit(10)
+                    ->findAll();
+    }
+
 }

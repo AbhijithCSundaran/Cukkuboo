@@ -25,7 +25,7 @@ class Reels extends ResourceController
 
     $authHeader = $this->request->getHeaderLine('Authorization');
     $authenticatedUser= $this->authService->getAuthenticatedUser($authHeader);
-    if (!$user) {
+    if (!$authenticatedUser) {
             return $this->failUnauthorized('Invalid or missing token.');
         }
     if (empty($reels_id)) {

@@ -6,10 +6,10 @@ use CodeIgniter\Router\RouteCollection;
  * @var RouteCollection $routes
  */
 $routes->get('/', 'Home::index');
-$routes->post('Login/login', 'Login::loginFun',['filter' => 'cors']);
-$routes->post('Login/logout', 'Login::logout');
-$routes->post('Login/forgot-password', 'Login::sendOtp');
-$routes->post('Login/reset-password', 'Login::resetPassword');
+$routes->post('login/login', 'Login::loginFun',['filter' => 'cors']);
+$routes->post('login/logout', 'Login::logout');
+$routes->post('login/forgot-password', 'Login::sendOtp');
+$routes->post('login/reset-password', 'Login::resetPassword');
 
 
 $routes->post('user/register','User::registerFun');
@@ -29,6 +29,7 @@ $routes->post('Genres/genres/(:any)', 'Genres::update/$1');
 $routes->delete('Genres/genres/(:any)', 'Genres::deleteGenere/$1');
 
 $routes->get('category/categories', 'Category::categorylist');
+$routes->get('category/categories/(:num)', 'Category::getCategoryById/$1');
 $routes->post('category/categories', 'Category::saveCategory');               
 $routes->delete('category/categories/(:any)', 'Category::delete/$1'); 
 
@@ -46,7 +47,7 @@ $routes->get('movies/latest', 'MovieDetail::getLatestMovies');
 $routes->get('movies/most-watched', 'MovieDetail::mostWatchedMovies');
 
 
-$routes->get('movies/latestmovies', 'MovieDetail::LatestMovies');
+$routes->get('movies/latestmovies', 'MovieDetail::latestMovies');
 $routes->get('movies/mostwatchmovie', 'MovieDetail::getMostWatchMovies');
 
 
@@ -56,9 +57,9 @@ $routes->get('api/home', 'MovieDetail::homeDisplay');
 
 
 // Subscription Plan Routes 
+$routes->post('subscriptionplan/save', 'SubscriptionPlan::savePlan');    
 $routes->get('subscriptionplan/list', 'SubscriptionPlan::getAll');           
-$routes->get('subscriptionplan/get/(:num)', 'SubscriptionPlan::get/$1');     
-$routes->post('subscriptionplan/save', 'SubscriptionPlan::savePlan');         
+$routes->get('subscriptionplan/get/(:num)', 'SubscriptionPlan::get/$1');          
 $routes->delete('subscriptionplan/delete/(:num)', 'SubscriptionPlan::delete/$1'); 
 
 //reels details
@@ -88,7 +89,7 @@ $routes->get('resume/viewhistory', 'Resume::viewHistory');
 $routes->post('savehistory/save', 'Savehistory::saveMovie');
 $routes->get('savehistory/history', 'Savehistory::saveHistory');
 
-
+$routes->post('video/videoview', 'VideoView::viewVideo');
 
 
 ?>

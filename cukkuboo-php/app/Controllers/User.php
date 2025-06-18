@@ -41,6 +41,7 @@ class User extends ResourceController
             'country'      => $data['country'] ?? null,
             'subscription' => $data['subscription'] ?? 'free',
             'status'       => $data['status'] ?? null,
+               'join_date'       => $data['join_date'] ?? null,
             //  'status'       => 1,
             'user_type' => $data['user_type'] ??'Customer',
         ]);
@@ -62,7 +63,7 @@ class User extends ResourceController
                     'message' => 'User already exists.'
                 ])->setStatusCode(409);
             }
-            $userData['join_date'] = date('Y-m-d');
+            $userData['join_date'] = $userData['join_date'] ?? date('Y-m-d');
             $userData['created_at'] = date('Y-m-d H:i:s');
             $userId = $this->UserModel->addUser($userData);
             $user   = $this->UserModel->find($userId);

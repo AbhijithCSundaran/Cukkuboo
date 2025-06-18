@@ -1,21 +1,20 @@
-import { Component, AfterViewInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
+import { UserSubscriptionService } from '../../services/subscription.service';
 import { CommonModule } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
-import { Router } from '@angular/router';
-import { MatIconModule } from '@angular/material/icon';
-import { MatDialog } from '@angular/material/dialog';
-import { EditSubscriptionListComponent } from './edit-subscription-list/edit-subscription-list.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatIconModule } from '@angular/material/icon';
+import { HttpClientModule } from '@angular/common/http';
 
 interface Subscription {
-  userName: string;
-  plan: string;
-  startDate: Date;
-  endDate: Date;
+  username: string;
+  plan_name: string;
+  start_date: Date;
+  end_date: Date;
   status: 'active' | 'expired';
 }
 
@@ -23,89 +22,66 @@ interface Subscription {
   selector: 'app-subscriptions',
   standalone: true,
   imports: [
-    MatFormFieldModule,
     CommonModule,
-    MatIconModule,
     MatTableModule,
     MatPaginatorModule,
-    MatInputModule 
+    MatFormFieldModule,
+    MatInputModule,
+    MatIconModule,
+    HttpClientModule
   ],
   templateUrl: './subscriptions.component.html',
   styleUrls: ['./subscriptions.component.scss']
 })
-export class SubscriptionsComponent implements AfterViewInit {
-  displayedColumns: string[] = ['slNo','user', 'plan', 'startDate', 'endDate', 'status', 'action'];
-
-  dataSource = new MatTableDataSource<Subscription>([
-    { userName: 'John Doe', plan: 'Premium', startDate: new Date('2024-01-01'), endDate: new Date('2025-01-01'), status: 'active' },
-    { userName: 'Jane Smith', plan: 'Basic', startDate: new Date('2023-05-01'), endDate: new Date('2024-05-01'), status: 'expired' },
-    { userName: 'Alice Johnson', plan: 'Standard', startDate: new Date('2024-02-10'), endDate: new Date('2025-02-10'), status: 'active' },
-    { userName: 'Bob Martin', plan: 'Premium', startDate: new Date('2023-11-01'), endDate: new Date('2024-11-01'), status: 'expired' },
-    { userName: 'Charlie Brown', plan: 'Basic', startDate: new Date('2023-12-15'), endDate: new Date('2024-12-15'), status: 'active' },
-    { userName: 'Diana Prince', plan: 'Standard', startDate: new Date('2024-03-20'), endDate: new Date('2025-03-20'), status: 'active' },
-    { userName: 'Evan Scott', plan: 'Basic', startDate: new Date('2023-08-01'), endDate: new Date('2024-08-01'), status: 'expired' },
-    { userName: 'Fiona Apple', plan: 'Premium', startDate: new Date('2024-04-01'), endDate: new Date('2025-04-01'), status: 'active' },
-    { userName: 'George King', plan: 'Standard', startDate: new Date('2023-10-10'), endDate: new Date('2024-10-10'), status: 'expired' },
-    { userName: 'Helen Lane', plan: 'Basic', startDate: new Date('2023-07-01'), endDate: new Date('2024-07-01'), status: 'expired' },
-    { userName: 'Isaac Newton', plan: 'Premium', startDate: new Date('2024-05-01'), endDate: new Date('2025-05-01'), status: 'active' },
-    { userName: 'Julia Roberts', plan: 'Standard', startDate: new Date('2024-06-01'), endDate: new Date('2025-06-01'), status: 'active' },
-    { userName: 'Kevin Hart', plan: 'Basic', startDate: new Date('2023-09-15'), endDate: new Date('2024-09-15'), status: 'expired' },
-    { userName: 'Laura Palmer', plan: 'Premium', startDate: new Date('2024-07-01'), endDate: new Date('2025-07-01'), status: 'active' },
-    { userName: 'Michael Scott', plan: 'Standard', startDate: new Date('2023-11-20'), endDate: new Date('2024-11-20'), status: 'expired' },
-    { userName: 'Nancy Drew', plan: 'Basic', startDate: new Date('2024-01-15'), endDate: new Date('2025-01-15'), status: 'active' },
-    { userName: 'Oscar Wilde', plan: 'Premium', startDate: new Date('2024-02-01'), endDate: new Date('2025-02-01'), status: 'active' },
-    { userName: 'Pam Beesly', plan: 'Standard', startDate: new Date('2023-10-01'), endDate: new Date('2024-10-01'), status: 'expired' },
-    { userName: 'Quentin Blake', plan: 'Basic', startDate: new Date('2023-06-10'), endDate: new Date('2024-06-10'), status: 'expired' },
-    { userName: 'Rachel Green', plan: 'Premium', startDate: new Date('2024-03-01'), endDate: new Date('2025-03-01'), status: 'active' },
-    { userName: 'Steve Rogers', plan: 'Standard', startDate: new Date('2023-12-01'), endDate: new Date('2024-12-01'), status: 'expired' },
-    { userName: 'Tony Stark', plan: 'Premium', startDate: new Date('2024-08-01'), endDate: new Date('2025-08-01'), status: 'active' },
-    { userName: 'Uma Thurman', plan: 'Basic', startDate: new Date('2023-04-01'), endDate: new Date('2024-04-01'), status: 'expired' },
-    { userName: 'Victor Hugo', plan: 'Standard', startDate: new Date('2023-09-01'), endDate: new Date('2024-09-01'), status: 'expired' },
-    { userName: 'Wanda Maximoff', plan: 'Premium', startDate: new Date('2024-09-01'), endDate: new Date('2025-09-01'), status: 'active' }
-  ]);
+export class SubscriptionsComponent implements OnInit, AfterViewInit {
+  displayedColumns: string[] = ['slNo', 'user', 'plan', 'startDate', 'endDate', 'status'];
+  dataSource = new MatTableDataSource<Subscription>([]);
+  totalItems = 0;
+  searchText: string = '';
+  pageIndex = 0;
+  pageSize = 10;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  constructor(
-    private router: Router,
-    private dialog: MatDialog,
+  constructor(private userSubscriptionService: UserSubscriptionService) {}
 
-  ) { }
+  ngOnInit(): void {
+    this.fetchSubscriptions(0, this.pageSize, '');
+  }
 
-  ngAfterViewInit() {
+  ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator;
-  }
-    ngOnInit(): void {
-    
 
-
-     
-
-  this.dataSource.filterPredicate = (data: any, filter: string) => {
-    const dataStr = `${data.name} ${data.role} ${data.email} ${data.phone} ${data.status}`
-      .toLowerCase();
-    return dataStr.includes(filter);
-  };
-  }
-  editSubscription(sub: Subscription): void {
-    // this.router.navigate(['/edit-subscription-list']);
-    const dialogRef = this.dialog.open(EditSubscriptionListComponent, {
-      // width: '600px',
-      // height: '500px',
-      data: {  }
+    this.paginator.page.subscribe(() => {
+      this.pageIndex = this.paginator.pageIndex;
+      this.pageSize = this.paginator.pageSize;
+      this.fetchSubscriptions(this.pageIndex, this.pageSize, this.searchText);
     });
-    dialogRef.afterClosed().subscribe((data) => {
-      if (data) {
+  }
+
+  fetchSubscriptions(pageIndex: number = 0, pageSize: number = 10, searchText: string = ''): void {
+    this.userSubscriptionService.listUserSubscriptions(pageIndex, pageSize, searchText).subscribe({
+      next: (response) => {
+        console.log('Subscriptions response:', response);
+
+        this.dataSource.data = response?.data || [];
+        this.totalItems = response?.totalCount || this.dataSource.data.length;
+
+        // Force refresh paginator length (needed if response.totalCount is updated)
+        if (this.paginator) {
+          this.paginator.length = this.totalItems;
+        }
+      },
+      error: (error) => {
+        console.error('Error fetching subscriptions:', error);
       }
-    })
+    });
   }
 
-  deleteSubscription(sub: Subscription): void {
-    this.dataSource.data = this.dataSource.data.filter(s => s !== sub);
-  }
-
-applyGlobalFilter(event: KeyboardEvent): void {
-    const input = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = input.trim().toLowerCase();
+  applyGlobalFilter(event: KeyboardEvent): void {
+    const value = (event.target as HTMLInputElement).value;
+    this.searchText = value.trim().toLowerCase();
+    this.paginator.pageIndex = 0;
+    this.fetchSubscriptions(0, this.pageSize, this.searchText);
   }
 }

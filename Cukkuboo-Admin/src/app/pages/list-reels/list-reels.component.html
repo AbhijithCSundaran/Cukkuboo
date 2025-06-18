@@ -25,7 +25,9 @@
       <!-- Sl. No. Column -->
       <ng-container matColumnDef="slNo">
         <th mat-header-cell *matHeaderCellDef> Sl. No. </th>
-        <td mat-cell *matCellDef="let row; let i = index"> {{ i + 1 }} </td>
+<td mat-cell *matCellDef="let row; let i = index">
+  {{ pageIndex * pageSize + i + 1 }}
+</td>
       </ng-container>
 
       <!-- Title Column -->
@@ -93,12 +95,15 @@
   </div>
 
   <div class="pagination-wrapper">
- <mat-paginator  class="pagination"[pageSize]="10" showFirstLastButtons></mat-paginator>
-  <!-- <mat-paginator
-    class="pagination"
-    [pageSizeOptions]="[10, 20, 50]"
-    showFirstLastButtons
-  ></mat-paginator> -->
+ <!-- <mat-paginator  class="pagination"[pageSize]="10" showFirstLastButtons></mat-paginator> -->
+<mat-paginator
+  class="pagination"
+  [length]="totalItems"
+  [pageSize]="pageSize"
+  [pageSizeOptions]="[10, 20, 50]"
+  showFirstLastButtons
+></mat-paginator>
+
 </div>
 
   <!-- Delete Confirmation Modal -->

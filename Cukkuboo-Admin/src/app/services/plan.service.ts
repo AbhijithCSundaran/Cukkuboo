@@ -1,42 +1,45 @@
 import { Injectable } from '@angular/core';
-import { environment } from '../../environments/environment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PlanService {
-  private apiUrl: string = environment.apiUrl;
-  // Retrieve the access token from localStorage or sessionStorage
-  get token() { return localStorage.getItem('token') || sessionStorage.getItem('token'); }
 
-  // Set headers including the authorization token
+  private apiUrl: string = environment.apiUrl;
+
+  get token() {
+    return localStorage.getItem('token') || sessionStorage.getItem('token');
+  }
+
   get headers() {
     return new HttpHeaders({
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${this.token}`, // Add Bearer token
+      'Authorization': `Bearer ${this.token}`
     });
   }
-  constructor(private http: HttpClient) { }
 
+  constructor(private http: HttpClient) {}
 
- listplan(model: any): Observable<any> {
-    const body = model;
-    return this.http.post(this.apiUrl + 'User/register', body);
+  listPlans(pageIndex: number = 0, pageSize: number = 10, searchText: string = ''): Observable<any> {
+    return this.http.get(`${this.apiUrl}subscriptionplan/list?pageIndex=${pageIndex}&pageSize=${pageSize}&searchText=${searchText}`, {
+      headers: this.headers
+    });
   }
-  addplan(model: any): Observable<any> {
-    const body = model;
-    return this.http.post(this.apiUrl + 'User/register', body);
+
+  addPlan(model: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}subscriptionplan/save`, model, { headers: this.headers });
   }
-  updateplan(model: any): Observable<any> {
-    const body = model;
-    return this.http.post(this.apiUrl + 'User/register', body);
+
+  getPlanById(id: number): Observable<any> {
+    return this.http.get(`${this.apiUrl}subscriptionplan/get/${id}`, { headers: this.headers });
   }
-  
- deleteplan(model: any): Observable<any> {
-    const body = model;
-    return this.http.post(this.apiUrl + 'User/register', body);
+
+ 
+
+  deletePlan(id: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}subscriptionplan/delete/${id}`, { headers: this.headers });
   }
-  
 }

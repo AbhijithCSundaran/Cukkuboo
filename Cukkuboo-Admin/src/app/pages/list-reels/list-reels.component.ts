@@ -33,11 +33,14 @@ export class ListReelsComponent implements OnInit, AfterViewInit {
   displayedColumns: string[] = ['slNo', 'title', 'access', 'likes', 'views', 'status', 'action'];
   dataSource = new MatTableDataSource<any>([]);
   confirmDeleteReel: any = null;
-  totalItems = 0;
-  searchText: string = '';
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
+
+  pageIndex: number = 0;
+  pageSize: number = 10;
+  totalItems: number = 0;
+  searchText: string = '';
 
   constructor(
     private router: Router,
@@ -46,31 +49,28 @@ export class ListReelsComponent implements OnInit, AfterViewInit {
   ) {}
 
   ngOnInit(): void {
-    this.listReels(0, 10, '');
+    this.listReels(this.pageIndex, this.pageSize, this.searchText);
   }
 
- ngAfterViewInit(): void {
-  this.dataSource.paginator = this.paginator;
-  this.dataSource.sort = this.sort;
+  ngAfterViewInit(): void {
+    this.sort.sortChange.subscribe(() => {
+      this.pageIndex = 0;
+      this.listReels(this.pageIndex, this.pageSize, this.searchText);
+    });
 
-  // Now call listReels only ONCE using paginator values
-  this.listReels(this.paginator.pageIndex, this.paginator.pageSize, this.searchText);
-
-  // Listen for pagination
-  this.paginator.page.subscribe(() => {
-    this.listReels(this.paginator.pageIndex, this.paginator.pageSize, this.searchText);
-  });
-}
-
+    this.paginator.page.subscribe(() => {
+      this.pageIndex = this.paginator.pageIndex;
+      this.pageSize = this.paginator.pageSize;
+      this.listReels(this.pageIndex, this.pageSize, this.searchText);
+    });
+  }
 
   listReels(pageIndex: number = 0, pageSize: number = 10, search: string = ''): void {
     this.reelsService.listReels(pageIndex, pageSize, search).subscribe({
       next: (response) => {
-       
-        console.log('API response from listreels():', response);
-        this.dataSource.data = response?.data || response || [];
-
-      
+        console.log('API response from listReels():', response);
+        this.dataSource.data = response?.data || [];
+        this.totalItems = response?.total || 0;
       },
       error: (err) => {
         console.error('Failed to load reels:', err);
@@ -82,7 +82,8 @@ export class ListReelsComponent implements OnInit, AfterViewInit {
   applyGlobalFilter(event: KeyboardEvent): void {
     const value = (event.target as HTMLInputElement).value;
     this.searchText = value.trim().toLowerCase();
-    this.listReels(0, this.paginator.pageSize || 10, this.searchText);
+    this.pageIndex = 0;
+    this.listReels(this.pageIndex, this.pageSize, this.searchText);
   }
 
   addNewReel(): void {
@@ -97,29 +98,26 @@ export class ListReelsComponent implements OnInit, AfterViewInit {
     this.confirmDeleteReel = null;
   }
 
-confirmDelete(): void {
-  const reel = this.confirmDeleteReel;
+  confirmDelete(): void {
+    const reel = this.confirmDeleteReel;
+    if (!reel) return;
 
-  if (!reel) return;
+    console.log('Deleting reel with id:', reel.reels_id);
 
-  console.log('Deleting reel with id:', reel.id);
+    this.reelsService.deleteReels(reel.reels_id).subscribe({
+      next: () => {
+        console.log('Delete successful, updating dataSource');
+        this.dataSource.data = this.dataSource.data.filter(r => r.reels_id !== reel.reels_id);
+        this.showSnackbar('Reel deleted successfully!', 'snackbar-success');
+      },
+      error: (err) => {
+        console.error('Failed to delete reel:', err);
+        this.showSnackbar('Failed to delete reel. Please try again.', 'snackbar-error');
+      }
+    });
 
-  this.reelsService.deleteReels(reel.reels_id).subscribe({
-    next: () => {
-      console.log('Delete successful, updating dataSource');
-      this.dataSource.data = this.dataSource.data.filter(r => r.reels_id !== reel.reels_id);
-      this.showSnackbar('Reel deleted successfully!', 'snackbar-success');
-    },
-    error: (err) => {
-      console.error('Failed to delete reel:', err);
-      this.showSnackbar('Failed to delete reel. Please try again.', 'snackbar-error');
-    }
-  });
-
-  this.confirmDeleteReel = null;
-}
-
-
+    this.confirmDeleteReel = null;
+  }
 
   showSnackbar(message: string, panelClass: string = 'snackbar-default'): void {
     this.snackBar.open(message, 'Close', {

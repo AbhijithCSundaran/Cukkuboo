@@ -1,17 +1,14 @@
 <div class="content-container">
- 
   <div class="header-row">
     <h2>Categories</h2>
   </div>
 
-  
-  <mat-card  class="form-card form_container">
+  <mat-card class="form-card form_container">
     <mat-card-content class="form-section" [formGroup]="categoryForm">
-
       <div class="left-side">
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Category</mat-label>
-          <input matInput placeholder="Add category name" formControlName="name" required>
+          <input matInput placeholder="Add category name" formControlName="name" required />
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="w-100">
@@ -22,11 +19,11 @@
 
       <div class="right-side">
         <mat-form-field appearance="outline" class="w-100">
-     
+          <mat-label>Status</mat-label>
           <mat-select formControlName="status">
             <mat-option value="">Choose Status</mat-option>
-            <mat-option value="enabled">Enabled</mat-option>
-            <mat-option value="disabled">Disabled</mat-option>
+            <mat-option value="1">Active</mat-option>
+            <mat-option value="2">Inactive</mat-option>
           </mat-select>
         </mat-form-field>
 
@@ -39,54 +36,81 @@
     </mat-card-content>
   </mat-card>
 
-
   <div class="table-wrapper">
-  <table mat-table [dataSource]="categories" class="mat-elevation-z2 custom-table" >
-
-     <ng-container matColumnDef="slNo">
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z2 custom-table">
+      <ng-container matColumnDef="slNo">
         <th mat-header-cell *matHeaderCellDef> Sl. No. </th>
-        <td mat-cell *matCellDef="let row; let i = index"> {{ i + 1 }} </td>
+<td mat-cell *matCellDef="let row; let i = index"> {{ getSerialNumber(i) }} </td>
+
+        
       </ng-container>
 
-    <ng-container matColumnDef="name">
-      <th mat-header-cell *matHeaderCellDef> Category  </th>
-      <td mat-cell *matCellDef="let category"> {{ category.name }} </td>
-    </ng-container>
-  
-    <ng-container matColumnDef="description">
-      <th mat-header-cell *matHeaderCellDef> Description </th>
-      <td mat-cell *matCellDef="let category"> {{ category.description }} </td>
-    </ng-container>
-  
-    <ng-container matColumnDef="status">
-      <th mat-header-cell *matHeaderCellDef> Status </th>
-      <td mat-cell *matCellDef="let category">
-        <span [ngClass]="{
-                'badge': true,
-                'badge-enabled': category.status === 'enabled',
-                'badge-disabled': category.status === 'disabled'
-              }">
-          {{ category.status }}
-        </span>
-      </td>
-    </ng-container>
-  
-    <ng-container matColumnDef="action" class="action" >
-      <th mat-header-cell *matHeaderCellDef> Action </th>
-      <td mat-cell *matCellDef="let category; let i = index">
-        <div class="action-icons">
-          <mat-icon class="icon" (click)="editCategory(i)">edit</mat-icon>
-          <mat-icon class="icon" (click)="deleteCategory(i)">delete</mat-icon>
-        </div>
-      </td>
-    </ng-container>
-    
-  
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-  </table>
-</div>
-  <!-- No data found message -->
-  <div *ngIf="categories.length === 0" class="no-data">
+      <ng-container matColumnDef="category_name">
+        <th mat-header-cell *matHeaderCellDef> Category </th>
+        <td mat-cell *matCellDef="let category" class="title"> {{ category.category_name }} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="description">
+        <th mat-header-cell *matHeaderCellDef> Description </th>
+        <td mat-cell *matCellDef="let category"> {{ category.description }} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef> Status </th>
+        <td mat-cell *matCellDef="let category">
+          <span
+            [ngClass]="{
+              badge: true,
+              'badge-enabled': category.status === '1',
+              'badge-disabled': category.status === '2'
+            }"
+          >
+            {{ category.status === '1' ? 'Active' : category.status === '2' ? 'Inactive' : category.status }}
+          </span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="action">
+        <th mat-header-cell *matHeaderCellDef> Action </th>
+        <td mat-cell *matCellDef="let category">
+          <div class="action-icons">
+            <mat-icon class="icon" (click)="editCategory(category.category_id)">edit</mat-icon>
+            <mat-icon class="icon" (click)="modalDeleteCategory(category)">delete</mat-icon>
+          </div>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+
+<mat-paginator
+  class="pagination"
+  [length]="totalItems"
+  [pageSize]="pageSize"
+  [pageIndex]="pageIndex"
+  [pageSizeOptions]="[5, 10, 20]"
+  (page)="onPageChange($event)"
+  showFirstLastButtons
+></mat-paginator>
+
+  </div>
+
+  <div *ngIf="dataSource.data.length === 0" class="no-data">
     No categories found.
   </div>
+
+  <!-- Delete Confirmation Modal -->
+  <div class="modal" [class.show]="categoryToDelete">
+    <div class="modal-content">
+      <p>
+        Are you sure you want to delete
+        <span class="highlight">"{{ categoryToDelete?.category_name }}"</span>?
+      </p>
+      <div class="modal-actions">
+        <button class="btn-yes" (click)="confirmDelete()">Delete</button>
+        <button class="btn-no" (click)="cancelDelete()">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>

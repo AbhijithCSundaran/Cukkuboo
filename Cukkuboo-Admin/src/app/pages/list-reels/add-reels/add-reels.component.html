@@ -25,10 +25,10 @@
                   </small>
                 </label>
 
-                <button class="trash-button" *ngIf="reelForm.value['thumbnail']"
-                  (click)="openDeleteConfirm('thumbnail')">
-                  <i class="fa-solid fa-trash"></i>
-                </button>
+               <button type="button" class="trash-button" *ngIf="reelForm.value['thumbnail']"
+  (click)="openDeleteConfirm('thumbnail')">
+  <i class="fa-solid fa-trash"></i>
+</button>
 
                 <div class="drag-drop-zone" [ngClass]="{'uploaded': reelForm.value['thumbnail']}"
                   (dragover)="onThumbnailDragOver($event)" (drop)="onThumbnailDrop($event)"
@@ -45,19 +45,20 @@
                   </div>
                 </div>
 
-                <input type="file" (change)="onThumbnailSelected($event)" accept="image/jpeg" hidden #thumbnailInput />
+                <input type="file" (change)="onThumbnailSelected($event)" accept="image/*" hidden #thumbnailInput />
               </mat-card-content>
             </mat-card>
           </div>
 
-          <!-- Reel Video Upload -->
+          <!-- Reel Video Upload
           <div class="width-50 px-2 pb-3">
             <mat-card appearance="outlined">
               <mat-card-content>
                 <label class="fw-medium d-block mb-2">Reel Video</label>
-                <button class="trash-button" *ngIf="reelForm.value['video']" (click)="openDeleteConfirm('video')">
-                  <i class="fa-solid fa-trash"></i>
-                </button>
+               <button type="button" class="trash-button" *ngIf="reelForm.value['video']"
+  (click)="openDeleteConfirm('video')">
+  <i class="fa-solid fa-trash"></i>
+</button>
 
                 <div class="drag-drop-zone" [ngClass]="{'uploaded': reelForm.value['video']}"
                   (dragover)="onVideoDragOver($event)" (drop)="onVideoDrop($event)"
@@ -65,15 +66,53 @@
 
                   <p *ngIf="!reelForm.value['video']">Drag & drop a video here or click to select (MP4 only)</p>
 
-                  <video *ngIf="reelForm.value['video']" [src]="videoUrl+reelForm.value['trailer']" controls controlsList="nodownload"
-                    class="media-preview">
-                  </video>
+                 <video *ngIf="reelForm.value['video']" [src]="videoUrl + reelForm.value['video']" controls controlsList="nodownload"
+                class="media-preview">
+                </video>
+
                 </div>
 
                 <input type="file" (change)="onVideoSelected($event)" accept="video/mp4" hidden #reelInput />
               </mat-card-content>
             </mat-card>
-          </div>
+          </div> -->
+
+
+          <!-- Reel Video Upload -->
+<div class="width-50 px-2 pb-3">
+  <mat-card appearance="outlined">
+    <mat-card-content>
+      <label class="fw-medium d-block mb-2">Reel Video</label>
+      <button type="button" class="trash-button" *ngIf="reelForm.value['video']"
+        (click)="openDeleteConfirm('video')">
+        <i class="fa-solid fa-trash"></i>
+      </button>
+
+      <div class="drag-drop-zone" [ngClass]="{'uploaded': reelForm.value['video']}"
+        (dragover)="onVideoDragOver($event)" (drop)="onVideoDrop($event)"
+        (click)="!reelForm.value['video'] && reelInput.click()">
+
+        <p *ngIf="!reelForm.value['video']">Drag & drop a video here or click to select (MP4 only)</p>
+
+        <video *ngIf="reelForm.value['video']" [src]="videoUrl + reelForm.value['video']" controls
+          controlsList="nodownload" class="media-preview"></video>
+      </div>
+
+      <!-- Upload Progress UI -->
+      <div class="progress-wrapper">
+  <div *ngIf="uploadProgress > 0 && uploadProgress < 100" class="progress-container">
+    <div class="progress-bar" [style.width.%]="uploadProgress"></div>
+    <span class="progress-text">{{ uploadProgress }}%</span>
+  </div>
+ 
+</div>
+
+
+<input type="file" (change)="onVideoSelected($event)" accept="video/mp4" hidden #reelInput />
+    </mat-card-content>
+  </mat-card>
+</div>
+
 
           <!-- Title -->
           <div class="width-50 px-2 pb-3">

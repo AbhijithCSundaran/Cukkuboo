@@ -1,42 +1,16 @@
-<?php
-
-namespace App\Models;
+<?php namespace App\Models;
 
 use CodeIgniter\Model;
 
 class SubscriptionPlanModel extends Model
 {
-    protected $table = 'subscriptionplan';
-    protected $primaryKey = 'subscriptionplan_id';
-    
-   
+    protected $table = 'subscriptionplan'; 
+    protected $primaryKey = 'subscriptionplan_id'; 
+
     protected $allowedFields = [
-        'plan_name',
-        'price',
-        'discount_price',
-        'period',
-        'features',
-        'status',
-        'created_by', 
-        'created_on',
-        'modify_by',
-        'modify_on'
+        'plan_name', 'price', 'period', 'discount_price',
+        'features', 'status','modify_by','modify_on', 'created_on', 'created_by'
     ];
-
-    protected $useTimestamps = false;
-
-    public function getAllPlans()
-    {
-        return $this->orderBy('subscriptionplan_id', 'DESC')->findAll();
-    }
-
-    public function getPlanById($id)
-    {
-        return $this->where('subscriptionplan_id', $id)
-            ->where('status !=', 9)
-            ->first();
-
-    }
 
     public function addPlan($data)
     {
@@ -48,25 +22,8 @@ class SubscriptionPlanModel extends Model
         return $this->update($id, $data);
     }
 
-//     public function deletePlanById($status, $id)
-// {
-//     return $this->update($id, [
-//         'status'     => $status,
-//         'modify_on'  => date('Y-m-d H:i:s')
-//     ]);
-// }
-
-public function deletePlanById($status, $id)
-{
-    return $this->db->table($this->table)
-        ->where('subscriptionplan_id', $id)
-        ->update([
-            'status'    => $status,
-            'modify_on' => date('Y-m-d H:i:s')
-        ]);
-}
-
-
-        
-
+    public function getPlanById($id)
+    {
+        return $this->find($id);
+    }
 }

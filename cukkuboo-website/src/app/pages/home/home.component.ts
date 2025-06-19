@@ -14,16 +14,16 @@ export class HomeComponent {
     autoplay: true, autoplayTimeout: 5000, autoplayHoverPause: false, autoplayMouseleaveTimeout: 1000,
     items: 1,
     autoHeight: false, autoWidth: true,
-    dots: true, nav: false, navText: ['<span class="material-icons" style="font-size:18px">arrow_back_ios_new</span>', '<span class="material-icons" style="font-size:18px">arrow_forward_ios</span>']
+    dots: true, nav: true, navText: ['<span class="material-icons" style="font-size:18px">arrow_back_ios_new</span>', '<span class="material-icons" style="font-size:18px">arrow_forward_ios</span>']
   }
 
   carouselItems = [
     {
-      background: 'images/background/asset-1.jpeg',
+      background: 'assets/images/background/asset-1.jpeg',
       title: 'King of Skull',
       cast: 'Anna Romanson, Robert Romanson',
       rating: '12A',
-      ratingImage: 'images/asset-2.png',
+      ratingImage: 'assets/images/asset-2.png',
       ratingValue: '0',
       trailer: 'https://www.youtube.com/watch?v=LXb3EKWsInQ',
       image: 'images/background/asset-1.jpeg',
@@ -32,27 +32,27 @@ export class HomeComponent {
       tagline: 'Most Viewed'
     },
     {
-      background: 'images/background/asset-3.jpeg',
+      background: 'assets/images/background/asset-3.jpeg',
       title: 'The Express',
       cast: 'Robert Romanson, Anne Good',
       rating: 'PG-14',
-      ratingImage: 'images/asset-2.png',
+      ratingImage: 'assets/images/asset-2.png',
       ratingValue: '8.5',
       trailer: 'https://www.youtube.com/watch?v=LXb3EKWsInQ',
-      image: 'images/background/asset-3.jpeg',
+      image: 'assets/images/background/asset-3.jpeg',
       tags: ['4K Ultra', 'King', 'Premieres', 'Viking'],
       genres: ['Action', 'Adventure', 'Biography'],
       tagline: 'Best Of 2021'
     },
     {
-      background: 'images/background/asset-4.jpeg',
+      background: 'assets/images/background/asset-4.jpeg',
       title: 'Thieve the Bank',
       cast: 'Jennifer Lonez, Mars Shelley',
       rating: 'TV-MA',
-      ratingImage: 'images/asset-2.png',
+      ratingImage: 'assets/images/asset-2.png',
       ratingValue: '9.5',
       trailer: 'https://www.youtube.com/watch?v=LXb3EKWsInQ',
-      image: 'images/background/asset-4.jpeg',
+      image: 'assets/images/background/asset-4.jpeg',
       tags: ['Brother', 'Hero', 'Premieres', 'Viking'],
       genres: ['Action', 'Mystery'],
       tagline: 'High Rated'

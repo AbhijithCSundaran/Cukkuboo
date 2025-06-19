@@ -65,17 +65,6 @@ Import css
 /*================================================
 Moz Selection
 ================================================*/
-:root {
-    --primary-color: #e50916;
-    --primarydark-color: #b81d24;
-    --black-color: #221f1f;
-    --dark-color: #161616;
-    --secondary-color: #cecfd1;
-    --grey-color: #f5f5f1;
-    --white-color: #ffffff;
-    --body-fonts: 'Roboto', sans-serif;
-    --title-fonts: 'Jost', sans-serif;
-}
 
 ::-moz-selection {
     text-shadow: none;
@@ -3621,158 +3610,6 @@ Video Popup
 }
 
 
-
-/*================================================
-OWL Carousel
-================================================*/
-.owl-carousel .owl-nav.disabled {
-    display: none;
-}
-
-.owl-carousel .owl-nav {
-    cursor: pointer;
-    z-index: 9;
-    margin: 0;
-    width: 100%;
-    position: absolute;
-    top: 50%;
-    left: 0%;
-    -webkit-transform: translate(0%, -50%);
-    -ms-transform: translate(0%, -50%);
-    transform: translate(0%, -50%);
-}
-
-.owl-carousel .owl-nav button.owl-prev {
-    outline: none;
-    text-align: center;
-    text-indent: inherit;
-    cursor: pointer;
-    text-align: center;
-    font-size: 32px;
-    position: absolute;
-    top: 0;
-    left: -22.5px;
-    line-height: 1;
-    padding: 0;
-    margin: 0;
-    color: var(--white-color) !important;
-}
-
-.owl-carousel .owl-nav button.disabled {
-    display: none;
-}
-
-.owl-carousel .owl-nav button.owl-next {
-    outline: none;
-    text-align: center;
-    text-indent: inherit;
-    cursor: pointer;
-    text-align: center;
-    font-size: 32px;
-    position: absolute;
-    top: 0;
-    right: -22.5px;
-    line-height: 1;
-    padding: 0;
-    margin: 0;
-    color: var(--white-color) !important;
-}
-
-.gen-style-2 .owl-carousel .owl-nav {
-    top: 30%;
-}
-
-.gen-style-1 .owl-carousel .owl-nav {
-    top: 40%;
-}
-
-@media(max-width:1399px) {
-    .gen-style-2 .owl-carousel .owl-nav {
-        top: 26%;
-    }
-}
-
-@media(max-width:1199px) {}
-
-@media(max-width:1023px) {
-    .owl-carousel .owl-nav button.owl-prev {
-        left: 15px;
-    }
-
-    .owl-carousel .owl-nav button.owl-next {
-        right: 15px;
-    }
-
-    .gen-style-2 .owl-carousel .owl-nav {
-        top: 32%;
-    }
-}
-
-@media(max-width:979px) {
-    .gen-style-2 .owl-carousel .owl-nav {
-        top: 36%;
-    }
-}
-
-@media(max-width:767px) {
-    .gen-style-2 .owl-carousel .owl-nav {
-        top: 32%;
-    }
-}
-
-@media(max-width:479px) {
-    .gen-style-2 .owl-carousel .owl-nav {
-        top: 26%;
-    }
-}
-
-/* Dots */
-.owl-carousel .owl-dots.disabled {
-    display: none;
-}
-
-.owl-carousel .owl-dots {
-    margin: 15px 0 0;
-    line-height: normal;
-    position: relative;
-    display: inline-block;
-    width: 100%;
-    text-indent: inherit;
-    text-align: center;
-    cursor: pointer;
-}
-
-.owl-carousel .owl-dots .owl-dot {
-    box-shadow: none;
-    outline: none;
-    background: var(--white-color);
-    opacity: 1;
-    display: inline-block;
-    padding: 0;
-    margin: 0px 5px;
-    height: 4px;
-    width: 30px;
-    border: none;
-    border-radius: 0;
-    transition: all 0.5s ease-in-out;
-    -webkit-transition: all 0.5s ease-in-out;
-    -o-transition: all 0.5s ease-in-out;
-    -moz-transition: all 0.5s ease-in-out;
-    -ms-transition: all 0.5s ease-in-out;
-    cursor: pointer;
-}
-
-.owl-carousel .owl-dots .owl-dot:hover {
-    background: var(--primary-color);
-    opacity: 1;
-}
-
-.owl-carousel .owl-dots .owl-dot.active {
-    background: var(--primary-color);
-    opacity: 1;
-}
-
-
 /*================================================
 Gen Slick
 ===============================================*/
@@ -5985,6 +5822,7 @@ Banner 3
     stroke: var(--white-color);
     stroke-dasharray: 0;
     stroke-dashoffset: 0;
+    transition: all 0.5s ease-in-out;
     -webkit-transition: all 0.5s ease-in-out;
     opacity: 1;
 }
@@ -6130,16 +5968,19 @@ Play Button
     stroke: var(--white-color);
     stroke-dasharray: 650;
     stroke-dashoffset: 650;
+    transition: all 0.5s ease-in-out;
     -webkit-transition: all 0.5s ease-in-out;
     opacity: 0.3;
 }
 
 .playBut {
     display: inline-block;
+    transition: all 0.5s ease;
     -webkit-transition: all 0.5s ease;
 }
 
 .playBut .triangle {
+    transition: all 0.7s ease-in-out;
     -webkit-transition: all 0.7s ease-in-out;
     stroke-dasharray: 240;
     stroke-dashoffset: 480;

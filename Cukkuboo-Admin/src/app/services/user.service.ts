@@ -22,7 +22,7 @@ export class UserService {
 
   login(model: any): Observable<any> {
     const body = model;
-    return this.http.post(this.apiUrl + 'Login/login', body);
+    return this.http.post(this.apiUrl + 'login/login', body);
   }
 
   register(model: any): Observable<any> {

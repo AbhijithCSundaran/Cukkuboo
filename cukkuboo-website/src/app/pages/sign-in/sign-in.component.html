@@ -9,43 +9,59 @@
         <div class="text-center">
           <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" id="pms_login">
             <h4>Sign In</h4>
-            <p class="login-username">
-              <label for="user_login">Username or Email Address</label>
+
+            <!-- Email Field -->
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Username or Email Address</mat-label>
               <input
-                type="text"
+                matInput
+                formControlName="email"
+                placeholder="Enter your email"
                 id="user_login"
-                class="input"
-                formControlName="username"
+                class="input_text"
               />
-            </p>
-            <p class="login-password">
-              <label for="user_pass">Password</label>
+              <mat-error
+                *ngIf="loginForm.controls['email'].touched && loginForm.controls['email'].invalid"
+              >
+                <Validation-Messages [control]="loginForm.controls['email']"></Validation-Messages>
+              </mat-error>
+            </mat-form-field>
+
+            <!-- Password Field -->
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Password</mat-label>
               <input
+                matInput
                 type="password"
-                id="user_pass"
-                class="input"
                 formControlName="password"
+                placeholder="Enter your password"
+                id="user_pass"
               />
-            </p>
+              <mat-error
+                *ngIf="loginForm.controls['password'].touched && loginForm.controls['password'].invalid"
+              >
+                <Validation-Messages [control]="loginForm.controls['password']"></Validation-Messages>
+              </mat-error>
+            </mat-form-field>
+
+            <!-- Remember Me Checkbox -->
             <p class="login-remember">
-              <label>
-                <input
-                  type="checkbox"
-                  id="rememberme"
-                  formControlName="rememberMe"
-                />
-                Remember Me
-              </label>
+              <mat-checkbox formControlName="rememberMe">Remember Me</mat-checkbox>
             </p>
+
+            <!-- Submit Button -->
             <p class="login-submit">
               <button
                 id="wp-submit"
                 class="button button-primary"
+                color="primary"
                 type="submit"
               >
                 Log In
               </button>
             </p>
+
+            <!-- Links -->
             <a routerLink="/register">Register</a> |
             <a routerLink="/recover-password">Lost your password?</a>
           </form>

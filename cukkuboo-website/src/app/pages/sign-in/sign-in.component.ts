@@ -8,19 +8,31 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 import { ValidationMessagesComponent } from '../../core/components/validation-messsage/validaation-message.component';
 import { CommonModule } from '@angular/common';
+
 @Component({
   selector: 'app-sign-in',
-  imports: [
-    MatSnackBarModule,ReactiveFormsModule,MatFormFieldModule,MatInputModule,MatCheckboxModule,MatButtonModule,
-    ValidationMessagesComponent,  CommonModule,  ],
+  standalone: true,
   templateUrl: './sign-in.component.html',
-  styleUrls: ['./sign-in.component.scss']
+  styleUrls: ['./sign-in.component.scss'],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatCheckboxModule,
+    MatButtonModule,
+    MatIconModule,
+    MatSnackBarModule,
+    ValidationMessagesComponent
+  ]
 })
 export class SignInComponent {
   loginForm: FormGroup;
   loading = false;
+  hide = true; 
 
   constructor(
     private fb: FormBuilder,
@@ -34,20 +46,20 @@ export class SignInComponent {
       rememberMe: [false]
     });
   }
-navigateToSignUp() {
-  this.router.navigate(['/signup']);
-}
+
+  navigateToSignUp() {
+    this.router.navigate(['/signup']);
+  }
 
   onSubmit(): void {
     if (this.loginForm.valid) {
-      var model = this.loginForm.value
+      const model = this.loginForm.value;
       this.signInService.login(model).subscribe({
         next: (response) => {
-            console.log('response from login:', response);
+          console.log('response from login:', response);
 
           if (response.status) {
-            console.log(response)
-            if (response.user.user_type == 'Customer') {
+            if (response.user.user_type === 'Customer') {
               localStorage.setItem('token', response.user?.jwt_token);
               this.snackBar.open('Login successful', '', {
                 duration: 3000,
@@ -55,16 +67,14 @@ navigateToSignUp() {
                 panelClass: ['snackbar-success']
               });
               this.router.navigate(['/home']);
-            }
-            else {
+            } else {
               this.snackBar.open('Not a customer', '', {
                 duration: 3000,
                 verticalPosition: 'top',
                 panelClass: ['snackbar-error']
               });
             }
-          }
-          else {
+          } else {
             this.snackBar.open(response.message, '', {
               duration: 3000,
               verticalPosition: 'top',
@@ -74,10 +84,8 @@ navigateToSignUp() {
         },
         error: (error) => {
           console.error(error);
-          debugger;
         }
-      })
-
+      });
     } else {
       this.snackBar.open('Invalid email or password', '', {
         duration: 3000,
@@ -85,7 +93,5 @@ navigateToSignUp() {
         panelClass: ['snackbar-error']
       });
     }
-
-    
-  }}
-
+  }
+}

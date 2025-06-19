@@ -6,7 +6,7 @@
 
 }
 .pms_register-form .mat-form-field .input{
-  color: white !important;
+  color:  var(--white-color) !important;
 }
 
 
@@ -20,7 +20,7 @@
 .heading-underline {
   height: 2px;
   width: 80px; 
-  background-color: white;
+  background-color:  var(--white-color);
   margin-top: -10px;
   margin-bottom: 20px;
 }
@@ -38,11 +38,21 @@ button.btn-sm {
   font-weight: 500;
 }
 
-
+.red-link {
+  color:var(--primary-color);
+  text-decoration: underline;
+  cursor: pointer;
+}
+.small-eye-icon {
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+  line-height: 16px;
+}
 
 .red-button {
-  background-color: #e50914;
-  color: white;
+  background-color: var(--primary-color);
+  color: var(--white-color);
   font-weight: 600;
   font-size: 14px;        
   padding: 6px 16px;     
@@ -52,17 +62,9 @@ button.btn-sm {
   box-shadow: none;
 
   &:hover {
-    background-color: #b20710;
+    background-color: var( --primarydark-color);
   }
 }
 
 
-.snackbar-success {
-  background-color: #4caf50;
-  color: white;
-}
 
-.snackbar-error {
-  background-color: #f44336;
-  color: white;
-}

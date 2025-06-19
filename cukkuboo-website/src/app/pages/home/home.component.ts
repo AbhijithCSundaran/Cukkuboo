@@ -14,7 +14,7 @@ export class HomeComponent {
     autoplay: true, autoplayTimeout: 5000, autoplayHoverPause: false, autoplayMouseleaveTimeout: 1000,
     items: 1,
     autoHeight: false, autoWidth: true,
-    dots: true, nav: false, navText: ['<span class="material-icons" style="font-size:18px">arrow_back_ios_new</span>', '<span class="material-icons" style="font-size:18px">arrow_forward_ios</span>']
+    dots: true, nav: true, navText: ['<span class="material-icons" style="font-size:18px">arrow_back_ios_new</span>', '<span class="material-icons" style="font-size:18px">arrow_forward_ios</span>']
   }
 
   carouselItems = [

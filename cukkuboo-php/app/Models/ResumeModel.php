@@ -7,7 +7,7 @@ use CodeIgniter\Model;
 class ResumeModel extends Model
 {
     protected $table = 'resume';
-    protected $primaryKey = 'id';
+    protected $primaryKey = 'resume_id';
     protected $allowedFields = ['user_id', 'mov_id', 'duration', 'created_by', 'created_on', 'modify_by', 'modify_on'];
 
     public function getHistoryByUserId($userId)
@@ -28,7 +28,7 @@ class ResumeModel extends Model
         $now = date('Y-m-d H:i:s');
 
         if ($existing) {
-            return $this->update($existing['id'], [
+            $this->update($existing['resume_id'], [
                 'duration' => $duration,
                 'modify_by' => $userId,
                 'modify_on' => $now

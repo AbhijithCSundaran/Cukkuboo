@@ -9,7 +9,7 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { ValidationMessagesComponent } from '../../core/components/validation-messsage/validaation-message.component';
 import { SignInService } from '../../sign-in.service';
 import { Router } from '@angular/router';
-import { PlanService } from '../../plan.service'; // ✅ Import your PlanService
+import { PlanService } from '../../plan.service'; 
 
 @Component({
   selector: 'app-sign-up',
@@ -29,14 +29,14 @@ import { PlanService } from '../../plan.service'; // ✅ Import your PlanService
 })
 export class SignUpComponent implements OnInit {
   signUpForm!: FormGroup;
-  plans: any[] = []; // Initialize empty and fill from API
+  plans: any[] = []; 
 
   constructor(
     private fb: FormBuilder,
     private signInService: SignInService,
     private snackBar: MatSnackBar,
     private router: Router,
-    private planService: PlanService // ✅ Inject PlanService
+    private planService: PlanService 
   ) {}
 
   ngOnInit(): void {
@@ -47,10 +47,10 @@ export class SignUpComponent implements OnInit {
       lastName: [''],
       password: ['', Validators.required],
       confirmPassword: ['', Validators.required],
-      subscriptionPlan: ['', Validators.required] // Start with empty
+      subscriptionPlan: ['', Validators.required] 
     });
 
-    this.loadPlans(); // ✅ Load plans from API
+    this.loadPlans();
   }
 
   loadPlans(): void {
@@ -58,7 +58,7 @@ export class SignUpComponent implements OnInit {
       next: (res) => {
         if (res?.status && res.data?.length > 0) {
           this.plans = res.data;
-          // Optional: set default value if needed
+       
           this.signUpForm.patchValue({ subscriptionPlan: this.plans[0].value });
         }
       },

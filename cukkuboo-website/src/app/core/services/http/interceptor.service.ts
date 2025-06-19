@@ -3,7 +3,6 @@ import { HttpEvent, HttpInterceptor, HttpHandler, HttpRequest, HttpResponse, Htt
 import { Observable, of, throwError } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
 import { Router } from '@angular/router';
-import { LoginComponent } from '../../../pages/login/login.component';
 @Injectable({
   providedIn: 'root'
 })
@@ -39,8 +38,8 @@ export class InterceptorService implements HttpInterceptor {
         this.handleAuthError(err, request, next)
       }
     })
-    // , catchError((error) => this.handleAuthError(error, request, next))
-  );
+      // , catchError((error) => this.handleAuthError(error, request, next))
+    );
   }
   // private showLoader(): void {
   //   this.loaderService.show();

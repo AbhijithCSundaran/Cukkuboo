@@ -6,10 +6,10 @@ use CodeIgniter\Router\RouteCollection;
  * @var RouteCollection $routes
  */
 $routes->get('/', 'Home::index');
-$routes->post('Login/login', 'Login::loginFun',['filter' => 'cors']);
-$routes->post('Login/logout', 'Login::logout');
-$routes->post('Login/forgot-password', 'Login::sendOtp');
-$routes->post('Login/reset-password', 'Login::resetPassword');
+$routes->post('login/login', 'Login::loginFun',['filter' => 'cors']);
+$routes->post('login/logout', 'Login::logout');
+$routes->post('login/forgot-password', 'Login::sendOtp');
+$routes->post('login/reset-password', 'Login::resetPassword');
 
 
 $routes->post('user/register','User::registerFun');
@@ -47,6 +47,8 @@ $routes->get('movies/latest', 'MovieDetail::getLatestMovies');
 $routes->get('movies/most-watched', 'MovieDetail::mostWatchedMovies');
 
 
+$routes->get('movies/latestmovies', 'MovieDetail::latestMovies');
+$routes->get('movies/mostwatchmovie', 'MovieDetail::getMostWatchMovies');
 
 
 //Home Display
@@ -87,6 +89,7 @@ $routes->get('resume/viewhistory', 'Resume::viewHistory');
 $routes->post('savehistory/save', 'Savehistory::saveMovie');
 $routes->get('savehistory/history', 'Savehistory::saveHistory');
 
+$routes->post('video/videoview', 'VideoView::viewVideo');
 
 
 ?>

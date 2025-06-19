@@ -28,12 +28,12 @@ class Usersub extends ResourceController
         $authHeader = $this->request->getHeaderLine('Authorization');
         $user = $this->authService->getAuthenticatedUser($authHeader);
         // Validate required fields for create
-        if (!$id && (empty($data['user_id']) || empty($data['subscription_id']) || empty($data['start_date']))) {
+        if (!$id && (empty($data['user_id']) || empty($data['subscriptionplan_id']) || empty($data['start_date']))) {
             return $this->failValidationErrors('User ID, plan ID, and start date are required.');
         }
 
         // Verify plan exists
-        $plan = $this->subscriptionPlanModel->getPlanById($data['subscription_id']);
+        $plan = $this->subscriptionPlanModel->getPlanById($data['subscriptionplan_id']);
         if (!$plan) {
             return $this->failNotFound('Invalid subscription plan.');
         }
@@ -45,7 +45,7 @@ class Usersub extends ResourceController
         // Build data payload
         $payload = [
             'user_id'         => $data['user_id'] ?? null,
-            'subscription_id' => $data['subscription_id'] ?? null,
+            'subscriptionplan_id' => $data['subscriptionplan_id'] ?? null,
             'start_date'      => $data['start_date'],
             'end_date'        => $end,
             'modify_on'       => date('Y-m-d H:i:s'),
@@ -87,22 +87,29 @@ class Usersub extends ResourceController
 
 
     public function getAllSubscriptions()
-    {
+{
     $pageIndex = (int) $this->request->getGet('pageIndex');
     $pageSize  = max(10, (int) $this->request->getGet('pageSize'));
     $search    = $this->request->getGet('search');
     $authHeader = $this->request->getHeaderLine('Authorization');
     $user = $this->authService->getAuthenticatedUser($authHeader);
-    if(!$user) {
-            return $this->failUnauthorized('Invalid or missing token.');
+
+    if (!$user) {
+        return $this->failUnauthorized('Invalid or missing token.');
     }
+
     $offset = $pageIndex * $pageSize;
 
-    $builder = $this->usersubModel->builder(); // start fresh query builder
-    $builder->select('us.*, u.username AS username')
-        ->from('user_subscription us')
-        ->join('user u', 'u.user_id = us.user_id', 'left')
-        ->where('us.status !=', 9);
+    $builder = $this->usersubModel->builder();
+    $builder->select('
+        us.*, 
+        u.username AS username, 
+        sp.plan_name AS plan_name
+    ')
+    ->from('user_subscription us')
+    ->join('user u', 'u.user_id = us.user_id', 'left')
+    ->join('subscriptionplan sp', 'sp.subscriptionplan_id = us.user_subscription_id', 'left')
+    ->where('us.status !=', 9);
 
     if (!empty($search)) {
         $builder->like('u.username', $search);

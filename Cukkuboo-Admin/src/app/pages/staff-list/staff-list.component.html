@@ -1,92 +1,116 @@
 <div class="content-container">
-    <div class="header-row">
-      <h2>Staff List</h2>
-      <button mat-raised-button class="add-button" [routerLink]="['add-staff']">
-        + New
-      </button>
-    </div>
+  <div class="header-row">
+    <h2>Staff List</h2>
+    <button mat-raised-button class="add-button" [routerLink]="['add-staff']">+ New</button>
+  </div>
 
-      <!-- Search Bar -->
-  <div class="width-50    search-bar-wrapper">
+  <!-- Search Bar -->
+  <div class="width-50 search-bar-wrapper">
     <mat-form-field class="custom-search" appearance="outline">
       <mat-icon matPrefix>search</mat-icon>
-      <input
-        matInput
-        placeholder="Search"
-        (keyup)="applyGlobalFilter($event)"
-      />
+      <input matInput placeholder="Search" (keyup)="applyGlobalFilter($event)" />
     </mat-form-field>
   </div>
 
-  
-    <table mat-table [dataSource]="dataSource" class="mat-elevation-z2 custom-table">
+  <table mat-table [dataSource]="dataSource" class="mat-elevation-z2 custom-table">
 
-        <ng-container matColumnDef="slNo">
-  <th mat-header-cell *matHeaderCellDef> Sl. No. </th>
-  <td mat-cell *matCellDef="let row; let i = index"> {{ i + 1 }} </td>
-</ng-container>
-      
-      <ng-container matColumnDef="name">
-        <th mat-header-cell *matHeaderCellDef> Name </th>
-        <td mat-cell *matCellDef="let staff"> {{ staff.name }} </td>
-      </ng-container>
-  
-      <ng-container matColumnDef="role">
-        <th mat-header-cell *matHeaderCellDef> Role </th>
-        <td mat-cell *matCellDef="let staff"> {{ staff.role }} </td>
-      </ng-container>
-  
-      <ng-container matColumnDef="email">
-        <th mat-header-cell *matHeaderCellDef> Email </th>
-        <td mat-cell *matCellDef="let staff"> {{ staff.email }} </td>
-      </ng-container>
-  
-      <ng-container matColumnDef="phone">
-        <th mat-header-cell *matHeaderCellDef> Phone </th>
-        <td mat-cell *matCellDef="let staff"> {{ staff.phone }} </td>
-      </ng-container>
-  
-      <ng-container matColumnDef="status">
-        <th mat-header-cell *matHeaderCellDef> Status </th>
-        <td mat-cell *matCellDef="let staff">
-          <span
-            [ngClass]="{
-              'badge': true,
-              'badge-enabled': staff.status === 'active',
-              'badge-disabled': staff.status === 'inactive'
-            }"
-          >
-            {{ staff.status }}
-          </span>
-        </td>
-      </ng-container>
-  
-      <ng-container matColumnDef="joiningDate">
-        <th mat-header-cell *matHeaderCellDef> Joining Date </th>
-        <td mat-cell *matCellDef="let staff"> {{ staff.joiningDate | date: 'mediumDate' }} </td>
-      </ng-container>
-  
-      <ng-container matColumnDef="action">
-        <th mat-header-cell *matHeaderCellDef> Action </th>
-        <td mat-cell *matCellDef="let staff">
-          <mat-icon class="icon" [routerLink]="['edit-staff', staff.id]">edit</mat-icon>
-          <mat-icon class="icon" (click)="deleteStaff(staff)">delete</mat-icon>
-        </td>
-      </ng-container>
-  
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-    </table>
-  
-    <div class="no-data" *ngIf="dataSource.data.length === 0">
-      No Staff found.
+    <!-- Serial No -->
+    <ng-container matColumnDef="slNo">
+      <th mat-header-cell *matHeaderCellDef> Sl. No. </th>
+      <td mat-cell *matCellDef="let row; let i = index">
+        {{ i + 1 + pageIndex * pageSize }}
+      </td>
+    </ng-container>
+
+    <!-- Username -->
+    <ng-container matColumnDef="username">
+      <th mat-header-cell *matHeaderCellDef> Username </th>
+      <td mat-cell *matCellDef="let staff" class="title">
+        {{ staff.username }}
+      </td>
+    </ng-container>
+
+    <!-- Role -->
+    <!-- <ng-container matColumnDef="role">
+      <th mat-header-cell *matHeaderCellDef> Role </th>
+      <td mat-cell *matCellDef="let staff"> {{ staff.role }} </td>
+    </ng-container> -->
+
+    <!-- Email -->
+    <ng-container matColumnDef="email">
+      <th mat-header-cell *matHeaderCellDef> Email </th>
+      <td mat-cell *matCellDef="let staff"> {{ staff.email }} </td>
+    </ng-container>
+
+    <!-- Phone -->
+    <ng-container matColumnDef="phone">
+      <th mat-header-cell *matHeaderCellDef> Phone </th>
+      <td mat-cell *matCellDef="let staff"> {{ staff.phone }} </td>
+    </ng-container>
+
+    <!-- Status -->
+    <ng-container matColumnDef="status">
+      <th mat-header-cell *matHeaderCellDef> Status </th>
+      <td mat-cell *matCellDef="let staff">
+        <span
+          [ngClass]="{
+            badge: true,
+            'badge-enabled': staff.status === '1',
+            'badge-disabled': staff.status === '2'
+          }"
+        >
+          {{ staff.status === '1' ? 'Active' : staff.status === '2' ? 'Inactive' : staff.status }}
+        </span>
+      </td>
+    </ng-container>
+
+    <!-- Joining Date -->
+    <ng-container matColumnDef="joiningDate">
+      <th mat-header-cell *matHeaderCellDef> Joining Date </th>
+      <td mat-cell *matCellDef="let staff">
+{{ staff.join_date | date: 'yyyy-MM-dd' }}
+      </td>
+    </ng-container>
+
+    <!-- Action -->
+    <ng-container matColumnDef="action">
+      <th mat-header-cell *matHeaderCellDef> Action </th>
+      <td mat-cell *matCellDef="let staff">
+        <mat-icon class="icon" (click)="editStaff(staff)">edit</mat-icon>
+        <mat-icon class="icon" (click)="openDeleteModal(staff)">delete</mat-icon>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+
+  <div class="no-data" *ngIf="dataSource.data.length === 0">
+    No Staff found.
+  </div>
+
+  <div class="pagination-wrapper">
+    <mat-paginator
+      class="pagination"
+      [length]="totalItems"
+      [pageSize]="pageSize"
+      [pageSizeOptions]="[10, 20, 50]"
+      (page)="onPageChange($event)"
+      showFirstLastButtons
+    ></mat-paginator>
+  </div>
+
+  <!-- Delete Confirmation Modal -->
+  <div class="modal" [class.show]="confirmDeleteVisible">
+    <div class="modal-content">
+      <p>
+        Are you sure you want to delete
+        <span class="highlight">"{{ confirmDeleteStaff?.username }}"</span>?
+      </p>
+      <div class="modal-actions">
+        <button class="btn-yes" (click)="confirmDelete()">Delete</button>
+        <button class="btn-no" (click)="cancelDelete()">Cancel</button>
+      </div>
     </div>
-  
- <div class="pagination-wrapper">
-  <mat-paginator
-    class="pagination"
-    [pageSizeOptions]="[10, 20, 50]"
-    showFirstLastButtons
-  ></mat-paginator>
-</div>  </div>
-  
+  </div>
+</div>

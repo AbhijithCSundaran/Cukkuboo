@@ -1,19 +1,21 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
-import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatPaginatorModule, MatPaginator } from '@angular/material/paginator';
 import { Router } from '@angular/router';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-
+import { PlanService } from '../../services/plan.service';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 interface SubscriptionPlan {
-  id: number;
-  name: string;
+  subscriptionplan_id: number;
+  plan_name: string;
   price: string | number;
-  period: string;          
+  discount_price?: string | number;
+  period: string;
   features: string;
 }
 
@@ -21,69 +23,72 @@ interface SubscriptionPlan {
   selector: 'app-subscription-plans',
   standalone: true,
   imports: [
-    MatInputModule,
-    MatFormFieldModule,
     CommonModule,
     MatIconModule,
     MatTableModule,
     MatPaginatorModule,
     MatButtonModule,
+    MatInputModule,
+    MatFormFieldModule,
+    MatSnackBarModule
   ],
   templateUrl: './subscription-plans.component.html',
-  styleUrl: './subscription-plans.component.scss'
+  styleUrl: './subscription-plans.component.scss',
 })
-export class SubscriptionPlansComponent {
+export class SubscriptionPlansComponent implements OnInit, AfterViewInit {
+  displayedColumns: string[] = ['slNo', 'plan_name', 'price', 'discount_price', 'period', 'features', 'action'];
+  dataSource = new MatTableDataSource<SubscriptionPlan>([]);
+  confirmDeletePlan: SubscriptionPlan | null = null;
 
-displayedColumns: string[] = ['slNo', 'plan', 'price', 'period', 'features', 'action'];
+  totalItems = 0;
+  searchText = '';
+  pageIndex = 0;
+  pageSize = 10;
 
-  constructor(private router: Router) {}
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  subscriptionPlans: SubscriptionPlan[] = [
-    {
-      id: 1,
-      name: '1 Year',
-      price: '₹693',
-      period: '365-days',
-      features: 'All content + 4 screens + HD'
-    },
-    {
-      id: 2,
-      name: '3 Months',
-      price: '₹297',
-      period: '90-days', 
-      features: 'Access to standard content + 2 screen'
-    },
-    {
-      id: 3,
-      name: '1 Month',
-      price: '₹198',
-      period: '30-days', 
-      features: 'Access to standard content + 1 screen'
-    },
+  constructor(
+    private router: Router,
+    private planService: PlanService,
+    private snackBar: MatSnackBar
+  ) {}
 
-     {
-      id: 4,
-      name: '3 Days',
-      price: '₹99',
-      period: '3-days', 
-      features: 'Feature 1, Feature 2'
-    }
-  ];
-
-  dataSource = new MatTableDataSource<SubscriptionPlan>(this.subscriptionPlans);
   ngOnInit(): void {
-    
-
-
-     
-
-  this.dataSource.filterPredicate = (data: any, filter: string) => {
-    const dataStr = `${data.name} ${data.role} ${data.email} ${data.phone} ${data.status}`
-      .toLowerCase();
-    return dataStr.includes(filter);
-  };
+    this.listPlans(0, this.pageSize, '');
   }
-  addNewPlan() {
+
+  ngAfterViewInit(): void {
+    this.dataSource.paginator = this.paginator;
+
+    this.paginator.page.subscribe(() => {
+      this.pageIndex = this.paginator.pageIndex;
+      this.pageSize = this.paginator.pageSize;
+      this.listPlans(this.pageIndex, this.pageSize, this.searchText);
+    });
+  }
+
+ listPlans(pageIndex: number = 0, pageSize: number = 10, search: string = ''): void {
+  this.planService.listPlans(pageIndex, pageSize, search).subscribe({
+    next: (response) => {
+      console.log('API response from listPlans():', response); 
+      this.dataSource.data = response?.data || response || [];
+      this.totalItems = response?.total || this.dataSource.data.length;
+    },
+    error: (error) => {
+      console.error('Error fetching plans:', error);
+      this.dataSource.data = [];
+      this.showSnackbar('Failed to load plans. Please try again.', 'snackbar-error');
+    }
+  });
+}
+
+  applyGlobalFilter(event: KeyboardEvent): void {
+    const input = (event.target as HTMLInputElement).value;
+    this.searchText = input.trim().toLowerCase();
+    this.listPlans(0, this.pageSize, this.searchText);
+  }
+
+  addNewPlan(): void {
     this.router.navigate(['/add-subscription-plan']);
   }
 
@@ -91,16 +96,38 @@ displayedColumns: string[] = ['slNo', 'plan', 'price', 'period', 'features', 'ac
     this.router.navigate(['/edit-subscription-plan', id]);
   }
 
-  deletePlan(plan: SubscriptionPlan) {
-    const index = this.subscriptionPlans.indexOf(plan);
-    if (index >= 0) {
-      this.subscriptionPlans.splice(index, 1);
-      this.dataSource.data = [...this.subscriptionPlans]; 
-    }
+  deletePlan(plan: SubscriptionPlan): void {
+    this.confirmDeletePlan = plan;
   }
-  applyGlobalFilter(event: KeyboardEvent): void {
-    const input = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = input.trim().toLowerCase();
+
+  confirmDelete(): void {
+    if (!this.confirmDeletePlan) return;
+
+    const id = this.confirmDeletePlan.subscriptionplan_id;
+
+    this.planService.deletePlan(id).subscribe({
+      next: () => {
+        this.dataSource.data = this.dataSource.data.filter(p => p.subscriptionplan_id !== id);
+        this.showSnackbar('Plan deleted successfully.', 'snackbar-success');
+        this.confirmDeletePlan = null;
+      },
+      error: (error) => {
+        console.error('Error deleting plan:', error);
+        this.showSnackbar('Failed to delete plan. Please try again.', 'snackbar-error');
+        this.confirmDeletePlan = null;
+      }
+    });
   }
-  
+
+  cancelDelete(): void {
+    this.confirmDeletePlan = null;
+  }
+
+  showSnackbar(message: string, panelClass: string = 'snackbar-default'): void {
+    this.snackBar.open(message, 'Close', {
+      duration: 3000,
+      verticalPosition: 'top',
+      panelClass: [panelClass]
+    });
+  }
 }

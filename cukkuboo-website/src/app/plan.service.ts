@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { environment } from '../../environments/environment';
+import { environment } from '../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -27,19 +27,5 @@ export class PlanService {
     return this.http.get(`${this.apiUrl}subscriptionplan/list?pageIndex=${pageIndex}&pageSize=${pageSize}&searchText=${searchText}`, {
       headers: this.headers
     });
-  }
-
-  addPlan(model: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}subscriptionplan/save`, model, { headers: this.headers });
-  }
-
-  getPlanById(id: number): Observable<any> {
-    return this.http.get(`${this.apiUrl}subscriptionplan/get/${id}`, { headers: this.headers });
-  }
-
- 
-
-  deletePlan(id: number): Observable<any> {
-    return this.http.delete(`${this.apiUrl}subscriptionplan/delete/${id}`, { headers: this.headers });
   }
 }

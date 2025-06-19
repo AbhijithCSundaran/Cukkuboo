@@ -96,70 +96,70 @@ export class AddMovieShowComponent implements OnInit {
       status: ['', Validators.required],
       rating: [5,],
 
-      duration: ['', ],
+      duration: ['',],
 
 
 
     });
 
 
-      const token = localStorage.getItem('token');
-  console.log('Token from localStorage:', token);
-
-
-  
- const id = this.route.snapshot.paramMap.get('id');
-  this.isEditMode = !!id;
-  if (id) {
-    this.loadMovieData(Number(id));
-  }
-  }
+    const token = localStorage.getItem('token');
+    console.log('Token from localStorage:', token);
 
 
 
-loadMovieData(id: number): void {
-  this.movieService.getMovieById(id).subscribe({
-    next: (response) => {
-      console.log('prefill API response:', response);
-
-      const data = Array.isArray(response?.data) ? response.data[0] : response.data;
-
-      if (data) {
-        this.movieForm.patchValue({
-          mov_id: data.mov_id,
-          title: data.title,
-          description: data.description,
-          category: data.category,
-          genre: data.genre,
-          cast_details: data.cast_details,
-          release_date: data.release_date,
-          age_rating: data.age_rating,
-          access: data.access,
-          status: data.status,
-          video: data.video,
-          trailer: data.trailer,
-          thumbnail: data.thumbnail,
-          banner: data.banner,
-          rating: data.rating,
-          duration: data.duration
-        });
-
-        
-        // this.trailerName = data.trailer ? data.trailer.split('/').pop() || '' : '';
-        // this.trailerURL = data.trailer ? this.videoUrl + data.trailer : null;
-
-        
-
-        this.cdr.detectChanges();
-      } else {
-        console.warn('Movie not found for ID:', id);
-      }
-    },
-    error: (error) => {
-      console.error('Error fetching movie data:', error);
+    const id = this.route.snapshot.paramMap.get('id');
+    this.isEditMode = !!id;
+    if (id) {
+      this.loadMovieData(Number(id));
     }
-  });
-}
+  }
+
+
+
+  loadMovieData(id: number): void {
+    this.movieService.getMovieById(id).subscribe({
+      next: (response) => {
+        console.log('prefill API response:', response);
+
+        const data = Array.isArray(response?.data) ? response.data[0] : response.data;
+        debugger;
+        if (data) {
+          this.movieForm.patchValue({
+            mov_id: data.mov_id,
+            title: data.title,
+            description: data.description,
+            category: data.category,
+            genre: data.genre,
+            cast_details: data.cast_details,
+            release_date: data.release_date,
+            age_rating: data.age_rating,
+            access: data.access,
+            status: data.status,
+            video: data.video,
+            trailer: data.trailer,
+            thumbnail: data.thumbnail,
+            banner: data.banner,
+            rating: data.rating,
+            duration: data.duration
+          });
+
+
+          // this.trailerName = data.trailer ? data.trailer.split('/').pop() || '' : '';
+          // this.trailerURL = data.trailer ? this.videoUrl + data.trailer : null;
+
+
+
+          this.cdr.detectChanges();
+        } else {
+          console.warn('Movie not found for ID:', id);
+        }
+      },
+      error: (error) => {
+        console.error('Error fetching movie data:', error);
+      }
+    });
+  }
 
 
 
@@ -209,9 +209,9 @@ loadMovieData(id: number): void {
     }
   }
 
-  
 
-   uploadImage(file: File, control: AbstractControl | null = null, inProgress: boolean = true, progress: number = 0): void {
+
+  uploadImage(file: File, control: AbstractControl | null = null, inProgress: boolean = true, progress: number = 0): void {
     inProgress = true;
     this.fileUploadService.uploadImage(file).subscribe({
       next: (event: HttpEvent<any>) => {
@@ -463,84 +463,84 @@ loadMovieData(id: number): void {
   // event.stopPropagation();  
 
   removeTrailer(): void {
-   
-
-  this.trailerURL = '';
-  this.trailerName = '';
-
-  
-  this.movieForm.controls['trailer'].setValue(null);
-  this.movieForm.controls['trailer'].markAsDirty();
-  this.movieForm.controls['trailer'].markAsTouched();
-
-  // Reset file input
-  if (this.trailerInputRef) {
-    this.trailerInputRef.nativeElement.value = '';
-  }
-
-  this.cdr.detectChanges();
-}
 
 
-submitMovie() {
-  if (this.movieForm.invalid) {
-    this.movieForm.markAllAsTouched();
-    return;
-  }
+    this.trailerURL = '';
+    this.trailerName = '';
 
-  const model = this.movieForm.value;
 
-  this.movieService.addmovies(model).subscribe({
-    next: (response) => {
-      this.showSnackbar('Movie saved successfully!', 'snackbar-success');
-      this.router.navigate(['/list-movie-show']);
-    },
-    error: (error) => {
-      this.showSnackbar('Failed to save movie. Please try again.', 'snackbar-error');
+    this.movieForm.controls['trailer'].setValue(null);
+    this.movieForm.controls['trailer'].markAsDirty();
+    this.movieForm.controls['trailer'].markAsTouched();
+
+    // Reset file input
+    if (this.trailerInputRef) {
+      this.trailerInputRef.nativeElement.value = '';
     }
-  });
-}
 
-
-
-
-  
-openDeleteConfirm(type: string): void {
-  this.confirmDeleteType = type;
-}
-
-confirmDelete(): void {
-  if (!this.confirmDeleteType) return;
-
-  switch (this.confirmDeleteType) {
-    case 'video':
-      this.removeMainVideo();
-      break;
-    case 'thumbnail':
-      this.removeThumbnail();
-      break;
-    case 'trailer':
-      this.removeTrailer();
-      break;
-    case 'banner':
-      this.removeBanner();
-      break;
+    this.cdr.detectChanges();
   }
-  this.cancelDelete();
-}
 
-// Cancel modal and reset
-cancelDelete(): void {
-  this.confirmDeleteType = null;
-}
 
-capitalizeTitle() {
-  const control = this.movieForm.controls['title'];
-  const value = control.value;
-  if (value && value.length > 0) {
-    control.setValue(value.charAt(0).toUpperCase() + value.slice(1));
+  submitMovie() {
+    if (this.movieForm.invalid) {
+      this.movieForm.markAllAsTouched();
+      return;
+    }
+
+    const model = this.movieForm.value;
+
+    this.movieService.addmovies(model).subscribe({
+      next: (response) => {
+        this.showSnackbar('Movie saved successfully!', 'snackbar-success');
+        this.router.navigate(['/list-movie-show']);
+      },
+      error: (error) => {
+        this.showSnackbar('Failed to save movie. Please try again.', 'snackbar-error');
+      }
+    });
   }
-}
+
+
+
+
+
+  openDeleteConfirm(type: string): void {
+    this.confirmDeleteType = type;
+  }
+
+  confirmDelete(): void {
+    if (!this.confirmDeleteType) return;
+
+    switch (this.confirmDeleteType) {
+      case 'video':
+        this.removeMainVideo();
+        break;
+      case 'thumbnail':
+        this.removeThumbnail();
+        break;
+      case 'trailer':
+        this.removeTrailer();
+        break;
+      case 'banner':
+        this.removeBanner();
+        break;
+    }
+    this.cancelDelete();
+  }
+
+  // Cancel modal and reset
+  cancelDelete(): void {
+    this.confirmDeleteType = null;
+  }
+
+  capitalizeTitle() {
+    const control = this.movieForm.controls['title'];
+    const value = control.value;
+    if (value && value.length > 0) {
+      control.setValue(value.charAt(0).toUpperCase() + value.slice(1));
+    }
+  }
 
 }
 

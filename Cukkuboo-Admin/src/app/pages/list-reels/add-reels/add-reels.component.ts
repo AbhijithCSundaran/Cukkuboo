@@ -1,7 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { HttpClient, HttpEvent, HttpEventType } from '@angular/common/http';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -10,14 +13,17 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { Router, ActivatedRoute } from '@angular/router';
 import { ValidationMessagesComponent } from '../../../core/components/validation-messsage/validaation-message.component';
+import { ReelsService } from '../../../services/reels.service';
+import { FileUploadService } from '../../../services/upload/file-upload.service';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-add-reels',
+  standalone: true,
   imports: [
-ValidationMessagesComponent,
     CommonModule,
     ReactiveFormsModule,
     MatCardModule,
@@ -27,126 +33,231 @@ ValidationMessagesComponent,
     MatDatepickerModule,
     MatNativeDateModule,
     MatButtonModule,
-    MatProgressBarModule
+    MatProgressBarModule,
+    MatSnackBarModule,
+    ValidationMessagesComponent
   ],
   templateUrl: './add-reels.component.html',
   styleUrls: ['./add-reels.component.scss']
 })
 export class AddReelsComponent implements OnInit {
   reelForm!: FormGroup;
+  Id: string | null = null;
   isEditMode = false;
-  videoUrl: string = '';
-  isVerticalVideo: boolean = false;
-  confirmDeleteType: 'video' | 'thumbnail' | null = null;
-
-
-
-
   selectedReelFile: File | null = null;
+  thumbnailFile: File | null = null;
   reelPreviewUrl: SafeUrl | null = null;
   thumbnailPreview: SafeUrl | null = null;
-thumbnailFile: File | null = null;
-
+  isVerticalVideo: boolean = false;
+  confirmDeleteType: 'video' | 'thumbnail' | null = null;
   uploadInProgress = false;
   uploadProgress = 0;
   uploadError = '';
   isDragging = false;
-  
+
+  videoUrl: string = environment.apiUrl + 'uploads/videos/';
+  imgUrl: string = environment.apiUrl + 'uploads/images/';
+
+  @ViewChild('reelInput') reelInput!: ElementRef<HTMLInputElement>;
+  @ViewChild('thumbnailInput') thumbnailInput!: ElementRef<HTMLInputElement>;
 
   constructor(
     private fb: FormBuilder,
     private sanitizer: DomSanitizer,
-    private http: HttpClient
+    private http: HttpClient,
+    private snackBar: MatSnackBar,
+    private reelsService: ReelsService,
+    private fileUploadService: FileUploadService,
+    private router: Router,
+    private cdr: ChangeDetectorRef,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
     this.reelForm = this.fb.group({
+      reels_id: [0],
       title: ['', Validators.required],
       description: ['', Validators.required],
-      releaseDate: ['', Validators.required],
+      release_date: ['', Validators.required],
       access: ['', Validators.required],
       status: ['', Validators.required],
-      thumbnail: [null],
-      views: [0],  
-      likes: [0] 
+      video: ['', Validators.required],
+      thumbnail: ['', Validators.required],
+      views: [0],
+      likes: [0],
+      created_by: ['']
+    });
+
+    const id = this.route.snapshot.paramMap.get('id');
+    this.isEditMode = !!id;
+    if (id) {
+      this.loadReelData(Number(id));
+    }
+  }
+
+  loadReelData(id: number): void {
+    this.reelsService.getReelsById(id).subscribe({
+      next: (response) => {
+        const data = Array.isArray(response?.data) ? response.data[0] : response.data;
+        this.reelForm.patchValue({
+          reels_id: data.reels_id,
+          title: data.title,
+          description: data.description,
+          release_date: data.release_date,
+          access: data.access,
+          status: data.status,
+          thumbnail: data.thumbnail,
+          video: data.video,
+          views: data.views,
+          likes: data.likes,
+          created_by: data.created_by
+        });
+
+        if (data.thumbnail) {
+          this.thumbnailPreview = this.sanitizer.bypassSecurityTrustUrl(data.thumbnail);
+        }
+
+        if (data.video) {
+          this.reelPreviewUrl = this.sanitizer.bypassSecurityTrustUrl(data.video);
+        }
+
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('Error fetching reel by ID:', err);
+        this.showSnackbar('Failed to load reel data.', 'snackbar-error');
+      }
     });
   }
 
-  onDragOver(event: DragEvent): void {
+  showSnackbar(message: string, panelClass: string = 'snackbar-default'): void {
+    this.snackBar.open(message, 'Close', {
+      duration: 3000,
+      verticalPosition: 'top',
+      panelClass: [panelClass]
+    });
+  }
+
+  uploadVideo(file: File, control: AbstractControl): void {
+    this.uploadProgress = 0;
+    this.uploadError = '';
+    this.selectedReelFile = file;
+
+    this.fileUploadService.uploadVideo(file).subscribe({
+      next: (event: HttpEvent<any>) => {
+        if (event.type === HttpEventType.UploadProgress && event.total) {
+          this.uploadProgress = Math.round((100 * event.loaded) / event.total);
+        } else if (event.type === HttpEventType.Response) {
+          this.showSnackbar('Video uploaded successfully!', 'snackbar-success');
+          if (control && event.body?.file_name) {
+            control.setValue(event.body.file_name);
+            this.reelPreviewUrl = this.sanitizer.bypassSecurityTrustUrl(this.videoUrl + event.body.file_name);
+          }
+          this.cdr.detectChanges();
+        }
+      },
+      error: (err) => {
+        this.uploadError = 'Upload failed. Please try again.';
+        this.uploadProgress = 0;
+        this.selectedReelFile = null;
+        this.reelPreviewUrl = null;
+        control.setValue(null);
+        if (this.reelInput?.nativeElement) {
+          this.reelInput.nativeElement.value = '';
+        }
+        this.showSnackbar('Video upload failed.', 'snackbar-error');
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  uploadImage(file: File, control: AbstractControl): void {
+    this.fileUploadService.uploadImage(file).subscribe({
+      next: (event: HttpEvent<any>) => {
+        if (event.type === HttpEventType.Response) {
+          this.showSnackbar('Image uploaded successfully!', 'snackbar-success');
+
+          if (control && event.body?.file_name) {
+            control.setValue(event.body.file_name);
+          }
+
+          this.cdr.detectChanges();
+        }
+      },
+      error: (err) => {
+        console.error('Upload error:', err);
+        this.thumbnailFile = null;
+        this.thumbnailPreview = null;
+        control.setValue(null);
+        if (this.thumbnailInput?.nativeElement) {
+          this.thumbnailInput.nativeElement.value = '';
+        }
+        this.showSnackbar('Image upload failed.', 'snackbar-error');
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  onVideoSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    if (file) {
+      this.uploadVideo(file, this.reelForm.controls['video']);
+    }
+  }
+
+  onVideoDrop(event: DragEvent): void {
+    event.preventDefault();
+    event.stopPropagation();
+    this.isDragging = false;
+    const file = event.dataTransfer?.files?.[0];
+    if (file) {
+      this.uploadVideo(file, this.reelForm.controls['video']);
+    }
+  }
+
+  onVideoDragOver(event: DragEvent): void {
     event.preventDefault();
     this.isDragging = true;
   }
 
-  onDragLeave(event: DragEvent): void {
+  onVideoDragLeave(event: DragEvent): void {
     event.preventDefault();
     this.isDragging = false;
   }
 
-  onDrop(event: DragEvent): void {
-    event.preventDefault();
-    this.isDragging = false;
-    const file = event.dataTransfer?.files?.[0];
+  onThumbnailSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
     if (file) {
-      this.handleFile(file);
+      this.setThumbnailPreview(file);
+      this.uploadImage(file, this.reelForm.controls['thumbnail']);
     }
   }
 
- onVideoSelected(event: Event): void {
-  const input = event.target as HTMLInputElement;
-  if (input.files && input.files.length > 0) {
-    this.handleFile(input.files[0]);
-  }
-}
-
-
- handleFile(file: File): void {
-  if (!file.type.startsWith('video/')) {
-    this.uploadError = 'Only video files are allowed.';
-    return;
+  onThumbnailDrop(event: DragEvent): void {
+    event.preventDefault();
+    event.stopPropagation();
+    const file = event.dataTransfer?.files?.[0];
+    if (file) {
+      this.setThumbnailPreview(file);
+      this.uploadImage(file, this.reelForm.controls['thumbnail']);
+    }
   }
 
-  this.selectedReelFile = file;
-  const objectUrl = URL.createObjectURL(file);
-  this.reelPreviewUrl = this.sanitizer.bypassSecurityTrustUrl(objectUrl);
-  this.uploadError = '';
-
-  const video = document.createElement('video');
-  video.src = objectUrl;
-  video.onloadedmetadata = () => {
-    this.isVerticalVideo = video.videoHeight > video.videoWidth;
-  };
-}
-
-
-onThumbnailDragOver(event: DragEvent): void {
-  event.preventDefault();
-}
-
-onThumbnailDrop(event: DragEvent): void {
-  event.preventDefault();
-  const file = event.dataTransfer?.files?.[0];
-  if (file) {
-    this.handleThumbnailFile(file);
-  }
-}
-
-onThumbnailSelected(event: Event): void {
-  const input = event.target as HTMLInputElement;
-  if (input.files && input.files.length > 0) {
-    this.handleThumbnailFile(input.files[0]);
-  }
-}
-
-handleThumbnailFile(file: File): void {
-  if (!file.type.startsWith('image/')) {
-    return;
+  onThumbnailDragOver(event: DragEvent): void {
+    event.preventDefault();
   }
 
-  this.thumbnailFile = file;
-  const objectUrl = URL.createObjectURL(file);
-  this.thumbnailPreview = this.sanitizer.bypassSecurityTrustUrl(objectUrl);
-  this.reelForm.patchValue({ thumbnail: file.name }); // Dummy value to trigger *ngIf
-}
+  setThumbnailPreview(file: File): void {
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.thumbnailPreview = this.sanitizer.bypassSecurityTrustUrl(reader.result as string);
+      this.cdr.detectChanges();
+    };
+    reader.readAsDataURL(file);
+  }
+
   openDeleteConfirm(type: 'video' | 'thumbnail'): void {
     this.confirmDeleteType = type;
   }
@@ -155,12 +266,19 @@ handleThumbnailFile(file: File): void {
     if (this.confirmDeleteType === 'video') {
       this.selectedReelFile = null;
       this.reelPreviewUrl = null;
+      this.reelForm.patchValue({ video: null });
       this.uploadProgress = 0;
       this.uploadError = '';
+      if (this.reelInput?.nativeElement) {
+        this.reelInput.nativeElement.value = '';
+      }
     } else if (this.confirmDeleteType === 'thumbnail') {
       this.thumbnailFile = null;
       this.thumbnailPreview = null;
       this.reelForm.patchValue({ thumbnail: null });
+      if (this.thumbnailInput?.nativeElement) {
+        this.thumbnailInput.nativeElement.value = '';
+      }
     }
 
     this.confirmDeleteType = null;
@@ -169,65 +287,41 @@ handleThumbnailFile(file: File): void {
   cancelDelete(): void {
     this.confirmDeleteType = null;
   }
-openFullscreen(element: HTMLElement): void {
-  if (element.requestFullscreen) {
-    element.requestFullscreen();
-  } else if ((element as any).webkitRequestFullscreen) { /* Safari */
-    (element as any).webkitRequestFullscreen();
-  } else if ((element as any).msRequestFullscreen) { /* IE11 */
-    (element as any).msRequestFullscreen();
-  }
-}
 
-saveReel(): void {
-  if (this.reelForm.invalid || !this.selectedReelFile) {
-    this.uploadError = 'Please complete the form and select a video.';
-    return;
-  }
-
-  const formData = new FormData(); 
-
-  formData.append('title', this.reelForm.value.title);
-  formData.append('description', this.reelForm.value.description);
-  formData.append('releaseDate', this.reelForm.value.releaseDate);
-  formData.append('access', this.reelForm.value.access);
-  formData.append('status', this.reelForm.value.status);
-  formData.append('video', this.selectedReelFile);
-  formData.append('views', this.reelForm.value.views);
-formData.append('likes', this.reelForm.value.likes);
-
-
-  if (this.thumbnailFile) {
-    formData.append('thumbnail', this.thumbnailFile);
-  }
-
-  this.uploadInProgress = true;
-  this.uploadProgress = 0;
-
-  this.http.post('', formData, {
-    reportProgress: true,
-    observe: 'events'
-  }).subscribe({
-    next: (event: HttpEvent<any>) => {
-      if (event.type === HttpEventType.UploadProgress && event.total) {
-        this.uploadProgress = Math.round((event.loaded / event.total) * 100);
-      } else if (event.type === HttpEventType.Response) {
-        this.uploadProgress = 100;
-        this.uploadInProgress = false;
-        console.log('Upload complete:', event.body);
-      }
-    },
-    error: (err) => {
-      this.uploadInProgress = false;
-      this.uploadError = 'Upload failed. Please try again.';
-      console.error('Upload error:', err);
+  openFullscreen(element: HTMLElement): void {
+    if (element.requestFullscreen) {
+      element.requestFullscreen();
+    } else if ((element as any).webkitRequestFullscreen) {
+      (element as any).webkitRequestFullscreen();
+    } else if ((element as any).msRequestFullscreen) {
+      (element as any).msRequestFullscreen();
     }
-  });
-}
+  }
 
+  saveReel(): void {
+    if (this.reelForm.invalid || !this.reelForm.value['video']) {
+      this.reelForm.markAllAsTouched();
+      console.warn('Form is invalid or video file not selected');
+      return;
+    }
 
+    const model = this.reelForm.value;
+    this.uploadInProgress = true;
 
-
+    this.reelsService.addReels(model).subscribe({
+      next: (response) => {
+        this.uploadInProgress = false;
+        this.uploadProgress = 100;
+        this.showSnackbar('Reel saved successfully!', 'snackbar-success');
+        this.router.navigate(['/reels']);
+      },
+      error: (err) => {
+        this.uploadInProgress = false;
+        this.uploadError = 'Upload failed. Please try again.';
+        this.showSnackbar('Failed to save reel. Please try again.', 'snackbar-error');
+      }
+    });
+  }
 
   goBack(): void {
     history.back();

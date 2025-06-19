@@ -36,29 +36,23 @@ export class AddUserComponent implements OnInit {
   public userForm!: FormGroup;
   public hidePassword = true;
 
-
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private fb: FormBuilder,
     private userService: UserService,
     private snackBar: MatSnackBar
-
-  ) { }
+  ) {}
 
   ngOnInit(): void {
-    
     this.userForm = this.fb.group({
       user_id: [0],
       username: ['', Validators.required],
       password: ['', Validators.required],
-      phone: [
-        '', [Validators.pattern(/^\d{0,15}$/), Validators.maxLength(15)]
-      ],
+      phone: ['', [Validators.pattern(/^\d{0,15}$/), Validators.maxLength(15)]],
       email: ['', [Validators.email]],
       country: ['', [Validators.pattern(/^[a-zA-Z\s]*$/)]],
       status: ['active', Validators.required],
-      user_type: ['customer'],
       subscription: ['free', Validators.required]
     });
 
@@ -83,14 +77,14 @@ export class AddUserComponent implements OnInit {
           this.userForm.patchValue({
             user_id: data.user_id,
             username: data.username,
-            password: '',//data.password,
+            password: '', 
             phone: data.phone,
             email: data.email,
             country: data.country,
             status: data.status,
-            user_type: data.user_type,
             subscription: data.subscription
           });
+
           const passwordControl = this.userForm.get('password') as FormControl;
           passwordControl.setValidators([]);
           passwordControl.updateValueAndValidity();
@@ -109,17 +103,16 @@ export class AddUserComponent implements OnInit {
     });
   }
 
-
   togglePasswordVisibility(): void {
     this.hidePassword = !this.hidePassword;
   }
+
   saveUser(): void {
-    debugger;
     if (this.userForm.valid) {
       const model = this.userForm.value;
- console.log('Submitting User Model:', model);
       this.userService.register(model).subscribe({
         next: (response) => {
+          // console.log('Register API success response:', response);
           if (response.status) {
             this.snackBar.open('User registered successfully', '', {
               duration: 3000,

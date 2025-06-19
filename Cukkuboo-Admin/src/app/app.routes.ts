@@ -23,6 +23,17 @@ export const routes: Routes = [
       { path: 'reels', loadComponent: () => import('./pages/list-reels/list-reels.component').then((m) => m.ListReelsComponent) },
       { path: 'add-reels', loadComponent: () => import('./pages/list-reels/add-reels/add-reels.component').then((m)=>m.AddReelsComponent)},
 
+{
+  path: 'edit-reel/:id',
+  loadComponent: () => import('./pages/list-reels/add-reels/add-reels.component').then(m => m.AddReelsComponent)
+},
+//  {
+//         path: 'reels', children: [
+//           { path: '', loadComponent: () => import('./pages/list-reels/list-reels.component').then((m) => m.ListReelsComponent)},
+//           { path: 'add-reels', loadComponent: () => import('./pages/list-reels/add-reels/add-reels.component').then((m) => m.AddReelsComponent) },
+//           { path: 'edit-reels/:id', loadComponent: () => import('./pages/list-reels/add-reels/add-reels.component').then((m) => m.AddReelsComponent) },
+//         ]
+//       },
 
       
       {

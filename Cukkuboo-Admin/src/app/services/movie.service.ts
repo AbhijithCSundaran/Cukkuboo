@@ -37,13 +37,23 @@ export class MovieService {
 
   // for edit prefill
   getMovieById(id: number): Observable<any> {
-  return this.http.get(this.apiUrl + 'movie/get/' + id, { headers: this.headers });
+  return this.http.get(this.apiUrl + 'getmovie/' + id, { headers: this.headers });
   }
 
   deleteMovies(id: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}movie/delete/${id}`, { headers: this.headers });
   }
 
+  getMostWatchedMovies(): Observable<any> {
+    return this.http.get(`${this.apiUrl}movies/mostwatchmovie`, {
+      headers: this.headers
+    });
+  }
 
+getLatestMovies(): Observable<any> {
+  return this.http.get(`${this.apiUrl}movies/latestmovies`, {
+    headers: this.headers
+  });
+}
 
 }

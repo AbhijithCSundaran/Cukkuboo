@@ -11,137 +11,173 @@
 
 
 
-          <!-- Form Inputs -->
-      <div class="form_container">
+        <!-- Form Inputs -->
+        <div class="form_container">
 
-                      <!-- Thumbnail Upload -->
-<div class="width-50 px-2 pb-3">
-  <mat-card appearance="outlined">
-    <mat-card-content>
-      <label class="fw-medium d-block mb-2">
-        Thumbnail
-        <small class="text-muted" *ngIf="!reelForm.value['thumbnail']">
-          (Portrait – 300×450px, JPEG)
-        </small>
-      </label>
+          <!-- Thumbnail Upload -->
+          <div class="width-50 px-2 pb-3">
+            <mat-card appearance="outlined">
+              <mat-card-content>
+                <label class="fw-medium d-block mb-2">
+                  Thumbnail
+                  <small class="text-muted" *ngIf="!reelForm.value['thumbnail']">
+                    (Portrait – 300×450px, JPEG)
+                  </small>
+                </label>
 
-      <button class="trash-button" *ngIf="reelForm.value['thumbnail']" (click)="openDeleteConfirm('thumbnail')">
-        <i class="fa-solid fa-trash"></i>
-      </button>
+               <button type="button" class="trash-button" *ngIf="reelForm.value['thumbnail']"
+  (click)="openDeleteConfirm('thumbnail')">
+  <i class="fa-solid fa-trash"></i>
+</button>
 
-      <div class="drag-drop-zone" [ngClass]="{'uploaded': reelForm.value['thumbnail']}"
-           (dragover)="onThumbnailDragOver($event)" (drop)="onThumbnailDrop($event)"
-           (click)="!thumbnailPreview && thumbnailInput.click()">
+                <div class="drag-drop-zone" [ngClass]="{'uploaded': reelForm.value['thumbnail']}"
+                  (dragover)="onThumbnailDragOver($event)" (drop)="onThumbnailDrop($event)"
+                  (click)="!thumbnailPreview && thumbnailInput.click()">
 
-        <p *ngIf="!reelForm.value['thumbnail']">Drag & drop an image here or click to select</p>
+                  <p *ngIf="!reelForm.value['thumbnail']">Drag & drop an image here or click to select</p>
 
-        <div class="preview-container" *ngIf="reelForm.value['thumbnail']">
-          <img [src]="thumbnailPreview" alt="Thumbnail Preview" class="media-preview"
-               (click)="$event.stopPropagation()" #thumbnailImg />
-          <button class="fullscreen-button" (click)="openFullscreen(thumbnailImg)">
-            <i class="fa-solid fa-expand"></i>
-          </button>
-        </div>
-      </div>
+                  <div class="preview-container" *ngIf="reelForm.value['thumbnail']">
+                    <img [src]="imgUrl+reelForm.value['thumbnail']" alt="Thumbnail Preview" class="media-preview"
+                      (click)="$event.stopPropagation()" #thumbnailImg />
+                    <button class="fullscreen-button" (click)="openFullscreen(thumbnailImg)">
+                      <i class="fa-solid fa-expand"></i>
+                    </button>
+                  </div>
+                </div>
 
-      <input type="file" (change)="onThumbnailSelected($event)" accept="image/jpeg" hidden #thumbnailInput />
-    </mat-card-content>
-  </mat-card>
-</div>
+                <input type="file" (change)="onThumbnailSelected($event)" accept="image/*" hidden #thumbnailInput />
+              </mat-card-content>
+            </mat-card>
+          </div>
 
-<!-- Reel Video Upload -->
+          <!-- Reel Video Upload
+          <div class="width-50 px-2 pb-3">
+            <mat-card appearance="outlined">
+              <mat-card-content>
+                <label class="fw-medium d-block mb-2">Reel Video</label>
+               <button type="button" class="trash-button" *ngIf="reelForm.value['video']"
+  (click)="openDeleteConfirm('video')">
+  <i class="fa-solid fa-trash"></i>
+</button>
+
+                <div class="drag-drop-zone" [ngClass]="{'uploaded': reelForm.value['video']}"
+                  (dragover)="onVideoDragOver($event)" (drop)="onVideoDrop($event)"
+                  (click)="!reelForm.value['video'] && reelInput.click()">
+
+                  <p *ngIf="!reelForm.value['video']">Drag & drop a video here or click to select (MP4 only)</p>
+
+                 <video *ngIf="reelForm.value['video']" [src]="videoUrl + reelForm.value['video']" controls controlsList="nodownload"
+                class="media-preview">
+                </video>
+
+                </div>
+
+                <input type="file" (change)="onVideoSelected($event)" accept="video/mp4" hidden #reelInput />
+              </mat-card-content>
+            </mat-card>
+          </div> -->
+
+
+          <!-- Reel Video Upload -->
 <div class="width-50 px-2 pb-3">
   <mat-card appearance="outlined">
     <mat-card-content>
       <label class="fw-medium d-block mb-2">Reel Video</label>
-      <button class="trash-button" *ngIf="reelPreviewUrl" (click)="openDeleteConfirm('video')">
+      <button type="button" class="trash-button" *ngIf="reelForm.value['video']"
+        (click)="openDeleteConfirm('video')">
         <i class="fa-solid fa-trash"></i>
       </button>
 
-      <div class="drag-drop-zone" [ngClass]="{'uploaded': reelPreviewUrl}"
-           (dragover)="onDragOver($event)" (drop)="onDrop($event)"
-           (click)="!reelPreviewUrl && reelInput.click()">
+      <div class="drag-drop-zone" [ngClass]="{'uploaded': reelForm.value['video']}"
+        (dragover)="onVideoDragOver($event)" (drop)="onVideoDrop($event)"
+        (click)="!reelForm.value['video'] && reelInput.click()">
 
-        <p *ngIf="!reelPreviewUrl">Drag & drop a video here or click to select (MP4 only)</p>
+        <p *ngIf="!reelForm.value['video']">Drag & drop a video here or click to select (MP4 only)</p>
 
-        <video *ngIf="reelPreviewUrl" [src]="reelPreviewUrl" controls
-               controlsList="nodownload" class="media-preview"></video>
+        <video *ngIf="reelForm.value['video']" [src]="videoUrl + reelForm.value['video']" controls
+          controlsList="nodownload" class="media-preview"></video>
       </div>
 
-      <input type="file" (change)="onVideoSelected($event)" accept="video/mp4" hidden #reelInput />
+      <!-- Upload Progress UI -->
+      <div class="progress-wrapper">
+  <div *ngIf="uploadProgress > 0 && uploadProgress < 100" class="progress-container">
+    <div class="progress-bar" [style.width.%]="uploadProgress"></div>
+    <span class="progress-text">{{ uploadProgress }}%</span>
+  </div>
+ 
+</div>
+
+
+<input type="file" (change)="onVideoSelected($event)" accept="video/mp4" hidden #reelInput />
     </mat-card-content>
   </mat-card>
 </div>
-        <!-- Title -->
-        <div class="width-50 px-2 pb-3">
-          <mat-form-field appearance="outline" class="w-100">
-            <mat-label>Title</mat-label>
-            <input matInput formControlName="title" placeholder="Enter title" />
-            <mat-error>
-              <Validation-Messages [control]="reelForm.controls['title']"></Validation-Messages>
-            </mat-error>
-          </mat-form-field>
-        </div>
 
-        <!-- Release Date -->
-        <div class="width-50 px-2 pb-3">
-          <mat-form-field appearance="outline" class="w-100">
-            <mat-label>Release Date</mat-label>
-            <input matInput [matDatepicker]="picker" formControlName="releaseDate" placeholder="Choose a date"
-                   (click)="picker.open()" readonly />
-            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-            <mat-datepicker #picker></mat-datepicker>
-            <mat-error>
-              <Validation-Messages [control]="reelForm.controls['releaseDate']"></Validation-Messages>
-            </mat-error>
-          </mat-form-field>
-        </div>
 
-        <!-- Description -->
-        <div class="width-50 px-2 pb-3">
-          <mat-form-field appearance="outline" class="w-100">
-            <mat-label>Description</mat-label>
-            <textarea matInput formControlName="description" placeholder="Enter description"></textarea>
-            <mat-error>
-              <Validation-Messages [control]="reelForm.controls['description']"></Validation-Messages>
-            </mat-error>
-          </mat-form-field>
-        </div>
-
-        <!-- Access -->
-        <div class="width-50 px-2 pb-3">
-          <mat-form-field appearance="outline" class="w-100">
-            <mat-label>Access</mat-label>
-            <mat-select formControlName="access">
-              <mat-option value="Free">Free</mat-option>
-              <mat-option value="Premium">Premium</mat-option>
-            </mat-select>
-            <mat-error>
-              <Validation-Messages [control]="reelForm.controls['access']"></Validation-Messages>
-            </mat-error>
-          </mat-form-field>
-        </div>
-
-        <!-- Status -->
-        <div class="width-50 px-2 pb-3">
-          <mat-form-field appearance="outline" class="w-100">
-            <mat-label>Status</mat-label>
-            <mat-select formControlName="status">
-              <mat-option value="Active">Active</mat-option>
-              <mat-option value="Inactive">Inactive</mat-option>
-            </mat-select>
-            <mat-error>
-              <Validation-Messages [control]="reelForm.controls['status']"></Validation-Messages>
-            </mat-error>
-          </mat-form-field>
-        </div>
-
-        
+          <!-- Title -->
+          <div class="width-50 px-2 pb-3">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Title</mat-label>
+              <input matInput formControlName="title"  placeholder="Enter title" />
+              <mat-error>
+                <Validation-Messages [control]="reelForm.controls['title']"></Validation-Messages>
+              </mat-error>
+            </mat-form-field>
           </div>
 
+          <!-- Release Date -->
+          <div class="width-50 px-2 pb-3">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Release Date</mat-label>
+              <input matInput [matDatepicker]="picker" formControlName="release_date" placeholder="Choose a date"
+                (click)="picker.open()" readonly />
+              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+              <mat-error>
+                <Validation-Messages [control]="reelForm.controls['release_date']"></Validation-Messages>
+              </mat-error>
+            </mat-form-field>
+          </div>
 
-    
+          <!-- Description -->
+          <div class="width-50 px-2 pb-3">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Description</mat-label>
+              <textarea matInput formControlName="description" placeholder="Enter description"></textarea>
+              <mat-error>
+                <Validation-Messages [control]="reelForm.controls['description']"></Validation-Messages>
+              </mat-error>
+            </mat-form-field>
+          </div>
 
+          <!-- Access -->
+          <div class="width-50 px-2 pb-3">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Access</mat-label>
+              <mat-select formControlName="access">
+                <mat-option value="1">Free</mat-option>
+                <mat-option value="2">Premium</mat-option>
+              </mat-select>
+              <mat-error>
+                <Validation-Messages [control]="reelForm.controls['access']"></Validation-Messages>
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <!-- Status -->
+          <div class="width-50 px-2 pb-3">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Status</mat-label>
+              <mat-select formControlName="status">
+                <mat-option value="1">Active</mat-option>
+                <mat-option value="2">Inactive</mat-option>
+              </mat-select>
+              <mat-error>
+                <Validation-Messages [control]="reelForm.controls['status']"></Validation-Messages>
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
         <!-- Save Button -->
         <div class="w-100 px-2 pb-0 d-flex justify-content-end">
           <button class="save-button" type="submit">Save</button>
@@ -152,17 +188,17 @@
   </mat-card>
 
   <!-- Delete Confirmation Modal -->
-<div class="modal" [class.show]="confirmDeleteType">
-  <div class="modal-content">
-    <p>
-      Are you sure you want to delete
-      <span class="highlight">"{{ confirmDeleteType }}"</span>?
-    </p>
-    <div class="modal-actions">
-      <button class="btn-yes" (click)="confirmDelete()">Delete</button>
-      <button class="btn-no" (click)="cancelDelete()">Cancel</button>
+  <div class="modal" [class.show]="confirmDeleteType">
+    <div class="modal-content">
+      <p>
+        Are you sure you want to delete
+        <span class="highlight">"{{ confirmDeleteType }}"</span>?
+      </p>
+      <div class="modal-actions">
+        <button class="btn-yes" (click)="confirmDelete()">Delete</button>
+        <button class="btn-no" (click)="cancelDelete()">Cancel</button>
+      </div>
     </div>
   </div>
-</div>
 
 </div>

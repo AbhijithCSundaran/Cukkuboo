@@ -23,7 +23,7 @@ class UsersubModel extends Model
     protected $useTimestamps = false;
     protected $returnType = 'array';
 
-    
+
     public function addSubscription($data)
     {
         return $this->insert($data);

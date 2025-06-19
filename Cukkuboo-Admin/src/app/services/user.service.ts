@@ -47,7 +47,7 @@ export class UserService {
 
   logout(): Observable<any> {
     const body = {};
-    return this.http.post(this.apiUrl + 'Login/logout', body, { headers: this.headers });
+    return this.http.post(this.apiUrl + 'login/logout', body, { headers: this.headers });
   }
 
   // staff

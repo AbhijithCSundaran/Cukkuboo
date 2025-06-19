@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { environment } from '../../environments/environment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -8,35 +8,41 @@ import { Observable } from 'rxjs';
 })
 export class CategoryService {
   private apiUrl: string = environment.apiUrl;
-  // Retrieve the access token from localStorage or sessionStorage
-  get token() { return localStorage.getItem('token') || sessionStorage.getItem('token'); }
 
-  // Set headers including the authorization token
-  get headers() {
+  constructor(private http: HttpClient) {}
+
+  // Get token from localStorage/sessionStorage
+  get token(): string | null {
+    return localStorage.getItem('token') || sessionStorage.getItem('token');
+  }
+
+  // Set headers with token
+  get headers(): HttpHeaders {
     return new HttpHeaders({
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${this.token}`, // Add Bearer token
+      'Authorization': `Bearer ${this.token}`,
     });
   }
-  constructor(private http: HttpClient) { }
+
+ 
+listCategories(pageIndex: number = 0, pageSize: number = 10, searchText: string = ''): Observable<any> {
+  return this.http.get(`${this.apiUrl}category/categories?pageIndex=${pageIndex}&pageSize=${pageSize}&searchText=${searchText}`, {
+    headers: this.headers
+  });
+}
 
 
- listcategory(model: any): Observable<any> {
-    const body = model;
-    return this.http.post(this.apiUrl + 'User/register', body);
+ 
+  saveCategory(category: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}category/categories`, category, { headers: this.headers });
   }
-  addcategory(model: any): Observable<any> {
-    const body = model;
-    return this.http.post(this.apiUrl + 'User/register', body);
+
+  deleteCategory(id: string): Observable<any> {
+    return this.http.delete(`${this.apiUrl}category/categories/${id}`, { headers: this.headers });
   }
-  updatecategory(model: any): Observable<any> {
-    const body = model;
-    return this.http.post(this.apiUrl + 'User/register', body);
-  }
-  
- deletecategory(model: any): Observable<any> {
-    const body = model;
-    return this.http.post(this.apiUrl + 'User/register', body);
-  }
-  
+
+  getCategoryById(id: string): Observable<any> {
+  return this.http.get(`${this.apiUrl}category/categories/${id}`, { headers: this.headers });
+}
+
 }

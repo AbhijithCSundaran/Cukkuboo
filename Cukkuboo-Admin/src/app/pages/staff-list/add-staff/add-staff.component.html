@@ -12,20 +12,20 @@
         <div class="w-50 px-2 pb-3">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Name</mat-label>
-            <input matInput formControlName="name" placeholder="Add name" required>
+            <input matInput formControlName="username" placeholder="Add name" required>
           </mat-form-field>
         </div>
         <!-- Role -->
-<div class="w-50 px-2 pb-3">
+<!-- <div class="w-50 px-2 pb-3">
     <mat-form-field appearance="outline" class="w-100">
       <mat-label>Role</mat-label>
       <mat-select formControlName="role" placeholder="Select role">
         <mat-option value="1">Admin</mat-option>
         <mat-option value="2">Manager</mat-option>
-        <!-- Add more roles as needed -->
+     
       </mat-select>
     </mat-form-field>
-  </div>
+  </div> -->
   
   
         <!-- Contact -->
@@ -34,7 +34,7 @@
             <mat-label>Contact</mat-label>
             <input
               matInput
-              formControlName="contact"
+              formControlName="phone"
               placeholder="Add contact number"
               maxlength="15"
               (input)="onNumberInput($event)">
@@ -70,10 +70,11 @@
         <!-- Status -->
         <div class="w-50 px-2 pb-3">
           <mat-form-field appearance="outline" class="w-100">
-         
+          <mat-label>Status</mat-label> 
             <mat-select formControlName="status">
-              <mat-option value="active">Active</mat-option>
-              <mat-option value="inactive">Inactive</mat-option>
+              
+              <mat-option value="1">Active</mat-option>
+              <mat-option value="2">Inactive</mat-option>
             </mat-select>
           </mat-form-field>
         </div>
@@ -82,7 +83,7 @@
         <div class="w-50 px-2 pb-3">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Join Date</mat-label>
-            <input matInput [matDatepicker]="picker" formControlName="joinDate" placeholder="Choose a date" (click)="picker.open()" readonly />
+            <input matInput [matDatepicker]="picker" formControlName="join_date" placeholder="Choose a date" (click)="picker.open()" readonly />
             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
             <mat-datepicker #picker></mat-datepicker>
           </mat-form-field>

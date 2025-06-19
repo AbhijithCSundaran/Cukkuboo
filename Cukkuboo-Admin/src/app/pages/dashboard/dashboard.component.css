@@ -6,7 +6,9 @@
   gap: 16px;
   justify-content: space-between;
 }
-
+.title{
+  text-transform: capitalize;
+}
 .dashboard-card {
   flex: 1 1 0%;
   min-width: 220px;

@@ -27,10 +27,11 @@
   <td mat-cell *matCellDef="let row; let i = index"> {{ i + 1 }} </td>
 </ng-container>
   
-      <ng-container matColumnDef="plan">
-        <th mat-header-cell *matHeaderCellDef> Plan </th>
-        <td mat-cell *matCellDef="let plan"> {{ plan.name }} </td>
-      </ng-container>
+     <ng-container matColumnDef="plan_name">
+  <th mat-header-cell *matHeaderCellDef> Plan </th>
+  <td mat-cell *matCellDef="let plan" class="title"> {{ plan.plan_name }} </td>
+</ng-container>
+
 
       <ng-container matColumnDef="period">
         <th mat-header-cell *matHeaderCellDef> Period </th>
@@ -43,6 +44,13 @@
         <th mat-header-cell *matHeaderCellDef> Price </th>
         <td mat-cell *matCellDef="let plan"> {{ plan.price }} </td>
       </ng-container>
+
+       <ng-container matColumnDef="discount_price">
+       <th mat-header-cell *matHeaderCellDef> Discounted Price </th>
+        <td mat-cell *matCellDef="let plan"> {{ plan.discount_price || '—' }} </td>
+       </ng-container>
+
+
   
       <ng-container matColumnDef="features">
         <th mat-header-cell *matHeaderCellDef> Features </th>
@@ -52,13 +60,15 @@
       <ng-container matColumnDef="action">
         <th mat-header-cell *matHeaderCellDef> Action </th>
         <td mat-cell *matCellDef="let plan">
-          <mat-icon class="icon" (click)="editPlan(plan.id)">edit</mat-icon>
-          <mat-icon class="icon" (click)="deletePlan(plan)">delete</mat-icon>
+         <mat-icon class="icon" (click)="editPlan(plan.subscriptionplan_id)">edit</mat-icon>
+           <mat-icon class="icon" (click)="deletePlan(plan)">delete</mat-icon>
+
         </td>
       </ng-container>
   
-    <tr mat-header-row *matHeaderRowDef="['slNo', 'plan', 'price', 'period', 'features', 'action']"></tr>
-<tr mat-row *matRowDef="let row; columns: ['slNo', 'plan', 'price', 'period', 'features', 'action'];"></tr>
+       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
 
       
     </table>
@@ -69,10 +79,31 @@
         </div>
 
  <div class="pagination-wrapper">
-  <mat-paginator
+  <!-- <mat-paginator
     class="pagination"
     [pageSizeOptions]="[10, 20, 50]"
     showFirstLastButtons
-  ></mat-paginator>
-</div>  </div>
+  ></mat-paginator> -->
+
+
+  <mat-paginator   class="pagination"[length]="totalItems" [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 20, 50]"></mat-paginator>
+
+</div> 
+
+
+
+<!-- Delete Confirmation Modal -->
+<div class="modal" [class.show]="confirmDeletePlan !== null">
+  <div class="modal-content">
+    <p>
+      Are you sure you want to delete
+      <span class="highlight">"{{ confirmDeletePlan?.plan_name }}"</span>?
+    </p>
+    <div class="modal-actions">
+      <button class="btn-yes" (click)="confirmDelete()">Delete</button>
+      <button class="btn-no" (click)="cancelDelete()">Cancel</button>
+    </div>
+  </div>
+</div>
+</div>
   

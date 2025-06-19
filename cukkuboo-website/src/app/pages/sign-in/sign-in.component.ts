@@ -34,6 +34,9 @@ export class SignInComponent {
       rememberMe: [false]
     });
   }
+navigateToSignUp() {
+  this.router.navigate(['/signup']);
+}
 
   onSubmit(): void {
     if (this.loginForm.valid) {

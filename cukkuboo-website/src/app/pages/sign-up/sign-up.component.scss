@@ -24,6 +24,38 @@
   margin-top: -10px;
   margin-bottom: 20px;
 }
+h4 {
+  font-size: 1.25rem;
+}
+
+button.btn-sm {
+  font-size: 0.875rem;
+  padding: 0.5rem 1.25rem;
+}
+
+.signup-link {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+
+
+.red-button {
+  background-color: #e50914;
+  color: white;
+  font-weight: 600;
+  font-size: 14px;        
+  padding: 6px 16px;     
+  border-radius: 30px;     
+  text-transform: uppercase;
+  min-width: auto;         
+  box-shadow: none;
+
+  &:hover {
+    background-color: #b20710;
+  }
+}
+
 
 .snackbar-success {
   background-color: #4caf50;

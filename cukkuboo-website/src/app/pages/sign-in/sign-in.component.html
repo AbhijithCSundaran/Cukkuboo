@@ -8,11 +8,16 @@
       <div class="col-lg-12">
         <div class="text-center">
           <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" id="pms_login">
-            <h4>Sign In</h4>
+            
+               <!-- Logo -->
+          <div class="text-center mb-3">
+            <img src="assets/images/logo-collapsed.png" alt="Logo" style="max-width: 60px;" />
+          </div>
+            <h4 class="text-start">Sign In</h4>
 
             <!-- Email Field -->
             <mat-form-field appearance="outline" class="w-100">
-              <mat-label>Username or Email Address</mat-label>
+              <mat-label>Email Address</mat-label>
               <input
                 matInput
                 formControlName="email"
@@ -50,20 +55,27 @@
             </p>
 
             <!-- Submit Button -->
-            <p class="login-submit">
-              <button
-                id="wp-submit"
-                class="button button-primary"
-                color="primary"
-                type="submit"
-              >
-                Log In
-              </button>
-            </p>
+      
 
-            <!-- Links -->
-            <a routerLink="/register">Register</a> |
-            <a routerLink="/recover-password">Lost your password?</a>
+                
+                      <div class="text-start mt-3">
+              <button  type="submit" class="red-button">
+                 Sign-In
+              </button>
+
+
+            </div>
+
+   
+            <!-- Sign In Link -->
+            <div class="text-start mt-2">
+              <span class="me-2">Not a subscriber yet?</span>
+              <a (click)="navigateToSignUp()" class="signup-link text-primary text-decoration-underline" style="cursor: pointer;">Sign In</a>
+            </div>
+
+
+            <!-- | -->
+            <!-- <a routerLink="/recover-password">Lost your password?</a> -->
           </form>
         </div>
       </div>

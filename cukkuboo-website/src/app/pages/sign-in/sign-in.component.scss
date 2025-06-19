@@ -8,7 +8,35 @@
   background-color: #4caf50;
   color: white;
 }
+.signup-link {
+  cursor: pointer;
+  color: #ffffff; 
+  text-decoration: underline;
+  transition: color 0.2s ease, text-decoration 0.2s ease;
 
+  &:hover {
+    color: #ffcc00; 
+    text-decoration: none;
+  }
+}
+h4 {
+  font-size: 1.25rem;
+}
+.red-button {
+  background-color: #e50914;
+  color: white;
+  font-weight: 600;
+  font-size: 14px;        
+  padding: 6px 16px;     
+  border-radius: 30px;     
+  text-transform: uppercase;
+  min-width: auto;         
+  box-shadow: none;
+
+  &:hover {
+    background-color: #b20710;
+  }
+}
 .snackbar-error {
   background-color: #f44336;
   color: white;

@@ -9,13 +9,24 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { ValidationMessagesComponent } from '../../core/components/validation-messsage/validaation-message.component';
 import { SignInService } from '../../sign-in.service';
 import { Router } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { PlanService } from '../../plan.service'; 
+
+interface Plan {
+  subscriptionplan_id: string;
+  plan_name: string;
+  price: number;
+  discount_price?: number;
+  period: number;
+}
+
 
 @Component({
   selector: 'app-sign-up',
   standalone: true,
   imports: [
     CommonModule,
+    RouterModule,
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
@@ -29,14 +40,14 @@ import { PlanService } from '../../plan.service';
 })
 export class SignUpComponent implements OnInit {
   signUpForm!: FormGroup;
-  plans: any[] = []; 
+  plans: Plan[] = [];
 
   constructor(
     private fb: FormBuilder,
     private signInService: SignInService,
     private snackBar: MatSnackBar,
     private router: Router,
-    private planService: PlanService 
+    private planService: PlanService
   ) {}
 
   ngOnInit(): void {
@@ -47,31 +58,34 @@ export class SignUpComponent implements OnInit {
       lastName: [''],
       password: ['', Validators.required],
       confirmPassword: ['', Validators.required],
-      subscriptionPlan: ['', Validators.required] 
+      subscriptionPlan: ['', Validators.required]
     });
 
-    this.loadPlans();
+    // this.loadPlans();
   }
 
-  loadPlans(): void {
-    this.planService.listPlans(0, 10, '').subscribe({
-      next: (res) => {
-        if (res?.status && res.data?.length > 0) {
-          this.plans = res.data;
-       
-          this.signUpForm.patchValue({ subscriptionPlan: this.plans[0].value });
-        }
-      },
-      error: (err) => {
-        console.error('Failed to load plans:', err);
-        this.snackBar.open('Failed to load subscription plans', '', {
-          duration: 3000,
-          panelClass: ['snackbar-error']
-        });
-      }
-    });
-  }
+  // loadPlans(): void {
+  //   this.planService.listPlans(0, 10, '').subscribe({
+  //     next: (res) => {
+  //       if (res?.status && res.data?.length > 0) {
+  //         // Fix: TS7006 by typing a and b
+  //         this.plans = res.data.sort((a: Plan, b: Plan) => a.period - b.period);
+  //         this.signUpForm.patchValue({ subscriptionPlan: this.plans[0].subscriptionplan_id });
+  //       }
+  //     },
+  //     error: (err) => {
+  //       console.error('Failed to load plans:', err);
+  //       this.snackBar.open('Failed to load subscription plans', '', {
+  //         duration: 3000,
+  //         panelClass: ['snackbar-error']
+  //       });
+  //     }
+  //   });
+  // }
 
+  navigateToSignIn() {
+  this.router.navigate(['/signin']);
+}
   onSubmit(): void {
     if (this.signUpForm.valid) {
       const model = this.signUpForm.value;
@@ -113,3 +127,4 @@ export class SignUpComponent implements OnInit {
     }
   }
 }
+

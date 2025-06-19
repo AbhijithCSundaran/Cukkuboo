@@ -3,18 +3,15 @@
   <div class="container">
     <div class="row">
       <div class="col-lg-12">
-
         <div class="form-aligned">
-
-          <!-- Form  -->
           <form id="pms_register-form" class="pms-form" [formGroup]="signUpForm" (ngSubmit)="onSubmit()">
-
-          <!-- Heading -->
-          <h4 class="text-start">SIGN-UP</h4>
-          
+             <!-- Logo -->
+          <div class="text-center mb-3">
+            <img src="assets/images/logo-collapsed.png" alt="Logo" style="max-width: 60px;" />
+          </div>
+            <h4 class="text-start">Join now for unlimited entertainment</h4>
             <ul class="pms-form-fields-wrapper list-unstyled">
 
-              <!-- Username -->
               <li class="pms-field pms-user-login-field">
                 <mat-form-field appearance="outline" class="w-100">
                   <mat-label>Username</mat-label>
@@ -25,7 +22,6 @@
                 </mat-form-field>
               </li>
 
-              <!-- Email -->
               <li class="pms-field pms-user-email-field">
                 <mat-form-field appearance="outline" class="w-100">
                   <mat-label>Email</mat-label>
@@ -36,7 +32,6 @@
                 </mat-form-field>
               </li>
 
-              <!-- First Name -->
               <li class="pms-field pms-first-name-field">
                 <mat-form-field appearance="outline" class="w-100">
                   <mat-label>First Name</mat-label>
@@ -47,7 +42,6 @@
                 </mat-form-field>
               </li>
 
-              <!-- Last Name -->
               <li class="pms-field pms-last-name-field">
                 <mat-form-field appearance="outline" class="w-100">
                   <mat-label>Last Name</mat-label>
@@ -58,7 +52,6 @@
                 </mat-form-field>
               </li>
 
-              <!-- Password -->
               <li class="pms-field pms-pass1-field">
                 <mat-form-field appearance="outline" class="w-100">
                   <mat-label>Password</mat-label>
@@ -69,10 +62,9 @@
                 </mat-form-field>
               </li>
 
-              <!-- Confirm Password -->
               <li class="pms-field pms-pass2-field">
                 <mat-form-field appearance="outline" class="w-100">
-                  <mat-label>Repeat Password</mat-label>
+                  <mat-label>Confirm Password</mat-label>
                   <input matInput type="password" formControlName="confirmPassword" placeholder="Repeat password" />
                   <mat-error *ngIf="signUpForm.controls['confirmPassword'].touched && signUpForm.controls['confirmPassword'].invalid">
                     <Validation-Messages [control]="signUpForm.controls['confirmPassword']"></Validation-Messages>
@@ -81,67 +73,54 @@
               </li>
 
               <!-- Subscription Plans -->
-              <li class="pms-field pms-field-subscriptions">
+              <!-- <li class="pms-field pms-field-subscriptions">
                 <label class="mb-2 d-block">Choose a Plan</label>
 
                 <div class="row">
-                  <!-- Left Column -->
-                  <div class="col-md-6">
-                    <mat-radio-group formControlName="subscriptionPlan" class="d-block">
-                      <mat-radio-button
-                        *ngFor="let plan of plans.slice(0, plans.length / 2)"
-                        [value]="plan.subscriptionplan_id"
-                        class="d-block mb-3"
-                      >
-                        <div class="d-flex justify-content-between align-items-center">
-                          <strong class="me-2">{{ plan.plan_name }}</strong>
-                          <div>
-                            <span class="text-white text-decoration-line-through me-2" *ngIf="plan.discount_price">
-                              ₹{{ plan.price }}
-                            </span>
-                            <span class="text-danger fw-bold">₹{{ plan.discount_price || plan.price }}</span>
+                  <ng-container *ngFor="let plan of plans; let i = index">
+                    <div class="col-md-6" [ngClass]="{ 'ps-md-0': i % 2 === 0, 'pe-md-0': i % 2 !== 0 }">
+                      <mat-radio-group formControlName="subscriptionPlan" class="d-block w-100">
+                        <mat-radio-button [value]="plan.subscriptionplan_id" class="d-block mb-3">
+                          <div class="d-flex justify-content-between align-items-center">
+                            <strong class="me-2">{{ plan.plan_name }}</strong>
+                            <div>
+                              <span class="text-white text-decoration-line-through me-2" *ngIf="plan.discount_price">
+                                ₹{{ plan.price }}
+                              </span>
+                              <span class="text-danger fw-bold">₹{{ plan.discount_price || plan.price }}</span>
+                            </div>
                           </div>
-                        </div>
-                      </mat-radio-button>
-                    </mat-radio-group>
-                  </div>
-
-                  <!-- Right Column -->
-                  <div class="col-md-6">
-                    <mat-radio-group formControlName="subscriptionPlan" class="d-block">
-                      <mat-radio-button
-                        *ngFor="let plan of plans.slice(plans.length / 2)"
-                        [value]="plan.subscriptionplan_id"
-                        class="d-block mb-3"
-                      >
-                        <div class="d-flex justify-content-between align-items-center">
-                          <strong class="me-2">{{ plan.plan_name }}</strong>
-                          <div>
-                            <span class="text-white text-decoration-line-through me-2" *ngIf="plan.discount_price">
-                              ₹{{ plan.price }}
-                            </span>
-                            <span class="text-danger fw-bold">₹{{ plan.discount_price || plan.price }}</span>
-                          </div>
-                        </div>
-                      </mat-radio-button>
-                    </mat-radio-group>
-                  </div>
+                        </mat-radio-button>
+                      </mat-radio-group>
+                    </div>
+                  </ng-container>
                 </div>
 
                 <mat-error *ngIf="signUpForm.controls['subscriptionPlan'].touched && signUpForm.controls['subscriptionPlan'].invalid">
                   <Validation-Messages [control]="signUpForm.controls['subscriptionPlan']"></Validation-Messages>
                 </mat-error>
-              </li>
+              </li> -->
+
             </ul>
 
-            <!-- Submit Button -->
             <div class="text-start mt-3">
-              <button color="primary" type="submit">Sign-up</button>
+              <button  type="submit" class="red-button">
+                 Sign-up
+              </button>
+
+
             </div>
 
-          </form>
-        </div> 
+   
+            <!-- Sign In Link -->
+            <div class="text-start mt-2">
+              <span class="me-2">Already have an account?</span>
+              <a (click)="navigateToSignIn()" class="signup-link text-primary text-decoration-underline" style="cursor: pointer;">Sign In</a>
+            </div>
 
+
+          </form>
+        </div>
       </div>
     </div>
   </div>

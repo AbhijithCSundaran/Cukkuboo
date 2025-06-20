@@ -71,6 +71,26 @@ class Category extends ResourceController
             ]);
         }
     }
+    public function getCategoryById($id = null)
+{
+    if ($id === null) {
+        return $this->failValidationError('Category ID is required.');
+    }
+
+    $category = $this->categoryModel
+                     ->where('category_id', $id)
+                     ->where('status !=', 9)
+                     ->first();
+
+    if (!$category) {
+        return $this->failNotFound('Category not found.');
+    }
+
+    return $this->respond([
+        'success' => true,
+        'data'    => $category
+    ]);
+}
 
     public function categorylist()
     {

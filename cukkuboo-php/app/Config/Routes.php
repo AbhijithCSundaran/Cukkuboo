@@ -19,6 +19,7 @@ $routes->get('user/profile/(:num)', 'User::getUserDetailsById/$1');
 $routes->get('user/list', 'User::getUserList');
 $routes->get('staff/list', 'User::getStaffList');
 
+$routes->post('user/email-preference', 'User::updateEmailPreference');
 
 
 
@@ -46,10 +47,10 @@ $routes->delete('movie/delete/(:any)','MovieDetail::deleteMovieDetails/$1');
 $routes->get('movies/latest', 'MovieDetail::getLatestMovies');
 $routes->get('movies/most-watched', 'MovieDetail::mostWatchedMovies');
 
-
+//Admin Home Display
 $routes->get('movies/latestmovies', 'MovieDetail::latestMovies');
 $routes->get('movies/mostwatchmovie', 'MovieDetail::getMostWatchMovies');
-
+$routes->get('user/count-user', 'User::countActiveUsers');
 
 //Home Display
 
@@ -70,7 +71,7 @@ $routes->get('reels/get/(:any)', 'Reels::getReelById/$1');
 $routes->delete('reels/delete/(:any)', 'Reels::deleteReel/$1');
 
 $routes->post('usersub/add', 'Usersub::saveSubscription');
-$routes->get('usersub/details', 'Usersub::getAllSubscriptions');
+$routes->get('usersub/details', 'Usersub::getUserSubscriptions');
 $routes->get('usersub/get/(:num)', 'Usersub::getSubscriptionById/$1');
 $routes->delete('usersub/delete/(:num)', 'Usersub::deleteSubscription/$1');
 

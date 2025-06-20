@@ -20,7 +20,12 @@ class UserModel extends Model
         'subscription',
         'user_type',
         'jwt_token',
-        'fcm_token','created_by','created_at','updated_by','updated_at'
+        'fcm_token',
+        'created_by',
+        'created_at',
+        'updated_by',
+        'updated_at',
+        'email_preference'
     ];
 
     public function isUserExists($phone = null, $email = null)
@@ -63,4 +68,11 @@ return $this->db->query("update user set status = '".$status."', updated_at=NOW(
     {
         return $this->db->query("SELECT * FROM user WHERE status != 9 and user_type = 'customer'" )->getResult();
     }
+
+    //--------------------------------------Admin Home Display----------------------------//
+    public function countActiveUsers()
+    {
+        return $this->where('status', 1)->countAllResults();
+    }
+
 }

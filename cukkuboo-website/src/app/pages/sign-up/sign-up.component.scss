@@ -6,7 +6,7 @@
 
 }
 .pms_register-form .mat-form-field .input{
-  color: white !important;
+  color:  var(--white-color) !important;
 }
 
 
@@ -20,17 +20,51 @@
 .heading-underline {
   height: 2px;
   width: 80px; 
-  background-color: white;
+  background-color:  var(--white-color);
   margin-top: -10px;
   margin-bottom: 20px;
 }
-
-.snackbar-success {
-  background-color: #4caf50;
-  color: white;
+h4 {
+  font-size: 1.25rem;
 }
 
-.snackbar-error {
-  background-color: #f44336;
-  color: white;
+button.btn-sm {
+  font-size: 0.875rem;
+  padding: 0.5rem 1.25rem;
 }
+
+.signup-link {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.red-link {
+  color:var(--primary-color);
+  text-decoration: underline;
+  cursor: pointer;
+}
+.small-eye-icon {
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+  line-height: 16px;
+}
+
+.red-button {
+  background-color: var(--primary-color);
+  color: var(--white-color);
+  font-weight: 600;
+  font-size: 14px;        
+  padding: 6px 16px;     
+  border-radius: 30px;     
+  text-transform: uppercase;
+  min-width: auto;         
+  box-shadow: none;
+
+  &:hover {
+    background-color: var( --primarydark-color);
+  }
+}
+
+
+

@@ -5,38 +5,45 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { ValidationMessagesComponent } from '../../core/components/validation-messsage/validaation-message.component';
 import { SignInService } from '../../sign-in.service';
 import { Router } from '@angular/router';
-import { PlanService } from '../../plan.service'; 
+import { RouterModule } from '@angular/router';
+import { PlanService } from '../../plan.service';
 
 @Component({
   selector: 'app-sign-up',
   standalone: true,
+  templateUrl: './sign-up.component.html',
+  styleUrls: ['./sign-up.component.scss'],
   imports: [
     CommonModule,
+    RouterModule,
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
     MatRadioModule,
     MatButtonModule,
+    MatIconModule,             
     MatSnackBarModule,
     ValidationMessagesComponent
-  ],
-  templateUrl: './sign-up.component.html',
-  styleUrls: ['./sign-up.component.scss']
+  ]
 })
 export class SignUpComponent implements OnInit {
   signUpForm!: FormGroup;
-  plans: any[] = []; 
+
+ 
+  hidePassword = true;
+  hideConfirmPassword = true;
 
   constructor(
     private fb: FormBuilder,
     private signInService: SignInService,
     private snackBar: MatSnackBar,
     private router: Router,
-    private planService: PlanService 
+    private planService: PlanService
   ) {}
 
   ngOnInit(): void {
@@ -46,30 +53,12 @@ export class SignUpComponent implements OnInit {
       firstName: [''],
       lastName: [''],
       password: ['', Validators.required],
-      confirmPassword: ['', Validators.required],
-      subscriptionPlan: ['', Validators.required] 
+      confirmPassword: ['', Validators.required]
     });
-
-    this.loadPlans();
   }
 
-  loadPlans(): void {
-    this.planService.listPlans(0, 10, '').subscribe({
-      next: (res) => {
-        if (res?.status && res.data?.length > 0) {
-          this.plans = res.data;
-       
-          this.signUpForm.patchValue({ subscriptionPlan: this.plans[0].value });
-        }
-      },
-      error: (err) => {
-        console.error('Failed to load plans:', err);
-        this.snackBar.open('Failed to load subscription plans', '', {
-          duration: 3000,
-          panelClass: ['snackbar-error']
-        });
-      }
-    });
+  navigateToSignIn() {
+    this.router.navigate(['/signin']);
   }
 
   onSubmit(): void {

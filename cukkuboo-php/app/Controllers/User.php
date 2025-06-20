@@ -44,7 +44,7 @@ class User extends ResourceController
                'join_date'       => $data['join_date'] ?? null,
             //  'status'       => 1,
             'user_type' => $data['user_type'] ??'Customer',
-        ]);
+            'date_of_birth'=> $data['date_of_birth'] ?? null         ]);
 
         if (!empty($data['password'])) {
             $userData['password'] = password_hash($data['password'], PASSWORD_BCRYPT);
@@ -93,6 +93,7 @@ class User extends ResourceController
                     'phone'               => $user['phone'],
                     'status'              => $user['status'],
                     'join_date'           =>$user['join_date'],
+                    'date_of_birth' => $user['date_of_birth'], 
                     'subscription_status' => $user['subscription'],
                     'user_type'           => $user['user_type'],
                     'created_at'          => $user['created_at'],

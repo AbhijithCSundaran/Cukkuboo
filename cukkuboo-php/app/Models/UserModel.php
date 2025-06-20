@@ -20,8 +20,8 @@ class UserModel extends Model
         'subscription',
         'user_type',
         'jwt_token',
-        'fcm_token','created_by','created_at','updated_by','updated_at'
-    ];
+        'fcm_token','created_by','created_at','updated_by','updated_at',
+        'date_of_birth'    ];
 
     public function isUserExists($phone = null, $email = null)
     {

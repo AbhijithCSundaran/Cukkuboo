@@ -47,7 +47,7 @@ export class SignUpComponent implements OnInit {
       lastName: [''],
       password: ['', Validators.required],
       confirmPassword: ['', Validators.required],
-      subscriptionPlan: ['', Validators.required] 
+      // subscriptionPlan: ['', Validators.required] 
     });
 
     this.loadPlans();

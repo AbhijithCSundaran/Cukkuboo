@@ -109,10 +109,11 @@ public function getMostWatchedMovies()
 }
 
 
+// -------------------------------------Admin home Dispaly----------------------------------------
 
-public function latestAddedMovies()
-{
-    return $this->select('title, release_date')
+    public function latestAddedMovies()
+    {
+        return $this->select('title, release_date')
                 ->where('status', 1)
                 ->where('release_date <=', date('Y-m-d'))
                 ->orderBy('created_on', 'DESC')
@@ -121,13 +122,21 @@ public function latestAddedMovies()
 }
 
 
- public function getMostWatchMovies()
+    public function getMostWatchMovies()
     {
         return $this->select('title,views')  
                     ->where('status', 1)
                     ->orderBy('views', 'DESC')
                     ->limit(10)
                     ->findAll();
+    }
+    public function countActiveMovies()
+    {
+        return $this->where('status', 1)->countAllResults();
+    }
+    public function countInactiveMovies()
+    {
+        return $this->where('status', 2)->countAllResults();
     }
 
 }

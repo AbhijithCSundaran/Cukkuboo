@@ -11,7 +11,7 @@ class UsersubModel extends Model
 
     protected $allowedFields = [
         'user_id',
-        'subscription_id',
+        'subscriptionplan_id',
         'start_date',
         'end_date',
         'status',
@@ -23,7 +23,7 @@ class UsersubModel extends Model
     protected $useTimestamps = false;
     protected $returnType = 'array';
 
-    
+
     public function addSubscription($data)
     {
         return $this->insert($data);

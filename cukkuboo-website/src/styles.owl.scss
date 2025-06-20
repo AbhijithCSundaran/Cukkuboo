@@ -1,0 +1,200 @@
+// @import "~ngx-owl-carousel-o/lib/styles/scss/owl.carousel";
+// @import "~ngx-owl-carousel-o/lib/styles/scss/owl.theme.default";
+// @use "ngx-owl-carousel-o/lib/styles/scss/owl.carousel" as owlCarousel;
+// @use "ngx-owl-carousel-o/lib/styles/scss/owl.theme.default" as owlTheme;
+
+// ------------------------//
+owl-carousel-o {
+    position: relative;
+    //height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+
+    .owl-theme,
+    .owl-stage-outer {
+        height: 100%;
+
+        owl-stage {
+            >div {
+                // display: flex;
+                height: 100%;
+            }
+
+            .owl-stage {
+                display: flex;
+                height: 100%;
+
+                .owl-item {
+                    height: auto;
+                    //display: flex;
+                }
+            }
+        }
+    }
+}
+
+.owl-item {
+    height: 100%;
+    width: 100%;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: 50% 50%;
+}
+
+
+/*================================================
+OWL Carousel
+================================================*/
+.owl-carousel .owl-nav.disabled {
+    display: none;
+}
+
+.owl-carousel .owl-nav {
+    cursor: pointer;
+    z-index: 9;
+    margin: 0;
+    width: 100%;
+    position: absolute;
+    top: 50%;
+    left: 0%;
+    -webkit-transform: translate(0%, -50%);
+    -ms-transform: translate(0%, -50%);
+    transform: translate(0%, -50%);
+}
+
+.owl-carousel .owl-nav .owl-prev {
+    outline: none;
+    text-align: center;
+    text-indent: inherit;
+    cursor: pointer;
+    text-align: center;
+    font-size: 32px;
+    position: absolute;
+    top: 0;
+    left: -22.5px;
+    line-height: 1;
+    padding: 0;
+    margin: 0;
+    color: var(--white-color) !important;
+}
+
+// .owl-carousel .owl-nav .disabled {
+//     display: none;
+// }
+
+.owl-carousel .owl-nav .owl-next {
+    outline: none;
+    text-align: center;
+    text-indent: inherit;
+    cursor: pointer;
+    text-align: center;
+    font-size: 32px;
+    position: absolute;
+    top: 0;
+    right: -22.5px;
+    line-height: 1;
+    padding: 0;
+    margin: 0;
+    color: var(--white-color) !important;
+}
+
+.gen-style-2 .owl-carousel .owl-nav {
+    top: 30%;
+}
+
+.gen-style-1 .owl-carousel .owl-nav {
+    top: 40%;
+}
+
+@media(max-width:1399px) {
+    .gen-style-2 .owl-carousel .owl-nav {
+        top: 26%;
+    }
+}
+
+@media(max-width:1199px) {}
+
+@media(max-width:1023px) {
+    .owl-carousel .owl-nav button.owl-prev {
+        left: 15px;
+    }
+
+    .owl-carousel .owl-nav button.owl-next {
+        right: 15px;
+    }
+
+    .gen-style-2 .owl-carousel .owl-nav {
+        top: 32%;
+    }
+}
+
+@media(max-width:979px) {
+    .gen-style-2 .owl-carousel .owl-nav {
+        top: 36%;
+    }
+}
+
+@media(max-width:767px) {
+    .gen-style-2 .owl-carousel .owl-nav {
+        top: 32%;
+    }
+}
+
+@media(max-width:479px) {
+    .gen-style-2 .owl-carousel .owl-nav {
+        top: 26%;
+    }
+}
+
+/* Dots */
+.owl-carousel .owl-dots.disabled {
+    display: none;
+}
+
+.owl-carousel .owl-dots {
+    margin: 15px 0 0;
+    line-height: normal;
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    text-indent: inherit;
+    text-align: center;
+    cursor: pointer;
+}
+
+.owl-carousel .owl-dots .owl-dot {
+    span {
+        box-shadow: none;
+        outline: none;
+        background: var(--white-color);
+        opacity: 1;
+        display: inline-block;
+        padding: 0;
+        margin: 0px 5px;
+        height: 4px;
+        width: 30px;
+        border: none;
+        border-radius: 0;
+        transition: all 0.5s ease-in-out;
+        -webkit-transition: all 0.5s ease-in-out;
+        -o-transition: all 0.5s ease-in-out;
+        -moz-transition: all 0.5s ease-in-out;
+        -ms-transition: all 0.5s ease-in-out;
+        cursor: pointer;
+    }
+}
+
+.owl-carousel .owl-dots .owl-dot:hover {
+    span {
+        background: var(--primary-color);
+        opacity: 1;
+    }
+}
+
+.owl-carousel .owl-dots .owl-dot.active {
+    span {
+        background: var(--primary-color);
+        opacity: 1;
+    }
+}

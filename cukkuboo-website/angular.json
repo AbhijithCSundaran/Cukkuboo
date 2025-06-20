@@ -35,8 +35,13 @@
             "styles": [
               "@angular/material/prebuilt-themes/azure-blue.css",
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
+              "node_modules/ngx-owl-carousel-o/lib/styles/prebuilt-themes/owl.carousel.min.css",
+              "node_modules/ngx-owl-carousel-o/lib/styles/prebuilt-themes/owl.theme.default.min.css",
+              "src/styles.owl.scss",
               "src/styles.mat.scss",
-              "src/styles.scss"
+              "src/styles.scss",
+              "src/assets/css/style.css",
+              "src/assets/css/responsive.css"
             ],
             "scripts": []
           },
@@ -102,5 +107,8 @@
         }
       }
     }
+  },
+  "cli": {
+    "analytics": "42b18101-ce04-46db-b44c-c2263f5be41f"
   }
 }

@@ -78,11 +78,13 @@ export class LoginComponent implements OnInit, AfterViewInit {
     //   });
     //   return;
     // }
-    debugger;
+   
     if (this.loginForm.valid) {
       var model = this.loginForm.value
       this.userService.login(model).subscribe({
         next: (response) => {
+            console.log('response from login:', response);
+
           if (response.status) {
             console.log(response)
             if (response.user.user_type == 'admin') {

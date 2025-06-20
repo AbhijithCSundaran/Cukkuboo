@@ -22,7 +22,7 @@ export class UserService {
 
   login(model: any): Observable<any> {
     const body = model;
-    return this.http.post(this.apiUrl + 'Login/login', body);
+    return this.http.post(this.apiUrl + 'login/login', body);
   }
 
   register(model: any): Observable<any> {
@@ -31,6 +31,7 @@ export class UserService {
   }
 
   list(pageIndex: number = 0, pageSize: number = 10, searchText: string = ''): Observable<any> {
+     
     return this.http.get(`${this.apiUrl}user/list?pageIndex=${pageIndex}&pageSize=${pageSize}searchText=${searchText}`,
       { headers: this.headers });
   }
@@ -46,6 +47,14 @@ export class UserService {
 
   logout(): Observable<any> {
     const body = {};
-    return this.http.post(this.apiUrl + 'Login/logout', body, { headers: this.headers });
+    return this.http.post(this.apiUrl + 'login/logout', body, { headers: this.headers });
   }
+
+  // staff
+  getStaffList(pageIndex: number = 0, pageSize: number = 10, searchText: string = ''): Observable<any> {
+  return this.http.get(`${this.apiUrl}staff/list?pageIndex=${pageIndex}&pageSize=${pageSize}&searchText=${encodeURIComponent(searchText)}`, {
+    headers: this.headers
+  });
+}
+
 }

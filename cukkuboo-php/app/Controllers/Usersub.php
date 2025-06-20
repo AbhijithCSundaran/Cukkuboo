@@ -28,12 +28,12 @@ class Usersub extends ResourceController
         $authHeader = $this->request->getHeaderLine('Authorization');
         $user = $this->authService->getAuthenticatedUser($authHeader);
         // Validate required fields for create
-        if (!$id && (empty($data['user_id']) || empty($data['subscription_id']) || empty($data['start_date']))) {
+        if (!$id && (empty($data['user_id']) || empty($data['subscriptionplan_id']) || empty($data['start_date']))) {
             return $this->failValidationErrors('User ID, plan ID, and start date are required.');
         }
 
         // Verify plan exists
-        $plan = $this->subscriptionPlanModel->getPlanById($data['subscription_id']);
+        $plan = $this->subscriptionPlanModel->getPlanById($data['subscriptionplan_id']);
         if (!$plan) {
             return $this->failNotFound('Invalid subscription plan.');
         }
@@ -45,7 +45,7 @@ class Usersub extends ResourceController
         // Build data payload
         $payload = [
             'user_id'         => $data['user_id'] ?? null,
-            'subscription_id' => $data['subscription_id'] ?? null,
+            'subscriptionplan_id' => $data['subscriptionplan_id'] ?? null,
             'start_date'      => $data['start_date'],
             'end_date'        => $end,
             'modify_on'       => date('Y-m-d H:i:s'),
@@ -86,51 +86,56 @@ class Usersub extends ResourceController
     }
 
 
-    public function getAllSubscriptions()
-    {
-    $pageIndex = (int) $this->request->getGet('pageIndex');
-    $pageSize  = max(10, (int) $this->request->getGet('pageSize'));
-    $search    = $this->request->getGet('search');
+   public function getUserSubscriptions()
+{
     $authHeader = $this->request->getHeaderLine('Authorization');
     $user = $this->authService->getAuthenticatedUser($authHeader);
-    if(!$user) {
-            return $this->failUnauthorized('Invalid or missing token.');
-    }
-    $offset = $pageIndex * $pageSize;
 
-    $builder = $this->usersubModel->builder(); // start fresh query builder
-    $builder->select('us.*, u.username AS username')
-        ->from('user_subscription us')
-        ->join('user u', 'u.user_id = us.user_id', 'left')
-        ->where('us.status !=', 9);
-
-    if (!empty($search)) {
-        $builder->like('u.username', $search);
+    if (!$user) {
+        return $this->failUnauthorized('Invalid or missing token.');
     }
 
-    if ($pageIndex < 0) {
-        $rows = $builder->orderBy('us.user_subscription_id', 'DESC')
-                        ->get()
-                        ->getResultArray();
+    $builder = $this->usersubModel->builder();
+    $builder->select('
+        us.user_subscription_id,
+        us.user_id,
+        u.username,
+        us.subscriptionplan_id,
+        us.start_date,
+        us.end_date,
+        us.status,
+        sp.plan_name,
+        sp.period
+    ')
+    ->from('user_subscription us')
+    ->join('user u', 'u.user_id = us.user_id', 'left')
+    ->join('subscriptionplan sp', 'sp.subscriptionplan_id = us.subscriptionplan_id', 'left')
+    ->where('us.status !=', 9)
+    ->where('us.user_id', $user['user_id']);
 
-        return $this->respond([
-            'status' => true,
-            'data'   => $rows,
-            'total'  => count($rows),
-        ]);
+    $results = $builder->orderBy('us.user_subscription_id', 'DESC')->get()->getResultArray();
+
+    foreach ($results as &$row) {
+        // If end_date is not set, calculate it using start_date and period
+        if (empty($row['end_date']) && !empty($row['start_date']) && !empty($row['period'])) {
+            $startDate = new \DateTime($row['start_date']);
+            $startDate->modify("+{$row['period']} days");
+            $row['end_date'] = $startDate->format('Y-m-d');
+
+            // Update it in the DB
+            $this->usersubModel->update($row['user_subscription_id'], ['end_date' => $row['end_date']]);
+        }
+
+        // Update status to 2 if expired
+        if (!empty($row['end_date']) && new \DateTime() > new \DateTime($row['end_date']) && $row['status'] != 2) {
+            $this->usersubModel->update($row['user_subscription_id'], ['status' => 2]);
+            $row['status'] = 2;
+        }
     }
-
-    $total = $builder->countAllResults(false);
-
-    $rows = $builder->orderBy('us.user_subscription_id', 'DESC')
-        ->limit($pageSize, $offset)
-        ->get()
-        ->getResultArray();
 
     return $this->respond([
         'status' => true,
-        'data'   => $rows,
-        'total'  => $total,
+        'data' => $results
     ]);
 }
 

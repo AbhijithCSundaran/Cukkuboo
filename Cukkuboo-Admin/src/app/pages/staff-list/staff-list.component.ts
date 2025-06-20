@@ -1,97 +1,117 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-
-import { MatTableModule } from '@angular/material/table';
+import { MatTableModule, MatTableDataSource } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
-import { MatPaginatorModule, MatPaginator } from '@angular/material/paginator';
+import { MatPaginatorModule, MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatInputModule } from '@angular/material/input';
-import { MatTableDataSource } from '@angular/material/table';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { StaffService } from '../../staff.service';
 
 @Component({
   selector: 'app-staff-list',
   standalone: true,
   imports: [
-    MatInputModule ,
-    MatFormFieldModule,
     CommonModule,
     RouterLink,
     MatTableModule,
     MatIconModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    MatInputModule,
+    MatFormFieldModule
   ],
   templateUrl: './staff-list.component.html',
   styleUrls: ['./staff-list.component.scss']
 })
-export class StaffListComponent implements OnInit {
-  displayedColumns: string[] = ['slNo','name', 'role', 'email', 'phone', 'status', 'joiningDate', 'action'];
-
-  staffMembers = [
-    {
-      id: 1,
-      name: 'Alice Johnson',
-      role: 'Admin',
-      email: 'alice@example.com',
-      phone: '555-123-4567',
-      status: 'active',
-      joiningDate: new Date('2022-04-10')
-    },
-    {
-      id: 2,
-      name: 'Bob Lee',
-     role: 'Manager',
-      email: 'bob@example.com',
-      phone: '555-987-6543',
-      status: 'inactive',
-      joiningDate: new Date('2021-11-01')
-    }
-  ];
-
-  dataSource = new MatTableDataSource(this.staffMembers);
+export class StaffListComponent implements OnInit, AfterViewInit {
+  displayedColumns: string[] = ['slNo', 'username', 'email', 'phone', 'status', 'joiningDate', 'action'];
+  dataSource = new MatTableDataSource<any>();
+  totalItems = 0;
+  pageSize = 10;
+  pageIndex = 0;
+  searchText = '';
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  constructor(private router: Router) {}
+  confirmDeleteVisible = false;
+  confirmDeleteStaff: any = null;
+
+  constructor(private router: Router, private staffservice: StaffService) {}
 
   ngOnInit(): void {
+    this.getStaffList();
+
+    this.dataSource.filterPredicate = (data: any, filter: string) => {
+      const dataStr = `${data.username} ${data.role} ${data.email} ${data.phone} ${data.status}`.toLowerCase();
+      return dataStr.includes(filter);
+    };
+  }
+
+  ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
-
-
-     
-
-  this.dataSource.filterPredicate = (data: any, filter: string) => {
-    const dataStr = `${data.name} ${data.role} ${data.email} ${data.phone} ${data.status}`
-      .toLowerCase();
-    return dataStr.includes(filter);
-  };
   }
 
-  deleteStaff(staff: any): void {
-    const index = this.staffMembers.indexOf(staff);
-    if (index > -1) {
-      this.staffMembers.splice(index, 1);
-      this.dataSource.data = [...this.staffMembers];
-    }
-  }
-
-
- 
-  editStaff(staff: any): void {
-
-    this.router.navigate(['/add-staff'], {
-
+  getStaffList(): void {
+    this.staffservice.getStaffList(this.pageIndex, this.pageSize, this.searchText).subscribe({
+      next: (response) => {
+        this.dataSource.data = (response.data || []).map((staff: any) => ({
+          ...staff,
+          join_date: this.fixDateString(staff.join_date) // Prevent timezone shift
+        }));
+        this.totalItems = response.totalItems || 0;
+      },
+      error: (err) => {
+        console.error('Failed to fetch staff list:', err);
+      }
     });
   }
 
-
-
+  fixDateString(date: string): string {
+    // Converts date to yyyy-MM-dd format string, no timezone issues
+    const d = new Date(date);
+    const offsetDate = new Date(d.getTime() + Math.abs(d.getTimezoneOffset() * 60000));
+    return offsetDate.toISOString().split('T')[0];
+  }
 
   applyGlobalFilter(event: KeyboardEvent): void {
     const input = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = input.trim().toLowerCase();
+    this.searchText = input.trim().toLowerCase();
+    this.pageIndex = 0;
+    this.getStaffList();
   }
-  addNewStaff(): void {
-    this.router.navigate(['/add-staff']);
+
+  onPageChange(event: PageEvent): void {
+    this.pageIndex = event.pageIndex;
+    this.pageSize = event.pageSize;
+    this.getStaffList();
+  }
+
+  editStaff(staff: any): void {
+    this.router.navigate(['/edit-staff', staff.user_id]);
+  }
+
+  openDeleteModal(staff: any): void {
+    this.confirmDeleteStaff = staff;
+    this.confirmDeleteVisible = true;
+  }
+
+  cancelDelete(): void {
+    this.confirmDeleteVisible = false;
+    this.confirmDeleteStaff = null;
+  }
+
+  confirmDelete(): void {
+    if (!this.confirmDeleteStaff) return;
+
+    this.staffservice.deleteUser(this.confirmDeleteStaff.user_id).subscribe({
+      next: () => {
+        this.getStaffList();
+        this.cancelDelete();
+      },
+      error: (err) => {
+        console.error('Failed to delete staff:', err);
+        this.cancelDelete();
+      }
+    });
   }
 }

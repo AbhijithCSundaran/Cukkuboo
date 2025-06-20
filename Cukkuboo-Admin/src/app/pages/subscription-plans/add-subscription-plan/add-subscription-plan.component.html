@@ -15,9 +15,9 @@
         <div class="w-50 px-2 pb-3">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Plan</mat-label>
-            <input matInput placeholder="Enter plan name" formControlName="name">
+            <input matInput placeholder="Enter plan name" formControlName="plan_name">
             <mat-error>
-              <Validation-Messages [control]="dataForm.controls['name']"></Validation-Messages>
+              <Validation-Messages [control]="dataForm.controls['plan_name']"></Validation-Messages>
             </mat-error>
           </mat-form-field>
         </div>
@@ -32,21 +32,34 @@
             </mat-error>
           </mat-form-field>
         </div>
+         
+
+                  <!-- Discounted Price -->
+        <div class="w-50 px-2 pb-3">
+  <mat-form-field appearance="outline" class="w-100">
+    <mat-label>Discounted Price</mat-label>
+    <input matInput type="number" placeholder="Enter discounted price" formControlName="discount_price">
+    <mat-error>
+      <Validation-Messages [control]="dataForm.controls['discount_price']"></Validation-Messages>
+    </mat-error>
+  </mat-form-field>
+        </div>
+
 
         <!-- Period -->
-        <div class="w-50 px-2 pb-3">
-          <mat-form-field appearance="outline" class="w-100">
-            <mat-label>Period</mat-label>
-            <mat-select formControlName="period">
-              <mat-option value="Monthly">Monthly</mat-option>
-              <mat-option value="Quarterly">Quarterly</mat-option>
-              <mat-option value="Yearly">Yearly</mat-option>
-            </mat-select>
-            <mat-error>
-              <Validation-Messages [control]="dataForm.controls['period']"></Validation-Messages>
-            </mat-error>
-          </mat-form-field>
-        </div>
+   
+     <div class="w-50 px-2 pb-3">
+     <mat-form-field appearance="outline" class="w-100">
+     <mat-label>Period (in days)</mat-label>
+    <input matInput type="text" placeholder="Enter period in days" formControlName="period">
+    <mat-error>
+      <Validation-Messages [control]="dataForm.controls['period']"></Validation-Messages>
+    </mat-error>
+  </mat-form-field>
+    </div>
+
+
+            
 
         <!-- Features -->
         <div class="w-50 px-2 pb-3">

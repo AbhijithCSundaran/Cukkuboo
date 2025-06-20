@@ -1,37 +1,39 @@
 <div class="content-container">
   <div class="header-row">
     <h2>List Movie/Show</h2>
-    <button mat-raised-button class="add-button" (click)="addNewMovie()">
-      + New
-    </button>
+    <button mat-raised-button class="add-button" (click)="addNewMovie()">+ New</button>
   </div>
 
   <!-- Search Bar -->
   <div class="search-bar-wrapper">
     <mat-form-field class="custom-search" appearance="outline">
-  <mat-icon matPrefix>search</mat-icon>
-  <input
-    matInput
-    placeholder="Search"
-    (keyup)="applyGlobalFilter($event)"
-  />
-</mat-form-field>
-
+      <mat-icon matPrefix>search</mat-icon>
+      <input
+        matInput
+        placeholder="Search"
+        (keyup)="applyGlobalFilter($event)"
+      />
+    </mat-form-field>
   </div>
 
   <div class="w-100 overflow-auto">
     <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z2 custom-table">
 
+      <!-- Sl. No. -->
       <ng-container matColumnDef="slNo">
         <th mat-header-cell *matHeaderCellDef> Sl. No. </th>
-        <td mat-cell *matCellDef="let row; let i = index"> {{ i + 1 }} </td>
+<td mat-cell *matCellDef="let row; let i = index">
+  {{ pageIndex * pageSize + i + 1 }}
+</td>
       </ng-container>
 
+      <!-- Title -->
       <ng-container matColumnDef="title">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Title </th>
         <td mat-cell *matCellDef="let movie" class="title"> {{ movie.title }} </td>
       </ng-container>
 
+      <!-- Genre -->
       <ng-container matColumnDef="genre">
         <th mat-header-cell *matHeaderCellDef> Genre </th>
         <td mat-cell *matCellDef="let movie">
@@ -47,6 +49,7 @@
         </td>
       </ng-container>
 
+      <!-- Category -->
       <ng-container matColumnDef="category">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Category </th>
         <td mat-cell *matCellDef="let movie">
@@ -54,6 +57,7 @@
         </td>
       </ng-container>
 
+      <!-- Status -->
       <ng-container matColumnDef="status">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
         <td mat-cell *matCellDef="let movie">
@@ -69,6 +73,7 @@
         </td>
       </ng-container>
 
+      <!-- Action -->
       <ng-container matColumnDef="action">
         <th mat-header-cell *matHeaderCellDef> Action </th>
         <td mat-cell *matCellDef="let movie">
@@ -77,41 +82,34 @@
         </td>
       </ng-container>
 
-      <!-- Filter row -->
-      <tr mat-header-row *matHeaderRowDef="displayedColumns">
-        <th mat-header-cell *matHeaderCellDef>
-          <input matInput placeholder="Filter Title" (keyup)="applyFilter('title', $event)" />
-        </th>
-        <th mat-header-cell *matHeaderCellDef>
-          <input matInput placeholder="Filter Genre" (keyup)="applyFilter('genre', $event)" />
-        </th>
-        <th mat-header-cell *matHeaderCellDef>
-          <input matInput placeholder="Filter Category" (keyup)="applyFilter('category', $event)" />
-        </th>
-        <th mat-header-cell *matHeaderCellDef>
-          <input matInput placeholder="Filter Status" (keyup)="applyFilter('status', $event)" />
-        </th>
-        <th mat-header-cell *matHeaderCellDef></th>
-      </tr>
-
+      <!-- Table Header & Rows -->
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
     </table>
   </div>
 
-  <!-- No Data Found -->
+  <!-- No Data Message -->
   <div class="no-data" *ngIf="dataSource.data.length === 0">
     No movies or shows found.
   </div>
 
- <div class="pagination-wrapper">
-  <mat-paginator
-    class="pagination"
-    [pageSizeOptions]="[10, 20, 50]"
-    showFirstLastButtons
-  ></mat-paginator>
-</div>
+  <!-- Pagination -->
+  <div class="pagination-wrapper">
+    <!-- <mat-paginator
+      class="pagination"
+      [pageSizeOptions]="[10, 20, 50]"
+      showFirstLastButtons>
+    </mat-paginator> -->
+    <mat-paginator
+  class="pagination"
+  [length]="totalItems"
+  [pageSize]="pageSize"
+  [pageSizeOptions]="[10, 20, 50]"
+  (page)="onPageChange($event)"
+  showFirstLastButtons>
+</mat-paginator>
 
-
+  </div>
 
   <!-- Delete Confirmation Modal -->
   <div class="modal" [class.show]="confirmDeleteMovie">

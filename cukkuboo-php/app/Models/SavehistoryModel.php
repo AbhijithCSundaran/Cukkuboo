@@ -16,7 +16,7 @@ class SavehistoryModel extends Model
         $now = date('Y-m-d H:i:s');
 
         if ($existing) {
-            return $this->update($existing['id'], [
+            return $this->update($existing['history_id'], [
                 'modify_by' => $userId,
                 'modify_on' => $now
             ]);

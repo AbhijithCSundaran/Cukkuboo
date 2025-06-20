@@ -25,8 +25,8 @@ class UserModel extends Model
         'created_at',
         'updated_by',
         'updated_at',
+        'date_of_birth',
         'email_preference'
-    ];
 
     public function isUserExists($phone = null, $email = null)
     {

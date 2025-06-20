@@ -27,7 +27,9 @@ get token() {
   }
 
 
-
+ getMovieById(id: number): Observable<any> {
+  return this.http.get(this.apiUrl + 'getmovie/' + id, { headers: this.headers });
+  }
 
 
 

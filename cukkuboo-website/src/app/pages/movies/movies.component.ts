@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { MovieService } from '../../services/movie.service';
 import { environment } from '../../../environments/environment';
 
+
 @Component({
   selector: 'app-movies',
   imports: [CommonModule,RouterLink, RouterLinkActive],

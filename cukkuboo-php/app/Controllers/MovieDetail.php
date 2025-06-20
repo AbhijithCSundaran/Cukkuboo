@@ -286,7 +286,7 @@ public function mostWatchedMovies()
 
 
 
-// --------------------------------- website--------------------------------------//
+// ---------------------------------Admin home  Display--------------------------------------//
 
 public function latestMovies()
 {
@@ -310,6 +310,15 @@ public function latestMovies()
             'data'    => $mostWatched
         ]);
     }
+public function countActiveMovies()
+    {
+        $movieModel = new MoviesModel();
+        $activeCount = $movieModel->countActiveMovies();
 
+        return $this->respond([
+            'status' => true,
+            'active_movie_count' => $activeCount
+        ]);
+    }
 
 }

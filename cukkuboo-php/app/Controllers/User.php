@@ -44,7 +44,7 @@ class User extends ResourceController
                'join_date'       => $data['join_date'] ?? null,
             //  'status'       => 1,
             'user_type' => $data['user_type'] ??'Customer',
-        ]);
+            'date_of_birth'=> $data['date_of_birth'] ?? null         ]);
 
         if (!empty($data['password'])) {
             $userData['password'] = password_hash($data['password'], PASSWORD_BCRYPT);
@@ -93,6 +93,7 @@ class User extends ResourceController
                     'phone'               => $user['phone'],
                     'status'              => $user['status'],
                     'join_date'           =>$user['join_date'],
+                    'date_of_birth' => $user['date_of_birth'], 
                     'subscription_status' => $user['subscription'],
                     'user_type'           => $user['user_type'],
                     'created_at'          => $user['created_at'],
@@ -289,6 +290,59 @@ public function getStaffList()
         'total'  => $total
     ]);
 }
+public function updateEmailPreference()
+{
+    $json = $this->request->getJSON(true); 
+
+    $userId = isset($json['user_id']) ? (int)$json['user_id'] : null;
+    $status = isset($json['status']) ? (int)$json['status'] : null;
+
+    if (!$userId || !in_array($status, [1, 2], true)) {
+        return $this->failValidationErrors('Invalid input. user_id must be valid, and status must be 1 (enable) or 2 (disable).');
+    }
+
+    $userModel = new \App\Models\UserModel();
+    $user = $userModel->find($userId);
+
+    if (!$user) {
+        return $this->failNotFound('User not found.');
+    }
+
+    if ((int)$user['email_preference'] === $status) {
+        return $this->respond([
+            'status'  => true,
+            'message' => 'Email preference is already set to this value.',
+        ]);
+    }
+
+    $updated = $userModel->update($userId, ['email_preference' => $status]);
+
+    if ($updated) {
+        return $this->respond([
+            'status'  => true,
+            'message' => 'Email preference updated successfully.',
+        ]);
+    } else {
+        return $this->failServerError('Failed to update email preference.');
+    }
+}
 
 
+//---------------------------------------Admin Home Display------------------------------------------------//
+
+
+public function countActiveUsers()
+    {
+        $authHeader = $this->request->getHeaderLine('Authorization');
+        $authuser = $this->authService->getAuthenticatedUser($authHeader);
+        if(!$authuser) 
+            return $this->failUnauthorized('Invalid or missing token.');
+        $userModel = new UserModel();
+        $activeCount = $userModel->countActiveUsers();
+
+        return $this->respond([
+            'status' => true,
+            'active_user_count' => $activeCount
+        ]);
+    }
 }

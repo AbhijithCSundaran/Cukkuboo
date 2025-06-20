@@ -67,6 +67,7 @@ export class SignUpComponent implements OnInit {
 
       this.signInService.register(model).subscribe({
         next: (response) => {
+          
           if (response?.status) {
             this.snackBar.open('Registration successful!', '', {
               duration: 3000,

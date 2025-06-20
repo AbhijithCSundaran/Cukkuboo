@@ -1,9 +1,9 @@
 <?php
-
+ 
 namespace App\Models;
-
+ 
 use CodeIgniter\Model;
-
+ 
 class CategoryModel extends Model
 {
     protected $table = 'categories';
@@ -12,10 +12,10 @@ class CategoryModel extends Model
         'category_id', 'category_name', 'description', 'status',
         'created_on', 'created_by', 'modify_on', 'modify_by'
     ];
-
+ 
     public $useAutoIncrement = false;
     public $useTimestamps = false;
-
+ 
     /**
      * Add a new category
      */
@@ -23,7 +23,7 @@ class CategoryModel extends Model
     {
         return $this->db->table($this->table)->insert($data);
     }
-
+ 
     /**
      * Update category by ID
      */
@@ -33,7 +33,7 @@ class CategoryModel extends Model
                         ->where('category_id', $category_id)
                         ->update($data);
     }
-
+ 
     /**
      * Soft delete is handled in controller, but this method can be used if needed
      */
@@ -43,7 +43,7 @@ class CategoryModel extends Model
                         ->where('category_id', $category_id)
                         ->delete();
     }
-
+ 
     /**
      * Check if a category exists
      * Accepts either ID or Name

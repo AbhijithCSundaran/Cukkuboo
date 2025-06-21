@@ -16,7 +16,7 @@ owl-carousel-o {
         height: 100%;
 
         owl-stage {
-            >div {
+            > div {
                 // display: flex;
                 height: 100%;
             }
@@ -42,7 +42,6 @@ owl-carousel-o {
     background-position: 50% 50%;
 }
 
-
 /*====================OWL Carousel Nav=========================*/
 
 .owl-carousel .owl-nav {
@@ -57,7 +56,7 @@ owl-carousel-o {
     -ms-transform: translate(0%, -50%);
     transform: translate(0%, -50%);
 
-    [class*=owl-] {
+    [class*="owl-"] {
         outline: none;
         text-align: center;
         text-indent: inherit;
@@ -74,6 +73,9 @@ owl-carousel-o {
         &:hover {
             background-color: transparent;
             transform: scale(1.1);
+        }
+        &.disabled {
+            opacity: 0.3;
         }
     }
 
@@ -92,7 +94,8 @@ owl-carousel-o {
     margin: 15px 0 0;
     line-height: normal;
     position: relative;
-    display: inline-block;
+    display: flex;
+    justify-content: center;
     width: 100%;
     text-indent: inherit;
     text-align: center;
@@ -135,8 +138,10 @@ owl-carousel-o {
     }
 }
 
-
-.gen-style-2 {
+.caro-style-1 {
+    overflow: hidden;
+    padding-left: 25px;
+    padding-right: 25px;
     .owl-carousel .owl-nav {
         top: 27%;
 
@@ -148,5 +153,4 @@ owl-carousel-o {
             right: -25px;
         }
     }
-
 }

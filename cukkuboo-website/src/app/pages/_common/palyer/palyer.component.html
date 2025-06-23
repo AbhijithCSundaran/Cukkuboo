@@ -1,0 +1,13 @@
+<!-- <video #video controls autoplay preload="auto" 
+controlsList="nodownload nofullscreen noremoteplayback" disablePictureInPicture 
+(contextmenu)="false" width="100%" height="auto"></video> -->
+<video #video controls 
+    controlsList="nodownload noremoteplayback">
+    Your browser does not support the video tag.
+</video>
+ <button mat-icon-button matSuffix (click)="Close()">
+    <mat-icon>close</mat-icon>
+</button>
+<!-- <video #video width="100%" height="auto" [src]="videoSrc" controlsList="nodownload"
+  controls crossorigin="anonymous" (contextmenu)="onRightClick($event)"
+></video> -->

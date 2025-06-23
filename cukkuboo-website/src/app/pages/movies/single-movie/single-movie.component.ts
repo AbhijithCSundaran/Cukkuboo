@@ -4,11 +4,13 @@ import { CommonModule } from '@angular/common';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { environment } from '../../../../environments/environment';
 import { MovieService } from '../../../services/movie.service';
+import { MatDialog } from '@angular/material/dialog';
+import { PalyerComponent } from '../../_common/palyer/palyer.component';
 
 @Component({
   selector: 'app-single-movie',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, PalyerComponent],
   templateUrl: './single-movie.component.html',
   styleUrls: ['./single-movie.component.scss']
 })
@@ -100,14 +102,15 @@ export class SingleMovieComponent implements OnInit {
       image: 'assets/images/background/asset-14.jpeg'
     }
   ];
-  MovieData = {
+  MovieData: any = {
     background: 'assets/images/background/asset-1.jpeg',
     title: 'King of Skull',
     cast: 'Anna Romanson, Robert Romanson',
     rating: '12A',
     ratingImage: 'assets/images/asset-2.png',
     ratingValue: '0',
-    trailer: 'https://www.youtube.com/watch?v=LXb3EKWsInQ',
+    trailer: '1750395879_43c5c1290493bc3ce7c1.mp4',
+    video: '1750395879_43c5c1290493bc3ce7c1.mp4',
     image: 'assets/images/background/asset-1.jpeg',
     tags: ['4K Ultra', 'Brother', 'Dubbing', 'Premieres'],
     genres: ['Action', 'Animation', 'Family'],
@@ -115,6 +118,7 @@ export class SingleMovieComponent implements OnInit {
   }
   constructor(
     private route: ActivatedRoute,
+    private dialog: MatDialog,
     private snackBar: MatSnackBar,
     private movieService: MovieService,
   ) { }
@@ -142,5 +146,9 @@ export class SingleMovieComponent implements OnInit {
       },
       error: (err) => console.error(err)
     });
+  }
+  playVideo(movie: any) {
+    movie.playTrailer = false;
+    movie.playVideo = true;
   }
 }

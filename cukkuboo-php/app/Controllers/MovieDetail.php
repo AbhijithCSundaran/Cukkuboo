@@ -61,7 +61,7 @@ class MovieDetail extends ResourceController
 
             if ($this->moviedetail->addMovie($moviedata)) {
                 return $this->respond([
-                    'status' => 200,
+                    'status' => true,
                     'message' => 'Movie added successfully',
                     'data' => $moviedata
                 ]);
@@ -72,7 +72,7 @@ class MovieDetail extends ResourceController
 
             if ($this->moviedetail->updateMovie($movie_id, $moviedata)) {
                 return $this->respond([
-                    'status' => 200,
+                    'status' => true,
                     'message' => 'Movie updated successfully',
                     'data' => $moviedata
                 ]);
@@ -103,8 +103,6 @@ public function getAllMovieDetails()
             ->orLike('category', $search)
         ->groupEnd();
     }
-
-    // Check if pagination params are missing or invalid
     if (!is_numeric($pageIndex) || !is_numeric($pageSize) || $pageIndex < 0 || $pageSize <= 0) {
         $movies = $builder
             ->orderBy('mov_id', 'DESC')
@@ -118,7 +116,6 @@ public function getAllMovieDetails()
         ]);
     }
 
-    // Apply pagination
     $pageIndex = (int) $pageIndex;
     $pageSize  = (int) $pageSize;
     $offset    = $pageIndex * $pageSize;
@@ -145,7 +142,7 @@ public function getAllMovieDetails()
         $user = $this->authService->getAuthenticatedUser($authHeader);
         if(!$user) 
             return $this->failUnauthorized('Invalid or missing token.');
-    $getmoviesdetails = $this->moviedetail->getMovieDetailsById($id);
+        $getmoviesdetails = $this->moviedetail->getMovieDetailsById($id);
         return $this->response->setJSON([
             'status' => true,
             'message' => 'movie details fetched successfully.',
@@ -165,7 +162,7 @@ public function getAllMovieDetails()
         // Call model method to update the status
         if ($this->moviedetail->deleteMovieDetailsById($status, $mov_id)) {
             return $this->respond([
-                'status' => 200,
+                'status' => true,
                 'message' => "Movie with ID $mov_id marked as deleted successfully."
             ]);
         } else {
@@ -265,7 +262,7 @@ public function getAllMovieDetails()
 
     return $this->response->setJSON([
         'success' => true,
-        'data' => $latestmovies
+        'latest_movies' => $latestmovies
     ]);
 }
 public function mostWatchedMovies()
@@ -278,7 +275,7 @@ public function mostWatchedMovies()
     return $this->response->setJSON([
         'status' => true,
         'message' => 'Top 10 most watched movies fetched successfully.',
-        'data' => $movies
+        'most_Watched_movies' => $movies
     ]);
 }
 
@@ -290,29 +287,41 @@ public function mostWatchedMovies()
 
 public function latestMovies()
 {
+    $authHeader = $this->request->getHeaderLine('Authorization');
+        $user = $this->authService->getAuthenticatedUser($authHeader);
+        if (!$user) 
+            return $this->failUnauthorized('Invalid or missing token.');
     $movieModel = new \App\Models\MovieDetailsModel();
     $latestMovies = $movieModel->latestAddedMovies();
 
     return $this->response->setJSON([
         'status' => true,
         'message' => 'Latest movies fetched successfully.',
-        'data' => $latestMovies
+        'latest_movies' => $latestMovies
     ]);
 }
     public function getMostWatchMovies()
     {
+        $authHeader = $this->request->getHeaderLine('Authorization');
+        $user = $this->authService->getAuthenticatedUser($authHeader);
+        if (!$user) 
+            return $this->failUnauthorized('Invalid or missing token.');
         $movieModel = new MovieDetailsModel();
         $mostWatched = $movieModel->getMostWatchMovies();
 
         return $this->response->setJSON([
             'status'  => true,
             'message' => 'Most watched movies fetched successfully.',
-            'data'    => $mostWatched
+            'most_watch_movies' => $mostWatched
         ]);
     }
-public function countActiveMovies()
+    public function countActiveMovies()
     {
-        $movieModel = new MoviesModel();
+        $authHeader = $this->request->getHeaderLine('Authorization');
+        $user = $this->authService->getAuthenticatedUser($authHeader);
+        if (!$user) 
+            return $this->failUnauthorized('Invalid or missing token.');
+        $movieModel = new MovieDetailsModel();
         $activeCount = $movieModel->countActiveMovies();
 
         return $this->respond([
@@ -320,5 +329,101 @@ public function countActiveMovies()
             'active_movie_count' => $activeCount
         ]);
     }
+    public function countInactiveMovie()
+    {
+        $authHeader = $this->request->getHeaderLine('Authorization');
+        $user = $this->authService->getAuthenticatedUser($authHeader);
+        if (!$user) 
+            return $this->failUnauthorized('Invalid or missing token.');
+        $movieModel = new MovieDetailsModel();
+        $inactiveCount = $movieModel->countInactiveMovies();
+
+        return $this->respond([
+            'status' => true,
+            'In_active_movie_count' => $inactiveCount
+        ]);
+    }
+
+    public function getUserHomeData()
+    {
+        $authHeader = $this->request->getHeaderLine('Authorization');
+        $user = $this->authService->getAuthenticatedUser($authHeader);
+        if (!$user) 
+            return $this->failUnauthorized('Invalid or missing token.');
+        
+        return $this->respond([
+            'success' => true,
+            'message' => true,
+            'data' => [
+                'active_movie_count' => $this->moviedetail->countActiveMovies(),
+                'In_active_movie_count' => $this->moviedetail->countInactiveMovies(),
+                'latest_movies' => [
+                    'heading' => 'Latest Movies',
+                    'data' => $this->moviedetail->latestMovies()
+                ],
+                'most_watch_movies' => [
+                    'heading' => 'Most Watched Movies',
+                    'data' => $this->moviedetail->getMostWatchMovies()
+                ]
+            ]
+        ]);
+    }
+    public function getAdminDashBoardData()
+    {
+        $authHeader = $this->request->getHeaderLine('Authorization');
+        $user = $this->authService->getAuthenticatedUser($authHeader);
+        if (!$user) 
+            return $this->failUnauthorized('Invalid or missing token.');
+        
+        return $this->respond([
+            'success' => true,
+            'message' => true,
+            'data' => [
+                
+                'active_movie_count' => $this->moviedetail->countActiveMovies(),
+                'In_active_movie_count' => $this->moviedetail->countInactiveMovies(),
+            ]
+        ]);
+    }
+// ------------------------------------Related Movies Display---------------------------
+
+public function getRelatedMovies($id)
+{
+    $authHeader = $this->request->getHeaderLine('Authorization');
+    $user = $this->authService->getAuthenticatedUser($authHeader);
+
+    if (!$user) {
+        return $this->failUnauthorized('Invalid or missing token.');
+    }
+
+    // Get current movie
+    $currentMovie = $this->moviedetail->find($id);
+    if (!$currentMovie) {
+        return $this->response->setJSON([
+            'status' => false,
+            'message' => 'Movie not found.',
+            'data' => []
+        ]);
+    }
+
+    // Pagination
+    $pageIndex = (int) $this->request->getGet('pageIndex', FILTER_VALIDATE_INT);
+    $pageSize  = (int) $this->request->getGet('pageSize', FILTER_VALIDATE_INT);
+    $offset = $pageIndex * $pageSize;
+
+    // Build query
+    $queryBuilder = $this->moviedetail->getRelatedMoviesQuery($currentMovie, $id);
+
+    $relatedMovies = $queryBuilder
+                        ->orderBy('mov_id', 'DESC')
+                        ->get($pageSize, $offset)
+                        ->getResultArray();
+
+    return $this->response->setJSON([
+        'status' => true,
+        'message' => 'Related movies fetched successfully.',
+        'data' => $relatedMovies
+    ]);
+}
 
 }

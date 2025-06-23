@@ -51,6 +51,14 @@ $routes->get('movies/most-watched', 'MovieDetail::mostWatchedMovies');
 $routes->get('movies/latestmovies', 'MovieDetail::latestMovies');
 $routes->get('movies/mostwatchmovie', 'MovieDetail::getMostWatchMovies');
 $routes->get('user/count-user', 'User::countActiveUsers');
+$routes->get('movies/countActive', 'MovieDetail::countActiveMovies');
+$routes->get('movies/countInActive', 'MovieDetail::countInactiveMovie');
+
+$routes->get('movies/dashboard', 'MovieDetail::getAdminDashBoardData');
+$routes->get('movies/userDashboard', 'MovieDetail::getUserHomeData');
+
+$routes->get('movies/related/(:num)', 'MovieDetail::getRelatedMovies/$1');
+
 
 //Home Display
 
@@ -84,11 +92,17 @@ $routes->delete('notification/delete/(:num)', 'Notification::delete/$1'); // sof
 $routes->post('notification/markall', 'Notification::markAllAsReadOrUnread'); // mark as read);
 $routes->get('notification/get/(:num)', 'Notification::getById/$1');
 
+// Watched history
+
 $routes->post('resume/saveprogress', 'Resume::saveProgress');
 $routes->get('resume/viewhistory', 'Resume::viewHistory');
 
+//Save Completed History
+
 $routes->post('savehistory/save', 'Savehistory::saveMovie');
 $routes->get('savehistory/history', 'Savehistory::saveHistory');
+
+//Video Count
 
 $routes->post('video/videoview', 'VideoView::viewVideo');
 

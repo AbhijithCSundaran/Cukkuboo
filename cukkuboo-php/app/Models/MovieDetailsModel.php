@@ -7,7 +7,7 @@ use CodeIgniter\Model;
 class MovieDetailsModel extends Model
 {
     protected $table = 'movies_details'; 
-
+    protected $primaryKey = 'mov_id';
     protected $allowedFields = [
         'video', 'title', 'genre', 'description', 'cast_details', 'category',
         'release_date', 'age_rating', 'access', 'status', 'thumbnail', 'trailer', 'banner', 'duration', 'rating', 'user_type', 
@@ -108,20 +108,20 @@ public function getMostWatchedMovies()
                 ->findAll();
 }
 
+// -------------------------------------Admin home Dispaly----------------------------------------
 
-
-public function latestAddedMovies()
-{
-    return $this->select('title, release_date')
+    public function latestAddedMovies()
+    {
+        return $this->select('title, release_date')
                 ->where('status', 1)
                 ->where('release_date <=', date('Y-m-d'))
                 ->orderBy('created_on', 'DESC')
                 ->limit(10)
                 ->findAll();
-}
+    }
 
 
- public function getMostWatchMovies()
+    public function getMostWatchMovies()
     {
         return $this->select('title,views')  
                     ->where('status', 1)
@@ -129,5 +129,46 @@ public function latestAddedMovies()
                     ->limit(10)
                     ->findAll();
     }
+    public function countActiveMovies()
+    {
+        return $this->where('status', 1)->countAllResults();
+    }
+    public function countInactiveMovies()
+    {
+        return $this->where('status', 2)->countAllResults();
+    }
 
+    // --------------------------------Related Movies Display-----------------------------------------
+    public function getRelatedMoviesQuery($currentMovie, $excludeId)
+    {
+    $builder = $this->builder()
+                    ->where('status !=', 9)
+                    ->where('mov_id !=', $excludeId);
+
+    $title        = $currentMovie['title'] ?? '';
+    $category     = $currentMovie['category'] ?? '';
+    $age_rating   = $currentMovie['age_rating'] ?? '';
+    $cast_details = $currentMovie['cast_details'] ?? '';
+
+   
+    $actors = array_filter(array_map('trim', explode(',', $cast_details)));
+
+    $builder->groupStart();
+    if ($category) {
+        $builder->orLike('category', $category);
+    }
+    if ($title) {
+        $builder->orLike('title', $title);
+    }
+    if ($age_rating) {
+        $builder->orLike('age_rating', $age_rating);
+    }
+    foreach ($actors as $actor) {
+        $builder->orLike('cast_details', $actor);
+    }
+    $builder->groupEnd();
+
+    return $builder;
 }
+}
+

@@ -103,8 +103,6 @@ public function getAllMovieDetails()
             ->orLike('category', $search)
         ->groupEnd();
     }
-
-    // Check if pagination params are missing or invalid
     if (!is_numeric($pageIndex) || !is_numeric($pageSize) || $pageIndex < 0 || $pageSize <= 0) {
         $movies = $builder
             ->orderBy('mov_id', 'DESC')
@@ -118,7 +116,6 @@ public function getAllMovieDetails()
         ]);
     }
 
-    // Apply pagination
     $pageIndex = (int) $pageIndex;
     $pageSize  = (int) $pageSize;
     $offset    = $pageIndex * $pageSize;
@@ -388,6 +385,45 @@ public function latestMovies()
             ]
         ]);
     }
+// ------------------------------------Related Movies Display---------------------------
 
+public function getRelatedMovies($id)
+{
+    $authHeader = $this->request->getHeaderLine('Authorization');
+    $user = $this->authService->getAuthenticatedUser($authHeader);
+
+    if (!$user) {
+        return $this->failUnauthorized('Invalid or missing token.');
+    }
+
+    // Get current movie
+    $currentMovie = $this->moviedetail->find($id);
+    if (!$currentMovie) {
+        return $this->response->setJSON([
+            'status' => false,
+            'message' => 'Movie not found.',
+            'data' => []
+        ]);
+    }
+
+    // Pagination
+    $pageIndex = (int) $this->request->getGet('pageIndex', FILTER_VALIDATE_INT);
+    $pageSize  = (int) $this->request->getGet('pageSize', FILTER_VALIDATE_INT);
+    $offset = $pageIndex * $pageSize;
+
+    // Build query
+    $queryBuilder = $this->moviedetail->getRelatedMoviesQuery($currentMovie, $id);
+
+    $relatedMovies = $queryBuilder
+                        ->orderBy('mov_id', 'DESC')
+                        ->get($pageSize, $offset)
+                        ->getResultArray();
+
+    return $this->response->setJSON([
+        'status' => true,
+        'message' => 'Related movies fetched successfully.',
+        'data' => $relatedMovies
+    ]);
+}
 
 }

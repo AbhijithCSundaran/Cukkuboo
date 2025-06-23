@@ -13,22 +13,24 @@ class VideoviewModel extends Model
     {
         return $this->db->table($this->table)
             ->where(['user_id' => $userId, 'mov_id' => $movieId])
-            ->get()->getRowArray();
+            ->get()
+            ->getRowArray();
     }
 
     public function insertUserView($data)
     {
         return $this->db->table($this->table)->insert($data);
     }
-public function updateUserView($userId, $movieId)
-{
-    return $this->db->table($this->table)
-        ->where(['user_id' => $userId, 'mov_id' => $movieId])
-        ->update([
-            'modify_on' => date('Y-m-d H:i:s'),
-            'modify_by' => $userId
-        ]);
-}
+
+    public function updateUserView($userId, $movieId)
+    {
+        return $this->db->table($this->table)
+            ->where(['user_id' => $userId, 'mov_id' => $movieId])
+            ->update([
+                'modify_on' => date('Y-m-d H:i:s'),
+                'modify_by' => $userId
+            ]);
+    }
 
     public function updateVideoViewCount($movieId)
     {
@@ -40,5 +42,4 @@ public function updateUserView($userId, $movieId)
             ->where('mov_id', $movieId)
             ->update(['views' => $views]);
     }
-    
 }

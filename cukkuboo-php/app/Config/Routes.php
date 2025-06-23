@@ -54,9 +54,11 @@ $routes->get('user/count-user', 'User::countActiveUsers');
 $routes->get('movies/countActive', 'MovieDetail::countActiveMovies');
 $routes->get('movies/countInActive', 'MovieDetail::countInactiveMovie');
 
+$routes->get('movies/dashboard', 'MovieDetail::getAdminDashBoardData');
+$routes->get('movies/userDashboard', 'MovieDetail::getUserHomeData');
 
-$routes->get('movies/Dashboard', 'MovieDetail::getAdminDashBoardData');
-$routes->get('movies/UserDashboard', 'MovieDetail::getUserHomeData');
+$routes->get('movies/related/(:num)', 'MovieDetail::getRelatedMovies/$1');
+
 
 //Home Display
 

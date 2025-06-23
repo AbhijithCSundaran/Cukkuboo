@@ -10,3 +10,26 @@
     }
   }
 }
+.store-logo-wrapper {
+  width: 160px;
+  height: 50px;
+  display: inline-block;
+  overflow: hidden;
+  margin-right: 10px;
+}
+
+.store-logo-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+.playstore-logo {
+  transform: scale(1.4); 
+}
+
+
+.appstore-logo {
+  transform: scale(0.95);
+}

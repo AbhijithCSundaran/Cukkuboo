@@ -8,10 +8,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { ValidationMessagesComponent } from '../../core/components/validation-messsage/validaation-message.component';
-import { SignInService } from '../../sign-in.service';
+import { SignInService } from '../../services/sign-in.service';
 import { Router } from '@angular/router';
 import { RouterModule } from '@angular/router';
-import { PlanService } from '../../plan.service';
+import { PlanService } from '../../services/plan.service';
 
 @Component({
   selector: 'app-sign-up',

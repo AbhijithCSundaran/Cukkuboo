@@ -34,7 +34,10 @@ get token() {
 
 
 
-
+getHomeData(): Observable<any> {
+  return this.http.get(`${this.apiUrl}movies/userDashboard`, {  headers: this.headers
+  });
+}
 
 
 }

@@ -19,15 +19,10 @@ class ReelView extends ResourceController
 
     public function viewReel()
     {
-        $headers = $this->request->getHeaders();
+        $authHeader = $this->request->getHeaderLine('Authorization');
 
-        if (!isset($headers['Authorization'])) {
-            return $this->failUnauthorized('Authorization header missing');
-        }
-
-        $authHeader = $headers['Authorization']->getValue();
-        if (!preg_match('/Bearer\s(\S+)/', $authHeader, $matches)) {
-            return $this->failUnauthorized('Invalid authorization header format');
+        if (!$authHeader || !preg_match('/Bearer\s(\S+)/', $authHeader, $matches)) {
+            return $this->failUnauthorized('Invalid or missing Authorization header');
         }
 
         $token = $matches[1];
@@ -37,36 +32,42 @@ class ReelView extends ResourceController
             return $this->failUnauthorized('Invalid or expired token');
         }
 
-        $data = $this->request->getJSON(true);
-        $userId  = $data['user_id'];
-        $reelsId = $data['reels_id'];
-        $status  = $data['status']; // status = 1 means viewed
+        $userIdFromToken = $decodedData->user_id ?? $decodedData->data->user_id ?? null;
 
-        if ($userId != $decodedData->user_id) {
+        $data = $this->request->getJSON(true);
+        $userId  = $data['user_id'] ?? null;
+        $reelId  = $data['reels_id'] ?? null;
+        $status  = $data['status'] ?? null;
+
+        if (!$userId || !$reelId || $status != 1) {
+            return $this->failValidationError('Invalid or missing data');
+        }
+
+        if ($userId != $userIdFromToken) {
             return $this->failUnauthorized('User ID mismatch');
         }
 
-        if ($status != 1) {
-            return $this->failValidationError('Invalid status value for view');
+        $existing = $this->reelViewModel->getUserReelView($userId, $reelId);
+
+        if (!$existing) {
+            // First time view → insert and count
+            $this->reelViewModel->insertUserView([
+                'user_id'    => $userId,
+                'reels_id'   => $reelId,
+                'status'     => $status,
+                'created_on' => date('Y-m-d H:i:s'),
+                'created_by' => $userId
+            ]);
+
+            $this->reelViewModel->updateReelViewCount($reelId);
+        } else {
+            // Already viewed → update timestamp
+            $this->reelViewModel->updateUserView($userId, $reelId);
         }
 
-        $existing = $this->reelViewModel->getUserReelView($userId, $reelsId);
-if (!$existing) {
-    // First time view → insert and count
-    $this->reelViewModel->insertUserView([
-        'user_id' => $userId,
-        'reels_id' => $reelsId,
-        'status' => $status,
-        'created_on' => date('Y-m-d H:i:s'),
-        'created_by' => $userId
-    ]);
-
-    $this->reelViewModel->updateReelViewCount($reelsId);
-} else {
-    // Already viewed → update modified_by/on, but no count increment
-    $this->reelViewModel->updateUserView($userId, $reelsId);
-}
-
-        return $this->respond(['success' => true, 'message' => 'Reel viewed']);
+        return $this->respond([
+            'success' => true,
+            'message' => 'Reel viewed'
+        ]);
     }
 }

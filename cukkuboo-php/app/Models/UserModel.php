@@ -26,16 +26,17 @@ class UserModel extends Model
         'updated_by',
         'updated_at',
         'date_of_birth',
-        'email_preference'];
+        'email_preference'
+    ];
+
 
     public function isUserExists($phone = null, $email = null)
-    {
-        return $this->groupStart()
-                    ->where('phone', $phone)
-                    ->orWhere('email', $email)
-                    ->groupEnd()
-                    ->first();
-    }
+{
+    return $this->where('phone', $phone)
+                ->orWhere('email', $email)
+                ->first();
+}
+
 
     public function addUser($data)
     {

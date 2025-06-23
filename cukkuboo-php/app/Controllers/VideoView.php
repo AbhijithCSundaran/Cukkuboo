@@ -4,45 +4,41 @@ namespace App\Controllers;
 
 use CodeIgniter\RESTful\ResourceController;
 use App\Models\VideoviewModel;
-use App\Libraries\Jwt;
+use App\Models\UserModel;
+use App\Libraries\AuthService;
 
 class VideoView extends ResourceController
 {
     protected $videoviewModel;
-    protected $jwt;
+    protected $userModel;
+    protected $authService;
 
     public function __construct()
     {
         $this->videoviewModel = new VideoviewModel();
-        $this->jwt = new Jwt();
+        $this->userModel = new UserModel();	
+        $this->authService = new AuthService();
     }
 
     public function viewVideo()
     {
-        $headers = $this->request->getHeaders();
+        $authHeader = $this->request->getHeaderLine('Authorization');
+        $user = $this->authService->getAuthenticatedUser($authHeader);
 
-        if (!isset($headers['Authorization'])) {
-            return $this->failUnauthorized('Authorization header missing');
-        }
-
-        $authHeader = $headers['Authorization']->getValue();
-        if (!preg_match('/Bearer\s(\S+)/', $authHeader, $matches)) {
-            return $this->failUnauthorized('Invalid authorization header format');
-        }
-
-        $token = $matches[1];
-        $decodedData = $this->jwt->decode($token);
-
-        if (!$decodedData) {
-            return $this->failUnauthorized('Invalid or expired token');
+        if (!$user) {
+            return $this->failUnauthorized('Invalid or missing token.');
         }
 
         $data = $this->request->getJSON(true);
-        $userId  = $data['user_id'];
-        $movieId = $data['mov_id'];
-        $status  = $data['status']; // status = 1 means viewed
+        $userId  = $data['user_id'] ?? null;
+        $movieId = $data['mov_id'] ?? null;
+        $status  = $data['status'] ?? null;
 
-        if ($userId != $decodedData->user_id) {
+        if (!$userId || !$movieId || !isset($status)) {
+            return $this->failValidationError('Missing required fields.');
+        }
+
+        if ($userId != $user['user_id']) {
             return $this->failUnauthorized('User ID mismatch');
         }
 
@@ -51,24 +47,24 @@ class VideoView extends ResourceController
         }
 
         $existing = $this->videoviewModel->getUserVideoView($userId, $movieId);
-if (!$existing) {
-    // First time view → insert and count
-    $this->videoviewModel->insertUserView([
-        'user_id' => $userId,
-        'mov_id' => $movieId,
-        'status' => $status,
-        'created_on' => date('Y-m-d H:i:s'),
-        'created_by' => $userId
-    ]);
 
-    $this->videoviewModel->updateVideoViewCount($movieId);
-} else {
-    // Already viewed → update modified_by/on, but no count increment
-    $this->videoviewModel->updateUserView($userId, $movieId);
-}
+        if (!$existing) {
+            $this->videoviewModel->insertUserView([
+                'user_id'    => $userId,
+                'mov_id'     => $movieId,
+                'status'     => $status,
+                'created_on' => date('Y-m-d H:i:s'),
+                'created_by' => $userId
+            ]);
 
-        return $this->respond(['success' => true, 
-                                'message' => 'Movie viewed'
+            $this->videoviewModel->updateVideoViewCount($movieId);
+        } else {
+            $this->videoviewModel->updateUserView($userId, $movieId);
+        }
+
+        return $this->respond([
+            'success' => true,
+            'message' => 'Movie viewed'
         ]);
     }
 }

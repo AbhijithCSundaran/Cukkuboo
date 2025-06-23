@@ -16,8 +16,6 @@ import { PalyerComponent } from '../../_common/palyer/palyer.component';
 })
 export class SingleMovieComponent implements OnInit {
   movie: any;
-  video: string = '';
-  thumbnail: string = '';
   videoUrl = environment.apiUrl + 'uploads/videos/';
   imageUrl = environment.apiUrl + 'uploads/images/';
   suggetionList: any[] = [
@@ -102,41 +100,40 @@ export class SingleMovieComponent implements OnInit {
       image: 'assets/images/background/asset-14.jpeg'
     }
   ];
-  MovieData: any = {
-    background: 'assets/images/background/asset-1.jpeg',
-    title: 'King of Skull',
-    cast: 'Anna Romanson, Robert Romanson',
-    rating: '12A',
-    ratingImage: 'assets/images/asset-2.png',
-    ratingValue: '0',
-    trailer: '1750395879_43c5c1290493bc3ce7c1.mp4',
-    video: '1750395879_43c5c1290493bc3ce7c1.mp4',
-    image: 'assets/images/background/asset-1.jpeg',
-    tags: ['4K Ultra', 'Brother', 'Dubbing', 'Premieres'],
-    genres: ['Action', 'Animation', 'Family'],
-    tagline: 'Most Viewed'
-  }
+
   constructor(
     private route: ActivatedRoute,
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
     private movieService: MovieService,
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
-    if (id)
-      this.getMovie(id)
+    if (id) this.getMovie(id);
   }
 
-  getMovie(id: any) {
+  getMovie(id: number): void {
     this.movieService.getMovieById(id).subscribe({
       next: (res) => {
-        // console.log('Movie Data:', res);
-        if (res.data) {
-          this.movie = res.data;
-        }
-        else {
+        if (res?.data) {
+          const data = Array.isArray(res.data) ? res.data[0] : res.data;
+          console.log('Movie Response:', data);
+
+          this.movie = {
+            ...data,
+            title: data.title || 'Untitled Movie',
+            image: this.imageUrl + (data.thumbnail || 'default-thumb.jpg'),
+            background: this.imageUrl + (data.banner || 'default-banner.jpg'),
+            trailer: this.videoUrl + (data.trailer || ''),
+            video: this.videoUrl + (data.video || ''),
+            cast_details: data.cast_details || data.cast || 'N/A',
+            duration: data.duration || 'Unknown',
+            release_date: data.release_date || 'Unknown',
+            playTrailer: false,
+            playVideo: false
+          };
+        } else {
           this.snackBar.open('Failed to load movie.', '', {
             duration: 3000,
             verticalPosition: 'top',
@@ -144,10 +141,18 @@ export class SingleMovieComponent implements OnInit {
           });
         }
       },
-      error: (err) => console.error(err)
+      error: (err) => {
+        console.error(err);
+        this.snackBar.open('Error loading movie data.', '', {
+          duration: 3000,
+          verticalPosition: 'top',
+          panelClass: ['snackbar-error']
+        });
+      }
     });
   }
-  playVideo(movie: any) {
+
+  playVideo(movie: any): void {
     movie.playTrailer = false;
     movie.playVideo = true;
   }

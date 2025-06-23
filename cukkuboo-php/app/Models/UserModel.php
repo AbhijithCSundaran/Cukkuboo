@@ -29,6 +29,7 @@ class UserModel extends Model
         'email_preference'
     ];
 
+
     public function isUserExists($phone = null, $email = null)
 {
     return $this->where('phone', $phone)

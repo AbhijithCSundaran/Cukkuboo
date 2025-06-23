@@ -2687,13 +2687,15 @@ header#gen-header.gen-header-default .gen-menu-search-block {
 }
 
 .gen-account-holder a#gen-user-btn {
-    height: 45px;
-    width: 45px;
-    line-height: 45px;
+    height: 30px;
+    width: 30px;
+    line-height: 1;
     text-align: center;
     background: var(--primary-color);
     color: var(--white-color);
-    display: inline-block;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     border-radius: 90px;
 }
 
@@ -2712,7 +2714,7 @@ header#gen-header.gen-header-default .gen-menu-search-block {
 }
 
 .gen-account-holder .gen-account-menu.gen-form-show {
-    display: inline-block;
+    display: flex;
 }
 
 .gen-account-holder .gen-account-menu ul {

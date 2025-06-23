@@ -2,8 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { SignInService } from '../../sign-in.service';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -11,6 +10,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { ValidationMessagesComponent } from '../../core/components/validation-messsage/validaation-message.component';
 import { CommonModule } from '@angular/common';
+import { StorageService } from '../../core/services/TempStorage/storageService';
+import { UserService } from '../../services/user/user.service';
 
 @Component({
   selector: 'app-sign-in',
@@ -25,19 +26,20 @@ import { CommonModule } from '@angular/common';
     MatCheckboxModule,
     MatButtonModule,
     MatIconModule,
-    MatSnackBarModule,
+    MatSnackBarModule,RouterLink,
     ValidationMessagesComponent
   ]
 })
 export class SignInComponent {
   loginForm: FormGroup;
   loading = false;
-  hide = true; 
+  hide = true;
 
   constructor(
     private fb: FormBuilder,
     private snackBar: MatSnackBar,
-    private signInService: SignInService,
+    private userService: UserService,
+    private storageService: StorageService,
     private router: Router
   ) {
     this.loginForm = this.fb.group({
@@ -54,13 +56,15 @@ export class SignInComponent {
   onSubmit(): void {
     if (this.loginForm.valid) {
       const model = this.loginForm.value;
-      this.signInService.login(model).subscribe({
+      this.userService.login(model).subscribe({
         next: (response) => {
           console.log('response from login:', response);
 
           if (response.status) {
             if (response.user.user_type === 'Customer') {
               localStorage.setItem('token', response.user?.jwt_token);
+              this.storageService.updateItem('username', response.user?.name || 'User');
+              this.storageService.updateItem('token', response.user?.jwt_token || 'token');
               this.snackBar.open('Login successful', '', {
                 duration: 3000,
                 verticalPosition: 'top',

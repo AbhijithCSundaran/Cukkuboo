@@ -2070,7 +2070,8 @@ Breadcrum
     text-align: center;
     position: relative;
     background-attachment: fixed !important;
-    background-size: cover !important;
+    background-size: contain !important;
+    background-position: center;
 }
 
 .gen-breadcrumb:before {

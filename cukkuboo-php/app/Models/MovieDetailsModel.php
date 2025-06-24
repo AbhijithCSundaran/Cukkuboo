@@ -43,22 +43,34 @@ public function deleteMovieDetailsById($status, $mov_id)
            
   public function getFeaturedMovies()
 {
-    return $this->where('status', 1)
-                ->where('release_date <=', date('Y-m-d')) // compare against today's date
-                ->orderBy('created_on', 'DESC')
-                ->limit(5)
-                ->findAll();
+    $results = $this->where('status', 1)
+                    ->where('release_date <=', date('Y-m-d'))
+                    ->orderBy('rating', 'DESC')
+                    ->limit(5)
+                    ->findAll();
+
+    foreach ($results as &$row) {
+        unset($row['video']);
+    }
+
+    return $results;
 }
 
-
-     public function getTrendingMovies()
+    public function getTrendingMovies()
 {
-    return $this->where('status', 1)
-                ->where('release_date <=', date('Y-m-d')) // optional: exclude future movies
-                ->orderBy('rating', 'DESC')
-                ->limit(5)
-                ->findAll();
+    $results = $this->where('status', 1)
+                    ->where('release_date <=', date('Y-m-d'))
+                    ->orderBy('rating', 'DESC')
+                    ->limit(5)
+                    ->findAll();
+
+    foreach ($results as &$row) {
+        unset($row['video']);
+    }
+
+    return $results;
 }
+
 
   public function getMoviesWithLimit($limit, $offset)
 {
@@ -91,22 +103,36 @@ public function countAllMovies()
 // }
 public function latestMovies()
 {
-    return $this->db->table($this->table)
+    $results = $this->db->table($this->table)
         ->where('status', 1)
-        ->where('release_date <=', date('Y-m-d')) 
-        ->orderBy('created_on', 'DESC')          
+        ->where('release_date <=', date('Y-m-d'))
+        ->orderBy('created_on', 'DESC')
         ->limit(10)
         ->get()
         ->getResultArray();
+
+    foreach ($results as &$row) {
+        unset($row['video']);
+    }
+
+    return $results;
 }
+
 
 public function getMostWatchedMovies()
 {
-    return $this->where('status', 1) 
-                ->orderBy('views', 'DESC')
-                ->limit(10)
-                ->findAll();
+    $results = $this->where('status', 1)
+                    ->orderBy('views', 'DESC')
+                    ->limit(10)
+                    ->findAll();
+
+    foreach ($results as &$row) {
+        unset($row['video']);
+    }
+
+    return $results;
 }
+
 
 // -------------------------------------Admin home Dispaly----------------------------------------
 

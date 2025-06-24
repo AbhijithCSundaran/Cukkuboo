@@ -61,7 +61,7 @@ class MovieDetail extends ResourceController
 
             if ($this->moviedetail->addMovie($moviedata)) {
                 return $this->respond([
-                    'status' => true,
+                    'success' => true,
                     'message' => 'Movie added successfully',
                     'data' => $moviedata
                 ]);
@@ -72,7 +72,7 @@ class MovieDetail extends ResourceController
 
             if ($this->moviedetail->updateMovie($movie_id, $moviedata)) {
                 return $this->respond([
-                    'status' => true,
+                    'success' => true,
                     'message' => 'Movie updated successfully',
                     'data' => $moviedata
                 ]);
@@ -96,11 +96,19 @@ public function getAllMovieDetails()
     $builder = $this->moviedetail->where('status !=', 9);
 
     if (!empty($search)) {
+        $search = preg_replace('/\s+/', ' ', $search);
+        $searchWildcard = '%' . str_replace(' ', '%', $search) . '%';
+        // $builder->groupStart()
+        //     ->like('title', $search)
+        //     ->orLike('genre', $search)
+        //     ->orLike('cast_details', $search)
+        //     ->orLike('category', $search)
+        // ->groupEnd();
         $builder->groupStart()
-            ->like('title', $search)
-            ->orLike('genre', $search)
-            ->orLike('cast_details', $search)
-            ->orLike('category', $search)
+            ->like('LOWER(title)', strtolower($searchWildcard))
+            ->orLike('LOWER(genre)', strtolower($searchWildcard))
+            ->orLike('LOWER(cast_details)', strtolower($searchWildcard))
+            ->orLike('LOWER(category)', strtolower($searchWildcard))
         ->groupEnd();
     }
     if (!is_numeric($pageIndex) || !is_numeric($pageSize) || $pageIndex < 0 || $pageSize <= 0) {
@@ -109,7 +117,7 @@ public function getAllMovieDetails()
             ->findAll();
 
         return $this->response->setJSON([
-            'status' => true,
+            'success' => true,
             'message' => 'All movies fetched (no pagination).',
             'data' => $movies,
             'total' => count($movies)
@@ -128,7 +136,7 @@ public function getAllMovieDetails()
         ->findAll($pageSize, $offset);
 
     return $this->response->setJSON([
-        'status' => true,
+        'success' => true,
         'message' => 'Paginated movies fetched successfully.',
         'data' => $movies,
         'total' => $total
@@ -144,7 +152,7 @@ public function getAllMovieDetails()
             return $this->failUnauthorized('Invalid or missing token.');
         $getmoviesdetails = $this->moviedetail->getMovieDetailsById($id);
         return $this->response->setJSON([
-            'status' => true,
+            'success' => true,
             'message' => 'movie details fetched successfully.',
             'data' => $getmoviesdetails
         ]);
@@ -162,7 +170,7 @@ public function getAllMovieDetails()
         // Call model method to update the status
         if ($this->moviedetail->deleteMovieDetailsById($status, $mov_id)) {
             return $this->respond([
-                'status' => true,
+                'success' => true,
                 'message' => "Movie with ID $mov_id marked as deleted successfully."
             ]);
         } else {
@@ -183,103 +191,72 @@ public function getAllMovieDetails()
 
 
    public function homeDisplay()
-    {
-        $movieModel = new MovieDetailsModel();
+{
+    $movieModel = new MovieDetailsModel();
 
-        $featured = $movieModel->getFeaturedMovies();
-        $trending = $movieModel->getTrendingMovies();
+    $featuredRaw = $movieModel->getFeaturedMovies();
+    $trendingRaw = $movieModel->getTrendingMovies();
 
-        // Dummy resume watching data — replace with actual user progress logic
-        // $resumeWatching = [
-        //     [
-        //         "id" => "series_123",
-        //         "title" => "Narcos",
-        //         "poster" => "https://cdn.cukkuboo.com/posters/narcos.jpg",
-        //         "progress" => 0.65,
-        //         "episode" => "S01E02",
-        //         "duration" => "55m"
-        //     ]
-        // ];
+    $featured = array_map([$this, 'formatMovie'], $featuredRaw);
+    $trending = array_map([$this, 'formatTrending'], $trendingRaw);
 
-        return $this->respond([
-            'success' => true,
-            'data' => [
-                'featured' =>  $featured,
-                // 'resume_watching' => $resumeWatching,
-                'trending_now' =>  $trending,
-            ]
-        ]);
-    }
+    return $this->respond([
+        'success' => true,
+        'data' => [
+            'list_1' => $featured,
+            'list_2' => $trending,
+        ]
+    ]);
+}
+
 
     private function formatMovie($movie)
-    {
-        // print_r($movie);
-        // exit;
-        return [
-            'mov_id' => $movie['mov_id'],
-            'video' => $movie['video'],
-            'title' => $movie['title'],
-            'cast_details' => $movie['cast_details'],
-            'category' => $movie['category'],
-            'release_date' => $movie['release_date'],
-            'age_rating' => $movie['age_rating'],
-            'access' => $movie['access'],
-            'trailer' => $movie['trailer'],
-            'banner' => $movie['banner'],
-            'thumbnail' => $movie['thumbnail'],
-            'rating' => (float) $movie['rating'],
-            'duration' => $movie['duration'],
-            'genre' => explode(',', $movie['genre']),
-            'description' => $movie['description']
-        ];
-    }
-
-    private function formatTrending($movie)
-    {
-        return [
-            'mov_id' => $movie['mov_id'],
-            'video' => $movie['video'],
-            'title' => $movie['title'],
-            'cast_details' => $movie['cast_details'],
-            'category' => $movie['category'],
-            'release_date' => $movie['release_date'],
-            'age_rating' => $movie['age_rating'],
-            'access' => $movie['access'],
-            'trailer' => $movie['trailer'],
-            'banner' => $movie['banner'],
-            'thumbnail' => $movie['thumbnail'],
-            'rating' => (float) $movie['rating'],
-            'duration' => $movie['duration'],
-            'genre' => explode(',', $movie['genre']),
-            'description' => $movie['description']
-        ];
-    }
+{
+    return [
+        'mov_id' => $movie['mov_id'],
+        'title' => $movie['title'],
+        'cast_details' => $movie['cast_details'],
+        'category' => $movie['category'],
+        'release_date' => $movie['release_date'],
+        'age_rating' => $movie['age_rating'],
+        'access' => $movie['access'],
+        'trailer' => $movie['trailer'],
+        'banner' => $movie['banner'],
+        'thumbnail' => $movie['thumbnail'],
+        'rating' => (float) $movie['rating'],
+        'duration' => $movie['duration'],
+        'genre' => explode(',', $movie['genre']),
+        'description' => $movie['description']
+    ];
+}
 
  public function getLatestMovies()
 {
     $movieModel = new \App\Models\MovieDetailsModel();
-    $latestmovies = $movieModel->latestMovies();
+    $latestRaw = $movieModel->latestMovies();
+
+    $latest = array_map([$this, 'formatMovie'], $latestRaw);
 
     return $this->response->setJSON([
         'success' => true,
-        'latest_movies' => $latestmovies
+        'message'=>'success',
+        'data' => $latest
     ]);
 }
+
 public function mostWatchedMovies()
 {
-    
     $movieModel = new MovieDetailsModel();
+    $moviesRaw = $movieModel->getMostWatchedMovies(); 
 
-    $movies = $movieModel->getMostWatchedMovies(); 
+    $movies = array_map([$this, 'formatMovie'], $moviesRaw);
 
     return $this->response->setJSON([
-        'status' => true,
+        'success' => true,
         'message' => 'Top 10 most watched movies fetched successfully.',
-        'most_Watched_movies' => $movies
+        'data' => $movies
     ]);
 }
-
-
 
 
 
@@ -295,9 +272,9 @@ public function latestMovies()
     $latestMovies = $movieModel->latestAddedMovies();
 
     return $this->response->setJSON([
-        'status' => true,
+        'success' => true,
         'message' => 'Latest movies fetched successfully.',
-        'latest_movies' => $latestMovies
+        'data' => $latestMovies
     ]);
 }
     public function getMostWatchMovies()
@@ -310,9 +287,9 @@ public function latestMovies()
         $mostWatched = $movieModel->getMostWatchMovies();
 
         return $this->response->setJSON([
-            'status'  => true,
+            'success'  => true,
             'message' => 'Most watched movies fetched successfully.',
-            'most_watch_movies' => $mostWatched
+            'data' => $mostWatched
         ]);
     }
     public function countActiveMovies()
@@ -325,8 +302,9 @@ public function latestMovies()
         $activeCount = $movieModel->countActiveMovies();
 
         return $this->respond([
-            'status' => true,
-            'active_movie_count' => $activeCount
+            'success' => true,
+            'message'=>'success',
+            'data' => $activeCount
         ]);
     }
     public function countInactiveMovie()
@@ -339,42 +317,45 @@ public function latestMovies()
         $inactiveCount = $movieModel->countInactiveMovies();
 
         return $this->respond([
-            'status' => true,
-            'In_active_movie_count' => $inactiveCount
+            'success' => true,
+            'message'=>'success',
+            'data' => $inactiveCount
         ]);
     }
 
     public function getUserHomeData()
-{
-    $authHeader = $this->request->getHeaderLine('Authorization');
-    $user = $this->authService->getAuthenticatedUser($authHeader);
+    {
+    // $authHeader = $this->request->getHeaderLine('Authorization');
+    // $user = $this->authService->getAuthenticatedUser($authHeader);
 
-    if (!$user) {
-        return $this->failUnauthorized('Invalid or missing token.');
-    }
-
+    // if (!$user) {
+    //     return $this->failUnauthorized('Invalid or missing token.');
+    // }
+    
+    
     return $this->respond([
         'success' => true,
         'message' => true,
         'data' => [
             'active_movie_count' => $this->moviedetail->countActiveMovies(),
             'In_active_movie_count' => $this->moviedetail->countInactiveMovies(),
-            'latest_movies' => [
-                'heading' => 'Latest Movies',
-                'data' => $this->moviedetail->latestMovies()
-            ],
-            'most_watch_movies' => [
-                'heading' => 'Most Watched Movies',
-                'data' => $this->moviedetail->getMostWatchedMovies()
-            ],
-            'featured' => [
+            'list_1' => [
                 'heading' => 'Featured Movies',
                 'data' => $this->moviedetail->getFeaturedMovies()
             ],
-            'trending_now' => [
+            'list_2' => [
                 'heading' => 'Trending Movies',
                 'data' => $this->moviedetail->getTrendingMovies()
-            ] 
+            ],
+            'list_3' => [
+                'heading' => 'Latest Movies',
+                'data' => $this->moviedetail->latestMovies()
+            ],
+            'list_4' => [
+                'heading' => 'Most Watched Movies',
+                'data' => $this->moviedetail->getMostWatchedMovies()
+            ]
+            
         ]
     ]);
 }
@@ -393,6 +374,9 @@ public function latestMovies()
                 
                 'active_movie_count' => $this->moviedetail->countActiveMovies(),
                 'In_active_movie_count' => $this->moviedetail->countInactiveMovies(),
+                'latest_movies' =>$this->moviedetail->latestAddedMovies(),
+                'most_watched_movies'=>$this->moviedetail->getMostWatchMovies()
+
             ]
         ]);
     }
@@ -431,7 +415,7 @@ public function getRelatedMovies($id)
                         ->getResultArray();
 
     return $this->response->setJSON([
-        'status' => true,
+        'success' => true,
         'message' => 'Related movies fetched successfully.',
         'data' => $relatedMovies
     ]);

@@ -21,11 +21,27 @@ get token() {
     });
   }
 
-  listMovies(): Observable<any> {
-    return this.http.get(`${this.apiUrl}movie/moviedetails`, {
-       headers: this.headers
-    });
-  }
+  // listMovies(pageIndex: number = 0, pageSize: number = 20, searchText: string = ''): Observable<any> {
+  // return this.http.get(this.apiUrl + 'movie/moviedetails?pageIndex=' + pageIndex + '&pageSize=' + pageSize + '&searchText=' + searchText,
+  //     { headers: this.headers });
+  // }
+
+  listMovies(pageIndex: number = 0, pageSize: number = 20, searchText: string = ''): Observable<any> {
+  const params = {
+    pageIndex: pageIndex.toString(),
+    pageSize: pageSize.toString(),
+    search: searchText 
+  };
+
+  return this.http.get(this.apiUrl + 'movie/moviedetails', {
+    headers: this.headers,
+    params
+  });
+}
+
+
+
+
 
 
  getMovieById(id: number): Observable<any> {

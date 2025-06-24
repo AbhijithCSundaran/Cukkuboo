@@ -7,6 +7,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
+import { ScrollingModule } from '@angular/cdk/scrolling';
 
 
 @Component({
@@ -15,7 +16,8 @@ import { MatIconModule } from '@angular/material/icon';
      MatFormFieldModule,   
     MatInputModule,
     FormsModule,
-    MatIconModule
+    MatIconModule,
+    ScrollingModule
   ],
   templateUrl: './movies.component.html',
   styleUrl: './movies.component.scss'

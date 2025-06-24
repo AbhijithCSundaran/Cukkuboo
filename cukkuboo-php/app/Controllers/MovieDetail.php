@@ -204,9 +204,9 @@ public function getAllMovieDetails()
         return $this->respond([
             'success' => true,
             'data' => [
-                'featured' => array_map([$this, 'formatMovie'], $featured),
+                'featured' =>  $featured,
                 // 'resume_watching' => $resumeWatching,
-                'trending_now' => array_map([$this, 'formatTrending'], $trending),
+                'trending_now' =>  $trending,
             ]
         ]);
     }
@@ -288,9 +288,9 @@ public function mostWatchedMovies()
 public function latestMovies()
 {
     $authHeader = $this->request->getHeaderLine('Authorization');
-        $user = $this->authService->getAuthenticatedUser($authHeader);
-        if (!$user) 
-            return $this->failUnauthorized('Invalid or missing token.');
+    $user = $this->authService->getAuthenticatedUser($authHeader);
+    if (!$user) 
+        return $this->failUnauthorized('Invalid or missing token.');
     $movieModel = new \App\Models\MovieDetailsModel();
     $latestMovies = $movieModel->latestAddedMovies();
 
@@ -345,29 +345,40 @@ public function latestMovies()
     }
 
     public function getUserHomeData()
-    {
-        $authHeader = $this->request->getHeaderLine('Authorization');
-        $user = $this->authService->getAuthenticatedUser($authHeader);
-        if (!$user) 
-            return $this->failUnauthorized('Invalid or missing token.');
-        
-        return $this->respond([
-            'success' => true,
-            'message' => true,
-            'data' => [
-                'active_movie_count' => $this->moviedetail->countActiveMovies(),
-                'In_active_movie_count' => $this->moviedetail->countInactiveMovies(),
-                'latest_movies' => [
-                    'heading' => 'Latest Movies',
-                    'data' => $this->moviedetail->latestMovies()
-                ],
-                'most_watch_movies' => [
-                    'heading' => 'Most Watched Movies',
-                    'data' => $this->moviedetail->getMostWatchMovies()
-                ]
-            ]
-        ]);
+{
+    $authHeader = $this->request->getHeaderLine('Authorization');
+    $user = $this->authService->getAuthenticatedUser($authHeader);
+
+    if (!$user) {
+        return $this->failUnauthorized('Invalid or missing token.');
     }
+
+    return $this->respond([
+        'success' => true,
+        'message' => true,
+        'data' => [
+            'active_movie_count' => $this->moviedetail->countActiveMovies(),
+            'In_active_movie_count' => $this->moviedetail->countInactiveMovies(),
+            'latest_movies' => [
+                'heading' => 'Latest Movies',
+                'data' => $this->moviedetail->latestMovies()
+            ],
+            'most_watch_movies' => [
+                'heading' => 'Most Watched Movies',
+                'data' => $this->moviedetail->getMostWatchedMovies()
+            ],
+            'featured' => [
+                'heading' => 'Featured Movies',
+                'data' => $this->moviedetail->getFeaturedMovies()
+            ],
+            'trending_now' => [
+                'heading' => 'Trending Movies',
+                'data' => $this->moviedetail->getTrendingMovies()
+            ] 
+        ]
+    ]);
+}
+
     public function getAdminDashBoardData()
     {
         $authHeader = $this->request->getHeaderLine('Authorization');

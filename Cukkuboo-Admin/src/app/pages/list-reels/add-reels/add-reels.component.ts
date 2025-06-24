@@ -86,6 +86,7 @@ export class AddReelsComponent implements OnInit {
       views: [0],
       likes: [0],
       created_by: ['']
+      
     });
 
     const id = this.route.snapshot.paramMap.get('id');

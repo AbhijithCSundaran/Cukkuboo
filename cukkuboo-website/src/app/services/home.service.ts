@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { environment } from '../environments/environment';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -24,7 +24,7 @@ export class HomeService {
 
   
   getHomeData(): Observable<any> {
-    return this.http.get(`${this.apiUrl}home`, { headers: this.headers
+    return this.http.get(`${this.apiUrl}api/home`, { headers: this.headers
     });
   }
 

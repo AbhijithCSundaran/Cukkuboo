@@ -7,17 +7,17 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
-import { ScrollingModule } from '@angular/cdk/scrolling';
+import { InfiniteScrollDirective } from '../../core/directives/infinite-scroll/infinite-scroll.directive';
 
 
 @Component({
   selector: 'app-movies',
   imports: [CommonModule, RouterLink,
-     MatFormFieldModule,   
+    MatFormFieldModule,
     MatInputModule,
     FormsModule,
     MatIconModule,
-    ScrollingModule
+    InfiniteScrollDirective
   ],
   templateUrl: './movies.component.html',
   styleUrl: './movies.component.scss'
@@ -25,20 +25,22 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
 export class MoviesComponent implements OnInit {
   movies: any[] = [];
   imageUrl = environment.apiUrl + 'uploads/images/';
-   pageIndex: number = 0;
-  pageSize: number = 20;
+  pageIndex: number = 0;
+  pageSize: number = 10;
   totalItems: number = 0;
   searchText: string = '';
   searchTimeout: any;
+  stopInfiniteScroll: boolean = false;
 
   constructor(
-
     private movieService: MovieService,
-
-
   ) { }
 
   ngOnInit(): void {
+    this.loadMovies(this.pageIndex, this.pageSize, this.searchText);
+  }
+  onScroll(event: any) {
+    this.pageIndex++;
     this.loadMovies(this.pageIndex, this.pageSize, this.searchText);
   }
 
@@ -46,7 +48,10 @@ export class MoviesComponent implements OnInit {
     this.movieService.listMovies(pageIndex, pageSize, search).subscribe({
       next: (res) => {
         if (res?.success) {
-          this.movies = res.data || [];
+          if (res.data.length)
+            this.movies = [...this.movies, ...res.data];
+          else
+            this.stopInfiniteScroll = true;
         }
       }
     });
@@ -57,11 +62,10 @@ export class MoviesComponent implements OnInit {
     clearTimeout(this.searchTimeout);
     this.searchTimeout = setTimeout(() => {
       this.pageIndex = 0;
+      this.stopInfiniteScroll = false;
       this.movies = [];
       this.loadMovies(this.pageIndex, this.pageSize, this.searchText);
     }, 400);
   }
-
-
 
 }

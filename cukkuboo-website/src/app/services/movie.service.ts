@@ -11,7 +11,7 @@ export class MovieService {
 
   constructor(private http: HttpClient) { }
 
-get token() {
+  get token() {
     return localStorage.getItem('token') || sessionStorage.getItem('token');
   }
   get headers() {
@@ -27,33 +27,19 @@ get token() {
   // }
 
   listMovies(pageIndex: number = 0, pageSize: number = 20, searchText: string = ''): Observable<any> {
-  const params = {
-    pageIndex: pageIndex.toString(),
-    pageSize: pageSize.toString(),
-    search: searchText 
-  };
-
-  return this.http.get(this.apiUrl + 'movie/moviedetails', {
-    headers: this.headers,
-    params
-  });
-}
-
-
-
-
-
-
- getMovieById(id: number): Observable<any> {
-  return this.http.get(this.apiUrl + 'getmovie/' + id, { headers: this.headers });
+    const params = { pageIndex: pageIndex.toString(), pageSize: pageSize.toString(), search: searchText };
+    return this.http.get(this.apiUrl + 'movie/moviedetails', { headers: this.headers, params });
   }
 
+  getMovieById(id: number): Observable<any> {
+    return this.http.get(this.apiUrl + 'getmovie/' + id, { headers: this.headers });
+  }
 
-
-getHomeData(): Observable<any> {
-  return this.http.get(`${this.apiUrl}movies/userDashboard`, {  headers: this.headers
-  });
-}
+  getHomeData(): Observable<any> {
+    return this.http.get(`${this.apiUrl}movies/userDashboard`, {
+      headers: this.headers
+    });
+  }
 
 
 }

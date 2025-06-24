@@ -8,10 +8,12 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { ValidationMessagesComponent } from '../../core/components/validation-messsage/validaation-message.component';
-
 import { Router } from '@angular/router';
 import { RouterModule } from '@angular/router';
 import { UserService } from '../../services/user/user.service';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+
 
 @Component({
   selector: 'app-sign-up',
@@ -21,6 +23,8 @@ import { UserService } from '../../services/user/user.service';
   imports: [
     CommonModule,
     RouterModule,
+     MatDatepickerModule,
+     MatNativeDateModule,
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
@@ -49,10 +53,13 @@ export class SignUpComponent implements OnInit {
     this.signUpForm = this.fb.group({
       username: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      firstName: [''],
-      lastName: [''],
+      // firstName: [''],
+      // lastName: [''],
       password: ['', Validators.required],
-      confirmPassword: ['', Validators.required]
+      confirmPassword: ['', Validators.required],
+      date_of_birth: ['', Validators.required],
+            phone: ['', [Validators.pattern(/^\d{0,15}$/), Validators.maxLength(15)]],
+
     });
   }
 
@@ -98,5 +105,12 @@ export class SignUpComponent implements OnInit {
         panelClass: ['snackbar-error']
       });
     }
+  }
+
+   onNumberInput(event: any): void {
+    const input = event.target;
+    const filteredValue = input.value.replace(/[^0-9]/g, '').slice(0, 15);
+    input.value = filteredValue;
+    this.signUpForm.get('phone')?.setValue(filteredValue, { emitEvent: false });
   }
 }

@@ -1,32 +1,30 @@
-:host{
+:host {
   margin-top: auto;
+
   .footer {
     background-color: white;
     padding: 10px 0;
     text-align: center;
     width: 100%;
-    i{
+
+    i {
       font-size: 10px;
     }
   }
 }
-.store-logo-wrapper {
-  width: 160px;
-  height: 50px;
-  display: inline-block;
-  overflow: hidden;
-  margin-right: 10px;
-}
 
-.store-logo-wrapper img {
+.store-logo {
   width: 100%;
   height: 100%;
-  object-fit: contain;
-  display: block;
+  overflow: hidden;
+
+  img {
+    transform: scale(2);
+  }
 }
 
 .playstore-logo {
-  transform: scale(1.4); 
+  transform: scale(1.4);
 }
 
 

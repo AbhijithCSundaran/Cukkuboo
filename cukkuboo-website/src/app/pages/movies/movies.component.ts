@@ -24,7 +24,7 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
 })
 export class MoviesComponent implements OnInit {
   movies: any[] = [];
-  imageBasePath = environment.imagePath;
+  imageUrl = environment.apiUrl + 'uploads/images/';
    pageIndex: number = 0;
   pageSize: number = 20;
   totalItems: number = 0;

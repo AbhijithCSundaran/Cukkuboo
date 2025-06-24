@@ -5,14 +5,16 @@
       <div class="col-lg-12">
         <div class="form-aligned">
           <form id="pms_register-form" class="pms-form" [formGroup]="signUpForm" (ngSubmit)="onSubmit()">
-             <!-- Logo -->
-          <div class="text-center mb-3">
-            <img src="assets/images/logo-collapsed.png" routerLink="/" alt="Logo" style="max-width: 60px;" />
-          </div>
+            <!-- Logo -->
+            <div class="text-center mb-3">
+              <img src="assets/images/logo-collapsed.png" routerLink="/" alt="Logo" style="max-width: 60px;" />
+            </div>
+
             <h4 class="text-start">Join now for unlimited entertainment</h4>
+
             <ul class="pms-form-fields-wrapper list-unstyled">
 
-              <li class="pms-field pms-user-login-field">
+              <!-- <li class="pms-field pms-user-login-field">
                 <mat-form-field appearance="outline" class="w-100">
                   <mat-label>Username</mat-label>
                   <input matInput formControlName="username" placeholder="Enter username" />
@@ -20,7 +22,7 @@
                     <Validation-Messages [control]="signUpForm.controls['username']"></Validation-Messages>
                   </mat-error>
                 </mat-form-field>
-              </li>
+              </li> -->
 
               <li class="pms-field pms-user-email-field">
                 <mat-form-field appearance="outline" class="w-100">
@@ -31,8 +33,9 @@
                   </mat-error>
                 </mat-form-field>
               </li>
+            
 
-              <li class="pms-field pms-first-name-field">
+                 <!-- <li class="pms-field pms-first-name-field">
                 <mat-form-field appearance="outline" class="w-100">
                   <mat-label>First Name</mat-label>
                   <input matInput formControlName="firstName" placeholder="Enter first name" />
@@ -40,9 +43,9 @@
                     <Validation-Messages [control]="signUpForm.controls['firstName']"></Validation-Messages>
                   </mat-error>
                 </mat-form-field>
-              </li>
+              </li> -->
 
-              <li class="pms-field pms-last-name-field">
+              <!-- <li class="pms-field pms-last-name-field">
                 <mat-form-field appearance="outline" class="w-100">
                   <mat-label>Last Name</mat-label>
                   <input matInput formControlName="lastName" placeholder="Enter last name" />
@@ -50,102 +53,90 @@
                     <Validation-Messages [control]="signUpForm.controls['lastName']"></Validation-Messages>
                   </mat-error>
                 </mat-form-field>
+              </li>  -->
+              <!-- Date of Birth -->
+              <li class="pms-field pms-date-of-birth-field">
+            
+                  <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Date of Birth</mat-label>
+                    <input
+                      matInput
+                      [matDatepicker]="dobPicker"
+                      formControlName="date_of_birth"
+                      placeholder="Choose a date"
+                      (click)="dobPicker.open()"
+                      readonly
+                    />
+                    <mat-datepicker-toggle matSuffix [for]="dobPicker"></mat-datepicker-toggle>
+                    <mat-datepicker #dobPicker></mat-datepicker>
+                    <mat-error *ngIf="signUpForm.controls['date_of_birth'].touched && signUpForm.controls['date_of_birth'].invalid">
+                      <Validation-Messages [control]="signUpForm.controls['date_of_birth']"></Validation-Messages>
+                    </mat-error>
+                  </mat-form-field>
+              
               </li>
 
-            <!-- Password -->
-<li class="pms-field pms-pass1-field">
-  <mat-form-field appearance="outline" class="w-100">
-    <mat-label>Password</mat-label>
-    <input
-      matInput
-      [type]="hidePassword ? 'password' : 'text'"
-      formControlName="password"
-      placeholder="Enter password"
-    />
-    <button
-      mat-icon-button
-      matSuffix
-      (click)="hidePassword = !hidePassword"
-      type="button"
-    >
-      <mat-icon class="small-eye-icon">{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
-    </button>
-    <mat-error *ngIf="signUpForm.controls['password'].touched && signUpForm.controls['password'].invalid">
-      <Validation-Messages [control]="signUpForm.controls['password']"></Validation-Messages>
-    </mat-error>
-  </mat-form-field>
-</li>
+              <!-- Password -->
+              <li class="pms-field pms-pass1-field">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Password</mat-label>
+                  <input
+                    matInput
+                    [type]="hidePassword ? 'password' : 'text'"
+                    formControlName="password"
+                    placeholder="Enter password"
+                  />
+                  <button
+                    mat-icon-button
+                    matSuffix
+                    (click)="hidePassword = !hidePassword"
+                    type="button"
+                  >
+                    <mat-icon class="small-eye-icon">{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+                  </button>
+                  <mat-error *ngIf="signUpForm.controls['password'].touched && signUpForm.controls['password'].invalid">
+                    <Validation-Messages [control]="signUpForm.controls['password']"></Validation-Messages>
+                  </mat-error>
+                </mat-form-field>
+              </li>
 
-<!-- Confirm Password  -->
-<li class="pms-field pms-pass2-field">
-  <mat-form-field appearance="outline" class="w-100">
-    <mat-label>Confirm Password</mat-label>
-    <input
-      matInput
-      [type]="hideConfirmPassword ? 'password' : 'text'"
-      formControlName="confirmPassword"
-      placeholder="Repeat password"
-    />
-    <button
-      mat-icon-button
-      matSuffix
-      (click)="hideConfirmPassword = !hideConfirmPassword"
-      type="button"
-    >
-      <mat-icon class="small-eye-icon">{{ hideConfirmPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
-    </button>
-    <mat-error *ngIf="signUpForm.controls['confirmPassword'].touched && signUpForm.controls['confirmPassword'].invalid">
-      <Validation-Messages [control]="signUpForm.controls['confirmPassword']"></Validation-Messages>
-    </mat-error>
-  </mat-form-field>
-</li>
-
-              <!-- Subscription Plans -->
-              <!-- <li class="pms-field pms-field-subscriptions">
-                <label class="mb-2 d-block">Choose a Plan</label>
-
-                <div class="row">
-                  <ng-container *ngFor="let plan of plans; let i = index">
-                    <div class="col-md-6" [ngClass]="{ 'ps-md-0': i % 2 === 0, 'pe-md-0': i % 2 !== 0 }">
-                      <mat-radio-group formControlName="subscriptionPlan" class="d-block w-100">
-                        <mat-radio-button [value]="plan.subscriptionplan_id" class="d-block mb-3">
-                          <div class="d-flex justify-content-between align-items-center">
-                            <strong class="me-2">{{ plan.plan_name }}</strong>
-                            <div>
-                              <span class="text-white text-decoration-line-through me-2" *ngIf="plan.discount_price">
-                                ₹{{ plan.price }}
-                              </span>
-                              <span class="text-danger fw-bold">₹{{ plan.discount_price || plan.price }}</span>
-                            </div>
-                          </div>
-                        </mat-radio-button>
-                      </mat-radio-group>
-                    </div>
-                  </ng-container>
-                </div>
-
-                <mat-error *ngIf="signUpForm.controls['subscriptionPlan'].touched && signUpForm.controls['subscriptionPlan'].invalid">
-                  <Validation-Messages [control]="signUpForm.controls['subscriptionPlan']"></Validation-Messages>
-                </mat-error>
-              </li> -->
+              <!-- Confirm Password -->
+              <li class="pms-field pms-pass2-field">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Confirm Password</mat-label>
+                  <input
+                    matInput
+                    [type]="hideConfirmPassword ? 'password' : 'text'"
+                    formControlName="confirmPassword"
+                    placeholder="Repeat password"
+                  />
+                  <button
+                    mat-icon-button
+                    matSuffix
+                    (click)="hideConfirmPassword = !hideConfirmPassword"
+                    type="button"
+                  >
+                    <mat-icon class="small-eye-icon">{{ hideConfirmPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+                  </button>
+                  <mat-error *ngIf="signUpForm.controls['confirmPassword'].touched && signUpForm.controls['confirmPassword'].invalid">
+                    <Validation-Messages [control]="signUpForm.controls['confirmPassword']"></Validation-Messages>
+                  </mat-error>
+                </mat-form-field>
+              </li>
 
             </ul>
 
             <div class="text-start mt-3">
-              <button  type="submit" class="red-button">
-                 Sign-up
+              <button type="submit" class="red-button">
+                Sign-up
               </button>
-
-
             </div>
 
-   
             <!-- Sign In Link -->
             <div class="text-start mt-2">
               <span class="me-2">Already have an account?</span>
               <a (click)="navigateToSignIn()" class="signup-link red-link">Sign In</a>
             </div>
-
 
           </form>
         </div>

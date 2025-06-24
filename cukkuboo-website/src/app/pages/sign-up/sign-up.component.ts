@@ -11,6 +11,9 @@ import { ValidationMessagesComponent } from '../../core/components/validation-me
 import { Router } from '@angular/router';
 import { RouterModule } from '@angular/router';
 import { UserService } from '../../services/user/user.service';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+
 
 @Component({
   selector: 'app-sign-up',
@@ -20,6 +23,8 @@ import { UserService } from '../../services/user/user.service';
   imports: [
     CommonModule,
     RouterModule,
+     MatDatepickerModule,
+     MatNativeDateModule,
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
@@ -46,12 +51,13 @@ export class SignUpComponent implements OnInit {
 
   ngOnInit(): void {
     this.signUpForm = this.fb.group({
-      username: ['', Validators.required],
+      // username: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      firstName: [''],
-      lastName: [''],
+      // firstName: [''],
+      // lastName: [''],
       password: ['', Validators.required],
-      confirmPassword: ['', Validators.required]
+      confirmPassword: ['', Validators.required],
+      date_of_birth: ['', Validators.required]
     });
   }
 

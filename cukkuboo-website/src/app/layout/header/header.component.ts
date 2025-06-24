@@ -14,7 +14,19 @@ import { Subject, takeUntil } from 'rxjs';
 export class HeaderComponent {
   isSignedIn: boolean = false;
   showUserDropdown: boolean = false;
-  menuOpen: boolean = false;
+
+  private _menuOpen = false;
+  get menuOpen(): boolean {
+    return this._menuOpen;
+  }
+  set menuOpen(value: boolean) {
+    this._menuOpen = value;
+    if (value) {
+      document.body.classList.add('sidebar-open');
+    } else {
+      document.body.classList.remove('sidebar-open');
+    }
+  }
 
   private _unsubscribeAll: Subject<void> = new Subject<void>();
 

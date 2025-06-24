@@ -44,7 +44,7 @@ export class HomeComponent implements OnInit {
 
   customOptions1: OwlOptions = {
     loop: true, mouseDrag: true, touchDrag: true, pullDrag: true, navSpeed: 700,
-    autoplay: true, autoplayTimeout: 7500, autoplayHoverPause: false, autoplayMouseleaveTimeout: 1000,
+    autoplay: true, autoplayTimeout: 7500, autoplayHoverPause: true, autoplayMouseleaveTimeout: 700,
     items: 1, autoHeight: false, autoWidth: true, dots: true, nav: true,
     navText: [
       '<span class="material-icons" style="font-size:18px">arrow_back_ios_new</span>',

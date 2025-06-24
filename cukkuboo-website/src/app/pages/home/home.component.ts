@@ -12,10 +12,14 @@ import { MovieService } from '../../services/movie.service';
   styleUrl: './home.component.scss'
 })
 export class HomeComponent implements OnInit {
-  carouselItems: any[] = [];
+  HomeData:any;
+  featured: any[] = [];
   trendingMovies: any[] = [];
+  latestMovies: any[] = [];
   mostWatchedMovies: any[] = [];
-  watchedList: any[] = [];
+  // In_active_movie_count: ['']
+  // active_movie_count: ['']
+
 
   constructor(private movieService: MovieService) {}
 
@@ -23,15 +27,13 @@ export class HomeComponent implements OnInit {
     this.movieService.getHomeData().subscribe({
       next: (data: any) => {
         console.log('Home Data:', data);
-
-        this.carouselItems = data?.featured?.data || [];
-        this.trendingMovies = data?.trending_now?.data || [];
-        this.watchedList = data?.latest_movies?.data || [];
-        this.mostWatchedMovies = data?.most_watch_movies?.data || [];
+        // this.featured = data?.featured?.data || [];
+        // this.trendingMovies = data?.trending_now?.data || [];
+        //   this.latestMovies = data?.latest_movies?.data || [];
+      
+        // this.mostWatchedMovies = data?.most_watch_movies?.data || [];
       },
-      error: (error) => {
-        console.error('Error loading home data:', error);
-      }
+      error: (err) => console.error('Error loading home data:', err)
     });
   }
 

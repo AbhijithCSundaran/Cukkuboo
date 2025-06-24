@@ -1,29 +1,27 @@
-<!-- Banner Section -->
+
 <section class="pt-0 pb-0">
   <div class="container-fluid px-0">
     <div class="d-flex no-gutters">
       <div class="col-12 gen-banner-movies banner-style-2">
         <owl-carousel-o [options]="customOptions1">
-          <ng-container *ngFor="let item of carouselItems">
+          <ng-container *ngFor="let movie of featured">
             <ng-template carouselSlide>
-              <div class="item" [ngStyle]="{'background-image': 'url(' + item.background + ')'}">
+              <div class="item" [ngStyle]="{ 'background-image': 'url(' + movie.background + ')' }">
                 <div class="gen-movie-contain-style-2 h-100">
                   <div class="container h-100">
                     <div class="row flex-row-reverse align-items-center h-100">
                       <div class="col-xl-6">
                         <div class="gen-front-image">
-                          <img [src]="item.image" alt="carousel-image" />
-                          <a [routerLink]="['/movies', item.mov_id]" class="playBut popup-youtube">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="213.7px" height="213.7px"
+                          <img [src]="movie.image" alt="carousel-image" />
+                          <a [routerLink]="['/movies', movie.mov_id]" class="playBut">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="213.7" height="213.7"
                                  viewBox="0 0 213.7 213.7">
-                              <polygon class="triangle" fill="none" stroke-width="7"
-                                       stroke-linecap="round" stroke-linejoin="round"
-                                       stroke-miterlimit="10"
-                                       points="73.5,62.5 148.5,105.8 73.5,149.1"></polygon>
-                              <circle class="circle" fill="none" stroke-width="7"
-                                      stroke-linecap="round" stroke-linejoin="round"
-                                      stroke-miterlimit="10"
-                                      cx="106.8" cy="106.8" r="103.3"></circle>
+                              <polygon class="triangle" fill="none" stroke-width="7" stroke-linecap="round"
+                                       stroke-linejoin="round" stroke-miterlimit="10"
+                                       points="73.5,62.5 148.5,105.8 73.5,149.1" />
+                              <circle class="circle" fill="none" stroke-width="7" stroke-linecap="round"
+                                      stroke-linejoin="round" stroke-miterlimit="10"
+                                      cx="106.8" cy="106.8" r="103.3" />
                             </svg>
                             <span>Watch Trailer</span>
                           </a>
@@ -32,28 +30,26 @@
                       <div class="col-xl-6">
                         <div class="gen-tag-line"><span>Most Viewed</span></div>
                         <div class="gen-movie-info">
-                          <h3>{{ item.title }}</h3>
+                          <h3>{{ movie.title }}</h3>
                         </div>
                         <div class="gen-movie-meta-holder">
                           <ul class="gen-meta-after-title">
-                            <li class="gen-sen-rating"><span>{{ item.rating }}</span></li>
-                            <li><img src="assets/images/asset-2.png" alt="rating-image"><span>{{ item.views }}</span></li>
+                            <li class="gen-sen-rating"><span>{{ movie.rating }}</span></li>
+                            <li><img src="assets/images/asset-2.png" alt="rating-img"><span>{{ movie.views }}</span></li>
                           </ul>
-                          <p>{{ item.description }}</p>
+                          <p>{{ movie.description }}</p>
                           <div class="gen-meta-info">
                             <ul class="gen-meta-after-excerpt">
-                              <li><strong>Cast : </strong> {{ item.cast }}</li>
+                              <li><strong>Cast : </strong> {{ movie.cast }}</li>
                               <li><strong>Tag : </strong>
-                                <span *ngFor="let tag of item.tags">
-                                  <a href="#">{{ tag }}</a>
-                                </span>
+                                <span *ngFor="let tag of movie.tags"><a href="#">{{ tag }}</a></span>
                               </li>
                             </ul>
                           </div>
                         </div>
                         <div class="gen-movie-action">
                           <div class="gen-btn-container">
-                            <a [routerLink]="['/movies', item.mov_id]" class="gen-button .gen-button-dark">
+                            <a [routerLink]="['/movies', movie.mov_id]" class="gen-button gen-button-dark">
                               <i class="fas fa-play"></i><span class="text">Play Now</span>
                             </a>
                           </div>
@@ -71,17 +67,16 @@
   </div>
 </section>
 
-
 <ng-container *ngFor="let section of [
   { title: 'Trending Videos', movies: trendingMovies },
-  { title: 'Watched List', movies: watchedList },
+  { title: 'Latest Movies', movies: latestMovies},
   { title: 'Most Watched', movies: mostWatchedMovies }
 ]">
   <section class="gen-section-padding-2 bg-gradient">
     <div class="container">
       <div class="d-flex justify-content-between">
         <h4 class="gen-heading-title">{{ section.title }}</h4>
-        <a [routerLink]="'/movies'" class="gen-button gen-button-flat d-none d-md-flex">
+        <a [routerLink]="['/movies']" class="gen-button gen-button-flat d-none d-md-flex">
           <span class="text">More Videos</span>
         </a>
       </div>
@@ -111,10 +106,14 @@
                         </div>
                         <div class="gen-info-contain">
                           <div class="gen-movie-info">
-                            <h3><a [routerLink]="['/movies', movie.mov_id]">{{ movie.title }}</a></h3>
+                            <h3>
+                              <a [routerLink]="['/movies', movie.mov_id]">{{ movie.title }}</a>
+                            </h3>
                           </div>
                           <div class="gen-movie-meta-holder">
-                            <ul><li>{{ movie.duration }}</li></ul>
+                            <ul>
+                              <li>{{ movie.duration }}</li>
+                            </ul>
                           </div>
                         </div>
                       </div>

@@ -41,5 +41,10 @@ export class MovieService {
     });
   }
 
+getReelsData(): Observable<any> {
+  return this.http.get(`${this.apiUrl}reels/details`, {
+    headers: this.headers
+  });
+}
 
 }

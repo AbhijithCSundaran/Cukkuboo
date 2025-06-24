@@ -6,20 +6,19 @@
 @media (max-width: 991px) {
   .mobile-sidebar {
     position: fixed;
-    top: 0;
+    top: 70px; 
     left: 0;
     width: 0;
-    height: 100vh;
+    height: calc(100vh - 70px); 
     background-color: black;
     overflow-x: hidden;
     overflow-y: auto;
     z-index: 1050;
     transition: width 0.3s ease-in-out;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+   
 
     &.open {
-      width: 25vw;
-      min-width: 250px;
+      width: 200px; 
     }
 
     #gen-menu-contain {

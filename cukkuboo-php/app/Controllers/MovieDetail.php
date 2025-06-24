@@ -17,7 +17,7 @@ class MovieDetail extends ResourceController
         $this->session = \Config\Services::session();
         $this->input = \Config\Services::request();
         $this->moviedetail = new MovieDetailsModel();
-        $this->UserModel = new UserModel();	
+        $this->userModel = new UserModel();	
         $this->authService = new AuthService();
     }
 
@@ -375,7 +375,8 @@ public function latestMovies()
                 'active_movie_count' => $this->moviedetail->countActiveMovies(),
                 'In_active_movie_count' => $this->moviedetail->countInactiveMovies(),
                 'latest_movies' =>$this->moviedetail->latestAddedMovies(),
-                'most_watched_movies'=>$this->moviedetail->getMostWatchMovies()
+                'most_watched_movies'=>$this->moviedetail->getMostWatchMovies(),
+                'active_user_count'=>$this->userModel->countActiveUsers()
 
             ]
         ]);

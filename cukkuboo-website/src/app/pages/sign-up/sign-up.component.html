@@ -23,6 +23,27 @@
                   </mat-error>
                 </mat-form-field>
               </li> -->
+                            <li class="pms-field pms-user-login-field">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Username</mat-label>
+                  <input matInput formControlName="username" placeholder="Enter username" />
+                  <mat-error *ngIf="signUpForm.controls['username'].touched && signUpForm.controls['username'].invalid">
+                    <Validation-Messages [control]="signUpForm.controls['username']"></Validation-Messages>
+                  </mat-error>
+                </mat-form-field>
+              </li>
+
+                 <li class="pms-field pms-user-login-field">
+                <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Contact</mat-label>
+            <input
+              matInput
+              formControlName="phone"
+              placeholder="Add contact number"
+              maxlength="15"
+              (input)="onNumberInput($event)">
+          </mat-form-field>
+             </li>
 
               <li class="pms-field pms-user-email-field">
                 <mat-form-field appearance="outline" class="w-100">

@@ -51,13 +51,15 @@ export class SignUpComponent implements OnInit {
 
   ngOnInit(): void {
     this.signUpForm = this.fb.group({
-      // username: ['', Validators.required],
+      username: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       // firstName: [''],
       // lastName: [''],
       password: ['', Validators.required],
       confirmPassword: ['', Validators.required],
-      date_of_birth: ['', Validators.required]
+      date_of_birth: ['', Validators.required],
+            phone: ['', [Validators.pattern(/^\d{0,15}$/), Validators.maxLength(15)]],
+
     });
   }
 
@@ -103,5 +105,12 @@ export class SignUpComponent implements OnInit {
         panelClass: ['snackbar-error']
       });
     }
+  }
+
+   onNumberInput(event: any): void {
+    const input = event.target;
+    const filteredValue = input.value.replace(/[^0-9]/g, '').slice(0, 15);
+    input.value = filteredValue;
+    this.signUpForm.get('phone')?.setValue(filteredValue, { emitEvent: false });
   }
 }

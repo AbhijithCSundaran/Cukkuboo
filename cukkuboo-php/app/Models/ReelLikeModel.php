@@ -6,56 +6,48 @@ use CodeIgniter\Model;
 
 class ReelLikeModel extends Model
 {
-    protected $table = 'reel_like'; 
+    protected $table = 'reel_like';
     protected $primaryKey = 'rlike_id';
-    public function getUserReelLike($userId, $reelsId)
-{
-    return $this->db->table('reel_like')
-        ->where(['user_id' => $userId, 'reels_id' => $reelsId])
-        ->get()->getRowArray();
+
+    public function getUserReelLike($userId, $reelId)
+    {
+        return $this->db->table($this->table)
+            ->where(['user_id' => $userId, 'reels_id' => $reelId])
+            ->get()
+            ->getRowArray();
+    }
+
+    public function insertUserLike(array $data)
+    {
+        return $this->db->table($this->table)->insert($data);
+    }
+
+    public function updateUserLike($userId, $reelId, $status)
+    {
+        return $this->db->table($this->table)
+            ->where(['user_id' => $userId, 'reels_id' => $reelId])
+            ->update([
+                'status'     => $status,
+                'modify_on'  => date('Y-m-d H:i:s'),
+                'modify_by'  => $userId
+            ]);
+    }
+
+    public function removeUserLike($userId, $reelId)
+    {
+        return $this->db->table($this->table)
+            ->where(['user_id' => $userId, 'reels_id' => $reelId])
+            ->delete();
+    }
+
+    public function updateReelLikeCount($reelId)
+    {
+        $likeCount = $this->db->table($this->table)
+            ->where(['reels_id' => $reelId, 'status' => 1]) // 1 = like
+            ->countAllResults();
+
+        return $this->db->table('reels')
+            ->where('reels_id', $reelId)
+            ->update(['likes' => $likeCount]);
+    }
 }
-
-public function insertUserLike($data)
-{
-    return $this->db->table('reel_like')->insert($data);
-}
-
-// public function updateUserLike($userId, $reelsId, $status)
-// {
-//     return $this->db->table('reel_like')
-//         ->where(['user_id' => $userId, 'reels_id' => $reelsId])
-//         ->update(['status' => $status]);
-// }
-public function updateUserLike($userId, $reelsId, $status)
-{
-    return $this->db->table('reel_like')
-        ->where(['user_id' => $userId, 'reels_id' => $reelsId])
-        ->update([
-            'status' => $status,
-            'modify_by' => $userId, // 👈 this sets who modified it
-            'modify_on' => date('Y-m-d H:i:s') // optional but helpful
-        ]);
-}
-
-public function removeUserLike($userId, $reelsId)
-{
-    return $this->db->table('reel_like')
-        ->where(['user_id' => $userId, 'reels_id' => $reelsId])
-        ->delete();
-}
-
-public function updateReelLikeCounts($reelsId)
-{
-    $likes = $this->db->table('reel_like')
-        ->where(['reels_id' => $reelsId, 'status' => 1]) // count only likes
-        ->countAllResults();
-
-    return $this->db->table('reels')
-        ->where('reels_id', $reelsId)
-        ->update([
-            'likes' => $likes // update only the likes field
-        ]);
-}
-
-}
-

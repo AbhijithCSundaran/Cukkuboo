@@ -28,9 +28,8 @@ export class MoviesComponent implements OnInit {
   loadMovies() {
     this.movieService.listMovies().subscribe({
       next: (res) => {
-        if (res?.status && res.data?.length > 0) {
-          this.movies = res.data;
-          console.log('API response:', this.movies);
+        if (res?.success) {
+          this.movies = res.data||[];
         }
       }
     })

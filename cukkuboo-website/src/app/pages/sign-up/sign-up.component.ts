@@ -8,10 +8,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { ValidationMessagesComponent } from '../../core/components/validation-messsage/validaation-message.component';
-import { SignInService } from '../../services/sign-in.service';
+
 import { Router } from '@angular/router';
 import { RouterModule } from '@angular/router';
-import { PlanService } from '../../services/plan.service';
+import { UserService } from '../../services/user/user.service';
 
 @Component({
   selector: 'app-sign-up',
@@ -26,7 +26,7 @@ import { PlanService } from '../../services/plan.service';
     MatInputModule,
     MatRadioModule,
     MatButtonModule,
-    MatIconModule,             
+    MatIconModule,
     MatSnackBarModule,
     ValidationMessagesComponent
   ]
@@ -34,17 +34,16 @@ import { PlanService } from '../../services/plan.service';
 export class SignUpComponent implements OnInit {
   signUpForm!: FormGroup;
 
- 
+
   hidePassword = true;
   hideConfirmPassword = true;
 
   constructor(
     private fb: FormBuilder,
-    private signInService: SignInService,
+    private userService: UserService,
     private snackBar: MatSnackBar,
     private router: Router,
-    private planService: PlanService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.signUpForm = this.fb.group({
@@ -64,10 +63,8 @@ export class SignUpComponent implements OnInit {
   onSubmit(): void {
     if (this.signUpForm.valid) {
       const model = this.signUpForm.value;
-
-      this.signInService.register(model).subscribe({
+      this.userService.register(model).subscribe({
         next: (response) => {
-          
           if (response?.status) {
             this.snackBar.open('Registration successful!', '', {
               duration: 3000,

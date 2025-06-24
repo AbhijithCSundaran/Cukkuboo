@@ -15,7 +15,7 @@ import { PalyerComponent } from '../../_common/palyer/palyer.component';
   styleUrls: ['./single-movie.component.scss']
 })
 export class SingleMovieComponent implements OnInit {
-  movie: any;
+  movieData: any;
   videoUrl = environment.apiUrl + 'uploads/videos/';
   imageUrl = environment.apiUrl + 'uploads/images/';
   suggetionList: any[] = [
@@ -120,19 +120,20 @@ export class SingleMovieComponent implements OnInit {
           const data = Array.isArray(res.data) ? res.data[0] : res.data;
           console.log('Movie Response:', data);
 
-          this.movie = {
-            ...data,
-            title: data.title || 'Untitled Movie',
-            image: this.imageUrl + (data.thumbnail || 'default-thumb.jpg'),
-            background: this.imageUrl + (data.banner || 'default-banner.jpg'),
-            trailer: this.videoUrl + (data.trailer || ''),
-            video: this.videoUrl + (data.video || ''),
-            cast_details: data.cast_details || data.cast || 'N/A',
-            duration: data.duration || 'Unknown',
-            release_date: data.release_date || 'Unknown',
-            playTrailer: false,
-            playVideo: false
-          };
+          this.movieData = data;
+          //  {
+          //   ...data,
+          //   title: data.title || 'Untitled Movie',
+          //   image: this.imageUrl + (data.thumbnail || 'default-thumb.jpg'),
+          //   background: this.imageUrl + (data.banner || 'default-banner.jpg'),
+          //   trailer: this.videoUrl + (data.trailer || ''),
+          //   video: this.videoUrl + (data.video || ''),
+          //   cast_details: data.cast_details || data.cast || 'N/A',
+          //   duration: data.duration || 'Unknown',
+          //   release_date: data.release_date || 'Unknown',
+          //   playTrailer: false,
+          //   playVideo: false
+          // };
         } else {
           this.snackBar.open('Failed to load movie.', '', {
             duration: 3000,

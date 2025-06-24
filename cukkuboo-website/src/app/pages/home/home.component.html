@@ -7,51 +7,49 @@
             <ng-template carouselSlide>
               <div class="item" [ngStyle]="{ 'background-image': 'url(' + imageUrl+item.banner + ')' }">
                 <div class="gen-movie-contain-style-2 h-100">
-                  <div class="container h-100">
-                    <div class="row flex-row-reverse align-items-center h-100">
-                      <div class="col-xl-6">
-                        <div class="gen-front-image">
-                          <img [src]="imageUrl+item.thumbnail" alt="carousel-image" />
-                          <a [routerLink]="['/movies', item.mov_id]" class="playBut">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="213.7" height="213.7"
-                              viewBox="0 0 213.7 213.7">
-                              <polygon class="triangle" fill="none" stroke-width="7" stroke-linecap="round"
-                                stroke-linejoin="round" stroke-miterlimit="10"
-                                points="73.5,62.5 148.5,105.8 73.5,149.1" />
-                              <circle class="circle" fill="none" stroke-width="7" stroke-linecap="round"
-                                stroke-linejoin="round" stroke-miterlimit="10" cx="106.8" cy="106.8" r="103.3" />
-                            </svg>
-                            <span>Watch Trailer</span>
+                  <div class="d-flex align-items-center h-100 p-5">
+                    <div class="col-xl-6 pe-3">
+                      <div class="gen-tag-line"><span>{{bannerData.heading}}</span></div>
+                      <div class="gen-movie-info">
+                        <h3>{{ item.title }}</h3>
+                      </div>
+                      <div class="gen-movie-meta-holder">
+                        <ul class="gen-meta-after-title">
+                          <li class="gen-sen-rating"><span>{{ item.rating }}</span></li>
+                          <li><img src="assets/images/asset-2.png" alt="rating-img"><span>{{ item.views }}</span></li>
+                        </ul>
+                        <p>{{ item.description }}</p>
+                        <div class="gen-meta-info">
+                          <ul class="gen-meta-after-excerpt">
+                            <li><strong>Cast : </strong> {{ item.cast }}</li>
+                            <li><strong>Tag : </strong>
+                              <span *ngFor="let tag of item.tags"><a href="#">{{ tag }}</a></span>
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                      <div class="gen-movie-action">
+                        <div class="gen-btn-container">
+                          <a [routerLink]="['/movies', item.mov_id]" class="gen-button gen-button-dark">
+                            <i class="fas fa-play"></i><span class="text">Play Now</span>
                           </a>
                         </div>
                       </div>
-                      <div class="col-xl-6">
-                        <div class="gen-tag-line"><span>Most Viewed</span></div>
-                        <div class="gen-movie-info">
-                          <h3>{{ item.title }}</h3>
-                        </div>
-                        <div class="gen-movie-meta-holder">
-                          <ul class="gen-meta-after-title">
-                            <li class="gen-sen-rating"><span>{{ item.rating }}</span></li>
-                            <li><img src="assets/images/asset-2.png" alt="rating-img"><span>{{ item.views }}</span></li>
-                          </ul>
-                          <p>{{ item.description }}</p>
-                          <div class="gen-meta-info">
-                            <ul class="gen-meta-after-excerpt">
-                              <li><strong>Cast : </strong> {{ item.cast }}</li>
-                              <li><strong>Tag : </strong>
-                                <span *ngFor="let tag of item.tags"><a href="#">{{ tag }}</a></span>
-                              </li>
-                            </ul>
-                          </div>
-                        </div>
-                        <div class="gen-movie-action">
-                          <div class="gen-btn-container">
-                            <a [routerLink]="['/movies', item.mov_id]" class="gen-button gen-button-dark">
-                              <i class="fas fa-play"></i><span class="text">Play Now</span>
-                            </a>
-                          </div>
-                        </div>
+                    </div>
+                    <div class="col-xl-6">
+                      <div class="gen-front-image">
+                        <img [src]="imageUrl+item.thumbnail" alt="carousel-image" />
+                        <a [routerLink]="['/movies', item.mov_id]" class="playBut">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="213.7" height="213.7"
+                            viewBox="0 0 213.7 213.7">
+                            <polygon class="triangle" fill="none" stroke-width="7" stroke-linecap="round"
+                              stroke-linejoin="round" stroke-miterlimit="10"
+                              points="73.5,62.5 148.5,105.8 73.5,149.1" />
+                            <circle class="circle" fill="none" stroke-width="7" stroke-linecap="round"
+                              stroke-linejoin="round" stroke-miterlimit="10" cx="106.8" cy="106.8" r="103.3" />
+                          </svg>
+                          <span>Watch Trailer</span>
+                        </a>
                       </div>
                     </div>
                   </div>

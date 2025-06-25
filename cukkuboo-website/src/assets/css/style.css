@@ -5606,6 +5606,9 @@ Banner 2
     width: 100%;
     font-size: 18px;
     margin-bottom: 20px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
 }
 
 .gen-movie-contain-style-2 .gen-movie-action .gen-btn-container {
@@ -6015,8 +6018,18 @@ Play Button
 ================================================*/
 .gen-front-image {
     position: relative;
-    display: inline-block;
-    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 370px;
+    max-height: 70vh;
+    overflow: hidden;
+}
+
+.gen-front-image img {
+    min-width: 100%;
+    min-height: 100%;
+    max-width: none;
 }
 
 .gen-front-image:before {

@@ -1,0 +1,19 @@
+<div *ngFor="let reel of reels" class="reel-container position-relative">
+  <video #videoEl
+         [src]="reel.video"
+         [poster]="reel.image"
+         muted
+         autoplay
+         loop
+         playsinline>
+  </video>
+  <div class="reel-text">
+    <div class="title">{{ reel.title }}</div>
+    <div class="decp">{{ reel.description }}</div>
+  </div>
+  <div class="cntl-icos">
+    <i class="bi bi-heart d-block mb-2"></i>
+    <i class="bi bi-volume-down d-block mb-2"></i>
+    <i class="bi bi-share d-block"></i>
+  </div>
+</div>

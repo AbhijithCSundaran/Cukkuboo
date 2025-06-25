@@ -75,5 +75,14 @@ return $this->db->query("update user set status = '".$status."', updated_at=NOW(
     {
         return $this->where('status', 1)->countAllResults();
     }
+    public function getMonthlySubscriberCount()
+    {
+    return $this->select("DATE_FORMAT(join_date, '%Y-%m') as month, COUNT(*) as total_subscribers")
+                ->where('status !=', 'deleted') 
+                ->groupBy("DATE_FORMAT(join_date, '%Y-%m')")
+                ->orderBy("month", "ASC")
+                ->findAll();
+    }
+
 
 }

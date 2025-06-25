@@ -53,7 +53,7 @@ class SubscriptionPlan extends ResourceController
         $data['subscriptionplan_id'] = $insertId;
  
         return $this->respond([
-            'status' => true,
+            'success' => true,
             'message' => 'Plan created successfully',
             'data' => $data
         ]);
@@ -68,7 +68,7 @@ class SubscriptionPlan extends ResourceController
         $data['subscriptionplan_id'] = $id;
  
         return $this->respond([
-            'status' => true,
+            'success' => true,
             'message' => 'Plan updated successfully',
             'data' => $data
         ]);
@@ -106,7 +106,8 @@ class SubscriptionPlan extends ResourceController
             ->findAll($pageSize, $offset);
  
         return $this->respond([
-            'status' => true,
+            'success' => true,
+            'message'=>'success',
             'data' => $plans,
             'total' => $total
         ]);
@@ -127,29 +128,33 @@ class SubscriptionPlan extends ResourceController
         }
  
         return $this->respond([
-            'status' => true,
+            'success' => true,
+            'message'=>'success',
             'data' => $plan
         ]);
     }
  
     public function delete($id = null)
-    {
-        $authHeader = $this->request->getHeaderLine('Authorization');
-        $user = $this->authService->getAuthenticatedUser($authHeader);
- 
-        if (!$user) {
-            return $this->failUnauthorized('Invalid or missing token.');
-        }
- 
-        $deleted = $this->subscriptionPlanModel->deletePlanById(9, (int)$id, $user['user_id']);
- 
-        if ($deleted) {
-            return $this->respond([
-                'status' => true,
-                'message' => "Plan with ID $id marked as deleted."
-            ]);
-        }
- 
-        return $this->failServerError("Failed to delete plan with ID $id.");
+{
+    $authHeader = $this->request->getHeaderLine('Authorization');
+    $user = $this->authService->getAuthenticatedUser($authHeader);
+
+    if (!$user) {
+        return $this->failUnauthorized('Invalid or missing token.');
     }
+
+    $status = 9;
+
+    $deleted = $this->subscriptionPlanModel->deletePlanById($status, (int)$id, $user['user_id']);
+
+    if ($deleted) {
+        return $this->respond([
+            'success' => true,
+            'message' => "Plan with ID $id marked as deleted successfully."
+        ]);
+    }
+
+    return $this->failServerError("Failed to delete plan with ID $id.");
+}
+
 }

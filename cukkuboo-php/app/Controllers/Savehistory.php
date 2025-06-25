@@ -36,7 +36,7 @@ class Savehistory extends ResourceController
         $result = $this->model->saveCompleted($user['user_id'], $movId);
 
         return $this->respond([
-            'status' => true,
+            'success' => true,
             'message' => $result ? 'Completed movie saved.' : 'Failed to save movie.'
         ]);
     }
@@ -53,7 +53,7 @@ class Savehistory extends ResourceController
         $history = $this->model->getCompletedHistory($user['user_id']);
 
         return $this->respond([
-            'status' => true,
+            'success' => true,
             'message' => 'Completed movie history fetched.',
             'data' => $history
         ]);

@@ -31,6 +31,11 @@ export class MovieService {
     return this.http.get(this.apiUrl + 'movie/moviedetails', { headers: this.headers, params });
   }
 
+  getrelatedMovies(id: number, pageIndex: number = 0, pageSize: number = 20): Observable<any> {
+    const params = { pageIndex: pageIndex.toString(), pageSize: pageSize.toString() };
+    return this.http.get(this.apiUrl + `movies/related/${id}`, { headers: this.headers, params });
+  }
+
   getMovieById(id: number): Observable<any> {
     return this.http.get(this.apiUrl + 'getmovie/' + id, { headers: this.headers });
   }
@@ -41,5 +46,10 @@ export class MovieService {
     });
   }
 
+getReelsData(): Observable<any> {
+  return this.http.get(`${this.apiUrl}reels/details`, {
+    headers: this.headers
+  });
+}
 
 }

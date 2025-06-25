@@ -1,124 +1,126 @@
-@if(movie){
+@if(movieData){
 <!-- Banner Section -->
 <section class="p-0 gen-banner-movies single">
-  <div class="item gen-section-padding-3 position-relative"
-    [ngStyle]="{ 'background-image': 'url(' + movie.background + ')' }">
-    <div class="gen-movie-contain-style-2 h-100">
-      <div class="container h-100">
-        <div class="row flex-row-reverse align-items-center h-100">
-          <!-- Thumbnail & Trailer Button -->
+  <div class="item p-5 position-relative" [ngStyle]="{ 'background-image': 'url(' +imageUrl+ movieData.banner + ')' }">
+    <div class="position-relative d-flex align-items-center h-100">
 
-          <div class="col-xl-6">
-            <div class="gen-front-image">
-              <img [src]="movie.image" alt="carousel-image" />
-              <a class="playBut popup-youtube popup-vimeo popup-gmaps" (click)="movie.playTrailer = true">
-                <svg xmlns="http://www.w3.org/2000/svg" width="213.7px" height="213.7px" viewBox="0 0 213.7 213.7">
-                  <polygon class="triangle" fill="none" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"
-                    stroke-miterlimit="10" points="73.5,62.5 148.5,105.8 73.5,149.1">
-                  </polygon>
-                  <circle class="circle" fill="none" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"
-                    stroke-miterlimit="10" cx="106.8" cy="106.8" r="103.3"></circle>
-                </svg>
-                <span>Watch Trailer</span>
-              </a>
-              <video-palyer *ngIf="movie.playTrailer" class="video_player" (onClose)="movie.playTrailer = false"
-                [videoSrc]="movie.trailer">
-              </video-palyer>
-            </div>
+      <!-- Movie Info & Play Button -->
+      <div class="col-12 col-xl-8">
+        <div class="gen-movie-info">
+          <h3>{{ movieData.title }}</h3>
+        </div>
+
+        <div class="gen-movie-action d-flex mt-4">
+          <div class="gen-btn-container">
+            <a (click)="playVideo(movieData)" class="gen-button gen-button-dark">
+              <i class="fas fa-play"></i>
+              <span class="text">Play Now</span>
+            </a>
           </div>
-
-          <!-- Movie Info & Play Button -->
-          <div class="col-xl-6">
-            <div class="gen-movie-info">
-              <h3>{{ movie.title }}</h3>
-            </div>
-
-            <div class="gen-movie-action">
-              <div class="gen-btn-container">
-                <a (click)="playVideo(movie)" class="gen-button gen-button-dark">
-                  <i class="fas fa-play"></i>
-                  <span class="text">Play Now</span>
-                </a>
-              </div>
-            </div>
+          <div class="ms-3 gen-btn-container d-block d-xl-none" (click)="movieData.playTrailer = true">
+            <a class="gen-button gen-button-outline">
+              <i class="fas fa-play"></i><span class="text">Watch Trailer</span>
+            </a>
           </div>
         </div>
       </div>
-    </div>
 
+      <!-- Thumbnail & Trailer Button -->
+      <div class="col-xl-4 d-none d-xl-flex">
+        <div class="gen-front-image mx-auto">
+          <img [src]="imageUrl+movieData.banner" alt="carousel-image" />
+          <a class="playBut popup-youtube popup-vimeo popup-gmaps" (click)="movieData.playTrailer = true">
+            <svg xmlns="http://www.w3.org/2000/svg" width="213.7px" height="213.7px" viewBox="0 0 213.7 213.7">
+              <polygon class="triangle" fill="none" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"
+                stroke-miterlimit="10" points="73.5,62.5 148.5,105.8 73.5,149.1">
+              </polygon>
+              <circle class="circle" fill="none" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"
+                stroke-miterlimit="10" cx="106.8" cy="106.8" r="103.3"></circle>
+            </svg>
+            <span>Watch Trailer</span>
+          </a>
+
+        </div>
+      </div>
+
+    </div>
+    <video-palyer *ngIf="movieData.playTrailer" class="video_player" (onClose)="movieData.playTrailer = false"
+      [videoSrc]="videoUrl+movieData.trailer">
+    </video-palyer>
     <!--  Video -->
-    <video-palyer *ngIf="movie.playVideo" class="video_player" (onClose)="movie.playVideo = false"
-      [videoSrc]="movie.video">
+    <video-palyer *ngIf="movieData.playVideo" class="video_player" (onClose)="movieData.playVideo = false"
+      [videoSrc]="videoUrl+movieData.video">
     </video-palyer>
   </div>
 </section>
 
 <!-- Movie Details -->
 <section class="py-0 px-5 gen-single-movie">
-    <div class="gen-single-movie-wrapper style-1">
-      <div class="gen-single-movie-info">
-        <h2 class="gen-title">{{ movie.title }}</h2>
-        <div class="gen-single-meta-holder">
+  <div class="gen-single-movie-wrapper style-1">
+    <div class="gen-single-movie-info">
+      <h2 class="gen-title">{{ movieData.title }}</h2>
+      <div class="gen-single-meta-holder">
+        <ul>
+          <li class="gen-sen-rating">
+            {{ movieData.age_rating === '1' ? '16+' : '18+' }}
+          </li>
+          <li>
+            <i class="fas fa-eye"></i>
+            <span>{{ movieData.views || 0 }} Views</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Description -->
+      <p>{{ movieData.description }}</p>
+
+      <!-- Cast, Duration, Release -->
+      <div class="gen-after-excerpt">
+        <div class="gen-extra-data">
           <ul>
-            <li class="gen-sen-rating">
-              {{ movie.age_rating === '1' ? '16+' : '18+' }}
-            </li>
-            <li>
-              <i class="fas fa-eye"></i>
-              <span>{{ movie.views || 0 }} Views</span>
-            </li>
+            <li><span>Cast:</span> <span>{{ movieData.cast_details }}</span></li>
+            <li><span>Run Time:</span> <span>{{ movieData.duration }}</span></li>
+            <li><span>Release Date:</span> <span>{{ movieData.release_date }}</span></li>
           </ul>
         </div>
 
-        <!-- Description -->
-        <p>{{ movie.description }}</p>
-
-        <!-- Cast, Duration, Release -->
-        <div class="gen-after-excerpt">
-          <div class="gen-extra-data">
-            <ul>
-              <li><span>Cast:</span> <span>{{ movie.cast_details }}</span></li>
-              <li><span>Run Time:</span> <span>{{ movie.duration }}</span></li>
-              <li><span>Release Date:</span> <span>{{ movie.release_date }}</span></li>
-            </ul>
-          </div>
-
-          <!-- Social -->
-          <div class="gen-socail-share">
-            <h4>Social Share:</h4>
-            <ul class="social-inner">
-              <li><a href="#" class="facebook"><i class="fab fa-facebook-f"></i></a></li>
-              <li><a href="#" class="instagram"><i class="fab fa-instagram"></i></a></li>
-            </ul>
-          </div>
+        <!-- Social -->
+        <div class="gen-socail-share">
+          <h4>Social Share:</h4>
+          <ul class="social-inner">
+            <li><a href="#" class="facebook"><i class="fab fa-facebook-f"></i></a></li>
+            <li><a href="#" class="instagram"><i class="fab fa-instagram"></i></a></li>
+          </ul>
         </div>
       </div>
     </div>
+  </div>
 </section>
 
 
 
 <!-- Suggested movies -->
-<section class="py-3 px-5" *ngIf="suggetionList.length">
+<section class="py-3 px-5">
   <div class="gen-more-like">
-    <h5 class="gen-more-title">More Like This</h5>
-    <div class="row">
+    <h5 class="gen-more-title mb-3">More Like This</h5>
+    @if(suggetionList.length){
+    <div class="row col-12">
       <div class="col-xl-3 col-lg-4 col-md-6" *ngFor="let movie of suggetionList">
-        <div class="gen-carousel-movies-style-3 movie-grid style-3">
+        <div class="gen-carousel-movies-style-3 movie-grid style-3" [routerLink]="['/movies', movie.mov_id]">
           <div class="gen-movie-contain">
             <div class="gen-movie-img">
-              <img [src]="movie.image" alt="streamlab-image" />
+              <img [src]="imageUrl+movie.thumbnail" alt="{{ movie.title }} thumbnail" />
             </div>
             <div class="gen-info-contain">
               <div class="gen-movie-info">
-                <h3><a href="#">{{ movie.title }}</a></h3>
+                <h3><a>{{ movie.title }}</a></h3>
               </div>
               <div class="gen-movie-meta-holder">
                 <ul>
                   <li>{{ movie.duration }}</li>
-                  <li>
-                    <a href="#"><span>{{ movie.genres[0] }}</span></a>
-                  </li>
+                  <!-- <li>
+                    <a><span>{{ movie.genres[0] }}</span></a>
+                  </li> -->
                 </ul>
               </div>
             </div>
@@ -126,6 +128,11 @@
         </div>
       </div>
     </div>
+    }@else {
+    <p class="py-3"> No related movies................</p>
+    }
   </div>
+  <div *ngIf="!stopInfiniteScroll" infiniteScroll (scrolled)="onScroll($event)" style="height: 1px;"></div>
 </section>
+
 }

@@ -26,4 +26,16 @@ class SubscriptionPlanModel extends Model
     {
         return $this->find($id);
     }
+    public function deletePlanById($status, $id, $user_id)
+{
+    return $this->db->table($this->table)
+        ->where('subscriptionplan_id', $id)
+        ->update([
+            'status' => $status,
+            'modify_by' => $user_id,
+            'modify_on' => date('Y-m-d H:i:s')
+        ]);
+}
+
+
 }

@@ -51,6 +51,7 @@ $routes->get('movies/most-watched', 'MovieDetail::mostWatchedMovies');
 $routes->get('movies/latestmovies', 'MovieDetail::latestMovies');
 $routes->get('movies/mostwatchmovie', 'MovieDetail::getMostWatchMovies');
 $routes->get('user/count-user', 'User::countActiveUsers');
+$routes->get('user/subscriber', 'User::countSubscribersByMonth');
 $routes->get('movies/countActive', 'MovieDetail::countActiveMovies');
 $routes->get('movies/countInActive', 'MovieDetail::countInactiveMovie');
 

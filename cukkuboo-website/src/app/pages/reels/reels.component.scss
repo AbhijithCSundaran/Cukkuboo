@@ -1,41 +1,102 @@
 body {
   margin: 0;
   background: #000;
-  overflow-y: scroll;
-  scroll-snap-type: y mandatory;
+  overflow: hidden;
 }
 
-.reel-container {
-  height: 100vh;
-  scroll-snap-align: start;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 10px;
+.reel-wrapper {
   position: relative;
-}
+  height: 100vh;
+  background: #000;
+  overflow: hidden;
 
-video {
-  max-height: 100%;
-  max-width: 100%;
-  border-radius: 10px;
-}
+  .reel-scroll {
+    height: 100%;
+    overflow-y: auto;
+    scroll-snap-type: y mandatory;
+    -webkit-overflow-scrolling: touch;
+  }
 
-.reel-text {
-  position: absolute;
-  width: 345px;
-  color: #fff;
-  margin-top: 80vh;
-}
+  .reel-container {
+    height: 100vh;
+    scroll-snap-align: start;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 
-.cntl-icos {
-  position: absolute;
-  width: 18px;
-  font-size: 25px;
-  margin-left: 280px;
-  margin-top: 70vh;
+  .reel-inner {
+    width: 360px;
+    height: 640px;
+    background-color: #000;
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
 
-  i {
-    color: #fff;
+    video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .play-pause-btn {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(0, 0, 0, 0.6);
+      border: none;
+      border-radius: 50%;
+      padding: 16px;
+      font-size: 32px;
+      color: white;
+      z-index: 10;
+      cursor: pointer;
+    }
+
+    .reel-text {
+      position: absolute;
+      bottom: 20px;
+      left: 16px;
+      color: #fff;
+      width: calc(100% - 32px);
+    }
+
+    .cntl-icos {
+      position: absolute;
+      right: 16px;
+      bottom: 80px;
+      font-size: 24px;
+
+      i {
+        color: #fff;
+        margin-bottom: 12px;
+        display: block;
+      }
+    }
+  }
+
+  .nav-arrows {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    z-index: 20;
+
+    .arrow {
+      background: rgba(255, 0, 0, 0.8); // Red
+      border: none;
+      color: #fff;
+      font-size: 24px;
+      margin: 10px 0;
+      padding: 10px;
+      border-radius: 50%;
+      cursor: pointer;
+
+      i {
+        color: #fff;
+      }
+    }
   }
 }

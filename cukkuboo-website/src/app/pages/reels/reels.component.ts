@@ -3,6 +3,7 @@ import {
   AfterViewInit,
   ElementRef,
   ViewChildren,
+  ViewChild,
   QueryList,
   OnInit
 } from '@angular/core';
@@ -19,6 +20,7 @@ import { environment } from '../../../environments/environment';
 })
 export class ReelsComponent implements OnInit, AfterViewInit {
   @ViewChildren('videoEl') videos!: QueryList<ElementRef<HTMLVideoElement>>;
+  @ViewChild('reelScroll') reelScroll!: ElementRef<HTMLDivElement>;
 
   reels: {
     video: string;
@@ -27,6 +29,9 @@ export class ReelsComponent implements OnInit, AfterViewInit {
     description: string;
   }[] = [];
 
+  videoStates: boolean[] = [];
+  hoveredIndex: number | null = null;
+  private currentIndex = 0;
   private videoUrl = environment.apiUrl + 'uploads/videos/';
   private imageUrl = environment.apiUrl + 'uploads/images/';
 
@@ -41,6 +46,8 @@ export class ReelsComponent implements OnInit, AfterViewInit {
           title: data.title,
           description: data.description
         })) || [];
+
+        this.videoStates = new Array(this.reels.length).fill(true);
       },
       error: (err) => {
         console.error('Error loading reels:', err);
@@ -53,10 +60,15 @@ export class ReelsComponent implements OnInit, AfterViewInit {
       (entries) => {
         entries.forEach((entry) => {
           const video = entry.target as HTMLVideoElement;
+          const index = Array.from(this.videos).findIndex(
+            (v) => v.nativeElement === video
+          );
           if (entry.isIntersecting) {
             video.play();
+            this.videoStates[index] = true;
           } else {
             video.pause();
+            this.videoStates[index] = false;
           }
         });
       },
@@ -66,5 +78,54 @@ export class ReelsComponent implements OnInit, AfterViewInit {
     this.videos.changes.subscribe(() => {
       this.videos.forEach((videoRef) => observer.observe(videoRef.nativeElement));
     });
+
+    setTimeout(() => {
+      this.videos.forEach((videoRef) => observer.observe(videoRef.nativeElement));
+    });
+  }
+
+  scrollToNext(): void {
+    if (this.currentIndex < this.reels.length - 1) {
+      this.currentIndex++;
+      this.scrollToIndex(this.currentIndex);
+    }
+  }
+
+  scrollToPrev(): void {
+    if (this.currentIndex > 0) {
+      this.currentIndex--;
+      this.scrollToIndex(this.currentIndex);
+    }
+  }
+
+  private scrollToIndex(index: number): void {
+    const container = this.reelScroll.nativeElement;
+    const reelElements = container.querySelectorAll('.reel-container');
+    if (reelElements[index]) {
+      reelElements[index].scrollIntoView({ behavior: 'smooth' });
+    }
+  }
+
+  togglePlayPause(index: number): void {
+    const video = this.videos.get(index)?.nativeElement;
+    if (video) {
+      if (video.paused) {
+        video.play();
+        this.videoStates[index] = true;
+      } else {
+        video.pause();
+        this.videoStates[index] = false;
+      }
+    }
+  }
+
+  onHover(index: number): void {
+    this.hoveredIndex = index;
+  }
+
+  onLeave(index: number): void {
+    if (this.hoveredIndex === index) {
+      this.hoveredIndex = null;
+    }
   }
 }

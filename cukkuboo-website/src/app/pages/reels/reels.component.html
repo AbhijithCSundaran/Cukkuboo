@@ -1,19 +1,47 @@
-<div *ngFor="let reel of reels" class="reel-container position-relative">
-  <video #videoEl
-         [src]="reel.video"
-         [poster]="reel.image"
-         muted
-         autoplay
-         loop
-         playsinline>
-  </video>
-  <div class="reel-text">
-    <div class="title">{{ reel.title }}</div>
-    <div class="decp">{{ reel.description }}</div>
+<div class="reel-wrapper">
+  <div class="reel-scroll" #reelScroll>
+    <div *ngFor="let reel of reels; let i = index" class="reel-container">
+      <div class="reel-inner" (mouseenter)="onHover(i)" (mouseleave)="onLeave(i)">
+        <video
+          #videoEl
+          [src]="reel.video"
+          [poster]="reel.image"
+          muted
+          autoplay
+          loop
+          playsinline
+        ></video>
+
+        <!-- Pause button only on hover -->
+        <button
+          class="play-pause-btn"
+          *ngIf="hoveredIndex === i"
+          (click)="togglePlayPause(i)"
+        >
+          <i [ngClass]="videoStates[i] ? 'bi bi-pause-fill' : 'bi bi-play-fill'"></i>
+        </button>
+
+        <div class="reel-text">
+          <div class="title">{{ reel.title }}</div>
+          <div class="decp">{{ reel.description }}</div>
+        </div>
+
+        <div class="cntl-icos">
+          <i class="bi bi-heart d-block mb-2"></i>
+          <i class="bi bi-volume-down d-block mb-2"></i>
+          <i class="bi bi-share d-block"></i>
+        </div>
+      </div>
+    </div>
   </div>
-  <div class="cntl-icos">
-    <i class="bi bi-heart d-block mb-2"></i>
-    <i class="bi bi-volume-down d-block mb-2"></i>
-    <i class="bi bi-share d-block"></i>
+
+  <!-- Navigation Arrows -->
+  <div class="nav-arrows">
+    <button class="arrow up" (click)="scrollToPrev()">
+      <i class="bi bi-chevron-up"></i>
+    </button>
+    <button class="arrow down" (click)="scrollToNext()">
+      <i class="bi bi-chevron-down"></i>
+    </button>
   </div>
 </div>

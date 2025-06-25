@@ -20,12 +20,10 @@
                         </ul>
                         <p>{{ item.description }}</p>
                         <div class="gen-meta-info">
-                          <ul class="gen-meta-after-excerpt">
-                            <li><strong>Cast : </strong> {{ item.cast }}</li>
-                            <li><strong>Tag : </strong>
-                              <span *ngFor="let tag of item.tags"><a href="#">{{ tag }}</a></span>
-                            </li>
-                          </ul>
+                           <ul class="gen-meta-after-excerpt">
+                              <li><strong>Cast : </strong> {{ item.cast_details }}</li>
+                              <li><strong>Category : </strong> {{ item.category == 1 ? 'Movie' : item.category == 2 ? 'Show' : 'Unknown' }}</li>
+                            </ul>
                         </div>
                       </div>
                       <div class="gen-movie-action d-flex">

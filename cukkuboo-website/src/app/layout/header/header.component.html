@@ -28,17 +28,9 @@
 
                   <!-- Mobile Search -->
                   <li class="menu-item mt-3">
-                    <div class="gen-menu-search-block">
+                   
                       <a href="javascript:void(0)">Search</a>
-                      <div class="gen-search-form mt-2">
-                        <form role="search" class="search-form">
-                          <label>
-                            <input type="search" class="search-field" placeholder="Search …" name="s" />
-                          </label>
-                          <button type="submit" class="search-submit"></button>
-                        </form>
-                      </div>
-                    </div>
+                   
                   </li>
 
                   <!-- Mobile User -->
@@ -76,6 +68,9 @@
                   </li>
                   <li class="menu-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">
                     <a routerLink="/movies" (click)="closeMenu()">Movies</a>
+                  </li>
+                   <li class="menu-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">
+                    <a routerLink="/reels" (click)="closeMenu()">Reels</a>
                   </li>
                 </ul>
               </div>

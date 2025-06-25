@@ -23,7 +23,7 @@ class Resume extends ResourceController
 
         if (!$user || !isset($user['user_id'])) {
             return $this->respond([
-                'status' => false,
+                'success' => false,
                 'message' => 'Unauthorized user.'
             ], 401);
         }
@@ -34,7 +34,7 @@ class Resume extends ResourceController
 
         if (!$movId || $duration === null) {
             return $this->respond([
-                'status' => false,
+                'success' => false,
                 'message' => 'Movie ID and duration are required.'
             ], 400);
         }
@@ -42,7 +42,7 @@ class Resume extends ResourceController
         $result = $this->resumeModel->saveOrUpdate($user['user_id'], $movId, $duration);
 
         return $this->respond([
-            'status' => true,
+            'success' => true,
             'message' => $result ? 'Movie progress saved successfully.' : 'Failed to save progress.'
         ]);
     }
@@ -54,7 +54,7 @@ class Resume extends ResourceController
 
         if (!$user || !isset($user['user_id'])) {
             return $this->respond([
-                'status' => false,
+                'success' => false,
                 'message' => 'Unauthorized user.'
             ], 401);
         }
@@ -62,7 +62,7 @@ class Resume extends ResourceController
         $history = $this->resumeModel->getHistoryByUserId($user['user_id']);
 
         return $this->respond([
-            'status' => true,
+            'success' => true,
             'message' => 'Viewed movie history fetched successfully.',
             'data' => $history
         ]);

@@ -57,7 +57,6 @@ export class MoviesComponent implements OnInit {
     });
   }
 
-
   onSearchChange() {
     clearTimeout(this.searchTimeout);
     this.searchTimeout = setTimeout(() => {

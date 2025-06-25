@@ -169,17 +169,18 @@
             </mat-error>
           </mat-form-field>
         </div>
-        <!-- Duration -->
-        <!-- <div class="width-50 px-2 pb-3">
-          <mat-form-field appearance="outline" class="w-100">
-            <mat-label>Duration</mat-label>
-            <input matInput type="text" placeholder="e.g., 2h 30m or 150 mins" formControlName="duration" />
-            <mat-error *ngIf="movieForm.controls['duration'].touched && movieForm.controls['duration'].invalid">
-              <Validation-Messages [control]="movieForm.controls['duration']"></Validation-Messages>
-            </mat-error>
-          </mat-form-field>
-        </div>
- -->
+     <!-- Duration -->
+<!-- <div class="width-50 px-2 pb-3">
+  <mat-form-field appearance="outline" class="w-100">
+    <mat-label>Duration</mat-label>
+    <input matInput type="text" placeholder="e.g., 2h 30m or 150 mins" formControlName="duration" />
+    <mat-error *ngIf="movieForm.controls['duration'].touched && movieForm.controls['duration'].invalid">
+      <Validation-Messages [control]="movieForm.controls['duration']"></Validation-Messages>
+    </mat-error>
+  </mat-form-field>
+</div> -->
+        
+ 
 
 
       </div>
@@ -279,12 +280,12 @@
         </div>
 
       </div>
-    </mat-card-content>
+    <!-- </mat-card-content> -->
 
     <mat-card-actions class="d-flex justify-content-end px-4 pb-2">
       <button class="save-button" (click)="submitMovie()">Save</button>
     </mat-card-actions>
-  </mat-card>
+  <!-- </mat-card> -->
   <!-- Delete Confirmation Modal -->
 <div class="modal" [class.show]="confirmDeleteType">
   <div class="modal-content">
@@ -298,4 +299,4 @@
   </div>
 </div>
 
-</div>
+<!-- </div> -->

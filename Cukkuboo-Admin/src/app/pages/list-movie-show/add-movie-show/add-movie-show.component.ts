@@ -264,46 +264,84 @@ export class AddMovieShowComponent implements OnInit {
     }
   }
 
-  onVideoSelected(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    const file = input.files?.[0];
+onVideoSelected(event: Event): void {
+  const input = event.target as HTMLInputElement;
+  const file = input.files?.[0];
 
-    if (file) {
-      const isMp4 = true;//file.type === 'video/mp4';
-      if (!isMp4) {
-        this.showSnackbar('Only MP4 video files are allowed for videos.', 'snackbar-error');
-        input.value = '';
-        return;
-      }
-
-      this.uploadMainVideo(file);
+  if (file) {
+    const isMp4 = file.type === 'video/mp4' || file.name.toLowerCase().endsWith('.mp4');
+    if (!isMp4) {
+      this.showSnackbar('Only MP4 video files are allowed for videos.', 'snackbar-error');
+      input.value = '';
+      return;
     }
+
+    this.videoName = file.name;
+    this.videoURL = URL.createObjectURL(file);
+    this.getVideoDuration(file); // 👈 Get duration before upload
+
+    this.uploadMainVideo(file);
   }
+}
+
 
   onVideoDragOver(event: DragEvent): void {
     event.preventDefault();
     event.stopPropagation();
   }
+onVideoDrop(event: DragEvent): void {
+  event.preventDefault();
+  event.stopPropagation();
+  const file = event.dataTransfer?.files?.[0];
 
-  onVideoDrop(event: DragEvent): void {
-    event.preventDefault();
-    event.stopPropagation();
-    const file = event.dataTransfer?.files?.[0];
-
-    if (file) {
-      const isMp4 = file.type === 'video/mp4' || file.name.toLowerCase().endsWith('.mp4');
-      if (!isMp4) {
-        this.showSnackbar('Only MP4 video files are allowed for videos.', 'snackbar-error');
-        return;
-      }
-
-      this.videoName = file.name;
-      this.videoURL = URL.createObjectURL(file);
-      this.movieForm.controls['video'].setValue(this.videoURL);
-
-      this.uploadMainVideo(file);
+  if (file) {
+    const isMp4 = file.type === 'video/mp4' || file.name.toLowerCase().endsWith('.mp4');
+    if (!isMp4) {
+      this.showSnackbar('Only MP4 video files are allowed for videos.', 'snackbar-error');
+      return;
     }
+
+    this.videoName = file.name;
+    this.videoURL = URL.createObjectURL(file);
+    this.movieForm.controls['video'].setValue(this.videoURL);
+
+    this.getVideoDuration(file); // 👈 Get duration before upload
+
+    this.uploadMainVideo(file);
   }
+}
+getVideoDuration(file: File): void {
+  const video = document.createElement('video');
+  video.preload = 'metadata';
+
+  video.onloadedmetadata = () => {
+    window.URL.revokeObjectURL(video.src);
+    const durationInSeconds = video.duration;
+
+    const hours = Math.floor(durationInSeconds / 3600);
+    const minutes = Math.floor((durationInSeconds % 3600) / 60);
+    const seconds = Math.floor(durationInSeconds % 60);
+
+    const formattedDuration =
+      hours > 0
+        ? `${hours}h ${minutes}m ${seconds}s`
+        : `${minutes}m ${seconds}s`;
+
+    console.log('Video duration:', formattedDuration); // ✅ Console check
+
+    this.movieForm.controls['duration'].setValue(formattedDuration);
+    this.cdr.detectChanges();
+
+    console.log('Form duration control value:', this.movieForm.value['duration']); // ✅ Form check
+  };
+
+  video.onerror = () => {
+    this.showSnackbar('Unable to retrieve video duration.', 'snackbar-error');
+  };
+
+  video.src = URL.createObjectURL(file);
+}
+
 
   uploadMainVideo(file: File) {
     this.uploadInProgress = true;
@@ -482,24 +520,27 @@ export class AddMovieShowComponent implements OnInit {
   }
 
 
-  submitMovie() {
-    if (this.movieForm.invalid) {
-      this.movieForm.markAllAsTouched();
-      return;
-    }
-
-    const model = this.movieForm.value;
-
-    this.movieService.addmovies(model).subscribe({
-      next: (response) => {
-        this.showSnackbar('Movie saved successfully!', 'snackbar-success');
-        this.router.navigate(['/list-movie-show']);
-      },
-      error: (error) => {
-        this.showSnackbar('Failed to save movie. Please try again.', 'snackbar-error');
-      }
-    });
+submitMovie() {
+  if (this.movieForm.invalid) {
+    this.movieForm.markAllAsTouched();
+    return;
   }
+
+  const model = this.movieForm.value;
+
+  console.log('Payload to backend:', model); // ✅ Ensure duration is included here
+
+  this.movieService.addmovies(model).subscribe({
+    next: (response) => {
+      console.log('Movie save response:', response); // ✅ Backend received duration?
+      this.showSnackbar('Movie saved successfully!', 'snackbar-success');
+      this.router.navigate(['/list-movie-show']);
+    },
+    error: (error) => {
+      this.showSnackbar('Failed to save movie. Please try again.', 'snackbar-error');
+    }
+  });
+}
 
 
 

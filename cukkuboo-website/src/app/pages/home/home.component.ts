@@ -5,12 +5,13 @@ import { CarouselModule, OwlOptions } from 'ngx-owl-carousel-o';
 import { MovieService } from '../../services/movie.service';
 import { environment } from '../../../environments/environment';
 import { PalyerComponent } from '../_common/palyer/palyer.component';
+import { TruncatePipe } from '../../core/pipes/truncate-pipe';
 
 @Component({
   selector: 'app-home',
   standalone: true,
   imports: [CommonModule, CarouselModule, RouterLink,
-    PalyerComponent
+    PalyerComponent, TruncatePipe
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
@@ -48,7 +49,7 @@ export class HomeComponent implements OnInit {
 
   customOptions1: OwlOptions = {
     loop: true, mouseDrag: true, touchDrag: true, pullDrag: true, navSpeed: 700,
-    autoplay: true, autoplayTimeout: 7500, autoplayHoverPause: true, autoplayMouseleaveTimeout: 700,
+    autoplay: false, autoplayTimeout: 7500, autoplayHoverPause: true, autoplayMouseleaveTimeout: 700,
     items: 1, autoHeight: false, autoWidth: true, dots: true, nav: true,
     navText: [
       '<span class="material-icons" style="font-size:18px">arrow_back_ios_new</span>',

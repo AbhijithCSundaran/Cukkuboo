@@ -38,6 +38,7 @@ body {
       width: 100%;
       height: 100%;
       object-fit: cover;
+      cursor: pointer;
     }
 
     .play-pause-btn {
@@ -61,6 +62,16 @@ body {
       left: 16px;
       color: #fff;
       width: calc(100% - 32px);
+
+      .title {
+        font-weight: bold;
+        font-size: 18px;
+        margin-bottom: 4px;
+      }
+
+      .decp {
+        font-size: 14px;
+      }
     }
 
     .cntl-icos {
@@ -73,6 +84,7 @@ body {
         color: #fff;
         margin-bottom: 12px;
         display: block;
+        cursor: pointer;
       }
     }
   }
@@ -80,22 +92,29 @@ body {
   .nav-arrows {
     position: absolute;
     top: 50%;
-    right: 10px;
+    right: 16px;
     transform: translateY(-50%);
     z-index: 20;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
 
     .arrow {
-      background: rgba(255, 0, 0, 0.8); // Red
+      background: rgba(255, 0, 0, 0.8); // red
       border: none;
       color: #fff;
       font-size: 24px;
-      margin: 10px 0;
       padding: 10px;
       border-radius: 50%;
       cursor: pointer;
+      transition: background 0.3s ease;
 
       i {
         color: #fff;
+      }
+
+      &:hover {
+        background: rgba(255, 0, 0, 1);
       }
     }
   }

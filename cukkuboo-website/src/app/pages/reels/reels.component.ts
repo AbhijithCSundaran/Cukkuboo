@@ -40,12 +40,13 @@ export class ReelsComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     this.movieService.getReelsData().subscribe({
       next: (response) => {
-        this.reels = response?.data?.map((data: any) => ({
-          video: this.videoUrl + (data.video || ''),
-          image: this.imageUrl + (data.thumbnail || 'default-thumb.jpg'),
-          title: data.title,
-          description: data.description
-        })) || [];
+        this.reels =
+          response?.data?.map((data: any) => ({
+            video: this.videoUrl + (data.video || ''),
+            image: this.imageUrl + (data.thumbnail || 'default-thumb.jpg'),
+            title: data.title,
+            description: data.description
+          })) || [];
 
         this.videoStates = new Array(this.reels.length).fill(true);
       },
@@ -76,11 +77,15 @@ export class ReelsComponent implements OnInit, AfterViewInit {
     );
 
     this.videos.changes.subscribe(() => {
-      this.videos.forEach((videoRef) => observer.observe(videoRef.nativeElement));
+      this.videos.forEach((videoRef) =>
+        observer.observe(videoRef.nativeElement)
+      );
     });
 
     setTimeout(() => {
-      this.videos.forEach((videoRef) => observer.observe(videoRef.nativeElement));
+      this.videos.forEach((videoRef) =>
+        observer.observe(videoRef.nativeElement)
+      );
     });
   }
 
@@ -116,6 +121,13 @@ export class ReelsComponent implements OnInit, AfterViewInit {
         video.pause();
         this.videoStates[index] = false;
       }
+
+      this.hoveredIndex = index;
+      setTimeout(() => {
+        if (this.hoveredIndex === index) {
+          this.hoveredIndex = null;
+        }
+      }, 1000);
     }
   }
 

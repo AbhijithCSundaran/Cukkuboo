@@ -1,7 +1,11 @@
 <div class="reel-wrapper">
   <div class="reel-scroll" #reelScroll>
     <div *ngFor="let reel of reels; let i = index" class="reel-container">
-      <div class="reel-inner" (mouseenter)="onHover(i)" (mouseleave)="onLeave(i)">
+      <div
+        class="reel-inner"
+        (mouseenter)="onHover(i)"
+        (mouseleave)="onLeave(i)"
+      >
         <video
           #videoEl
           [src]="reel.video"
@@ -10,22 +14,27 @@
           autoplay
           loop
           playsinline
+          (click)="togglePlayPause(i)"
         ></video>
 
-        <!-- Pause button only on hover -->
+        <!-- Play/Pause Button -->
         <button
           class="play-pause-btn"
           *ngIf="hoveredIndex === i"
-          (click)="togglePlayPause(i)"
+          (click)="togglePlayPause(i); $event.stopPropagation()"
         >
-          <i [ngClass]="videoStates[i] ? 'bi bi-pause-fill' : 'bi bi-play-fill'"></i>
+          <i
+            [ngClass]="videoStates[i] ? 'bi bi-pause-fill' : 'bi bi-play-fill'"
+          ></i>
         </button>
 
+        <!-- Text Info -->
         <div class="reel-text">
           <div class="title">{{ reel.title }}</div>
           <div class="decp">{{ reel.description }}</div>
         </div>
 
+        <!-- Control Icons -->
         <div class="cntl-icos">
           <i class="bi bi-heart d-block mb-2"></i>
           <i class="bi bi-volume-down d-block mb-2"></i>

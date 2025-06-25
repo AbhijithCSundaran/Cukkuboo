@@ -10,7 +10,7 @@
               <img class="img-fluid logo" src="assets/images/logo.png" alt="streamlab-image" />
             </a>
 
-        
+            <!-- Toggle Button -->
             <button class="navbar-toggler" type="button" (click)="menuOpen = !menuOpen">
               <i class="fas fa-bars"></i>
             </button>
@@ -25,15 +25,17 @@
                   <li class="menu-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">
                     <a routerLink="/movies" (click)="closeMenu()">Movies</a>
                   </li>
+                  <!-- ✅ Reels added for mobile -->
+                  <li class="menu-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">
+                    <a routerLink="/reels" (click)="closeMenu()">Reels</a>
+                  </li>
 
                   <!-- Mobile Search -->
                   <li class="menu-item mt-3">
-                   
-                      <a href="javascript:void(0)">Search</a>
-                   
+                    <a href="javascript:void(0)">Search</a>
                   </li>
 
-                  <!-- Mobile User -->
+                  <!-- Mobile User Auth Links -->
                   <ng-container *ngIf="!isSignedIn; else signedInBlock">
                     <li class="nav-item mt-3">
                       <a routerLink="/signin" class="nav-link" (click)="closeMenu()">Sign In</a>
@@ -69,16 +71,16 @@
                   <li class="menu-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">
                     <a routerLink="/movies" (click)="closeMenu()">Movies</a>
                   </li>
-                   <li class="menu-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">
+                  <li class="menu-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">
                     <a routerLink="/reels" (click)="closeMenu()">Reels</a>
                   </li>
                 </ul>
               </div>
             </div>
 
-         
+            <!-- Desktop Header Right Section -->
             <div class="gen-header-info-box d-none d-lg-flex align-items-center ml-auto">
-
+              
               <!-- Desktop Search -->
               <div class="gen-menu-search-block">
                 <a href="javascript:void(0)" id="gen-seacrh-btn"><i class="fa fa-search"></i></a>
@@ -92,7 +94,7 @@
                 </div>
               </div>
 
-              <!-- Desktop User -->
+              <!-- Desktop User Auth -->
               <div class="gen-account-holder ml-3"
                    (mouseenter)="showUserDropdown = true"
                    (mouseleave)="showUserDropdown = false"
@@ -121,6 +123,7 @@
                   </div>
                 </a>
               </div>
+
             </div>
 
           </nav>

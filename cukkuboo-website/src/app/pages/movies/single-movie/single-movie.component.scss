@@ -2,9 +2,16 @@
     padding: 12px 0px 90px 0px;
 }
 
+.movie-grid .gen-movie-img img {
+    height: 100%;
+    max-width: none;
+    max-height: 540px;
+}
+
 .movie-grid .gen-movie-img {
     max-height: 420px;
     display: flex;
     justify-content: center;
     align-items: center;
+    overflow: hidden;
 }

@@ -22,7 +22,7 @@ class Login extends BaseController
 
     if (!isset($data['email']) || !isset($data['password'])) {
         return $this->response->setJSON([
-            'status' => false,
+            'success' => true,
             'message' => 'Email and password are required.'
         ]);
     }
@@ -31,7 +31,7 @@ class Login extends BaseController
 
     if (!$user || !password_verify($data['password'], $user['password'])) {
         return $this->response->setStatusCode(200)->setJSON([
-            'status' => false,
+            'success' => true,
             'message' => 'Invalid email or password.'
         ]);
     }
@@ -101,7 +101,7 @@ class Login extends BaseController
 
     if (!$user) {
         return $this->response->setJSON([
-            'status' => false,
+            'success' => true,
             'message' => 'Invalid token or user not found.'
         ]);
     }
@@ -122,7 +122,7 @@ public function sendOtp()
     // Validate email
     if (empty($data['email'])) {
         return $this->response->setJSON([
-            'status' => false,
+            'success' => true,
             'message' => 'Email is required.'
         ]);
     }
@@ -132,7 +132,7 @@ public function sendOtp()
 
     if (!$user) {
         return $this->response->setJSON([
-            'status' => false,
+            'success' => true,
             'message' => 'User not found.'
         ]);
     }
@@ -148,7 +148,7 @@ public function sendOtp()
     return $this->response->setJSON([
         'status' => true,
         'message' => 'OTP sent successfully.',
-        'otp' => $otpString  // REMOVE in production
+        'data' => $otpString  // REMOVE in production
     ]);
 }
 
@@ -158,7 +158,7 @@ public function sendOtp()
     
 //     if (empty($data['email'])) {
 //         return $this->response->setJSON([
-//             'status' => false,
+//             'success' => true,,
 //             'message' => 'Email is required.'
 //         ]);
 //     }
@@ -167,7 +167,7 @@ public function sendOtp()
 
 //     if (!$user) {
 //         return $this->response->setJSON([
-//             'status' => false,
+//             'success' => true,,
 //             'message' => 'User not found.'
 //         ]);
 //     }
@@ -202,7 +202,7 @@ public function sendOtp()
 //     } else {
 //         echo $emailService->printDebugger(['headers']);
 //         // return $this->response->setJSON([
-//         //     'status' => false,
+//         //     'success' => true,,
 //         //     'message' => 'Failed to send OTP email.'
 //         // ]);
 //     }
@@ -232,7 +232,7 @@ public function resetPassword()
 
     if (empty($data['email']) || empty($data['otp']) || empty($data['new_password'])) {
         return $this->response->setJSON([
-            'status' => false,
+            'success' => true,
             'message' => 'Email, OTP, and new password are required.'
         ]);
     }
@@ -241,7 +241,7 @@ public function resetPassword()
 
     if (!$user || $user['password'] !== $data['otp']) {
         return $this->response->setJSON([
-            'status' => false,
+            'success' => true,
             'message' => 'Invalid OTP or email.'
         ]);
     }

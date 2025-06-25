@@ -4,11 +4,14 @@ import { RouterLink } from '@angular/router';
 import { CarouselModule, OwlOptions } from 'ngx-owl-carousel-o';
 import { MovieService } from '../../services/movie.service';
 import { environment } from '../../../environments/environment';
+import { PalyerComponent } from '../_common/palyer/palyer.component';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, CarouselModule, RouterLink],
+  imports: [CommonModule, CarouselModule, RouterLink,
+    PalyerComponent
+  ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
@@ -19,6 +22,7 @@ export class HomeComponent implements OnInit {
   videoUrl = environment.apiUrl + 'uploads/videos/';
   imageUrl = environment.apiUrl + 'uploads/images/';
 
+  selectedItem: any;
   constructor(private movieService: MovieService) { }
 
   ngOnInit(): void {
@@ -44,7 +48,7 @@ export class HomeComponent implements OnInit {
 
   customOptions1: OwlOptions = {
     loop: true, mouseDrag: true, touchDrag: true, pullDrag: true, navSpeed: 700,
-    autoplay: true, autoplayTimeout: 7500, autoplayHoverPause: true, autoplayMouseleaveTimeout: 700,
+    autoplay: false, autoplayTimeout: 7500, autoplayHoverPause: true, autoplayMouseleaveTimeout: 700,
     items: 1, autoHeight: false, autoWidth: true, dots: true, nav: true,
     navText: [
       '<span class="material-icons" style="font-size:18px">arrow_back_ios_new</span>',
@@ -63,4 +67,13 @@ export class HomeComponent implements OnInit {
       0: { items: 1 }, 480: { items: 1 }, 768: { items: 2 }, 992: { items: 3 }, 1200: { items: 4 }
     }
   };
+
+  playTrailer(item: any) {
+    this.customOptions1.autoplay = false;
+    this.selectedItem = item;
+  }
+  onCloseTrailer(event: any) {
+    this.selectedItem = null;
+    this.customOptions1.autoplay = true;
+  }
 }

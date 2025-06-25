@@ -1,0 +1,41 @@
+body {
+  margin: 0;
+  background: #000;
+  overflow-y: scroll;
+  scroll-snap-type: y mandatory;
+}
+
+.reel-container {
+  height: 100vh;
+  scroll-snap-align: start;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 10px;
+  position: relative;
+}
+
+video {
+  max-height: 100%;
+  max-width: 100%;
+  border-radius: 10px;
+}
+
+.reel-text {
+  position: absolute;
+  width: 345px;
+  color: #fff;
+  margin-top: 80vh;
+}
+
+.cntl-icos {
+  position: absolute;
+  width: 18px;
+  font-size: 25px;
+  margin-left: 280px;
+  margin-top: 70vh;
+
+  i {
+    color: #fff;
+  }
+}

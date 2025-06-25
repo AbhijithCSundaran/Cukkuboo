@@ -34,4 +34,12 @@ export class UserService {
     return this.http.post(this.apiUrl + 'user/register', body, { headers: this.headers });
   }
   
+
+getProfile(): Observable<any> {
+  const userId = localStorage.getItem('user_id');
+  console.log(userId);
+  return this.http.get(`${this.apiUrl}user/profile/${userId}`, {
+    headers: this.headers
+  });
+}
 }

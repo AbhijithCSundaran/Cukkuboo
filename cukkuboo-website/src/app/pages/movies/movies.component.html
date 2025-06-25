@@ -24,77 +24,80 @@
 
 <!-- Section-1 Start -->
 <section class="px-5 py-2">
-    <div class="col-12">
+  <div class="row d-flex justify-content-end mr-2">
+    <div class="col-4">
       <mat-form-field appearance="outline" class="w-100 mb-4">
         <mat-icon matPrefix>search</mat-icon>
         <input matInput type="text" placeholder="Search for the Movies" [(ngModel)]="searchText"
           (ngModelChange)="onSearchChange()" />
       </mat-form-field>
     </div>
-    <div class="col-12 d-flex flex-column">
-      @if(movies.length){
-        <div class="row col-12">
-          <div *ngFor="let movie of movies" class="col-xl-3 col-lg-4 col-md-6" [routerLink]="['/movies', movie.mov_id]">
-            <div class="gen-carousel-movies-style-3 movie-grid style-3">
-              <div class="gen-movie-contain">
-                <div class="gen-movie-img">
-                  <img [src]="imageUrl + movie.thumbnail" alt="{{ movie.title }} thumbnail" />
-                  <div class="gen-movie-add">
-                    <div class="wpulike wpulike-heart">
-                      <div class="wp_ulike_general_class wp_ulike_is_not_liked">
-                        <button type="button" class="wp_ulike_btn wp_ulike_put_image"></button>
-                      </div>
-                    </div>
-                    <ul class="menu bottomRight">
-                      <li class="share top">
-                        <i class="fa fa-share-alt"></i>
-                        <ul class="submenu">
-                          <li>
-                            <a href="#" class="facebook"><i class="fab fa-facebook-f"></i></a>
-                          </li>
-                          <li>
-                            <a href="#" class="facebook"><i class="fab fa-instagram"></i></a>
-                          </li>
-                          <li>
-                            <a href="#" class="facebook"><i class="fab fa-twitter"></i></a>
-                          </li>
-                        </ul>
+  </div>
+
+  <div class="col-12 d-flex flex-column">
+    @if(movies.length){
+    <div class="row col-12">
+      <div *ngFor="let movie of movies" class="col-xl-3 col-lg-4 col-md-6" [routerLink]="['/movies', movie.mov_id]">
+        <div class="gen-carousel-movies-style-3 movie-grid style-3">
+          <div class="gen-movie-contain">
+            <div class="gen-movie-img">
+              <img [src]="imageUrl + movie.thumbnail" alt="{{ movie.title }} thumbnail" />
+              <div class="gen-movie-add">
+                <div class="wpulike wpulike-heart">
+                  <div class="wp_ulike_general_class wp_ulike_is_not_liked">
+                    <button type="button" class="wp_ulike_btn wp_ulike_put_image"></button>
+                  </div>
+                </div>
+                <ul class="menu bottomRight">
+                  <li class="share top">
+                    <i class="fa fa-share-alt"></i>
+                    <ul class="submenu">
+                      <li>
+                        <a href="#" class="facebook"><i class="fab fa-facebook-f"></i></a>
+                      </li>
+                      <li>
+                        <a href="#" class="facebook"><i class="fab fa-instagram"></i></a>
+                      </li>
+                      <li>
+                        <a href="#" class="facebook"><i class="fab fa-twitter"></i></a>
                       </li>
                     </ul>
-                    <div class="movie-actions--link_add-to-playlist dropdown">
-                      <a class="dropdown-toggle" href="#" data-toggle="dropdown"><i class="fa fa-plus"></i></a>
-                      <div class="dropdown-menu mCustomScrollbar">
-                        <div class="mCustomScrollBox">
-                          <div class="mCSB_container">
-                            <a class="login-link" href="#">Sign in to add this movie to a playlist.</a>
-                          </div>
-                        </div>
+                  </li>
+                </ul>
+                <div class="movie-actions--link_add-to-playlist dropdown">
+                  <a class="dropdown-toggle" href="#" data-toggle="dropdown"><i class="fa fa-plus"></i></a>
+                  <div class="dropdown-menu mCustomScrollbar">
+                    <div class="mCustomScrollBox">
+                      <div class="mCSB_container">
+                        <a class="login-link" href="#">Sign in to add this movie to a playlist.</a>
                       </div>
                     </div>
                   </div>
-                  <div class="gen-movie-action">
-                    <a class="gen-button">
-                      <i class="fa fa-play"></i>
-                    </a>
-                  </div>
                 </div>
-                <div class="gen-info-contain">
-                  <div class="gen-movie-info">
-                    <h3>
-                      <a>{{ movie.title }}</a>
-                    </h3>
-                  </div>
-                  <div class="gen-movie-meta-holder">
-                    <ul>
-                      <li>{{ movie.duration }}</li>
-                    </ul>
-                  </div>
-                </div>
+              </div>
+              <div class="gen-movie-action">
+                <a class="gen-button">
+                  <i class="fa fa-play"></i>
+                </a>
+              </div>
+            </div>
+            <div class="gen-info-contain">
+              <div class="gen-movie-info">
+                <h3>
+                  <a>{{ movie.title }}</a>
+                </h3>
+              </div>
+              <div class="gen-movie-meta-holder">
+                <ul>
+                  <li>{{ movie.duration }}</li>
+                </ul>
               </div>
             </div>
           </div>
         </div>
-      <!-- <div class="col-lg-12">
+      </div>
+    </div>
+    <!-- <div class="col-lg-12">
         <div class="gen-load-more-button">
           <div class="gen-btn-container">
             <a class="gen-button gen-button-loadmore" href="#">
@@ -105,11 +108,11 @@
         </div>
       </div> -->
 
-      <div *ngIf="!stopInfiniteScroll" infiniteScroll (scrolled)="onScroll($event)" style="height: 1px;"></div>
-      <!-- <small *ngIf="stopInfiniteScroll" class="px-3 py-0 co-12 text-center">No more data</small> -->
-      }@else{
-      <p class="px-3">No Videos found</p>
-      }
-    </div>
+    <div *ngIf="!stopInfiniteScroll" infiniteScroll (scrolled)="onScroll($event)" style="height: 1px"></div>
+    <!-- <small *ngIf="stopInfiniteScroll" class="px-3 py-0 co-12 text-center">No more data</small> -->
+    }@else{
+    <p class="px-3">No Videos found</p>
+    }
+  </div>
 </section>
 <!-- Section-1 End -->

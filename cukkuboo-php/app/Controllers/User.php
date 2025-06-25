@@ -331,7 +331,7 @@ public function updateEmailPreference()
 //---------------------------------------Admin Home Display------------------------------------------------//
 
 
-public function countActiveUsers()
+    public function countActiveUsers()
     {
         $authHeader = $this->request->getHeaderLine('Authorization');
         $authuser = $this->authService->getAuthenticatedUser($authHeader);
@@ -341,8 +341,26 @@ public function countActiveUsers()
         $activeCount = $userModel->countActiveUsers();
 
         return $this->respond([
-            'status' => true,
-            'active_user_count' => $activeCount
+            'success' => true,
+            'message'=>'success',
+            'data' => $activeCount
         ]);
     }
+    public function countSubscribersByMonth()
+    {
+    $authHeader = $this->request->getHeaderLine('Authorization');
+    $authuser = $this->authService->getAuthenticatedUser($authHeader);
+    if (!$authuser) 
+        return $this->failUnauthorized('Invalid or missing token.');
+
+    $userModel = new UserModel();
+    $monthlyCounts = $userModel->getMonthlySubscriberCount();
+
+    return $this->respond([
+        'success' => true,
+        'message'=>'success',
+        'data' => $monthlyCounts
+    ]);
+}
+
 }

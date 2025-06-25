@@ -27,7 +27,10 @@ export const routes: Routes = [
                     { path: 'movies', loadComponent: () => import('./pages/movies/movies.component').then(m => m.MoviesComponent) },
                     { path: 'movies/:id', loadComponent: () => import('./pages/movies/single-movie/single-movie.component').then(m => m.SingleMovieComponent) },
                     { path: 'profile', loadComponent: () => import('./pages/profile/profile.component').then(m => m.ProfileComponent) },
-                    { path: 'subscribe', loadComponent: () => import('./pages/subscribe/subscribe.component').then(m => m.SubscribeComponent)}
+                    { path: 'subscribe', loadComponent: () => import('./pages/subscribe/subscribe.component').then(m => m.SubscribeComponent)},
+                    { path: 'privacy-policy', loadComponent: () => import('./pages/privacy-policy/privacy-policy.component').then(m => m.PrivacyPolicyComponent) },
+                    { path: 'terms-of-use', loadComponent: () => import('./pages/terms-of-use/terms-of-use.component').then(m => m.TermsOfUseComponent)},
+                    { path: 'help-center', loadComponent: () => import('./pages/help-center/help-center.component').then(m => m.HelpCenterComponent)}
                 ]
             },
         ]

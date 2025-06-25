@@ -26,7 +26,8 @@ export const routes: Routes = [
                 children: [
                     { path: 'movies', loadComponent: () => import('./pages/movies/movies.component').then(m => m.MoviesComponent) },
                     { path: 'movies/:id', loadComponent: () => import('./pages/movies/single-movie/single-movie.component').then(m => m.SingleMovieComponent) },
-                    { path: 'profile', loadComponent: () => import('./pages/profile/profile.component').then(m => m.ProfileComponent) }
+                    { path: 'profile', loadComponent: () => import('./pages/profile/profile.component').then(m => m.ProfileComponent) },
+                    { path: 'subscribe', loadComponent: () => import('./pages/subscribe/subscribe.component').then(m => m.SubscribeComponent)}
                 ]
             },
         ]

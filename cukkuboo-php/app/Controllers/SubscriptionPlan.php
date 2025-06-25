@@ -135,7 +135,7 @@ class SubscriptionPlan extends ResourceController
     }
  
     public function delete($id = null)
-{
+    {
     $authHeader = $this->request->getHeaderLine('Authorization');
     $user = $this->authService->getAuthenticatedUser($authHeader);
 
@@ -155,6 +155,21 @@ class SubscriptionPlan extends ResourceController
     }
 
     return $this->failServerError("Failed to delete plan with ID $id.");
-}
+    }
+    public function countSubscribers()
+    {
+    $authHeader = $this->request->getHeaderLine('Authorization');
+    $authuser = $this->authService->getAuthenticatedUser($authHeader);
+    if (!$authuser) 
+        return $this->failUnauthorized('Invalid or missing token.');
+
+    $subscriptionModel = new SubscriptionPlanModel();
+    $count = $this->subscriptionPlanModel->countCurrentMonthSubscribers();
+    return $this->respond([
+        'success' => true,
+        'message'=>'success',
+        'data' => $count
+    ]);
+    }
 
 }

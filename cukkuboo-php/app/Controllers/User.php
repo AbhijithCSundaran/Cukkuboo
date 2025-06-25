@@ -52,14 +52,14 @@ class User extends ResourceController
         if (!$user_id) {
             if (empty($data['phone']) && empty($data['email'])) {
                 return $this->response->setJSON([
-                    'status' => false,
+                    'success' => false,
                     'message' => 'Phone or email is required.'
                 ])->setStatusCode(400);
             }
 
             if ($this->UserModel->isUserExists($data['phone'] ?? null, $data['email'] ?? null)) {
                 return $this->response->setJSON([
-                    'status' => false,
+                    'success' => false,
                     'message' => 'User already exists.'
                 ])->setStatusCode(409);
             }
@@ -83,7 +83,7 @@ class User extends ResourceController
             $user = $this->UserModel->find($userId);
 
             return $this->response->setJSON([
-                'status'  => true,
+                'success'  => true,
                 'message' => 'User registered successfully.',
                 'data'    => [
                     'user_id'             => $user['user_id'],
@@ -110,14 +110,14 @@ class User extends ResourceController
                 $userData['updated_by'] = $authenticatedUser['user_id'];
                 $this->UserModel->updateUser($user_id, $userData);
                 return $this->response->setJSON([
-                    'status' => true,
+                    'success' => true,
                     'message' => 'User updated successfully.',
                     'data' => $userData
                 ]);
             }
             else{
                 return $this->response->setJSON([
-                    'status' => false,
+                    'success' => false,
                     'message' => 'Unauthorised User',
                     'data' => null
                 ]);
@@ -157,11 +157,11 @@ class User extends ResourceController
         // Call model method to update the status
         if ($this->UserModel->deleteUserById($status, $user_id)) {
             return $this->respond([
-                'status' => 200,
-                'message' => "Movie with ID $user_id marked as deleted successfully."
+                'success' => true,
+                'message' => "User with ID $user_id marked as deleted successfully."
             ]);
         } else {
-            return $this->failServerError("Failed to delete movie with ID $user_id.");
+            return $this->failServerError("Failed to delete user with ID $user_id.");
         }
     }
 
@@ -177,13 +177,14 @@ public function getUserDetailsById($userId)
 
     if (!$user) {
         return $this->response->setJSON([
-            'status' => false,
+            'success' => false,
             'message' => 'User not found'
         ])->setStatusCode(404);
     }
 
     return $this->response->setJSON([
-        'status' => true,
+        'success' => true,
+        'message'=>'success',
         'data' => $user
     ]);
 }
@@ -216,7 +217,8 @@ public function getUserList()
         $total = count($users);
 
         return $this->response->setJSON([
-            'status' => true,
+            'success' => true,
+            'message'=>'success',
             'data'   => $users,
             'total'  => $total
         ]);
@@ -233,7 +235,8 @@ public function getUserList()
                        ->findAll($pageSize, $offset);
 
     return $this->response->setJSON([
-        'status' => true,
+        'success' => true,
+        'message'=>'success',
         'data'   => $users,
         'total'  => $total
     ]);
@@ -268,7 +271,8 @@ public function getStaffList()
         $total = count($users);
 
         return $this->response->setJSON([
-            'status' => true,
+            'success' => true,
+            'message'=>'success',
             'data'   => $users,
             'total'  => $total
         ]);
@@ -285,7 +289,8 @@ public function getStaffList()
                        ->findAll($pageSize, $offset);
 
     return $this->response->setJSON([
-        'status' => true,
+        'success' => true,
+        'message'=>'success',
         'data'   => $users,
         'total'  => $total
     ]);
@@ -310,7 +315,7 @@ public function updateEmailPreference()
 
     if ((int)$user['email_preference'] === $status) {
         return $this->respond([
-            'status'  => true,
+            'success'  => true,
             'message' => 'Email preference is already set to this value.',
         ]);
     }
@@ -319,7 +324,7 @@ public function updateEmailPreference()
 
     if ($updated) {
         return $this->respond([
-            'status'  => true,
+            'success'  => true,
             'message' => 'Email preference updated successfully.',
         ]);
     } else {
@@ -346,21 +351,7 @@ public function updateEmailPreference()
             'data' => $activeCount
         ]);
     }
-    public function countSubscribersByMonth()
-    {
-    $authHeader = $this->request->getHeaderLine('Authorization');
-    $authuser = $this->authService->getAuthenticatedUser($authHeader);
-    if (!$authuser) 
-        return $this->failUnauthorized('Invalid or missing token.');
+    
 
-    $userModel = new UserModel();
-    $monthlyCounts = $userModel->getMonthlySubscriberCount();
-
-    return $this->respond([
-        'success' => true,
-        'message'=>'success',
-        'data' => $monthlyCounts
-    ]);
-}
 
 }

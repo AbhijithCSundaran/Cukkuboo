@@ -4,6 +4,7 @@ namespace App\Controllers;
 use CodeIgniter\RESTful\ResourceController;
 use App\Models\MovieDetailsModel;
 use App\Models\UserModel;
+use App\Models\SubscriptionPlanModel;
 use App\Libraries\Jwt;
 use App\Libraries\AuthService;
 
@@ -17,6 +18,7 @@ class MovieDetail extends ResourceController
         $this->session = \Config\Services::session();
         $this->input = \Config\Services::request();
         $this->moviedetail = new MovieDetailsModel();
+        $this->subscriptionPlanModel = new SubscriptionPlanModel();
         $this->userModel = new UserModel();	
         $this->authService = new AuthService();
     }
@@ -55,8 +57,7 @@ class MovieDetail extends ResourceController
             'modify_on' => date('Y-m-d H:i:s'),
         ];
         if (empty($movie_id)) {
-            $moviedata['created_by'] =
-                $data['created_by'] ?? null;
+            $moviedata['created_by'] =$data['created_by'] ?? null;
             $moviedata['created_on'] = date('Y-m-d H:i:s');
 
             if ($this->moviedetail->addMovie($moviedata)) {
@@ -371,13 +372,12 @@ public function latestMovies()
             'success' => true,
             'message' => true,
             'data' => [
-                
+                'active_user_count'=>$this->userModel->countActiveUsers(),
+                'subscriber_count'=>$this->subscriptionPlanModel->countCurrentMonthSubscribers(),
                 'active_movie_count' => $this->moviedetail->countActiveMovies(),
                 'In_active_movie_count' => $this->moviedetail->countInactiveMovies(),
                 'latest_movies' =>$this->moviedetail->latestAddedMovies(),
-                'most_watched_movies'=>$this->moviedetail->getMostWatchMovies(),
-                'active_user_count'=>$this->userModel->countActiveUsers()
-
+                'most_watched_movies'=>$this->moviedetail->getMostWatchMovies()
             ]
         ]);
     }
@@ -396,7 +396,7 @@ public function getRelatedMovies($id)
     $currentMovie = $this->moviedetail->find($id);
     if (!$currentMovie) {
         return $this->response->setJSON([
-            'status' => false,
+            'success' => false,
             'message' => 'Movie not found.',
             'data' => []
         ]);

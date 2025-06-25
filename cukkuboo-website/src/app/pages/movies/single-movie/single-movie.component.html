@@ -5,25 +5,30 @@
     <div class="position-relative d-flex align-items-center h-100">
 
       <!-- Movie Info & Play Button -->
-      <div class="col-xl-6">
+      <div class="col-12 col-xl-8">
         <div class="gen-movie-info">
           <h3>{{ movieData.title }}</h3>
         </div>
 
-        <div class="gen-movie-action mt-4">
+        <div class="gen-movie-action d-flex mt-4">
           <div class="gen-btn-container">
             <a (click)="playVideo(movieData)" class="gen-button gen-button-dark">
               <i class="fas fa-play"></i>
               <span class="text">Play Now</span>
             </a>
           </div>
+          <div class="ms-3 gen-btn-container d-block d-xl-none" (click)="movieData.playTrailer = true">
+            <a class="gen-button gen-button-outline">
+              <i class="fas fa-play"></i><span class="text">Watch Trailer</span>
+            </a>
+          </div>
         </div>
       </div>
 
       <!-- Thumbnail & Trailer Button -->
-      <div class="col-xl-6">
-        <div class="gen-front-image">
-          <img [src]="imageUrl+movieData.thumbnail" alt="carousel-image" />
+      <div class="col-xl-4 d-none d-xl-flex">
+        <div class="gen-front-image mx-auto">
+          <img [src]="imageUrl+movieData.banner" alt="carousel-image" />
           <a class="playBut popup-youtube popup-vimeo popup-gmaps" (click)="movieData.playTrailer = true">
             <svg xmlns="http://www.w3.org/2000/svg" width="213.7px" height="213.7px" viewBox="0 0 213.7 213.7">
               <polygon class="triangle" fill="none" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"
@@ -34,17 +39,17 @@
             </svg>
             <span>Watch Trailer</span>
           </a>
-          <video-palyer *ngIf="movieData.playTrailer" class="video_player" (onClose)="movieData.playTrailer = false"
-            [videoSrc]="movieData.trailer">
-          </video-palyer>
+
         </div>
       </div>
 
     </div>
-
+    <video-palyer *ngIf="movieData.playTrailer" class="video_player" (onClose)="movieData.playTrailer = false"
+      [videoSrc]="videoUrl+movieData.trailer">
+    </video-palyer>
     <!--  Video -->
     <video-palyer *ngIf="movieData.playVideo" class="video_player" (onClose)="movieData.playVideo = false"
-      [videoSrc]="movieData.video">
+      [videoSrc]="videoUrl+movieData.video">
     </video-palyer>
   </div>
 </section>
@@ -99,7 +104,7 @@
   <div class="gen-more-like">
     <h5 class="gen-more-title mb-3">More Like This</h5>
     @if(suggetionList.length){
-    <div class="row">
+    <div class="row col-12">
       <div class="col-xl-3 col-lg-4 col-md-6" *ngFor="let movie of suggetionList">
         <div class="gen-carousel-movies-style-3 movie-grid style-3" [routerLink]="['/movies', movie.mov_id]">
           <div class="gen-movie-contain">
@@ -124,7 +129,7 @@
       </div>
     </div>
     }@else {
-      <p class="py-3"> No related movies................</p>
+    <p class="py-3"> No related movies................</p>
     }
   </div>
   <div *ngIf="!stopInfiniteScroll" infiniteScroll (scrolled)="onScroll($event)" style="height: 1px;"></div>

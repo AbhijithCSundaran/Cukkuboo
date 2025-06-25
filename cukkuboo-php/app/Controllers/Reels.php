@@ -56,7 +56,7 @@ class Reels extends ResourceController
         $this->reelsModel->addReel($reelData);
 
         return $this->respond([
-            'status'  => true,
+            'success'  => true,
             'message' => 'Reel created successfully',
             'data'    => $reelData
         ]);
@@ -71,7 +71,7 @@ class Reels extends ResourceController
         $this->reelsModel->updateReel($reels_id, $reelData);
 
         return $this->respond([
-            'status'  => true,
+            'success'  => true,
             'message' => 'Reel updated successfully',
             'data'    => $reelData
         ]);
@@ -110,7 +110,7 @@ class Reels extends ResourceController
             ->findAll();
 
         return $this->response->setJSON([
-            'status'  => true,
+            'success'  => true,
             'message' => 'All reels fetched (no pagination).',
             'data'    => $reels,
             'total'   => count($reels)
@@ -126,7 +126,7 @@ class Reels extends ResourceController
         ->findAll($pageSize, $offset);
 
     return $this->response->setJSON([
-        'status'  => true,
+        'success'  => true,
         'message' => 'Paginated reels fetched successfully.',
         'data'    => $reels,
         'total'   => $total
@@ -143,7 +143,7 @@ public function getReelById($id)
     $data = $this->reelsModel->getReelDetailsById($id);
 
     return $this->response->setJSON([
-        'status' => true,
+        'success' => true,
         'message' => 'Reel details fetched successfully.',
         'data' => $data
     ]);
@@ -161,7 +161,7 @@ public function deleteReel($reels_id)
 
     if ($this->reelsModel->softDeleteReelById($status, $reels_id)) {
         return $this->respond([
-            'status' => 200,
+            'success' => 200,
             'message' => "Reel with ID $reels_id marked as deleted successfully."
         ]);
     } else {

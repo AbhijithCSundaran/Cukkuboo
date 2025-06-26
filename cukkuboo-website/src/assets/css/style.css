@@ -2319,7 +2319,8 @@ header#gen-header .gen-bottom-header .navbar .navbar-brand {
 }
 
 header#gen-header .gen-bottom-header .navbar .navbar-brand img {
-    height: 50px;
+    /* height: 50px; */
+    height:35px;
 }
 
 /*===== Header Navbar Bar =====*/

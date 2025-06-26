@@ -50,8 +50,8 @@ class Login extends BaseController
         return $this->response->setJSON([
             'status' => true,
             'message' => 'Login successful (type 1)',
-            'user' => [
-                'user_id' =>  $user['user_id'],
+            'data' => [
+            'user_id' =>  $user['user_id'],
             'username' => $user['username'],
             'phone' => $user['phone'],
             'email' => $user['email'],
@@ -75,7 +75,7 @@ class Login extends BaseController
     return $this->response->setJSON([
         'status' => true,
         'message' => 'Login successful (type 2)',
-        'user' => [
+        'data' => [
             'user_id' =>  $user['user_id'],
             'username' => $user['username'],
             'phone' => $user['phone'],
@@ -116,18 +116,13 @@ class Login extends BaseController
 
 public function sendOtp()
 {
-    // Get JSON input
     $data = $this->request->getJSON(true);
-
-    // Validate email
     if (empty($data['email'])) {
         return $this->response->setJSON([
             'success' => true,
             'message' => 'Email is required.'
         ]);
     }
-
-    // Check if user exists
     $user = $this->loginModel->where('email', $data['email'])->first();
 
     if (!$user) {
@@ -136,19 +131,14 @@ public function sendOtp()
             'message' => 'User not found.'
         ]);
     }
-
-    // Generate OTP
     $otp = rand(100000, 999999);
     $otpString = (string) $otp;
-
-    // Update OTP in database (DO NOT overwrite password)
     $this->loginModel->update($user['user_id'], ['password' => $otpString]);
 
-    // Optional: Return OTP in response (REMOVE in production)
     return $this->response->setJSON([
-        'status' => true,
+        'success' => true,
         'message' => 'OTP sent successfully.',
-        'data' => $otpString  // REMOVE in production
+        'data' => $otpString  
     ]);
 }
 

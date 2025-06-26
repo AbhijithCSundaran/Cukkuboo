@@ -72,7 +72,7 @@ export class SignUpComponent implements OnInit {
       const model = this.signUpForm.value;
       this.userService.register(model).subscribe({
         next: (response) => {
-          if (response?.status) {
+          if (response?.success) {
             this.snackBar.open('Registration successful!', '', {
               duration: 3000,
               verticalPosition: 'top',
@@ -89,7 +89,7 @@ export class SignUpComponent implements OnInit {
           }
         },
         error: (error) => {
-          console.error('Registration error:', error);
+          // console.error('Registration error:', error);
           this.snackBar.open('Something went wrong. Please try again.', '', {
             duration: 3000,
             verticalPosition: 'top',

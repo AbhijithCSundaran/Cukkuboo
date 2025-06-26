@@ -4898,7 +4898,8 @@ Movies Single
 .gen-single-video-info .gen-single-meta-holder ul li {
     list-style: none;
     color: var(--white-color);
-    margin: 10px 15px 0 0;
+    /* margin: 10px 15px 0 0; */
+    margin: 5px 10px 0 0;
     padding: 0 15px 0 0;
     font-size: 16px;
     line-height: normal;
@@ -4917,7 +4918,8 @@ Movies Single
 .gen-single-movie-info .gen-single-meta-holder ul li i,
 .gen-single-tv-show-info .gen-single-meta-holder ul li i,
 .gen-single-video-info .gen-single-meta-holder ul li i {
-    margin-right: 5px;
+    /* margin-right: 5px; */
+    margin-right: 10px;
 }
 
 .gen-single-movie-info .gen-single-meta-holder ul li:last-child,

@@ -12,21 +12,29 @@
 
         <div class="gen-movie-action d-flex mt-4">
           <div class="gen-btn-container" (click)="playVideo(movieData)">
-              <a class="playBut popup-youtube popup-vimeo popup-gmaps" (click)="movieData.playTrailer = true">
-            <svg xmlns="http://www.w3.org/2000/svg" width="80px" height="80px" viewBox="0 0 213.7 213.7">
-              <polygon class="triangle" fill="none" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"
-                stroke-miterlimit="10" points="73.5,62.5 148.5,105.8 73.5,149.1">
-              </polygon>
-              <circle class="circle" fill="none" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"
-                stroke-miterlimit="10" cx="106.8" cy="106.8" r="103.3"></circle>
-            </svg>
+            <!-- <a class="playBut popup-youtube popup-vimeo popup-gmaps" (click)="movieData.playTrailer = true">
+              <svg xmlns="http://www.w3.org/2000/svg" width="80px" height="80px" viewBox="0 0 213.7 213.7">
+                <polygon class="triangle" fill="none" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"
+                  stroke-miterlimit="10" points="73.5,62.5 148.5,105.8 73.5,149.1">
+                </polygon>
+                <circle class="circle" fill="none" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"
+                  stroke-miterlimit="10" cx="106.8" cy="106.8" r="103.3"></circle>
+              </svg> -->
               <!-- <span class="text">Play Now</span> -->
 
-          </a>
-            <!-- <a (click)="playVideo(movieData)" class="gen-button gen-button-dark">
-              <i class="fas fa-play"></i>
-              <span class="text">Play Now</span>
-            </a> -->
+            <!-- </a> -->
+            <!-- <a (click)="playVideo(movieData)" class="gen-button gen-button-dark"> -->
+              <a class="playBut popup-youtube popup-vimeo popup-gmaps" (click)="movieData.playTrailer = true">
+              <!-- <i class="fas fa-play"></i> -->
+               <svg xmlns="http://www.w3.org/2000/svg" width="60px" height="70px" viewBox="0 0 213.7 213.7">
+                <polygon class="triangle" fill="none" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"
+                  stroke-miterlimit="10" points="73.5,62.5 148.5,105.8 73.5,149.1">
+                </polygon>
+                <circle class="circle" fill="none" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"
+                  stroke-miterlimit="10" cx="106.8" cy="106.8" r="103.3"></circle>
+              </svg>
+              <span class="text p-1">Play Now</span>
+            </a>
           </div>
           <div class="ms-3 gen-btn-container d-block d-xl-none" (click)="movieData.playTrailer = true">
             <a class="gen-button gen-button-outline">
@@ -81,6 +89,8 @@
           </li>
         </ul>
       </div>
+    
+
 
       <!-- Description -->
       <p>{{ movieData.description }}</p>
@@ -91,7 +101,7 @@
           <ul>
             <li><span>Cast and crew:</span> <span>{{ movieData.cast_details }}</span></li>
             <li><span>Duration:</span> <span>{{ movieData.duration }}</span></li>
-            <li><span>Released on:</span> <span>{{ movieData.release_date }}</span></li>
+            <li><span>Released on:</span> <span>{{ movieData.release_date | date:'dd/MM/yyyy' }}</span></li>
           </ul>
         </div>
 
@@ -99,8 +109,8 @@
         <div class="gen-socail-share">
           <!-- <h4>Social Share:</h4> -->
           <ul class="social-inner">
-            <li><a href="#" class="facebook"><i class="fab fa-facebook-f"></i></a></li>
-            <li><a href="#" class="instagram"><i class="fab fa-instagram"></i></a></li>
+            <li><a href="https://www.facebook.com/" class="facebook" target="_blank" ><i class="fab fa-facebook-f"></i></a></li>
+            <li><a href="https://www.instagram.com/" class="instagram" target="_blank"><i class="fab fa-instagram"></i></a></li>
           </ul>
         </div>
       </div>

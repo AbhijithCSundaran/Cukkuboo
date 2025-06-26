@@ -16,7 +16,8 @@ class MovieDetailsModel extends Model
 
      public function addMovie($data)
     {
-        return $this->insert($data);
+        return $this->db->table('movies_details')
+                        ->insert($data);
     }
     public function updateMovie($mov_id, $data)
 {

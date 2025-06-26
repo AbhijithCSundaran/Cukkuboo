@@ -36,10 +36,10 @@
 
   <div class="col-12 d-flex flex-column">
     @if(movies.length){
-    <div class="row col-12">
+    <div class="row col-12 mb-3">
       <div *ngFor="let movie of movies" class="col-xl-3 col-lg-4 col-md-6" [routerLink]="['/movies', movie.mov_id]">
-        <div class="gen-carousel-movies-style-3 movie-grid style-3">
-          <div class="gen-movie-contain">
+        <div class="gen-carousel-movies-style-3 movie-grid style-3 h-100">
+          <div class="gen-movie-contain h-100 d-flex flex-column">
             <div class="gen-movie-img">
               <img [src]="imageUrl + movie.thumbnail" alt="{{ movie.title }} thumbnail" />
               <div class="gen-movie-add">

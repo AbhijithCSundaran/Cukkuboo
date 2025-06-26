@@ -20,13 +20,16 @@ class Notification extends ResourceController
     {
         $authHeader = $this->request->getHeaderLine('Authorization');
         $user = $this->authService->getAuthenticatedUser($authHeader);
-        if (!$user) return $this->failUnauthorized('Unauthorized.');
-
+        if(!$user){ 
+            return $this->failUnauthorized('Invalid or missing token.');
+        }
+        $notificationModel = new \App\Models\NotificationModel();
         $data = $this->request->getJSON(true);
         $notificationId = $data['notification_id'] ?? null;
 
         $notificationData = [
             'user_id'     => $user['user_id'],
+            'title'     => $data['title'] ?? '',
             'content'     => $data['content'] ?? '',
             'status'      => $data['status'] ?? 1,
         ];
@@ -37,8 +40,9 @@ class Notification extends ResourceController
 
             $updated = $this->notificationModel->update($notificationId, $notificationData);
             return $this->respond([
-                'status' => true,
-                'message' => $updated ? 'Notification updated' : 'Update failed'
+                'success' => true,
+                'message' => $updated ? 'Notification updated' : 'Update failed',
+                'data' => $notificationData
             ]);
         } else {
             $notificationData['created_by'] = $user['user_id'];
@@ -46,52 +50,51 @@ class Notification extends ResourceController
 
             $id = $this->notificationModel->insert($notificationData);
             return $this->respond([
-                'status' => true,
+                'success' => true,
                 'message' => 'Notification created',
-                'notification_id' => $id
-            ], 201);
+                'data' => $notificationData
+            ]);
         }
     }
 
-    public function getAll()
+    public function getAllNotifications()
 {
     $authHeader = $this->request->getHeaderLine('Authorization');
     $user = $this->authService->getAuthenticatedUser($authHeader);
-    if (!$user) return $this->failUnauthorized('Unauthorized.');
+
+    if (!$user) {
+        return $this->failUnauthorized('Invalid or missing token.');
+    }
 
     $pageIndex = (int) $this->request->getGet('pageIndex');
     $pageSize  = (int) $this->request->getGet('pageSize');
-    $search    = $this->request->getGet('search');
 
     if ($pageSize <= 0) {
-        $pageSize = 10; // default
+        $pageSize = 10;
     }
 
     $offset = $pageIndex * $pageSize;
+    $builder = $this->notificationModel->where('status !=', 9);
+    // $builder = $this->notificationModel
+    //                 ->where('user_id', $user['user_id'])
+    //                 ->whereIn('status', [1, 2]);
 
-    $builder = $this->notificationModel
-        ->where('user_id', $user['user_id'])
-        ->where('status !=', 9);
+    $total = $builder->countAllResults(false);
 
-    if (!empty($search)) {
-        $builder->like('content', $search);
-    }
-
-    $total = $builder->countAllResults(false); // don't reset query
-    $notifications = $builder->orderBy('created_on', 'DESC')
-                             ->findAll($pageSize, $offset);
+    $notifications = $builder->orderBy('created_on', 'DESC')->findAll($pageSize, $offset);
+                            
 
     return $this->respond([
-        'status' => true,
-        'data'   => $notifications,
-        'total'  => $total,
-        'pageIndex' => $pageIndex,
-        'pageSize'  => $pageSize
+        'success'   => true,
+        'message'   => 'Notifications fetched successfully.',
+        'data'      => $notifications,
+        'total'     => $total
     ]);
 }
 
+
     public function delete($notification_id = null)
-{
+    {
     $authHeader = $this->request->getHeaderLine('Authorization');
     $user = $this->authService->getAuthenticatedUser($authHeader);
 
@@ -102,8 +105,6 @@ class Notification extends ResourceController
     if (!$notification_id) {
         return $this->failNotFound('Notification ID not provided.');
     }
-
-    // Use your model's softDelete method (assumed signature: softDelete($notificationId, $userId))
     $deleted = $this->notificationModel->softDelete($notification_id, $user['user_id']);
 
     if ($deleted) {
@@ -114,14 +115,17 @@ class Notification extends ResourceController
     } else {
         return $this->failServerError("Failed to delete notification with ID $notification_id.");
     }
-}
+    }
 
 
    public function markAllAsReadOrUnread()
 {
     $authHeader = $this->request->getHeaderLine('Authorization');
     $user = $this->authService->getAuthenticatedUser($authHeader);
-    if (!$user) return $this->failUnauthorized('Unauthorized.');
+
+    if (!$user) {
+        return $this->failUnauthorized('Invalid or missing token.');
+    }
 
     $userId = $user['user_id'];
 
@@ -177,7 +181,11 @@ class Notification extends ResourceController
 {
     $authHeader = $this->request->getHeaderLine('Authorization');
     $user = $this->authService->getAuthenticatedUser($authHeader);
-    if (!$user) return $this->failUnauthorized('Unauthorized.');
+
+    if (!$user) {
+        return $this->failUnauthorized('Invalid or missing token.');
+    }
+
 
     $notification = $this->notificationModel
         ->where('notification_id', $notification_id)

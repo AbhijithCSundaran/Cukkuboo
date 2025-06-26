@@ -51,7 +51,7 @@ $routes->get('movies/most-watched', 'MovieDetail::mostWatchedMovies');
 $routes->get('movies/latestmovies', 'MovieDetail::latestMovies');
 $routes->get('movies/mostwatchmovie', 'MovieDetail::getMostWatchMovies');
 $routes->get('user/count-user', 'User::countActiveUsers');
-$routes->get('user/subscriber', 'User::countSubscribersByMonth');
+$routes->get('user/subscriber', 'SubscriptionPlan::countSubscribers');
 $routes->get('movies/countActive', 'MovieDetail::countActiveMovies');
 $routes->get('movies/countInActive', 'MovieDetail::countInactiveMovie');
 
@@ -87,10 +87,10 @@ $routes->delete('usersub/delete/(:num)', 'Usersub::deleteSubscription/$1');
 $routes->post('reellike/like', 'ReelLike::reelLike');
 $routes->post('reelview/view', 'ReelView::viewReel');
 
-$routes->post('notification/save', 'Notification::createOrUpdate'); // create or update
-$routes->get('notification/list', 'Notification::getAll');          // get by user
-$routes->delete('notification/delete/(:num)', 'Notification::delete/$1'); // soft delete
-$routes->post('notification/markall', 'Notification::markAllAsReadOrUnread'); // mark as read);
+$routes->post('notification/save', 'Notification::createOrUpdate'); 
+$routes->get('notification/list', 'Notification::getAllNotifications');          
+$routes->delete('notification/delete/(:num)', 'Notification::delete/$1'); 
+$routes->post('notification/markall', 'Notification::markAllAsReadOrUnread'); 
 $routes->get('notification/get/(:num)', 'Notification::getById/$1');
 
 // Watched history

@@ -49,7 +49,7 @@ class Uploads extends ResourceController
 
         if ($video->move($uploadPath, $newName)) {
             return $this->respond([
-                'status'    => 200,
+                'success'    => true,
                 'message'   => 'Video uploaded successfully',
                 'file_name' => $newName,
                 'path'      => base_url("uploads/videos/$newName")
@@ -89,7 +89,7 @@ class Uploads extends ResourceController
     // Move the uploaded image to the target directory
     if ($image->move($targetPath, $imgName)) {
         return $this->response->setJSON([
-            'status' => 200,
+            'success' => true,
             'message' => 'Image uploaded successfully',
             'file_name' => $imgName,
             'path' => base_url("uploads/images/$imgName")

@@ -1,19 +1,28 @@
 <?php
 
 namespace App\Models;
+
 use CodeIgniter\Model;
 
 class NotificationModel extends Model
 {
-    protected $table      = 'notification';
+    protected $table = 'notification'; 
     protected $primaryKey = 'notification_id';
     protected $returnType = 'array';
+    protected $useTimestamps = false;
+    protected $protectFields = true;
+
     protected $allowedFields = [
-        'user_id', 'status', 'content', 
-        'created_by', 'created_on', 
-        'modify_by', 'modify_on'
+        'user_id',
+        'title',
+        'content',
+        'status',
+        'created_by',
+        'created_on',
+        'modify_by',
+        'modify_on',
     ];
-    
+ 
     public function getUserNotifications($userId)
     {
         return $this->where('user_id', $userId)
@@ -33,8 +42,8 @@ class NotificationModel extends Model
     public function markAllAsRead($userId)
 {
     return $this->where('user_id', $userId)
-                ->where('status', 1)  // unread only
-                ->set(['status' => 2]) // mark as read
+                ->where('status', 1) 
+                ->set(['status' => 2]) 
                 ->update();
 }
 

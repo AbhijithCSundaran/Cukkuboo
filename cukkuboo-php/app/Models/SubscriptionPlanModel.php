@@ -27,7 +27,7 @@ class SubscriptionPlanModel extends Model
         return $this->find($id);
     }
     public function deletePlanById($status, $id, $user_id)
-{
+    {
     return $this->db->table($this->table)
         ->where('subscriptionplan_id', $id)
         ->update([
@@ -35,7 +35,14 @@ class SubscriptionPlanModel extends Model
             'modify_by' => $user_id,
             'modify_on' => date('Y-m-d H:i:s')
         ]);
-}
+    }
+    public function countCurrentMonthSubscribers()
+    {
+    return $this->where('status', 1) 
+                ->where('MONTH(created_on)', date('m'))
+                ->where('YEAR(created_on)', date('Y'))
+                ->countAllResults();
+    }
 
 
 }

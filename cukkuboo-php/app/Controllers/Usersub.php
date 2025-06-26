@@ -27,22 +27,22 @@ class Usersub extends ResourceController
         $id = $data['user_subscription_id'] ?? null;
         $authHeader = $this->request->getHeaderLine('Authorization');
         $user = $this->authService->getAuthenticatedUser($authHeader);
-        // Validate required fields for create
+       
         if (!$id && (empty($data['user_id']) || empty($data['subscriptionplan_id']) || empty($data['start_date']))) {
             return $this->failValidationErrors('User ID, plan ID, and start date are required.');
         }
 
-        // Verify plan exists
+       
         $plan = $this->subscriptionPlanModel->getPlanById($data['subscriptionplan_id']);
         if (!$plan) {
             return $this->failNotFound('Invalid subscription plan.');
         }
 
-        // Calculate end date
+        
         $start = new \DateTime($data['start_date']);
         $end = $start->add(new \DateInterval("P{$plan['period']}D"))->format('Y-m-d');
 
-        // Build data payload
+       
         $payload = [
             'user_id'         => $data['user_id'] ?? null,
             'subscriptionplan_id' => $data['subscriptionplan_id'] ?? null,
@@ -53,7 +53,7 @@ class Usersub extends ResourceController
         ];
 
         if (!$id) {
-            // Creating new subscription
+           
             $payload['status']      = 1;
             $payload['created_on']  = date('Y-m-d H:i:s');
             $payload['created_by']  = $data['created_by'] ?? 0;
@@ -62,13 +62,13 @@ class Usersub extends ResourceController
             $payload['user_subscription_id'] = $id;
 
             return $this->respond([
-                'status'  => true,
+                'success'  => true,
                 'message' => 'Subscription created successfully.',
                 'data'    => $payload
             ]);
         }
 
-        // Update existing subscription
+        
         $existing = $this->usersubModel->find($id);
         if (!$existing) {
             return $this->failNotFound("Subscription with ID $id not found.");
@@ -79,7 +79,7 @@ class Usersub extends ResourceController
         $payload['user_subscription_id'] = $id;
 
         return $this->respond([
-            'status'  => true,
+            'success'  => true,
             'message' => 'Subscription updated successfully.',
             'data'    => $payload
         ]);
@@ -96,45 +96,49 @@ class Usersub extends ResourceController
     }
 
     $builder = $this->usersubModel->builder();
+
     $builder->select('
         us.user_subscription_id,
         us.user_id,
-        u.username,
+        
         us.subscriptionplan_id,
+        sp.plan_name,
+        
         us.start_date,
         us.end_date,
-        us.status,
-        sp.plan_name,
-        sp.period
+        us.status
     ')
     ->from('user_subscription us')
     ->join('user u', 'u.user_id = us.user_id', 'left')
     ->join('subscriptionplan sp', 'sp.subscriptionplan_id = us.subscriptionplan_id', 'left')
     ->where('us.status !=', 9)
-    ->where('us.user_id', $user['user_id']);
+    ->where('us.user_id', $user['user_id'])
+    ->orderBy('us.user_subscription_id', 'DESC');
 
-    $results = $builder->orderBy('us.user_subscription_id', 'DESC')->get()->getResultArray();
+    $results = $builder->get()->getResultArray();
 
+    
     foreach ($results as &$row) {
-        // If end_date is not set, calculate it using start_date and period
         if (empty($row['end_date']) && !empty($row['start_date']) && !empty($row['period'])) {
             $startDate = new \DateTime($row['start_date']);
             $startDate->modify("+{$row['period']} days");
             $row['end_date'] = $startDate->format('Y-m-d');
-
-            // Update it in the DB
-            $this->usersubModel->update($row['user_subscription_id'], ['end_date' => $row['end_date']]);
+            $this->usersubModel->update($row['user_subscription_id'], [
+                'end_date' => $row['end_date']
+            ]);
         }
 
-        // Update status to 2 if expired
         if (!empty($row['end_date']) && new \DateTime() > new \DateTime($row['end_date']) && $row['status'] != 2) {
-            $this->usersubModel->update($row['user_subscription_id'], ['status' => 2]);
+            $this->usersubModel->update($row['user_subscription_id'], [
+                'status' => 2
+            ]);
             $row['status'] = 2;
         }
     }
 
     return $this->respond([
         'status' => true,
+        'message' => 'User subscriptions fetched successfully.',
         'data' => $results
     ]);
 }
@@ -150,17 +154,18 @@ class Usersub extends ResourceController
 
     if (!$record) {
         return $this->respond([
-            'status' => false,
+            'success' => false,
             'message' => 'Subscription not found.',
-            'debug' => [
+            'data' => [
                 'id' => $id,
                 'available_ids' => $this->usersubModel->select('user_subscription_id')->findAll()
             ]
-        ], 404);
+        ]);
     }
 
     return $this->respond([
         'status' => true,
+        'message'=>'success',
         'data' => $record
     ]);
 }
@@ -169,8 +174,7 @@ class Usersub extends ResourceController
 public function deleteSubscription($id = null)
 {
     $authHeader = $this->request->getHeaderLine('Authorization');
-    $auth = new AuthService();
-    $user=$auth->getAuthenticatedUser($authHeader);
+    $user = $this->authService->getAuthenticatedUser($authHeader);
     if (!$user) {
         return $this->failUnauthorized('Invalid or missing token.');
     }
@@ -188,7 +192,8 @@ public function deleteSubscription($id = null)
             'status'  => true,
             'message' => "Subscription with ID $id marked as deleted successfully."
         ]);
-    } else {
+    } 
+else {
         return $this->failServerError("Failed to delete subscription with ID $id.");
     }
 }

@@ -12,6 +12,7 @@ class UsersubModel extends Model
     protected $allowedFields = [
         'user_id',
         'subscriptionplan_id',
+        'plan_name',
         'start_date',
         'end_date',
         'status',

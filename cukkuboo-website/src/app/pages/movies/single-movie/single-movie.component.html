@@ -20,13 +20,13 @@
                 <circle class="circle" fill="none" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"
                   stroke-miterlimit="10" cx="106.8" cy="106.8" r="103.3"></circle>
               </svg> -->
-              <!-- <span class="text">Play Now</span> -->
+            <!-- <span class="text">Play Now</span> -->
 
             <!-- </a> -->
             <!-- <a (click)="playVideo(movieData)" class="gen-button gen-button-dark"> -->
-              <a class="playBut popup-youtube popup-vimeo popup-gmaps" (click)="movieData.playTrailer = true">
+            <a class="playBut popup-youtube popup-vimeo popup-gmaps" (click)="movieData.playTrailer = true">
               <!-- <i class="fas fa-play"></i> -->
-               <svg xmlns="http://www.w3.org/2000/svg" width="60px" height="70px" viewBox="0 0 213.7 213.7">
+              <svg xmlns="http://www.w3.org/2000/svg" width="60px" height="70px" viewBox="0 0 213.7 213.7">
                 <polygon class="triangle" fill="none" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"
                   stroke-miterlimit="10" points="73.5,62.5 148.5,105.8 73.5,149.1">
                 </polygon>
@@ -89,7 +89,7 @@
           </li>
         </ul>
       </div>
-    
+
 
 
       <!-- Description -->
@@ -109,8 +109,10 @@
         <div class="gen-socail-share">
           <!-- <h4>Social Share:</h4> -->
           <ul class="social-inner">
-            <li><a href="https://www.facebook.com/" class="facebook" target="_blank" ><i class="fab fa-facebook-f"></i></a></li>
-            <li><a href="https://www.instagram.com/" class="instagram" target="_blank"><i class="fab fa-instagram"></i></a></li>
+            <li><a href="https://www.facebook.com/" class="facebook" target="_blank"><i
+                  class="fab fa-facebook-f"></i></a></li>
+            <li><a href="https://www.instagram.com/" class="instagram" target="_blank"><i
+                  class="fab fa-instagram"></i></a></li>
           </ul>
         </div>
       </div>
@@ -125,12 +127,17 @@
   <div class="gen-more-like">
     <h5 class="gen-more-title mb-3">More Like This</h5>
     @if(suggetionList.length){
-    <div class="row col-12">
+    <div class="row col-12 mb-3">
       <div class="col-xl-3 col-lg-4 col-md-6" *ngFor="let movie of suggetionList">
-        <div class="movie-grid h-100 style-3" [routerLink]="['/movies', movie.mov_id]">
+        <div class="gen-carousel-movies-style-3 movie-grid h-100 style-3" [routerLink]="['/movies', movie.mov_id]">
           <div class="gen-movie-contain h-100 d-flex flex-column">
             <div class="gen-movie-img">
               <img [src]="imageUrl+movie.thumbnail" alt="{{ movie.title }} thumbnail" />
+              <div class="gen-movie-action">
+                <a class="gen-button">
+                  <i class="fa fa-play"></i>
+                </a>
+              </div>
             </div>
             <div class="gen-info-contain">
               <div class="gen-movie-info">

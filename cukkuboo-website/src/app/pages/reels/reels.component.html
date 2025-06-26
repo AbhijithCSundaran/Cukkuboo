@@ -33,7 +33,7 @@
           *ngIf="hoveredIndex === i"
           (click)="togglePlayPause(i); $event.stopPropagation()"
         >
-          <i [ngClass]="videoStates[i] ? 'bi bi-pause-fill' : 'bi bi-play-fill'"></i>
+          <i [ngClass]="videoStates[i] ? 'fas fa-pause' : 'fas fa-play'"></i>
         </button>
 
         <!-- Text Info -->
@@ -45,16 +45,16 @@
         <!-- Control Icons -->
         <div class="cntl-icos">
           <i
-            class="bi"
-            [ngClass]="likedStates[i] ? 'bi-heart-fill text-danger' : 'bi-heart'"
+            class="fas"
+            [ngClass]="likedStates[i] ? 'fa-heart text-danger' : 'fa-heart'"
             (click)="toggleLike(i)"
           ></i>
           <i
-            class="bi"
-            [ngClass]="mutedStates[i] ? 'bi-volume-mute-fill' : 'bi-volume-up-fill'"
+            class="fas"
+            [ngClass]="mutedStates[i] ? 'fa-volume-mute' : 'fa-volume-up'"
             (click)="toggleMute(i)"
           ></i>
-          <i class="bi bi-share-fill" (click)="onShare(i)"></i>
+          <i class="fas fa-share" (click)="onShare(i)"></i>
         </div>
       </div>
     </div>
@@ -63,10 +63,14 @@
   <!-- Navigation Arrows -->
   <div class="nav-arrows">
     <button class="arrow up" (click)="scrollToPrev()" aria-label="Previous reel">
-      <svg viewBox="0 0 24 24"><path d="M12 8L6 14H18L12 8Z" fill="currentColor" /></svg>
+      <svg viewBox="0 0 24 24">
+        <path d="M12 8L6 14H18L12 8Z" fill="currentColor" />
+      </svg>
     </button>
     <button class="arrow down" (click)="scrollToNext()" aria-label="Next reel">
-      <svg viewBox="0 0 24 24"><path d="M12 16L18 10H6L12 16Z" fill="currentColor" /></svg>
+      <svg viewBox="0 0 24 24">
+        <path d="M12 16L18 10H6L12 16Z" fill="currentColor" />
+      </svg>
     </button>
   </div>
 </div>

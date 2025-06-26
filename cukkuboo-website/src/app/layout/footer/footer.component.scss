@@ -42,4 +42,17 @@ footer#gen-footer .gen-footer-style-1 .widget ul.menu li{
 }
 footer#gen-footer .social-link {
   margin-top: 2rem; 
+
+}
+footer#gen-footer .social-link {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0px;
+  margin-top: 1rem;
+  padding-right: 338px;
+  list-style: none;
+}
+footer#gen-footer .social-link li a i {
+  font-size: 22px;             
+                
 }

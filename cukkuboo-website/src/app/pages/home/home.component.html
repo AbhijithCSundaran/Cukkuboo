@@ -1,143 +1,151 @@
+@if(HomeData){
 <section class="pt-0 pb-0">
-  <div class="container-fluid px-0">
-    <div class="d-flex no-gutters">
-      <div class="position-relative col-12 gen-banner-movies banner-style-2">
-        <owl-carousel-o [options]="customOptions1">
-          <ng-container *ngFor="let item of bannerData?.data">
-            <ng-template carouselSlide>
-              <div class="item" [ngStyle]="{ 'background-image': 'url(' + imageUrl + item.banner + ')' }">
-                <div class="gen-movie-contain-style-2 h-100">
-                  <div class="d-flex align-items-center h-100 p-5">
-                    <!-- Left Column -->
-                    <div class="col-12 col-xl-8 p-2">
-                      <div class="gen-tag-line">
-                        <span>{{ bannerData.heading }}</span>
-                      </div>
-                      <div class="gen-movie-info">
-                        <h3>{{ item.title }}</h3>
-                      </div>
-                      <div class="gen-movie-meta-holder">
-                        <!--  Star Rating +  Views -->
-                        <ul class="list-unstyled d-flex align-items-center flex-wrap gap-4 mb-2">
-                          <li class="d-flex align-items-center">
-                            <ng-container *ngFor="let star of [1,2,3,4,5]">
-                              <i class="fa"
-                                [ngClass]="star <= item.rating ? 'fa-star text-warning' : 'fa-star-o text-muted'"></i>
-                            </ng-container>
-                            <span class="ms-2">({{ item.rating }})</span>
-                          </li>
-                          <!-- <li class="d-flex align-items-center">
+   <div class="container-fluid px-0">
+      <div class="d-flex no-gutters">
+         <div class="position-relative col-12 gen-banner-movies banner-style-2">
+            <owl-carousel-o [options]="customOptions1">
+               <ng-container *ngFor="let item of bannerData?.data">
+                  <ng-template carouselSlide>
+                     <div class="item" [ngStyle]="{ 'background-image': 'url(' + imageUrl + item.banner + ')' }">
+                        <div class="gen-movie-contain-style-2 h-100">
+                           <div class="d-flex align-items-center h-100 p-5">
+                              <!-- Left Column -->
+                              <div class="col-12 col-xl-8 p-2">
+                                 <div class="gen-tag-line">
+                                    <span>{{ bannerData.heading }}</span>
+                                 </div>
+                                 <div class="gen-movie-info">
+                                    <h3 [routerLink]="['/movies', item.mov_id]">{{ item.title }}</h3>
+                                 </div>
+                                 <div class="gen-movie-meta-holder">
+                                    <!--  Star Rating +  Views -->
+                                    <ul class="list-unstyled d-flex align-items-center flex-wrap gap-4 mb-2">
+                                       <li class="d-flex align-items-center">
+                                          <ng-container *ngFor="let star of [1,2,3,4,5]">
+                                             <i class="fa"
+                                                [ngClass]="star <= item.rating ? 'fa-star text-warning' : 'fa-star-o text-muted'"></i>
+                                          </ng-container>
+                                          <span class="ms-2">({{ item.rating }})</span>
+                                       </li>
+                                       <!-- <li class="d-flex align-items-center">
                             <i class="fa fa-eye me-2"></i>
                             <span>{{ item.views }}</span>
                           </li> -->
-                        </ul>
+                                    </ul>
 
-                        <!-- Description -->
-                        <p>{{ item.description | truncate: 200 }}</p>
-                      </div>
+                                    <!-- Description -->
+                                    <p>{{ item.description | truncate: 200 }}</p>
+                                 </div>
 
-                      <!-- Buttons -->
-                      <div class="gen-movie-action d-flex">
-                        <div class="gen-btn-container">
-                          <a [routerLink]="['/movies', item.mov_id]" class="gen-button gen-button-dark">
-                            <i class="fas fa-play"></i><span class="text">Play Movie</span>
-                          </a>
+                                 <!-- Buttons -->
+                                 <div class="gen-movie-action d-flex">
+                                    <div class="gen-btn-container">
+                                       <a [routerLink]="['/movies', item.mov_id]" [queryParams]="{ ap: 1 }"
+                                          class="gen-button gen-button-dark">
+                                          <i class="fas fa-play"></i><span class="text">Play Movie</span>
+                                       </a>
+                                    </div>
+                                    <div class="gen-btn-container d-block d-xl-none" (click)="playTrailer(item)">
+                                       <a [routerLink]="['/movies', item.mov_id]" class="gen-button gen-button-outline">
+                                          <i class="fas fa-play"></i><span class="text">Watch Trailer</span>
+                                       </a>
+                                    </div>
+                                 </div>
+                              </div>
+
+                              <!-- Right Column: Thumbnail & Trailer -->
+                              <div class="col-xl-4 d-none d-xl-flex">
+                                 <div class="gen-front-image mx-auto">
+                                    <img [src]="imageUrl + item.thumbnail" alt="carousel-image" />
+                                    <a (click)="playTrailer(item)" class="playBut">
+                                       <svg xmlns="http://www.w3.org/2000/svg" width="213.7" height="213.7"
+                                          viewBox="0 0 213.7 213.7">
+                                          <polygon class="triangle" fill="none" stroke-width="7" stroke-linecap="round"
+                                             stroke-linejoin="round" stroke-miterlimit="10"
+                                             points="73.5,62.5 148.5,105.8 73.5,149.1" />
+                                          <circle class="circle" fill="none" stroke-width="7" stroke-linecap="round"
+                                             stroke-linejoin="round" stroke-miterlimit="10" cx="106.8" cy="106.8"
+                                             r="103.3" />
+                                       </svg>
+                                       <span>Watch Trailer</span>
+                                    </a>
+                                 </div>
+                              </div>
+                           </div>
                         </div>
-                        <div class="gen-btn-container d-block d-xl-none" (click)="playTrailer(item)">
-                          <a [routerLink]="['/movies', item.mov_id]" class="gen-button gen-button-outline">
-                            <i class="fas fa-play"></i><span class="text">Watch Trailer</span>
-                          </a>
-                        </div>
-                      </div>
-                    </div>
+                     </div>
+                  </ng-template>
+               </ng-container>
+            </owl-carousel-o>
 
-                    <!-- Right Column: Thumbnail & Trailer -->
-                    <div class="col-xl-4 d-none d-xl-flex">
-                      <div class="gen-front-image mx-auto">
-                        <img [src]="imageUrl + item.thumbnail" alt="carousel-image" />
-                        <a (click)="playTrailer(item)" class="playBut">
-                          <svg xmlns="http://www.w3.org/2000/svg" width="213.7" height="213.7"
-                            viewBox="0 0 213.7 213.7">
-                            <polygon class="triangle" fill="none" stroke-width="7" stroke-linecap="round"
-                              stroke-linejoin="round" stroke-miterlimit="10"
-                              points="73.5,62.5 148.5,105.8 73.5,149.1" />
-                            <circle class="circle" fill="none" stroke-width="7" stroke-linecap="round"
-                              stroke-linejoin="round" stroke-miterlimit="10" cx="106.8" cy="106.8" r="103.3" />
-                          </svg>
-                          <span>Watch Trailer</span>
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </ng-template>
-          </ng-container>
-        </owl-carousel-o>
-
-        <!-- Trailer Video Player -->
-        <js-player *ngIf="selectedItem" class="video_player" (onClose)="onCloseTrailer($event)"
-          [videoSrc]="videoUrl + selectedItem.trailer">
-        </js-player>
+            <!-- Trailer Video Player -->
+            <js-player *ngIf="selectedItem" class="video_player" (onClose)="onCloseTrailer($event)"
+               [videoSrc]="videoUrl + selectedItem.trailer">
+            </js-player>
+         </div>
       </div>
-    </div>
-  </div>
+   </div>
 </section>
 
 <ng-container *ngFor="let list of listSections">
-  <section class="gen-section-padding-2 bg-gradient">
-    <div class="container">
-      <div class="d-flex justify-content-between">
-        <h4 class="gen-heading-title">{{ list.heading }}</h4>
-        <a [routerLink]="['/movies']" class="gen-button gen-button-flat d-none d-md-flex">
-          <span class="text">View more</span>
-        </a>
-      </div>
-      <div class="row mt-3">
-        <div class="col-12 caro-style-1">
-          <owl-carousel-o [options]="carouselOptions2">
-            <ng-container *ngFor="let movie of list.data">
-              <ng-template carouselSlide>
-                <div class="item h-100">
-                  <div class="movie type-movie status-publish has-post-thumbnail hentry h-100">
-                    <div class="gen-carousel-movies-style-2 movie-grid style-2 h-100">
-                      <div class="gen-movie-contain h-100">
-                        <div class="gen-movie-img h-100">
-                          <img [src]="imageUrl+movie.banner" alt="movie-thumbnail">
-                          <div class="gen-movie-add">
-                            <div class="wpulike wpulike-heart">
-                              <div class="wp_ulike_general_class wp_ulike_is_not_liked">
-                                <button type="button" class="wp_ulike_btn wp_ulike_put_image"></button>
+   <section class="gen-section-padding-2 bg-gradient">
+      <div class="container">
+         <div class="d-flex justify-content-between">
+            <h4 class="gen-heading-title">{{ list.heading }}</h4>
+            <a [routerLink]="['/movies']" class="gen-button gen-button-flat d-none d-md-flex">
+               <span class="text">View more</span>
+            </a>
+         </div>
+         <div class="row mt-3">
+            <div class="col-12 caro-style-1">
+               <owl-carousel-o [options]="carouselOptions2">
+                  <ng-container *ngFor="let movie of list.data">
+                     <ng-template carouselSlide>
+                        <div class="item h-100">
+                           <div class="movie type-movie status-publish has-post-thumbnail hentry h-100">
+                              <div class="gen-carousel-movies-style-2 movie-grid style-2 h-100">
+                                 <div class="gen-movie-contain h-100">
+                                    <div class="gen-movie-img h-100">
+                                       <img [src]="imageUrl+movie.banner" alt="movie-thumbnail">
+                                       <div class="gen-movie-add">
+                                          <div class="wpulike wpulike-heart">
+                                             <div class="wp_ulike_general_class wp_ulike_is_not_liked">
+                                                <button type="button" class="wp_ulike_btn wp_ulike_put_image"></button>
+                                             </div>
+                                          </div>
+                                       </div>
+                                       <div class="gen-movie-action">
+                                          <a [routerLink]="['/movies', movie.mov_id]" class="gen-button">
+                                             <i class="fa fa-play"></i>
+                                          </a>
+                                       </div>
+                                    </div>
+                                    <div class="gen-info-contain">
+                                       <div class="gen-movie-info">
+                                          <h3>
+                                             <a [routerLink]="['/movies', movie.mov_id]">{{ movie.title }}</a>
+                                          </h3>
+                                       </div>
+                                       <div class="gen-movie-meta-holder">
+                                          <ul>
+                                             <li>{{ movie.duration }}</li>
+                                          </ul>
+                                       </div>
+                                    </div>
+                                 </div>
                               </div>
-                            </div>
-                          </div>
-                          <div class="gen-movie-action">
-                            <a [routerLink]="['/movies', movie.mov_id]" class="gen-button">
-                              <i class="fa fa-play"></i>
-                            </a>
-                          </div>
+                           </div>
                         </div>
-                        <div class="gen-info-contain">
-                          <div class="gen-movie-info">
-                            <h3>
-                              <a [routerLink]="['/movies', movie.mov_id]">{{ movie.title }}</a>
-                            </h3>
-                          </div>
-                          <div class="gen-movie-meta-holder">
-                            <ul>
-                              <li>{{ movie.duration }}</li>
-                            </ul>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </ng-template>
-            </ng-container>
-          </owl-carousel-o>
-        </div>
+                     </ng-template>
+                  </ng-container>
+               </owl-carousel-o>
+            </div>
+         </div>
       </div>
-    </div>
-  </section>
+   </section>
 </ng-container>
+}@else{
+<div class="fullscreen-loader" id="loader">
+   <div class="spinner"></div>
+</div>
+}

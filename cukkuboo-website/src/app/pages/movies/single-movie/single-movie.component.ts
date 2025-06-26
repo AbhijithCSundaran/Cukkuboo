@@ -118,9 +118,11 @@ export class SingleMovieComponent implements OnInit {
   ) {
     this.route.paramMap.subscribe(params => {
       const id = Number(params.get('id'));
-      if (id) this.getMovie(id);
+      const autoplay = this.route.snapshot.queryParamMap.get('ap');
+      if (id) this.getMovie(id, autoplay);
       // Handle your logic here
     });
+    
   }
 
   ngOnInit(): void {
@@ -128,7 +130,7 @@ export class SingleMovieComponent implements OnInit {
     // if (id) this.getMovie(id);
   }
 
-  getMovie(id: number): void {
+  getMovie(id: number, autoplay: any): void {
     this.movieService.getMovieById(id).subscribe({
       next: (res) => {
         if (res?.data) {
@@ -136,6 +138,8 @@ export class SingleMovieComponent implements OnInit {
           // console.log('Movie Response:', data);
 
           this.movieData = data;
+          if (autoplay)
+            this.playVideo(this.movieData.video)
           this.pageIndex = 0;
           this.stopInfiniteScroll = false;
           this.suggetionList = [];
@@ -160,7 +164,7 @@ export class SingleMovieComponent implements OnInit {
   }
 
   playVideo(video: string, isfull: boolean = false): void {
-    this.fullScreen = isfull
+    // this.fullScreen = isfull
     this.selectedVideo = video;
   }
   onScroll(event: any) {

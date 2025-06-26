@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MovieService } from '../../services/movie.service';
 import { environment } from '../../../environments/environment';
@@ -23,6 +23,7 @@ import { InfiniteScrollDirective } from '../../core/directives/infinite-scroll/i
   styleUrl: './movies.component.scss'
 })
 export class MoviesComponent implements OnInit {
+  @ViewChild('searchInput') searchInput!: ElementRef<HTMLInputElement>;
   movies: any[] = [];
   imageUrl = environment.apiUrl + 'uploads/images/';
   pageIndex: number = 0;
@@ -31,10 +32,22 @@ export class MoviesComponent implements OnInit {
   searchText: string = '';
   searchTimeout: any;
   stopInfiniteScroll: boolean = false;
+  showSearch: boolean = false;
 
   constructor(
+    private route: ActivatedRoute,
     private movieService: MovieService,
-  ) { }
+  ) {
+    this.route.queryParams.subscribe(params => {
+      this.showSearch = !!params['search'];
+      this.searchText = ''
+      setTimeout(() => {
+        if (this.showSearch) {
+          this.searchInput.nativeElement.focus();
+        }
+      });
+    });
+  }
 
   ngOnInit(): void {
     this.loadMovies(this.pageIndex, this.pageSize, this.searchText);

@@ -5207,9 +5207,9 @@ Banner
     background-repeat: no-repeat !important;
 }
 
-.gen-banner-movies.single .item {
+/* .gen-banner-movies.single .item {
     height: calc(90vh - 90px);
-}
+} */
 
 .gen-banner-movies .item:before {
     content: "";

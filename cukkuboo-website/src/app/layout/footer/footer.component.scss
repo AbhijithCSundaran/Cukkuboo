@@ -2,7 +2,6 @@
   margin-top: auto;
 
   .footer {
-    background-color: white;
     padding: 10px 0;
     text-align: center;
     width: 100%;
@@ -37,21 +36,7 @@ footer#gen-footer .gen-footer-style-1 .widget ul.menu li{
   display: inline !important;
 }
 
-.social{
-  font-size: 18px !important;
+.social-link a{
+  font-size: 18px;
+  color: var(--white-color);
 }
-// footer#gen-footer .social-link {
-//   margin-top: 2rem; 
-
-// }
-// footer#gen-footer .social-link {
-//   display: flex;
-//   justify-content: flex-end;
-//   gap: 0px;
-//   margin-top: 1rem;
-//   padding-right: 338px;
-//   list-style: none;
-// }
-// footer#gen-footer .social-link li a i {
-//   font-size: 22px;             
-// }

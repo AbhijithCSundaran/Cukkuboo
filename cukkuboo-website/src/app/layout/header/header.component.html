@@ -72,8 +72,10 @@
                   <li class="menu-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">
                     <a routerLink="/reels" (click)="closeMenu()">Reels</a>
                   </li>
+
+                  
                   <li class="menu-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">
-                    <a routerLink="/movies" [queryParams]="{ search: 1 }" (click)="closeMenu()">Search</a>
+                    <a routerLink="/movies" [queryParams]="{ search: 1 }" (click)="closeMenu()"><i class="fa-solid fa-magnifying-glass search"></i></a>
                   </li>
 
                   <!-- If NOT signed in -->

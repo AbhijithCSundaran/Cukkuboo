@@ -30,12 +30,13 @@ class Jwt
     }
 
     public function decode($token)
-    {
-        try {
-            $decoded = FirebaseJWT::decode($token, new Key($this->key, 'HS256'));
-            return $decoded->data;
-        } catch (\Exception $e) {
-            return false;
-        }
+{
+    try {
+        $decoded = FirebaseJWT::decode($token, new Key($this->key, 'HS256'));
+        return $decoded->data;
+    } catch (\Exception $e) {
+        return false;
     }
+}
+
 }

@@ -1,16 +1,26 @@
 <div class="reel-wrapper">
+  <!-- Back Button -->
+  <button class="back-btn" (click)="navigateHome()" aria-label="Back to Home">
+    <svg viewBox="0 0 24 24">
+      <path
+        d="M15 18l-6-6 6-6"
+        stroke="currentColor"
+        stroke-width="2"
+        fill="none"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </svg>
+  </button>
+
   <div class="reel-scroll" #reelScroll>
     <div *ngFor="let reel of reels; let i = index" class="reel-container">
-      <div
-        class="reel-inner"
-        (mouseenter)="onHover(i)"
-        (mouseleave)="onLeave(i)"
-      >
+      <div class="reel-inner" (mouseenter)="onHover(i)" (mouseleave)="onLeave(i)">
         <video
           #videoEl
           [src]="reel.video"
           [poster]="reel.image"
-          muted
+          [muted]="mutedStates[i]"
           autoplay
           loop
           playsinline
@@ -23,9 +33,7 @@
           *ngIf="hoveredIndex === i"
           (click)="togglePlayPause(i); $event.stopPropagation()"
         >
-          <i
-            [ngClass]="videoStates[i] ? 'bi bi-pause-fill' : 'bi bi-play-fill'"
-          ></i>
+          <i [ngClass]="videoStates[i] ? 'bi bi-pause-fill' : 'bi bi-play-fill'"></i>
         </button>
 
         <!-- Text Info -->
@@ -36,9 +44,17 @@
 
         <!-- Control Icons -->
         <div class="cntl-icos">
-          <i class="bi bi-heart d-block mb-2"></i>
-          <i class="bi bi-volume-down d-block mb-2"></i>
-          <i class="bi bi-share d-block"></i>
+          <i
+            class="bi"
+            [ngClass]="likedStates[i] ? 'bi-heart-fill text-danger' : 'bi-heart'"
+            (click)="toggleLike(i)"
+          ></i>
+          <i
+            class="bi"
+            [ngClass]="mutedStates[i] ? 'bi-volume-mute-fill' : 'bi-volume-up-fill'"
+            (click)="toggleMute(i)"
+          ></i>
+          <i class="bi bi-share-fill" (click)="onShare(i)"></i>
         </div>
       </div>
     </div>
@@ -46,11 +62,11 @@
 
   <!-- Navigation Arrows -->
   <div class="nav-arrows">
-    <button class="arrow up" (click)="scrollToPrev()">
-      <i class="bi bi-chevron-up"></i>
+    <button class="arrow up" (click)="scrollToPrev()" aria-label="Previous reel">
+      <svg viewBox="0 0 24 24"><path d="M12 8L6 14H18L12 8Z" fill="currentColor" /></svg>
     </button>
-    <button class="arrow down" (click)="scrollToNext()">
-      <i class="bi bi-chevron-down"></i>
+    <button class="arrow down" (click)="scrollToNext()" aria-label="Next reel">
+      <svg viewBox="0 0 24 24"><path d="M12 16L18 10H6L12 16Z" fill="currentColor" /></svg>
     </button>
   </div>
 </div>

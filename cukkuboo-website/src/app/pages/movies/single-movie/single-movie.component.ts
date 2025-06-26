@@ -5,14 +5,14 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { environment } from '../../../../environments/environment';
 import { MovieService } from '../../../services/movie.service';
 import { MatDialog } from '@angular/material/dialog';
-import { PalyerComponent } from '../../_common/palyer/palyer.component';
 import { InfiniteScrollDirective } from '../../../core/directives/infinite-scroll/infinite-scroll.directive';
+import { JsPlayerComponent } from '../../_common/js-player/js-player.component';
 
 @Component({
   selector: 'app-single-movie',
   standalone: true,
   imports: [CommonModule, RouterLink,
-    PalyerComponent,
+    JsPlayerComponent,
     InfiniteScrollDirective
   ],
   templateUrl: './single-movie.component.html',
@@ -23,6 +23,8 @@ export class SingleMovieComponent implements OnInit {
   pageSize: number = 10;
   stopInfiniteScroll: boolean = false;
   movieData: any;
+  selectedVideo: string = '';
+  fullScreen: boolean = false;
   videoUrl = environment.apiUrl + 'uploads/videos/';
   imageUrl = environment.apiUrl + 'uploads/images/';
   suggetionList: any[] = [];
@@ -157,9 +159,9 @@ export class SingleMovieComponent implements OnInit {
     });
   }
 
-  playVideo(movie: any): void {
-    movie.playTrailer = false;
-    movie.playVideo = true;
+  playVideo(video: string, isfull: boolean = false): void {
+    this.fullScreen = isfull
+    this.selectedVideo = video;
   }
   onScroll(event: any) {
     this.pageIndex++;

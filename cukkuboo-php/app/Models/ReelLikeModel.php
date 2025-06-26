@@ -27,9 +27,9 @@ class ReelLikeModel extends Model
         return $this->db->table($this->table)
             ->where(['user_id' => $userId, 'reels_id' => $reelId])
             ->update([
-                'status'     => $status,
-                'modify_on'  => date('Y-m-d H:i:s'),
-                'modify_by'  => $userId
+                'status'    => $status,
+                'modify_on' => date('Y-m-d H:i:s'),
+                'modify_by' => $userId
             ]);
     }
 
@@ -43,7 +43,7 @@ class ReelLikeModel extends Model
     public function updateReelLikeCount($reelId)
     {
         $likeCount = $this->db->table($this->table)
-            ->where(['reels_id' => $reelId, 'status' => 1]) // 1 = like
+            ->where(['reels_id' => $reelId, 'status' => 1])  // status 1 means like
             ->countAllResults();
 
         return $this->db->table('reels')

@@ -1,53 +1,74 @@
-import { Component, ElementRef, EventEmitter, HostListener, Input, Output, ViewChild } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Component, ElementRef, EventEmitter, HostBinding, HostListener, Input, Output, ViewChild } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import videojs from 'video.js';
+import type Player from 'video.js/dist/types/player';
 
 @Component({
-  selector: 'app-js-player',
-  imports: [],
+  selector: 'js-player',
+  imports: [CommonModule, MatButtonModule, MatIconModule],
   templateUrl: './js-player.component.html',
   styleUrl: './js-player.component.scss'
 })
 export class JsPlayerComponent {
   @Input() videoSrc!: string;
+  @Input() controls: boolean = true;
   @Input() autoplay: boolean = true;
+  @Input() fullScreen: boolean = false;
   @Output() onClose: EventEmitter<any> = new EventEmitter();
-  @ViewChild('video') videoRef!: ElementRef<HTMLVideoElement>;
+  @ViewChild('target') target!: ElementRef<HTMLVideoElement>;
+  player!: Player;
+  timeoutId: any;
+  @HostBinding('class.showClose') showClose = false;
 
   ngAfterViewInit(): void {
-    const video = this.videoRef.nativeElement;
-    if (video) {
-      video.src = this.videoSrc;
-      if (this.autoplay) {
-        video.play().catch(err => {
-          console.error('Autoplay failed:', err);
-        });
-      }
-    }
+    this.player = videojs(this.target.nativeElement, {
+      controls: this.controls,
+      autoplay: this.autoplay,
+      preload: 'auto'
+    });
+    if (this.fullScreen)
+      this.player.requestFullscreen();
   }
 
-  @HostListener('contextmenu', ['$event'])
-  onRightClick(event: MouseEvent): void {
-    event.preventDefault(); // Disable right-click
+  @HostListener('mouseenter')
+  onMouseEnter() {
+    this.resetTimeout();
   }
 
-  @HostListener('window:keydown', ['$event'])
-  disableSpecialKeys(event: KeyboardEvent): void {
-    const forbiddenKeys = [
-      'F1', 'F2', 'F3', 'F4', 'F5', 'F6',
-      'F7', 'F8', 'F9', 'F10', 'F11', 'F12'
-    ];
+  @HostListener('mousemove')
+  onMouseMove() {
+    this.resetTimeout();
+  }
 
-    if (
-      forbiddenKeys.includes(event.key) ||
-      event.ctrlKey ||
-      event.shiftKey ||
-      event.altKey
-    ) {
-      event.preventDefault();
-      event.stopPropagation();
+  // @HostListener('mouseleave')
+  // onMouseLeave() {
+  //   this.showClose = false;
+  //   if (this.timeoutId) {
+  //     clearTimeout(this.timeoutId);
+  //     this.timeoutId = null;
+  //   }
+  // }
+
+  private resetTimeout() {
+    this.showClose = true;
+    if (this.timeoutId) {
+      clearTimeout(this.timeoutId);
     }
+    this.timeoutId = setTimeout(() => {
+      this.showClose = false;
+      this.timeoutId = null;
+    }, 2500);
   }
 
   Close(): void {
     this.onClose.emit(true);
+  }
+
+  ngOnDestroy(): void {
+    if (this.player) {
+      this.player.dispose();
+    }
   }
 }

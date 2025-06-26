@@ -3,6 +3,7 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { StorageService } from '../../core/services/TempStorage/storageService';
 import { Subject, takeUntil } from 'rxjs';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-header',
@@ -32,7 +33,8 @@ export class HeaderComponent {
 
   constructor(
     private storageService: StorageService,
-    private elementRef: ElementRef
+    private elementRef: ElementRef,
+    private snackBar: MatSnackBar
   ) {
     this.storageService.onUpdateItem
       .pipe(takeUntil(this._unsubscribeAll))
@@ -45,6 +47,12 @@ export class HeaderComponent {
   signOut() {
     localStorage.clear();
     this.storageService.updateItem('token', '');
+    this.snackBar.open('Signed out successfully', 'Close', {
+      duration: 3000,
+      verticalPosition: 'top',
+      horizontalPosition: 'center',
+      panelClass: ['snackbar-success']
+    });
   }
 
   closeMenu() {

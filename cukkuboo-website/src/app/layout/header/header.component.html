@@ -10,7 +10,7 @@
               <img class="img-fluid logo" src="assets/images/logo.png" alt="streamlab-image" />
             </a>
 
-        
+            <!-- Toggle Button -->
             <button class="navbar-toggler" type="button" (click)="menuOpen = !menuOpen">
               <i class="fas fa-bars"></i>
             </button>
@@ -25,15 +25,11 @@
                   <li class="menu-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">
                     <a routerLink="/movies" (click)="closeMenu()">Movies</a>
                   </li>
-
-                  <!-- Mobile Search -->
-                  <li class="menu-item mt-3">
-                   
-                      <a href="javascript:void(0)">Search</a>
-                   
+                  <li class="menu-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">
+                    <a routerLink="/reels" (click)="closeMenu()">Reels</a>
                   </li>
 
-                  <!-- Mobile User -->
+                  <!-- Mobile User Auth Links -->
                   <ng-container *ngIf="!isSignedIn; else signedInBlock">
                     <li class="nav-item mt-3">
                       <a routerLink="/signin" class="nav-link" (click)="closeMenu()">Sign In</a>
@@ -44,7 +40,7 @@
                   </ng-container>
                   <ng-template #signedInBlock>
                     <li class="nav-item mt-3">
-                      <a routerLink="/profile" class="nav-link" (click)="closeMenu()">Profile</a>
+                      <!-- <a routerLink="/profile" class="nav-link" (click)="closeMenu()">Profile</a> -->
                     </li>
                     <li class="nav-item">
                       <a (click)="signOut(); closeMenu()" class="nav-link">Sign Out</a>
@@ -63,36 +59,41 @@
             <div class="collapse navbar-collapse d-none d-lg-flex" id="navbarSupportedContent">
               <div id="gen-menu-contain" class="gen-menu-contain w-100">
                 <ul id="gen-main-menu" class="navbar-nav ml-auto">
+                  <!-- Common Menu -->
                   <li class="menu-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">
                     <a routerLink="/" (click)="closeMenu()">Home</a>
                   </li>
                   <li class="menu-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">
                     <a routerLink="/movies" (click)="closeMenu()">Movies</a>
                   </li>
-                   <li class="menu-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">
+                  <li class="menu-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">
                     <a routerLink="/reels" (click)="closeMenu()">Reels</a>
                   </li>
+
+                  <!-- If NOT signed in -->
+                  <ng-container *ngIf="!isSignedIn">
+                    <li class="menu-item ml-3">
+                      <a routerLink="/signin" (click)="closeMenu()">Sign In</a>
+                    </li>
+                    <li class="menu-item ml-3">
+                      <a routerLink="/signup" (click)="closeMenu()">Sign Up</a>
+                    </li>
+                    <li class="menu-item ml-3">
+                      <a routerLink="/subscribe" class="gen-button" (click)="closeMenu()">
+                        <div class="gen-button-block">
+                          <span class="gen-button-line-left"></span>
+                          <span class="gen-button-text">Subscribe</span>
+                        </div>
+                      </a>
+                    </li>
+                  </ng-container>
                 </ul>
               </div>
             </div>
 
-         
-            <div class="gen-header-info-box d-none d-lg-flex align-items-center ml-auto">
-
-              <!-- Desktop Search -->
-              <div class="gen-menu-search-block">
-                <a href="javascript:void(0)" id="gen-seacrh-btn"><i class="fa fa-search"></i></a>
-                <div class="gen-search-form">
-                  <form role="search" class="search-form">
-                    <label>
-                      <input type="search" class="search-field" placeholder="Search …" name="s" />
-                    </label>
-                    <button type="submit" class="search-submit"></button>
-                  </form>
-                </div>
-              </div>
-
-              <!-- Desktop User -->
+            <!-- Desktop Header Right (Only if signed in) -->
+            <div *ngIf="isSignedIn" class="gen-header-info-box d-none d-lg-flex align-items-center ml-auto">
+              <!-- User Icon -->
               <div class="gen-account-holder ml-3"
                    (mouseenter)="showUserDropdown = true"
                    (mouseleave)="showUserDropdown = false"
@@ -100,19 +101,13 @@
                 <a href="javascript:void(0)" id="gen-user-btn"><i class="fa fa-user"></i></a>
                 <div class="gen-account-menu" [class.gen-form-show]="showUserDropdown">
                   <ul class="col-12">
-                    <ng-container *ngIf="!isSignedIn; else signedInMenu">
-                      <li><a routerLink="/signin"><i class="fas fa-sign-in-alt mr-1"></i> Sign In</a></li>
-                      <li><a routerLink="/signup"><i class="fa fa-user mr-1"></i> Sign Up</a></li>
-                    </ng-container>
-                    <ng-template #signedInMenu>
-                      <!-- <li><a routerLink="/profile"><i class="fas fa-user mr-1"></i> Profile</a></li> -->
-                      <li><a (click)="signOut()"><i class="fa fa-sign-out mr-1"></i> Sign Out</a></li>
-                    </ng-template>
+                    <!-- <li><a routerLink="/profile"><i class="fas fa-user mr-1"></i> Profile</a></li> -->
+                    <li><a (click)="signOut()"><i class="fa fa-sign-out mr-1"></i> Sign Out</a></li>
                   </ul>
                 </div>
               </div>
 
-              <!-- Desktop Subscribe -->
+              <!-- Subscribe Button -->
               <div class="gen-btn-container ml-3">
                 <a routerLink="/subscribe" class="gen-button">
                   <div class="gen-button-block">

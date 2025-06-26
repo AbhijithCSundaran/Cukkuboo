@@ -3,8 +3,8 @@
 
 html {
     color-scheme: dark;
-    @include mat.theme((color: (primary: mat.$chartreuse-palette,
-                tertiary: mat.$orange-palette,
+    @include mat.theme((color: (primary: mat.$red-palette,
+                tertiary: mat.$yellow-palette,
                 theme-type: dark,
             ),
             typography: Roboto,

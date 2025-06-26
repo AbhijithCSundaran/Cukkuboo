@@ -5,43 +5,56 @@
         <owl-carousel-o [options]="customOptions1">
           <ng-container *ngFor="let item of bannerData?.data">
             <ng-template carouselSlide>
-              <div class="item" [ngStyle]="{ 'background-image': 'url(' + imageUrl+item.banner + ')' }">
+              <div class="item" [ngStyle]="{ 'background-image': 'url(' + imageUrl + item.banner + ')' }">
                 <div class="gen-movie-contain-style-2 h-100">
                   <div class="d-flex align-items-center h-100 p-5">
+                    <!-- Left Column -->
                     <div class="col-12 col-xl-8 p-2">
-                      <div class="gen-tag-line"><span>{{bannerData.heading}}</span></div>
+                      <div class="gen-tag-line">
+                        <span>{{ bannerData.heading }}</span>
+                      </div>
                       <div class="gen-movie-info">
                         <h3>{{ item.title }}</h3>
                       </div>
                       <div class="gen-movie-meta-holder">
-                        <ul class="gen-meta-after-title">
-                          <li class="gen-sen-rating"><span>{{ item.rating }}</span></li>
-                          <li><img src="assets/images/asset-2.png" alt="rating-img"><span>{{ item.views }}</span></li>
+                        <!--  Star Rating +  Views -->
+                        <ul class="list-unstyled d-flex align-items-center flex-wrap gap-4 mb-2">
+                          <li class="d-flex align-items-center">
+                            <ng-container *ngFor="let star of [1,2,3,4,5]">
+                              <i class="fa"
+                                [ngClass]="star <= item.rating ? 'fa-star text-warning' : 'fa-star-o text-muted'"></i>
+                            </ng-container>
+                            <span class="ms-2">({{ item.rating }})</span>
+                          </li>
+                          <!-- <li class="d-flex align-items-center">
+                            <i class="fa fa-eye me-2"></i>
+                            <span>{{ item.views }}</span>
+                          </li> -->
                         </ul>
-                        <p>{{ item.description }}</p>
-                        <div class="gen-meta-info">
-                           <ul class="gen-meta-after-excerpt">
-                              <li><strong>Cast : </strong> {{ item.cast_details }}</li>
-                              <li><strong>Category : </strong> {{ item.category == 1 ? 'Movie' : item.category == 2 ? 'Show' : 'Unknown' }}</li>
-                            </ul>
-                        </div>
+
+                        <!-- Description -->
+                        <p>{{ item.description | truncate: 200 }}</p>
                       </div>
+
+                      <!-- Buttons -->
                       <div class="gen-movie-action d-flex">
                         <div class="gen-btn-container">
                           <a [routerLink]="['/movies', item.mov_id]" class="gen-button gen-button-dark">
-                            <i class="fas fa-play"></i><span class="text">Play Now</span>
+                            <i class="fas fa-play"></i><span class="text">Play Movie</span>
                           </a>
                         </div>
                         <div class="gen-btn-container d-block d-xl-none" (click)="playTrailer(item)">
                           <a [routerLink]="['/movies', item.mov_id]" class="gen-button gen-button-outline">
-                             <i class="fas fa-play"></i><span class="text">Watch Trailer</span>
+                            <i class="fas fa-play"></i><span class="text">Watch Trailer</span>
                           </a>
                         </div>
                       </div>
                     </div>
+
+                    <!-- Right Column: Thumbnail & Trailer -->
                     <div class="col-xl-4 d-none d-xl-flex">
                       <div class="gen-front-image mx-auto">
-                        <img [src]="imageUrl+item.thumbnail" alt="carousel-image" />
+                        <img [src]="imageUrl + item.thumbnail" alt="carousel-image" />
                         <a (click)="playTrailer(item)" class="playBut">
                           <svg xmlns="http://www.w3.org/2000/svg" width="213.7" height="213.7"
                             viewBox="0 0 213.7 213.7">
@@ -62,8 +75,9 @@
           </ng-container>
         </owl-carousel-o>
 
+        <!-- Trailer Video Player -->
         <video-palyer *ngIf="selectedItem" class="video_player" (onClose)="onCloseTrailer($event)"
-          [videoSrc]="videoUrl+selectedItem.trailer">
+          [videoSrc]="videoUrl + selectedItem.trailer">
         </video-palyer>
       </div>
     </div>
@@ -76,7 +90,7 @@
       <div class="d-flex justify-content-between">
         <h4 class="gen-heading-title">{{ list.heading }}</h4>
         <a [routerLink]="['/movies']" class="gen-button gen-button-flat d-none d-md-flex">
-          <span class="text">More Videos</span>
+          <span class="text">View more</span>
         </a>
       </div>
       <div class="row mt-3">

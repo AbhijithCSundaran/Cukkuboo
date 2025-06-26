@@ -5606,9 +5606,9 @@ Banner 2
     width: 100%;
     font-size: 18px;
     margin-bottom: 20px;
-    text-overflow: ellipsis;
+    /* text-overflow: ellipsis;
     overflow: hidden;
-    white-space: nowrap;
+    white-space: nowrap; */
 }
 
 .gen-movie-contain-style-2 .gen-movie-action .gen-btn-container {

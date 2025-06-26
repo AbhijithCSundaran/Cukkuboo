@@ -1,42 +1,65 @@
-import { Component, ElementRef, Input, ViewChild, AfterViewInit, HostListener, Inject, Output, EventEmitter } from '@angular/core';
-import { MatButtonModule, MatIconButton } from '@angular/material/button';
+import {
+  Component,
+  ElementRef,
+  Input,
+  ViewChild,
+  AfterViewInit,
+  HostListener,
+  Output,
+  EventEmitter
+} from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'video-palyer',
-  imports: [MatIconButton, MatIconModule, MatButtonModule],
+  standalone: true,
+  imports: [MatButtonModule, MatIconModule],
   templateUrl: './palyer.component.html',
   styleUrl: './palyer.component.scss'
 })
-export class PalyerComponent {
+export class PalyerComponent implements AfterViewInit {
   @Input() videoSrc!: string;
   @Input() autoplay: boolean = true;
   @Output() onClose: EventEmitter<any> = new EventEmitter();
   @ViewChild('video') videoRef!: ElementRef<HTMLVideoElement>;
 
-  constructor(
-  ) {
-  }
-
-  ngAfterViewInit() {
+  ngAfterViewInit(): void {
     const video = this.videoRef.nativeElement;
     if (video) {
-      // if (Hls.isSupported()) {
-      //   const hls = new Hls();
-      //   hls.loadSource(this.videoSrc);
-      //   hls.attachMedia(video);
-      // } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
       video.src = this.videoSrc;
-      if (this.autoplay)
-        video.play();
+      if (this.autoplay) {
+        video.play().catch(err => {
+          console.error('Autoplay failed:', err);
+        });
+      }
     }
   }
+
   @HostListener('contextmenu', ['$event'])
-  onRightClick(event: MouseEvent) {
-    // event.preventDefault(); // Disable right-click
+  onRightClick(event: MouseEvent): void {
+    event.preventDefault(); // Disable right-click
   }
 
-  Close() {
-    this.onClose.emit(true)
+  @HostListener('window:keydown', ['$event'])
+  disableSpecialKeys(event: KeyboardEvent): void {
+    const forbiddenKeys = [
+      'F1', 'F2', 'F3', 'F4', 'F5', 'F6',
+      'F7', 'F8', 'F9', 'F10', 'F11', 'F12'
+    ];
+
+    if (
+      forbiddenKeys.includes(event.key) ||
+      event.ctrlKey ||
+      event.shiftKey ||
+      event.altKey
+    ) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+  }
+
+  Close(): void {
+    this.onClose.emit(true);
   }
 }

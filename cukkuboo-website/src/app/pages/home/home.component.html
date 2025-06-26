@@ -76,9 +76,9 @@
         </owl-carousel-o>
 
         <!-- Trailer Video Player -->
-        <video-palyer *ngIf="selectedItem" class="video_player" (onClose)="onCloseTrailer($event)"
+        <js-player *ngIf="selectedItem" class="video_player" (onClose)="onCloseTrailer($event)"
           [videoSrc]="videoUrl + selectedItem.trailer">
-        </video-palyer>
+        </js-player>
       </div>
     </div>
   </div>

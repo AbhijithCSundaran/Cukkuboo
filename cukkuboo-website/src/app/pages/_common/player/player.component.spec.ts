@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PalyerComponent } from './palyer.component';
+import { PalyerComponent } from './player.component';
 
 describe('PalyerComponent', () => {
   let component: PalyerComponent;

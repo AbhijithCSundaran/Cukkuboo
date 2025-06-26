@@ -4,14 +4,14 @@ import { RouterLink } from '@angular/router';
 import { CarouselModule, OwlOptions } from 'ngx-owl-carousel-o';
 import { MovieService } from '../../services/movie.service';
 import { environment } from '../../../environments/environment';
-import { PalyerComponent } from '../_common/palyer/palyer.component';
 import { TruncatePipe } from '../../core/pipes/truncate-pipe';
+import { JsPlayerComponent } from '../_common/js-player/js-player.component';
 
 @Component({
   selector: 'app-home',
   standalone: true,
   imports: [CommonModule, CarouselModule, RouterLink,
-    PalyerComponent, TruncatePipe
+    JsPlayerComponent, TruncatePipe
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'

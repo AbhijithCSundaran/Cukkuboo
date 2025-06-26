@@ -11,21 +11,8 @@
         </div>
 
         <div class="gen-movie-action d-flex mt-4">
-          <div class="gen-btn-container" (click)="playVideo(movieData)">
-            <!-- <a class="playBut popup-youtube popup-vimeo popup-gmaps" (click)="movieData.playTrailer = true">
-              <svg xmlns="http://www.w3.org/2000/svg" width="80px" height="80px" viewBox="0 0 213.7 213.7">
-                <polygon class="triangle" fill="none" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"
-                  stroke-miterlimit="10" points="73.5,62.5 148.5,105.8 73.5,149.1">
-                </polygon>
-                <circle class="circle" fill="none" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"
-                  stroke-miterlimit="10" cx="106.8" cy="106.8" r="103.3"></circle>
-              </svg> -->
-            <!-- <span class="text">Play Now</span> -->
-
-            <!-- </a> -->
-            <!-- <a (click)="playVideo(movieData)" class="gen-button gen-button-dark"> -->
-            <a class="playBut popup-youtube popup-vimeo popup-gmaps" (click)="movieData.playTrailer = true">
-              <!-- <i class="fas fa-play"></i> -->
+          <div class="gen-btn-container">
+            <a class="playBut popup-youtube popup-vimeo popup-gmaps" (click)="playVideo(movieData.video,true)">
               <svg xmlns="http://www.w3.org/2000/svg" width="60px" height="70px" viewBox="0 0 213.7 213.7">
                 <polygon class="triangle" fill="none" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"
                   stroke-miterlimit="10" points="73.5,62.5 148.5,105.8 73.5,149.1">
@@ -36,7 +23,7 @@
               <span class="text p-1">Play Now</span>
             </a>
           </div>
-          <div class="ms-3 gen-btn-container d-block d-xl-none" (click)="movieData.playTrailer = true">
+          <div class="ms-3 gen-btn-container d-block d-xl-none" (click)="playVideo(movieData.trailer,false)">
             <a class="gen-button gen-button-outline">
               <i class="fas fa-play"></i><span class="text">Watch Trailer</span>
             </a>
@@ -48,7 +35,7 @@
       <div class="col-xl-4 d-none d-xl-flex">
         <div class="gen-front-image mx-auto">
           <img [src]="imageUrl+movieData.thumbnail" alt="carousel-image" />
-          <a class="playBut popup-youtube popup-vimeo popup-gmaps" (click)="movieData.playTrailer = true">
+          <a class="playBut popup-youtube popup-vimeo popup-gmaps" (click)="playVideo(movieData.trailer,false)">
             <svg xmlns="http://www.w3.org/2000/svg" width="213.7px" height="213.7px" viewBox="0 0 213.7 213.7">
               <polygon class="triangle" fill="none" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"
                 stroke-miterlimit="10" points="73.5,62.5 148.5,105.8 73.5,149.1">
@@ -63,13 +50,9 @@
       </div>
 
     </div>
-    <video-palyer *ngIf="movieData.playTrailer" class="video_player" (onClose)="movieData.playTrailer = false"
-      [videoSrc]="videoUrl+movieData.trailer">
-    </video-palyer>
-    <!--  Video -->
-    <video-palyer *ngIf="movieData.playVideo" class="video_player" (onClose)="movieData.playVideo = false"
-      [videoSrc]="videoUrl+movieData.video">
-    </video-palyer>
+    <js-player *ngIf="selectedVideo" class="video_player" (onClose)="selectedVideo = ''"
+      [videoSrc]="videoUrl+selectedVideo" [fullScreen]="fullScreen">
+    </js-player>
   </div>
 </section>
 

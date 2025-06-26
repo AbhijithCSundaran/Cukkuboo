@@ -18,11 +18,14 @@ export class ProfileComponent implements OnInit{
     constructor(private userService: UserService, private fb: FormBuilder) {}
 
 ngOnInit(): void {
+
+  console.log('Token:', localStorage.getItem('token'));
+  console.log('User ID:', localStorage.getItem('user_id'));
   this.profileForm = this.fb.group({
     username: [''],
     email: [''],
     phone: [''],
-    dob: ['']
+  
   });
 
   this.loadUserData();
@@ -34,8 +37,8 @@ loadUserData(): void {
       this.profileForm.patchValue({
         username: data.username,
         email: data.email,
-        contact: data.phone,
-        dob: data.date_of_birth
+        phone: data.phone,
+       
       });
     },
     error: (err) => {

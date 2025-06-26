@@ -4,53 +4,47 @@ namespace App\Controllers;
 
 use CodeIgniter\RESTful\ResourceController;
 use App\Models\ReelViewModel;
-use App\Libraries\Jwt;
+use App\Models\UserModel;
+use App\Libraries\AuthService;
 
 class ReelView extends ResourceController
 {
     protected $reelViewModel;
-    protected $jwt;
+    protected $userModel;
+    protected $authService;
 
     public function __construct()
     {
         $this->reelViewModel = new ReelViewModel();
-        $this->jwt = new Jwt();
+        $this->userModel = new UserModel();
+        $this->authService = new AuthService();
     }
 
     public function viewReel()
     {
         $authHeader = $this->request->getHeaderLine('Authorization');
+        $user = $this->authService->getAuthenticatedUser($authHeader);
 
-        if (!$authHeader || !preg_match('/Bearer\s(\S+)/', $authHeader, $matches)) {
-            return $this->failUnauthorized('Invalid or missing Authorization header');
+        if (!$user) {
+            return $this->failUnauthorized('Invalid or missing token.');
         }
-
-        $token = $matches[1];
-        $decodedData = $this->jwt->decode($token);
-
-        if (!$decodedData) {
-            return $this->failUnauthorized('Invalid or expired token');
-        }
-
-        $userIdFromToken = $decodedData->user_id ?? $decodedData->data->user_id ?? null;
 
         $data = $this->request->getJSON(true);
-        $userId  = $data['user_id'] ?? null;
-        $reelId  = $data['reels_id'] ?? null;
-        $status  = $data['status'] ?? null;
+        $userId = $data['user_id'] ?? null;
+        $reelId = $data['reels_id'] ?? null;
+        $status = $data['status'] ?? null;
 
         if (!$userId || !$reelId || $status != 1) {
             return $this->failValidationError('Invalid or missing data');
         }
 
-        if ($userId != $userIdFromToken) {
+        if ($userId != $user['user_id']) {
             return $this->failUnauthorized('User ID mismatch');
         }
 
         $existing = $this->reelViewModel->getUserReelView($userId, $reelId);
 
         if (!$existing) {
-            // First time view → insert and count
             $this->reelViewModel->insertUserView([
                 'user_id'    => $userId,
                 'reels_id'   => $reelId,
@@ -61,13 +55,12 @@ class ReelView extends ResourceController
 
             $this->reelViewModel->updateReelViewCount($reelId);
         } else {
-            // Already viewed → update timestamp
             $this->reelViewModel->updateUserView($userId, $reelId);
         }
 
         return $this->respond([
             'success' => true,
-            'message' => 'Reel viewed'
+            'message' => 'Reel viewed successfully'
         ]);
     }
 }

@@ -2,14 +2,7 @@
   <!-- Back Button -->
   <button class="back-btn" (click)="navigateHome()" aria-label="Back to Home">
     <svg viewBox="0 0 24 24">
-      <path
-        d="M15 18l-6-6 6-6"
-        stroke="currentColor"
-        stroke-width="2"
-        fill="none"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      />
+      <path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" />
     </svg>
   </button>
 
@@ -27,13 +20,14 @@
           (click)="togglePlayPause(i)"
         ></video>
 
+        <!-- Fullscreen Button -->
+        <button class="fullscreen-btn" (click)="toggleFullscreen($event)">
+          <i class="fas" [ngClass]="isFullscreen ? 'fa-compress' : 'fa-expand'"></i>
+        </button>
+
         <!-- Play/Pause Button -->
-        <button
-          class="play-pause-btn"
-          *ngIf="hoveredIndex === i"
-          (click)="togglePlayPause(i); $event.stopPropagation()"
-        >
-          <i [ngClass]="videoStates[i] ? 'bi bi-pause-fill' : 'bi bi-play-fill'"></i>
+        <button class="play-pause-btn" *ngIf="hoveredIndex === i" (click)="togglePlayPause(i); $event.stopPropagation()">
+          <i [ngClass]="videoStates[i] ? 'fas fa-pause' : 'fas fa-play'"></i>
         </button>
 
         <!-- Text Info -->
@@ -44,17 +38,9 @@
 
         <!-- Control Icons -->
         <div class="cntl-icos">
-          <i
-            class="bi"
-            [ngClass]="likedStates[i] ? 'bi-heart-fill text-danger' : 'bi-heart'"
-            (click)="toggleLike(i)"
-          ></i>
-          <i
-            class="bi"
-            [ngClass]="mutedStates[i] ? 'bi-volume-mute-fill' : 'bi-volume-up-fill'"
-            (click)="toggleMute(i)"
-          ></i>
-          <i class="bi bi-share-fill" (click)="onShare(i)"></i>
+          <i class="fas" [ngClass]="likedStates[i] ? 'fa-heart text-danger' : 'fa-heart'" (click)="toggleLike(i)"></i>
+          <i class="fas" [ngClass]="mutedStates[i] ? 'fa-volume-mute' : 'fa-volume-up'" (click)="toggleMute(i)"></i>
+          <i class="fas fa-share" (click)="onShare(i)"></i>
         </div>
       </div>
     </div>
@@ -62,10 +48,10 @@
 
   <!-- Navigation Arrows -->
   <div class="nav-arrows">
-    <button class="arrow up" (click)="scrollToPrev()" aria-label="Previous reel">
+    <button class="arrow up" (click)="scrollToPrev()">
       <svg viewBox="0 0 24 24"><path d="M12 8L6 14H18L12 8Z" fill="currentColor" /></svg>
     </button>
-    <button class="arrow down" (click)="scrollToNext()" aria-label="Next reel">
+    <button class="arrow down" (click)="scrollToNext()">
       <svg viewBox="0 0 24 24"><path d="M12 16L18 10H6L12 16Z" fill="currentColor" /></svg>
     </button>
   </div>

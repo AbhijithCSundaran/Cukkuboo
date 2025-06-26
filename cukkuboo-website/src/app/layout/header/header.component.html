@@ -28,6 +28,9 @@
                   <li class="menu-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">
                     <a routerLink="/reels" (click)="closeMenu()">Reels</a>
                   </li>
+                  <li class="menu-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">
+                    <a routerLink="/movies" [queryParams]="{ search: 1 }" (click)="closeMenu()">Search</a>
+                  </li>
 
                   <!-- Mobile User Auth Links -->
                   <ng-container *ngIf="!isSignedIn; else signedInBlock">
@@ -56,7 +59,7 @@
             </div>
 
             <!-- Desktop Menu -->
-            <div class="collapse navbar-collapse d-none d-lg-flex" id="navbarSupportedContent">
+            <div class="navbar-collapse d-none d-x-flex" id="navbarSupportedContent">
               <div id="gen-menu-contain" class="gen-menu-contain w-100">
                 <ul id="gen-main-menu" class="navbar-nav ml-auto">
                   <!-- Common Menu -->
@@ -68,6 +71,11 @@
                   </li>
                   <li class="menu-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">
                     <a routerLink="/reels" (click)="closeMenu()">Reels</a>
+                  </li>
+
+                  
+                  <li class="menu-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">
+                    <a routerLink="/movies" [queryParams]="{ search: 1 }" (click)="closeMenu()"><i class="fa-solid fa-magnifying-glass search"></i></a>
                   </li>
 
                   <!-- If NOT signed in -->
@@ -92,7 +100,7 @@
             </div>
 
             <!-- Desktop Header Right (Only if signed in) -->
-            <div *ngIf="isSignedIn" class="gen-header-info-box d-none d-lg-flex align-items-center ml-auto">
+            <div *ngIf="isSignedIn" class="gen-header-info-box d-none d-xl-flex align-items-center ml-auto">
               <!-- User Icon -->
               <div class="gen-account-holder ml-3"
                    (mouseenter)="showUserDropdown = true"

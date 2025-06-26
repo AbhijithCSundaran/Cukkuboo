@@ -2,7 +2,6 @@
   margin-top: auto;
 
   .footer {
-    background-color: white;
     padding: 10px 0;
     text-align: center;
     width: 100%;
@@ -16,6 +15,7 @@
 .store-logo {
   width: 100%;
   height: 100%;
+  max-width: 120px;
   overflow: hidden;
 
   img {
@@ -36,6 +36,7 @@ footer#gen-footer .gen-footer-style-1 .widget ul.menu li{
   display: inline !important;
 }
 
-.social{
-  font-size: 18px !important;
+.social-link a{
+  font-size: 18px;
+  color: var(--white-color);
 }

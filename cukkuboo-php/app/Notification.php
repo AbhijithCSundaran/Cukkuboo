@@ -177,32 +177,24 @@ class Notification extends ResourceController
 }
 
 
-    public function getUserNotifications($userId = null)
+    public function getUserNotifications()
 {
     $authHeader = $this->request->getHeaderLine('Authorization');
-    $authUser = $this->authService->getAuthenticatedUser($authHeader);
+    $user = $this->authService->getAuthenticatedUser($authHeader);
 
-    if (!$authUser) {
+    if (!$user) {
         return $this->failUnauthorized('Invalid or missing token.');
     }
 
-    if ($userId === null) {
-        $userId = $authUser['user_id'];
-    }
-    if (!$userId) {
-        return $this->failValidationErrors('User ID is required.');
-    }
+    $user_id = $user['user_id'];
 
-    $notifications = $this->notificationModel->getByUserId($userId);
-    $total = count($notifications);
-    return $this->response->setJSON([
-        'success' => true,
+    $notifications = $this->notificationModel->getByUserId($user_id);
+
+    return $this->respond([
+        'status' => true,
         'message' => 'Notifications fetched successfully.',
-        'total' => $total,
-        'data' => $notifications
+        'notifications' => $notifications
     ]);
 }
-
-
 
 }

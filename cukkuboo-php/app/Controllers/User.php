@@ -166,20 +166,25 @@ class User extends ResourceController
     }
 
 
-    // Get user details by user_id
-public function getUserDetailsById($userId)
+
+public function getUserDetailsById($userId = null)
 {
     $authHeader = $this->request->getHeaderLine('Authorization');
     $authuser = $this->authService->getAuthenticatedUser($authHeader);
         if(!$authuser) 
             return $this->failUnauthorized('Invalid or missing token.');
+        
+    if ($userId === null) {
+        $userId = $authuser['user_id'];
+    }
     $user = $this->UserModel->getUserById($userId);
 
+   
     if (!$user) {
         return $this->response->setJSON([
             'success' => false,
             'message' => 'User not found'
-        ])->setStatusCode(404);
+        ]);
     }
 
     return $this->response->setJSON([

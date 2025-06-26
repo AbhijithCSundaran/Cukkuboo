@@ -30,7 +30,7 @@ export class UserService {
   }
 
   register(model: any): Observable<any> {
-    const body = model;
+    const body = model; 
     return this.http.post(this.apiUrl + 'user/register', body, { headers: this.headers });
   }
   

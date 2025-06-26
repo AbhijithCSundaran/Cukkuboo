@@ -1,16 +1,59 @@
 .gen-section-padding-3 {
-    padding: 12px 0px 90px 0px;
+  padding: 12px 0px 90px 0px;
 }
 
-.play-movie{
-  color:white;
-    font-size: 23px;
+.play-movie {
+  color: white;
+  font-size: 23px;
 }
-/* Banner section title */
+
+
 .gen-banner-movies.single .gen-movie-info h3 {
   font-size: 45px;
   font-weight: 600;
   line-height: 1.2;
   color: #fff;
   text-transform: uppercase;
+}
+
+
+.gen-btn-container a.playBut {
+  display: flex;
+  align-items: center;       
+  gap: 10px;                 
+  text-decoration: none;
+  color: white;
+}
+
+
+.gen-btn-container a.playBut svg {
+  width: 40px;
+  height: 40px;
+}
+
+
+@media (max-width: 767px) {
+  .play-movie {
+    font-size: 18px;
+  }
+
+  .gen-banner-movies.single .gen-movie-info h3 {
+    font-size: 28px;
+  }
+
+  .gen-btn-container a.playBut svg {
+    width: 32px;
+    height: 32px;
+  }
+}
+.gen-more-like .gen-movie-info h3 a {
+  cursor: pointer;
+  text-decoration: none; 
+  color: #fff;      
+}
+.gen-movie-info h3 a {
+  cursor: pointer;
+}
+.gen-banner-movies .playBut {
+  cursor: pointer;
 }

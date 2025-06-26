@@ -1,93 +1,161 @@
-.gen-meta-after-title {
-    i {
-        font-size: 16px;
-        margin-right: 2px;
-    }
+.gen-meta-after-title i {
+  font-size: 16px;
+  margin-right: 2px;
+}
 
-    span {
-        font-size: 14px;
-    }
+.gen-meta-after-title span {
+  font-size: 14px;
 }
 
 .rating-views {
-    gap: 1.5rem;
-    margin-bottom: 0;
+  gap: 1.5rem;
+  margin-bottom: 0;
+}
 
-    li {
-        display: flex;
-        align-items: center;
-        color: #fff;
-        font-size: 14px;
+.rating-views li {
+  display: flex;
+  align-items: center;
+  color: #fff;
+  font-size: 14px;
+}
 
-        i {
-            font-size: 16px;
-            margin-right: 2px;
+.rating-views li i {
+  font-size: 16px;
+  margin-right: 2px;
+}
 
-            &.fa-star {
-                color: #ffc107;
-            }
+.rating-views li i.fa-star {
+  color: #ffc107;
+}
 
-            &.fa-star-o {
-                color: #888;
-            }
+.rating-views li i.fa-star-o {
+  color: #888;
+}
 
-            &.fa-eye {
-                color: #ccc;
-                font-size: 15px;
-            }
-        }
+.rating-views li i.fa-eye {
+  color: #ccc;
+  font-size: 15px;
+}
 
-        span {
-            margin-left: 4px;
-            font-size: 14px;
-            color: #ddd;
-        }
-    }
+.rating-views li span {
+  margin-left: 4px;
+  font-size: 14px;
+  color: #ddd;
 }
 
 .gen-movie-contain-style-2 .gen-movie-info h3 {
-    font-size: 45px;
-    font-weight: 600;
-    line-height: 1.2;
-    color: #fff;
+  font-size: 45px;
+  font-weight: 600;
+  line-height: 1.2;
+  color: #fff;
 }
 
 .fullscreen-loader {
-    position: relative;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: rgb(0, 0, 0);
-    /* semi-transparent black */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 9999;
+  position: relative;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgb(0, 0, 0);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
 }
 
 .spinner {
-    border: 8px solid #f3f3f3;
-    /* Light gray */
-    border-top: 8px solid #ff3d00;
-    /* Red/orange top */
-    border-radius: 50%;
-    width: 60px;
-    height: 60px;
-    animation: spin 1s linear infinite;
+  border: 8px solid #f3f3f3;
+  border-top: 8px solid #ff3d00;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  animation: spin 1s linear infinite;
 }
 
-/* Spinner animation */
 @keyframes spin {
-    0% {
-        transform: rotate(0deg);
-    }
+  0% {
+    transform: rotate(0deg);
+  }
 
-    100% {
-        transform: rotate(360deg);
-    }
+  100% {
+    transform: rotate(360deg);
+  }
 }
+
 .gen-movie-info h3,
 .gen-movie-info h3 a {
   cursor: pointer;
+}
+
+.gen-btn-container {
+  margin-top: 20px;
+}
+
+.gen-btn-container a.playBut {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: white;
+  transition: all 0.3s ease;
+}
+
+.gen-btn-container a.playBut svg {
+  width: 40px;
+  height: 40px;
+  transition: transform 0.3s ease;
+}
+
+.gen-btn-container a.playBut svg .triangle,
+.gen-btn-container a.playBut svg .circle {
+  stroke: white;
+}
+
+.gen-btn-container a.playBut .play-movie {
+  color: white;
+  font-size: 23px;
+  font-weight: 500;
+//   text-transform: uppercase;
+}
+
+.gen-btn-container a.playBut:hover svg {
+  transform: scale(1.1);
+}
+
+.gen-btn-container a.playBut:hover .play-movie {
+  text-decoration: underline;
+}
+
+@media (max-width: 767px) {
+  .gen-btn-container a.playBut svg {
+    width: 32px;
+    height: 32px;
+  }
+
+  .gen-btn-container a.playBut .play-movie {
+    font-size: 18px;
+  }
+
+  .gen-movie-contain-style-2 .gen-movie-info h3 {
+    font-size: 28px;
+  }
+}
+.gen-btn-container a.playBut:hover .play-movie {
+  text-decoration: none;
+}
+.gen-banner-movies .playBut {
+  cursor: pointer;
+}
+
+.gen-btn-container a.playBut {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: white;
+}
+
+.gen-btn-container a.playBut svg {
+  width: 40px;
+  height: 40px;
 }

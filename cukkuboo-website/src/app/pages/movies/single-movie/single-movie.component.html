@@ -117,11 +117,12 @@
           <div class="gen-movie-contain h-100 d-flex flex-column">
             <div class="gen-movie-img">
               <img [src]="imageUrl+movie.thumbnail" alt="{{ movie.title }} thumbnail" />
-              <div class="gen-movie-action">
-                <a class="gen-button">
-                  <i class="fa fa-play"></i>
-                </a>
-              </div>
+             <div class="gen-movie-action">
+  <a [routerLink]="['/movies', movie.mov_id]" [queryParams]="{ ap: 1 }" class="gen-button playBut">
+    <i class="fa fa-play me-1"></i> 
+  </a>
+</div>
+
             </div>
             <div class="gen-info-contain">
               <div class="gen-movie-info">

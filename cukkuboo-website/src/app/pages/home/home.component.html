@@ -40,16 +40,25 @@
                                  <!-- Buttons -->
                                  <div class="gen-movie-action d-flex">
                                     <div class="gen-btn-container">
+  <a [routerLink]="['/movies', item.mov_id]" [queryParams]="{ ap: 1 }" class="playBut">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 213.7 213.7">
+      <polygon class="triangle" fill="none" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"
+        stroke-miterlimit="10" points="73.5,62.5 148.5,105.8 73.5,149.1"></polygon>
+      <circle class="circle" fill="none" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"
+        stroke-miterlimit="10" cx="106.8" cy="106.8" r="103.3"></circle>
+    </svg>
+    <span class="text p-1 play-movie">Play Movie</span>
+  </a>
+</div>
+
+                                    <!-- <div class="gen-btn-container">
                                        <a [routerLink]="['/movies', item.mov_id]" [queryParams]="{ ap: 1 }"
                                           class="gen-button gen-button-dark">
                                           <i class="fas fa-play"></i><span class="text">Play Movie</span>
                                        </a>
-                                    </div>
-                                    <div class="gen-btn-container d-block d-xl-none" (click)="playTrailer(item)">
-                                       <a [routerLink]="['/movies', item.mov_id]" class="gen-button gen-button-outline">
-                                          <i class="fas fa-play"></i><span class="text">Watch Trailer</span>
-                                       </a>
-                                    </div>
+                                    </div> -->
+
+
                                  </div>
                               </div>
 
@@ -114,11 +123,21 @@
                                              </div>
                                           </div>
                                        </div>
-                                       <div class="gen-movie-action">
+                                       <!-- <div class="gen-movie-action">
                                           <a [routerLink]="['/movies', movie.mov_id]" class="gen-button">
                                              <i class="fa fa-play"></i>
                                           </a>
-                                       </div>
+                                          <a [routerLink]="['/movies', movie.mov_id]" [queryParams]="{ ap: 1 }" class="playBut">
+  <i class="fa fa-play me-1"></i>
+</a>
+
+                                       </div> -->
+                                       <div class="gen-movie-action">
+  <a [routerLink]="['/movies', movie.mov_id]" [queryParams]="{ ap: 1 }" class="gen-button playBut">
+    <i class="fa fa-play me-1"></i>
+  </a>
+</div>
+
                                     </div>
                                     <div class="gen-info-contain">
                                        <div class="gen-movie-info">

@@ -17,7 +17,7 @@ class ReelViewModel extends Model
             ->getRowArray();
     }
 
-    public function insertUserView($data)
+    public function insertUserView(array $data)
     {
         return $this->db->table($this->table)->insert($data);
     }

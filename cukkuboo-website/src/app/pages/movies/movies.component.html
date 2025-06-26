@@ -79,10 +79,11 @@
                                 </div>
                             </div>
                             <div class="gen-movie-action">
-                                <a class="gen-button">
-                                    <i class="fa fa-play"></i>
-                                </a>
-                            </div>
+  <a [routerLink]="['/movies', movie.mov_id]" [queryParams]="{ ap: 1 }" class="gen-button playBut">
+    <i class="fa fa-play"></i>
+  </a>
+</div>
+
                         </div>
                         <div class="gen-info-contain">
                             <div class="gen-movie-info">

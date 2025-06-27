@@ -172,7 +172,8 @@ public function getAllMovieDetails()
         if ($this->moviedetail->deleteMovieDetailsById($status, $mov_id)) {
             return $this->respond([
                 'success' => true,
-                'message' => "Movie with ID $mov_id marked as deleted successfully."
+                'message' => "Movie with ID $mov_id marked as deleted successfully.",
+                'data' => []
             ]);
         } else {
             return $this->failServerError("Failed to delete movie with ID $mov_id.");
@@ -203,6 +204,7 @@ public function getAllMovieDetails()
 
     return $this->respond([
         'success' => true,
+        'message'=>'success',
         'data' => [
             'list_1' => $featured,
             'list_2' => $trending,
@@ -392,7 +394,6 @@ public function getRelatedMovies($id)
         return $this->failUnauthorized('Invalid or missing token.');
     }
 
-    // Get current movie
     $currentMovie = $this->moviedetail->find($id);
     if (!$currentMovie) {
         return $this->response->setJSON([
@@ -402,12 +403,11 @@ public function getRelatedMovies($id)
         ]);
     }
 
-    // Pagination
+
     $pageIndex = (int) $this->request->getGet('pageIndex', FILTER_VALIDATE_INT);
     $pageSize  = (int) $this->request->getGet('pageSize', FILTER_VALIDATE_INT);
     $offset = $pageIndex * $pageSize;
 
-    // Build query
     $queryBuilder = $this->moviedetail->getRelatedMoviesQuery($currentMovie, $id);
 
     $relatedMovies = $queryBuilder

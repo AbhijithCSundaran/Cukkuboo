@@ -88,6 +88,7 @@ public function getCategoryById($id = null)
 
     return $this->respond([
         'success' => true,
+        'message'=>'success',
         'data'    => $category
     ]);
 }
@@ -120,6 +121,7 @@ public function getCategoryById($id = null)
  
         return $this->response->setJSON([
             'success' => true,
+            'message'=>'success',
             'data'    => $categories,
             'total'   => $total
         ]);
@@ -149,7 +151,8 @@ public function getCategoryById($id = null)
  
         return $this->respondDeleted([
             'success' => true,
-            'message' => 'Category marked as deleted successfully.'
+            'message' => 'Category marked as deleted successfully.',
+            'data' => []
         ]);
     }
 }

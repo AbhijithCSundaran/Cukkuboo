@@ -2320,7 +2320,7 @@ header#gen-header .gen-bottom-header .navbar .navbar-brand {
 
 header#gen-header .gen-bottom-header .navbar .navbar-brand img {
     /* height: 50px; */
-    height:35px;
+    height: 35px;
 }
 
 /*===== Header Navbar Bar =====*/
@@ -4660,7 +4660,9 @@ Carousel Movies
 }
 
 .gen-carousel-movies-style-3 .gen-movie-contain .gen-info-contain {
-    display: inline-block;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     width: 100%;
     padding: 15px;
     background: var(--black-color);

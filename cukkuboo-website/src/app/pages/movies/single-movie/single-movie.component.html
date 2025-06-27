@@ -116,11 +116,11 @@
           <div class="gen-movie-contain h-100 d-flex flex-column">
             <div class="gen-movie-img">
               <img [src]="imageUrl+movie.thumbnail" alt="{{ movie.title }} thumbnail" />
-             <div class="gen-movie-action">
-  <a [routerLink]="['/movies', movie.mov_id]" [queryParams]="{ ap: 1 }" class="gen-button playBut">
-    <i class="fa fa-play me-1"></i> 
-  </a>
-</div>
+              <div class="gen-movie-action">
+                <a [routerLink]="['/movies', movie.mov_id]" [queryParams]="{ 'ap': 1 }" class="gen-button playBut">
+                  <i class="fa fa-play me-1"></i>
+                </a>
+              </div>
 
             </div>
             <div class="gen-info-contain">
@@ -129,7 +129,7 @@
               </div>
               <div class="gen-movie-meta-holder">
                 <ul>
-                  <li>{{ movie.duration }}</li>
+                  <li>{{ movie.duration||'0m 0s' }}</li>
                   <!-- <li>
                     <a><span>{{ movie.genres[0] }}</span></a>
                   </li> -->

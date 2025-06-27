@@ -73,9 +73,10 @@
                     <a routerLink="/reels" (click)="closeMenu()">Reels</a>
                   </li>
 
-                  
+
                   <li class="menu-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">
-                    <a routerLink="/movies" [queryParams]="{ search: 1 }" (click)="closeMenu()"><i class="fa-solid fa-magnifying-glass search"></i></a>
+                    <a routerLink="/movies" [queryParams]="{ search: 1 }" (click)="closeMenu()"><i
+                        class="fa-solid fa-magnifying-glass search"></i></a>
                   </li>
 
                   <!-- If NOT signed in -->
@@ -102,18 +103,28 @@
             <!-- Desktop Header Right (Only if signed in) -->
             <div *ngIf="isSignedIn" class="gen-header-info-box d-none d-xl-flex align-items-center ml-auto">
               <!-- User Icon -->
-              <div class="gen-account-holder ml-3"
-                   (mouseenter)="showUserDropdown = true"
-                   (mouseleave)="showUserDropdown = false"
-                   (click)="showUserDropdown = !showUserDropdown">
-                <a href="javascript:void(0)" id="gen-user-btn"><i class="fa fa-user"></i></a>
+              <div class="gen-account-holder ml-3">
+                <a href="javascript:void(0)" id="gen-user-btn">
+                  <i class="fa fa-user"></i>
+                  <span class="mx-1 p-2 user-title">{{ username }}</span>
+                   
+
+                  <!-- Only caret icon toggles the dropdown -->
+                  <i class="fa-solid fa-caret-down" (click)="showUserDropdown = !showUserDropdown"></i>
+                </a>
+
                 <div class="gen-account-menu" [class.gen-form-show]="showUserDropdown">
                   <ul class="col-12">
-                    <!-- <li><a routerLink="/profile"><i class="fas fa-user mr-1"></i> Profile</a></li> -->
-                    <li><a (click)="signOut()"><i class="fa fa-sign-out mr-1"></i> Sign Out</a></li>
+                    <li>
+                      <a (click)="signOut()">
+                        <i class="fa fa-sign-out mr-1"></i> Sign Out
+                      </a>
+                    </li>
                   </ul>
                 </div>
               </div>
+
+
 
               <!-- Subscribe Button -->
               <div class="gen-btn-container ml-3">

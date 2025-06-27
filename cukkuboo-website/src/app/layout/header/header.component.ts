@@ -13,6 +13,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   styleUrl: './header.component.scss'
 })
 export class HeaderComponent {
+  username: string = '';
   isSignedIn: boolean = false;
   showUserDropdown: boolean = false;
 
@@ -40,6 +41,7 @@ export class HeaderComponent {
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe(() => {
         const token = this.storageService.getItem('token');
+        this.username = this.storageService.getItem('username');
         this.isSignedIn = !!token;
       });
   }
@@ -59,6 +61,7 @@ export class HeaderComponent {
     this.menuOpen = false;
     this.showUserDropdown = false;
   }
+  
 
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent) {
@@ -67,4 +70,6 @@ export class HeaderComponent {
       this.closeMenu();
     }
   }
+
+ 
 }

@@ -61,10 +61,10 @@ export class SignInComponent {
           console.log('response from login:', response);
 
           if (response.status) {
-            if (response.user.user_type === 'Customer') {
-              localStorage.setItem('token', response.user?.jwt_token);
-              this.storageService.updateItem('username', response.user?.name || 'User');
-              this.storageService.updateItem('token', response.user?.jwt_token || 'token');
+            if (response.data.user_type === 'Customer') {
+              localStorage.setItem('token', response.data?.jwt_token);
+              this.storageService.updateItem('username', response.data?.username || 'User');
+              this.storageService.updateItem('token', response.data?.jwt_token || 'token');
               // this.snackBar.open('Login successful', '', {
               //   duration: 3000,
               //   verticalPosition: 'top',

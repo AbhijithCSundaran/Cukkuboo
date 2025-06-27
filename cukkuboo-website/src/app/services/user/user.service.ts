@@ -14,7 +14,7 @@ export class UserService {
 
   // Getter for token
   get token(): string | null {
-    return localStorage.getItem('token') || sessionStorage.getItem('token');
+    return localStorage.getItem('t_k') || sessionStorage.getItem('token');
   }
 
   // Getter for HTTP headers

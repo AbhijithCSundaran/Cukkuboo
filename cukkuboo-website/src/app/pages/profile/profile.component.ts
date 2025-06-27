@@ -19,7 +19,7 @@ export class ProfileComponent implements OnInit{
 
 ngOnInit(): void {
 
-  console.log('Token:', localStorage.getItem('token'));
+  console.log('Token:', localStorage.getItem('t_k'));
   console.log('User ID:', localStorage.getItem('user_id'));
   this.profileForm = this.fb.group({
     username: [''],

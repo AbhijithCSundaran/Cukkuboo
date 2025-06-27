@@ -12,7 +12,7 @@ export class MovieService {
   constructor(private http: HttpClient) { }
 
   get token() {
-    return localStorage.getItem('token') || sessionStorage.getItem('token');
+    return localStorage.getItem('t_k') || sessionStorage.getItem('token');
   }
   get headers() {
     return new HttpHeaders({

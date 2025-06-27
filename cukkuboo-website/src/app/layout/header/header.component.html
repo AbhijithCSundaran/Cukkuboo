@@ -42,9 +42,9 @@
                     </li> -->
                   </ng-container>
                   <ng-template #signedInBlock>
-                    <li class="nav-item mt-3">
-                      <!-- <a routerLink="/profile" class="nav-link" (click)="closeMenu()">Profile</a> -->
-                    </li>
+                    <!-- <li class="nav-item mt-3">
+                      <a routerLink="/profile" class="nav-link" (click)="closeMenu()">Profile</a>
+                    </li> -->
                     <li class="nav-item">
                       <a (click)="signOut(); closeMenu()" class="nav-link">Sign Out</a>
                     </li>
@@ -104,13 +104,13 @@
             <div *ngIf="isSignedIn" class="gen-header-info-box d-none d-xl-flex align-items-center ml-auto">
               <!-- User Icon -->
               <div class="gen-account-holder ml-3">
-                <a href="javascript:void(0)" id="gen-user-btn">
+                <a href="javascript:void(0)" id="gen-user-btn" (click)="showUserDropdown = !showUserDropdown">
                   <i class="fa fa-user"></i>
                   <span class="mx-1 p-2 user-title">{{ username }}</span>
                    
 
                   <!-- Only caret icon toggles the dropdown -->
-                  <i class="fa-solid fa-caret-down" (click)="showUserDropdown = !showUserDropdown"></i>
+                  <i class="fa-solid fa-caret-down"></i>
                 </a>
 
                 <div class="gen-account-menu" [class.gen-form-show]="showUserDropdown">

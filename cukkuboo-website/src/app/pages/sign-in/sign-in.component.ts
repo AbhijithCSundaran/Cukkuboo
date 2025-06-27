@@ -62,7 +62,8 @@ export class SignInComponent {
 
           if (response.status) {
             if (response.data.user_type === 'Customer') {
-              localStorage.setItem('token', response.data?.jwt_token);
+              localStorage.setItem('t_k', response.data?.jwt_token);
+              localStorage.setItem('u_n', response.data?.username || 'User');
               this.storageService.updateItem('username', response.data?.username || 'User');
               this.storageService.updateItem('token', response.data?.jwt_token || 'token');
               // this.snackBar.open('Login successful', '', {

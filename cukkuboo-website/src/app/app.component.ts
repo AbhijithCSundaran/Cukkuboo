@@ -16,9 +16,12 @@ export class AppComponent {
   isProd: boolean = environment.production;
   devToolIsOpen: boolean = false;
   constructor(private storageService: StorageService) {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('t_k');
+    const name = localStorage.getItem('u_n');
     if (token)
       this.storageService.updateItem('token', token);
+    if (name)
+      this.storageService.updateItem('username', name);
 
   }
   ngOnInit(): void {
@@ -40,13 +43,13 @@ export class AppComponent {
 
   @HostListener('document:contextmenu', ['$event'])
   onRightClick(event: MouseEvent): void {
-    if(!this.isProd) return;
-      event.preventDefault(); // Disable right-click
+    if (!this.isProd) return;
+    event.preventDefault(); // Disable right-click
   }
 
   @HostListener('window:keydown', ['$event'])
   disableSpecialKeys(event: KeyboardEvent): void {
-    if(!this.isProd) return;
+    if (!this.isProd) return;
     const forbiddenKeys = [
       'F1', 'F2', 'F3', 'F4', 'F5', 'F6',
       'F7', 'F8', 'F9', 'F10', 'F11', 'F12'

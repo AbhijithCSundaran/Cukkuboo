@@ -2677,7 +2677,7 @@ header#gen-header.gen-header-default .gen-menu-search-block {
 .gen-account-holder {
     position: relative;
     margin-right: 30px;
-    line-height: 90px;
+    /* line-height: 90px; */
 }
 
 .gen-account-holder a#gen-user-btn {

@@ -64,7 +64,12 @@ class VideoView extends ResourceController
 
         return $this->respond([
             'success' => true,
-            'message' => 'Movie viewed'
+            'message' => 'Movie viewed',
+            'data'=>[
+                'user_id'    => $userId,
+                'mov_id'     => $movieId,
+                'status'     => $status
+            ]
         ]);
     }
 }

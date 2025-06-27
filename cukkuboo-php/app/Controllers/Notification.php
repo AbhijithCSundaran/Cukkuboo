@@ -40,7 +40,7 @@ class Notification extends ResourceController
 
             $updated = $this->notificationModel->update($notificationId, $notificationData);
             return $this->respond([
-                'status' => true,
+                'success' => true,
                 'message' => $updated ? 'Notification updated' : 'Update failed',
                 'data' => $notificationData
             ]);
@@ -50,7 +50,7 @@ class Notification extends ResourceController
 
             $id = $this->notificationModel->insert($notificationData);
             return $this->respond([
-                'status' => true,
+                'success' => true,
                 'message' => 'Notification created',
                 'data' => $notificationData
             ]);
@@ -85,7 +85,7 @@ class Notification extends ResourceController
                             
 
     return $this->respond([
-        'status'   => true,
+        'success'   => true,
         'message'   => 'Notifications fetched successfully.',
         'data'      => $notifications,
         'total'     => $total
@@ -109,8 +109,9 @@ class Notification extends ResourceController
 
     if ($deleted) {
         return $this->respondDeleted([
-            'status' => true,
-            'message' => "Notification with ID $notification_id marked as deleted successfully."
+            'success' => true,
+            'message' => "Notification with ID $notification_id marked as deleted successfully.",
+            'data' => []
         ]);
     } else {
         return $this->failServerError("Failed to delete notification with ID $notification_id.");
@@ -144,8 +145,8 @@ class Notification extends ResourceController
             ->update();
 
         return $this->respond([
-            'status' => true,
-            'message' => 'All unread notifications marked as read.',
+            'success' => true,
+            'message' => 'All unread notifications marked as read.'
         ]);
     }
 
@@ -164,14 +165,14 @@ class Notification extends ResourceController
             ->update();
 
         return $this->respond([
-            'status' => true,
+            'success' => true,
             'message' => 'All read notifications marked as unread.',
         ]);
     }
 
     // No unread or read notifications found
     return $this->respond([
-        'status' => true,
+        'success' => true,
         'message' => 'No notifications to update.',
     ]);
 }

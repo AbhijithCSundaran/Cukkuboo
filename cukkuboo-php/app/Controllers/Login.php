@@ -23,7 +23,8 @@ class Login extends BaseController
     if (!isset($data['email']) || !isset($data['password'])) {
         return $this->response->setJSON([
             'success' => true,
-            'message' => 'Email and password are required.'
+            'message' => 'Email and password are required.',
+            'data' => []
         ]);
     }
 
@@ -32,7 +33,8 @@ class Login extends BaseController
     if (!$user || !password_verify($data['password'], $user['password'])) {
         return $this->response->setStatusCode(200)->setJSON([
             'success' => true,
-            'message' => 'Invalid email or password.'
+            'message' => 'Invalid email or password.',
+            'data' => []
         ]);
     }
 
@@ -102,15 +104,17 @@ class Login extends BaseController
     if (!$user) {
         return $this->response->setJSON([
             'success' => true,
-            'message' => 'Invalid token or user not found.'
+            'message' => 'Invalid token or user not found.',
+            'data' => []
         ]);
     }
 
     $this->loginModel->update($user['user_id'], ['jwt_token' => null]);
 
     return $this->response->setJSON([
-        'status' => true,
-        'message' => 'Logout successful. Token removed.'
+        'success' => true,
+        'message' => 'Logout successful. Token removed.',
+        'data' => []
     ]);
 }
 
@@ -120,7 +124,8 @@ public function sendOtp()
     if (empty($data['email'])) {
         return $this->response->setJSON([
             'success' => true,
-            'message' => 'Email is required.'
+            'message' => 'Email is required.',
+            'data' => []
         ]);
     }
     $user = $this->loginModel->where('email', $data['email'])->first();
@@ -128,7 +133,8 @@ public function sendOtp()
     if (!$user) {
         return $this->response->setJSON([
             'success' => true,
-            'message' => 'User not found.'
+            'message' => 'User not found.',
+            'data' => []
         ]);
     }
     $otp = rand(100000, 999999);
@@ -223,7 +229,8 @@ public function resetPassword()
     if (empty($data['email']) || empty($data['otp']) || empty($data['new_password'])) {
         return $this->response->setJSON([
             'success' => true,
-            'message' => 'Email, OTP, and new password are required.'
+            'message' => 'Email, OTP, and new password are required.',
+            'data' => []
         ]);
     }
 
@@ -232,7 +239,8 @@ public function resetPassword()
     if (!$user || $user['password'] !== $data['otp']) {
         return $this->response->setJSON([
             'success' => true,
-            'message' => 'Invalid OTP or email.'
+            'message' => 'Invalid OTP or email.',
+            'data' => []
         ]);
     }
 
@@ -244,8 +252,9 @@ public function resetPassword()
     }
 
     return $this->response->setJSON([
-        'status' => true,
-        'message' => 'Password reset successful.'
+        'success' => true,
+        'message' => 'Password reset successful.',
+        
     ]);
 }
 }

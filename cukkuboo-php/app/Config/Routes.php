@@ -16,6 +16,7 @@ $routes->post('user/register','User::registerFun');
 //$routes->get('user/profile', 'User::getUserDetails');
 $routes->delete('user/delete/(:any)', 'User::deleteUser/$1');
 $routes->get('user/profile/(:num)', 'User::getUserDetailsById/$1');
+$routes->get('user/profile', 'User::getUserDetailsById');
 $routes->get('user/list', 'User::getUserList');
 $routes->get('staff/list', 'User::getStaffList');
 
@@ -91,7 +92,8 @@ $routes->post('notification/save', 'Notification::createOrUpdate');
 $routes->get('notification/list', 'Notification::getAllNotifications');          
 $routes->delete('notification/delete/(:num)', 'Notification::delete/$1'); 
 $routes->post('notification/markall', 'Notification::markAllAsReadOrUnread'); 
-$routes->get('notification/get/(:num)', 'Notification::getById/$1');
+$routes->get('notification/get/(:num)', 'Notification::getUserNotifications/$1');
+$routes->get('notification/get', 'Notification::getUserNotifications');
 
 // Watched history
 

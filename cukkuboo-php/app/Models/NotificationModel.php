@@ -30,6 +30,15 @@ class NotificationModel extends Model
                     ->orderBy('created_on', 'DESC')
                     ->findAll();
     }
+   public function getByUserId($userId)
+    {
+        return $this->where('user_id', $userId)
+                    ->where('status !=', 9)
+                    ->orderBy('created_on', 'DESC')
+                    ->findAll();
+    }
+
+
 
     public function softDelete($notificationId, $userId)
     {

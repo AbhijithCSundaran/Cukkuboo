@@ -10,9 +10,13 @@
             </a>
 
             <!-- Toggle Button -->
-            <button class="navbar-toggler" type="button" (click)="menuOpen = !menuOpen">
-              <i class="fas fa-bars"></i>
-            </button>
+             <div class="d-flex d-lg-none align-items-center">
+               <a routerLink="/movies" [queryParams]="{ search: 1 }" (click)="closeMenu()"><i
+                   class="fa-solid fa-magnifying-glass search"></i></a>
+               <button class="navbar-toggler" type="button" (click)="menuOpen = !menuOpen">
+                 <i class="fas fa-bars"></i>
+               </button>
+             </div>
 
             <!-- Mobile Sidebar -->
 
@@ -23,8 +27,8 @@
                   <div
                     class="gen-account-holder d-flex align-items-center justify-content-between px-3 py-2 border-bottom">
                     <div class="d-flex align-items-center">
-                      <i class="fa fa-user mr-2 p-2 user-icon"></i>
-                      <span class="user-title p-2">{{ username }}</span>
+                      <i class="fa fa-user me-3 p-1 user-icon"></i>
+                      <span class="user-title">{{ username }}</span>
                     </div>
                     <!-- <i class="fa-solid fa-caret-down" (click)="showUserDropdown = !showUserDropdown"></i> -->
                   </div>
@@ -43,9 +47,6 @@
                   <li class="menu-item" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
                     <a routerLink="/reels" (click)="closeMenu()">Reels</a>
                   </li>
-                  <li class="menu-item" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
-                    <a routerLink="/movies" [queryParams]="{ search: 1 }" (click)="closeMenu()">Search</a>
-                  </li>
 
                   <!-- Auth Links -->
                   <ng-container *ngIf="!isSignedIn">
@@ -62,7 +63,7 @@
                     <a routerLink="/subscribe" class="nav-link" (click)="closeMenu()">Subscribe</a>
                   </li> -->
                   <li class="menu-item ml-3">
-                    <a routerLink="/subscribe" class="gen-button" (click)="closeMenu()">
+                    <a routerLink="/subscribe" class="gen-button py-0 text-center" (click)="closeMenu()">
                       <div class="gen-button-block">
                         <span class="gen-button-line-left"></span>
                         <span class="gen-button-text">Subscribe</span>
@@ -83,8 +84,8 @@
             </div>
 
             <!-- Desktop Menu -->
-            <div class="navbar-collapse d-none d-x-flex" id="navbarSupportedContent">
-              <div id="gen-menu-contain" class="gen-menu-contain w-100">
+            <div class="navbar-collapse d-none d-xl-flex" id="navbarSupportedContent">
+              <div id="gen-menu-contain" class="gen-menu-contain w-100 d-flex justify-content-end">
                 <ul id="gen-main-menu" class="navbar-nav ml-auto">
                   <!-- Common Menu -->
                   <li class="menu-item" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
@@ -124,11 +125,11 @@
             </div>
 
             <!-- Desktop Header Right (Only if signed in) -->
-            <div *ngIf="isSignedIn" class="gen-header-info-box d-none d-xl-flex align-items-center ml-auto">
+            <div *ngIf="isSignedIn" class="gen-header-info-box d-none d-lg-flex align-items-center ml-auto">
               <!-- User Icon -->
               <div class="gen-account-holder ml-3">
                 <a href="javascript:void(0)" id="gen-user-btn" (click)="showUserDropdown = !showUserDropdown">
-                  <i class="fa fa-user"></i>
+                  <i class="fa fa-user p-2 user-icon"></i>
                   <span class="mx-1 p-2 user-title">{{ username }}</span>
 
                   <!-- Only caret icon toggles the dropdown -->

@@ -120,9 +120,8 @@ export class SingleMovieComponent implements OnInit {
       const id = Number(params.get('id'));
       const autoplay = this.route.snapshot.queryParamMap.get('ap');
       if (id) this.getMovie(id, autoplay);
-      // Handle your logic here
     });
-    
+
   }
 
   ngOnInit(): void {
@@ -131,12 +130,12 @@ export class SingleMovieComponent implements OnInit {
   }
 
   getMovie(id: number, autoplay: any): void {
+    this.selectedVideo = ''
     this.movieService.getMovieById(id).subscribe({
       next: (res) => {
         if (res?.data) {
           const data = Array.isArray(res.data) ? res.data[0] : res.data;
           // console.log('Movie Response:', data);
-
           this.movieData = data;
           if (autoplay)
             this.playVideo(this.movieData.video)

@@ -64,7 +64,12 @@ class ReelLike extends ResourceController
 
         return $this->respond([
             'success' => true,
-            'message' => 'Reel like action processed'
+            'message' => 'Reel like action processed',
+            'data' => [
+                'user_id'    => $userId,
+                'reels_id'   => $reelId,
+                'status'     => $status
+            ]
         ]);
     }
 }

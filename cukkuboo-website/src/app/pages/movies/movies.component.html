@@ -79,10 +79,11 @@
                                 </div>
                             </div>
                             <div class="gen-movie-action">
-  <a [routerLink]="['/movies', movie.mov_id]" [queryParams]="{ ap: 1 }" class="gen-button playBut">
-    <i class="fa fa-play"></i>
-  </a>
-</div>
+                                <a [routerLink]="['/movies', movie.mov_id]" [queryParams]="{ ap: 1 }"
+                                    class="gen-button playBut">
+                                    <i class="fa fa-play"></i>
+                                </a>
+                            </div>
 
                         </div>
                         <div class="gen-info-contain">
@@ -93,7 +94,7 @@
                             </div>
                             <div class="gen-movie-meta-holder">
                                 <ul>
-                                    <li>{{ movie.duration }}</li>
+                                    <li>{{ movie.duration||'0m 0s' }}</li>
                                 </ul>
                             </div>
                         </div>

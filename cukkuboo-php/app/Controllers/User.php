@@ -44,7 +44,8 @@ class User extends ResourceController
                'join_date'       => $data['join_date'] ?? null,
             //  'status'       => 1,
             'user_type' => $data['user_type'] ??'Customer',
-            'date_of_birth'=> $data['date_of_birth'] ?? null         ]);
+            'date_of_birth'=> $data['date_of_birth'] ?? null        
+        ]);
 
         if (!empty($data['password'])) {
             $userData['password'] = password_hash($data['password'], PASSWORD_BCRYPT);
@@ -54,14 +55,14 @@ class User extends ResourceController
                 return $this->response->setJSON([
                     'success' => false,
                     'message' => 'Phone or email is required.'
-                ])->setStatusCode(400);
+                ]);
             }
 
             if ($this->UserModel->isUserExists($data['phone'] ?? null, $data['email'] ?? null)) {
                 return $this->response->setJSON([
                     'success' => false,
                     'message' => 'User already exists.'
-                ])->setStatusCode(409);
+                ]);
             }
             $userData['join_date'] = $userData['join_date'] ?? date('Y-m-d');
             $userData['created_at'] = date('Y-m-d H:i:s');
@@ -100,7 +101,7 @@ class User extends ResourceController
                     'created_by'          => $created_by,
                     'jwt_token'           => $user['jwt_token']
                 ]
-            ])->setStatusCode(201);
+            ]);
          } 
 
       
@@ -158,7 +159,8 @@ class User extends ResourceController
         if ($this->UserModel->deleteUserById($status, $user_id)) {
             return $this->respond([
                 'success' => true,
-                'message' => "User with ID $user_id marked as deleted successfully."
+                'message' => "User with ID $user_id marked as deleted successfully.",
+                'data'=>[]
             ]);
         } else {
             return $this->failServerError("Failed to delete user with ID $user_id.");
@@ -183,7 +185,8 @@ public function getUserDetailsById($userId = null)
     if (!$user) {
         return $this->response->setJSON([
             'success' => false,
-            'message' => 'User not found'
+            'message' => 'User not found',
+            'data'=>[]
         ]);
     }
 
@@ -322,6 +325,7 @@ public function updateEmailPreference()
         return $this->respond([
             'success'  => true,
             'message' => 'Email preference is already set to this value.',
+            'data'=>[]
         ]);
     }
 
@@ -331,6 +335,10 @@ public function updateEmailPreference()
         return $this->respond([
             'success'  => true,
             'message' => 'Email preference updated successfully.',
+            'data'=>[
+                'user_id'    => $userId,
+                'status'     => $status
+            ]
         ]);
     } else {
         return $this->failServerError('Failed to update email preference.');

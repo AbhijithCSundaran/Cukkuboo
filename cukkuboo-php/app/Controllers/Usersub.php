@@ -137,7 +137,7 @@ class Usersub extends ResourceController
     }
 
     return $this->respond([
-        'status' => true,
+        'success' => true,
         'message' => 'User subscriptions fetched successfully.',
         'data' => $results
     ]);
@@ -164,7 +164,7 @@ class Usersub extends ResourceController
     }
 
     return $this->respond([
-        'status' => true,
+        'success' => true,
         'message'=>'success',
         'data' => $record
     ]);
@@ -189,8 +189,9 @@ public function deleteSubscription($id = null)
 
     if ($deleted) {
         return $this->respond([
-            'status'  => true,
-            'message' => "Subscription with ID $id marked as deleted successfully."
+            'success'  => true,
+            'message' => "Subscription with ID $id marked as deleted successfully.",
+            'data'=>[]
         ]);
     } 
 else {

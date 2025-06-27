@@ -150,7 +150,8 @@ class SubscriptionPlan extends ResourceController
     if ($deleted) {
         return $this->respond([
             'success' => true,
-            'message' => "Plan with ID $id marked as deleted successfully."
+            'message' => "Plan with ID $id marked as deleted successfully.",
+            'data'=>[]
         ]);
     }
 

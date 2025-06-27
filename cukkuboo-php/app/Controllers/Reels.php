@@ -161,8 +161,9 @@ public function deleteReel($reels_id)
 
     if ($this->reelsModel->softDeleteReelById($status, $reels_id)) {
         return $this->respond([
-            'success' => 200,
-            'message' => "Reel with ID $reels_id marked as deleted successfully."
+            'success' => true,
+            'message' => "Reel with ID $reels_id marked as deleted successfully.",
+            'data'=>[]
         ]);
     } else {
         return $this->failServerError("Failed to delete reel with ID $reels_id.");

@@ -25,7 +25,7 @@ class Resume extends ResourceController
             return $this->respond([
                 'success' => false,
                 'message' => 'Unauthorized user.'
-            ], 401);
+            ]);
         }
 
         $data = $this->request->getJSON(true);
@@ -36,7 +36,7 @@ class Resume extends ResourceController
             return $this->respond([
                 'success' => false,
                 'message' => 'Movie ID and duration are required.'
-            ], 400);
+            ]);
         }
 
         $result = $this->resumeModel->saveOrUpdate($user['user_id'], $movId, $duration);
@@ -56,7 +56,7 @@ class Resume extends ResourceController
             return $this->respond([
                 'success' => false,
                 'message' => 'Unauthorized user.'
-            ], 401);
+            ]);
         }
 
         $history = $this->resumeModel->getHistoryByUserId($user['user_id']);

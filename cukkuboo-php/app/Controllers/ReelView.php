@@ -60,7 +60,12 @@ class ReelView extends ResourceController
 
         return $this->respond([
             'success' => true,
-            'message' => 'Reel viewed successfully'
+            'message' => 'Reel viewed successfully',
+            'data'=>[
+                'user_id'   => $userId,
+                'reels_id'  => $reelId,
+                'status'    => $status
+            ]
         ]);
     }
 }

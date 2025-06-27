@@ -2681,16 +2681,16 @@ header#gen-header.gen-header-default .gen-menu-search-block {
 }
 
 .gen-account-holder a#gen-user-btn {
-    height: 30px;
-    width: 30px;
-    line-height: 1;
+    /* height: 30px;
+    width: 30px; */
+    /* line-height: 1; */
     text-align: center;
-    background: var(--primary-color);
+    /* background: var(--primary-color); */
     color: var(--white-color);
     display: flex;
     justify-content: center;
     align-items: center;
-    border-radius: 90px;
+    /* border-radius: 90px; */
 }
 
 .gen-account-holder .gen-account-menu {

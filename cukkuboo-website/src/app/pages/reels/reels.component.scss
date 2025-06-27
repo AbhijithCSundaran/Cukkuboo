@@ -14,11 +14,56 @@ body {
   background: #000;
   overflow: hidden;
 
+  .back-logo-container {
+    position: absolute;
+    top: 10%;
+    left: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    z-index: 30;
+
+    .reel-logo {
+      height: 60px;
+      width: auto;
+      object-fit: contain;
+    }
+  }
+
+  .back-btn {
+    background: rgba(255, 255, 255, 0.08);
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    border-radius: 50%;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(6px);
+
+    svg {
+      width: 24px;
+      height: 24px;
+    }
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.2);
+      border-color: rgba(255, 255, 255, 0.8);
+      transform: scale(1.05);
+    }
+
+    &:active {
+      transform: scale(0.95);
+    }
+  }
+
   .reel-scroll {
     height: 100%;
     overflow-y: auto;
     scroll-snap-type: y mandatory;
-    -webkit-overflow-scrolling: touch;
   }
 
   .reel-container {
@@ -36,7 +81,6 @@ body {
     position: relative;
     border-radius: 12px;
     overflow: hidden;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
 
     video {
       width: 100%;
@@ -45,51 +89,44 @@ body {
       cursor: pointer;
     }
 
+    .fullscreen-btn,
     .play-pause-btn {
       position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
       background: rgba(0, 0, 0, 0.6);
       border: none;
       border-radius: 50%;
-      padding: 16px;
-      font-size: 32px;
       color: white;
       z-index: 10;
       cursor: pointer;
-      width: 64px;
-      height: 64px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
     }
 
     .fullscreen-btn {
-      position: absolute;
       top: 16px;
-      right: 16px;
-      background: rgba(0, 0, 0, 0.6);
-      border: none;
-      border-radius: 50%;
-      padding: 10px;
-      font-size: 20px;
-      color: white;
-      z-index: 15;
-      cursor: pointer;
+      left: 16px;
       width: 40px;
       height: 40px;
       display: flex;
       align-items: center;
       justify-content: center;
 
-      &:hover {
-        background: rgba(0, 0, 0, 0.8);
-        transform: scale(1.05);
+      i {
+        font-size: 18px;
       }
+    }
 
-      &:active {
-        transform: scale(0.95);
+    .play-pause-btn {
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 64px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+
+      i {
+        font-size: 28px;
       }
     }
 
@@ -98,12 +135,10 @@ body {
       bottom: 20px;
       left: 16px;
       color: #fff;
-      width: calc(100% - 32px);
 
       .title {
         font-weight: bold;
         font-size: 18px;
-        margin-bottom: 4px;
       }
 
       .decp {
@@ -145,65 +180,17 @@ body {
       border-radius: 50%;
       width: 48px;
       height: 48px;
-      padding: 0;
       display: flex;
       align-items: center;
       justify-content: center;
       color: red;
       cursor: pointer;
-      transition: all 0.3s ease;
-      backdrop-filter: blur(6px);
 
       svg {
         width: 24px;
         height: 24px;
         fill: currentColor;
       }
-
-      &:hover {
-        background: rgba(255, 0, 0, 0.2);
-        border-color: rgba(255, 0, 0, 0.8);
-        transform: scale(1.1);
-      }
-
-      &:active {
-        transform: scale(0.95);
-      }
-    }
-  }
-
-  .back-btn {
-    position: absolute;
-    left: 20px;
-    top: 10%;
-    transform: translateY(-50%);
-    background: rgba(255, 255, 255, 0.08);
-    border: 2px solid rgba(255, 255, 255, 0.4);
-    border-radius: 50%;
-    width: 48px;
-    height: 48px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    z-index: 30;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    backdrop-filter: blur(6px);
-
-    svg {
-      width: 24px;
-      height: 24px;
-    }
-
-    &:hover {
-      background: rgba(255, 255, 255, 0.2);
-      border-color: rgba(255, 255, 255, 0.8);
-      transform: translateY(-50%) scale(1.05);
-    }
-
-    &:active {
-      transform: translateY(-50%) scale(0.95);
     }
   }
 }
@@ -211,34 +198,3 @@ body {
 .text-danger {
   color: #dc3545 !important;
 }
-.fullscreen-btn {
-  position: absolute;
-  top: 16px;
-  left: 16px;
-  background: rgba(0, 0, 0, 0.5);
-  border: none;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  color: #fff;
-  z-index: 20;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.3s ease;
-
-  i {
-    font-size: 18px;
-  }
-
-  &:hover {
-    background: rgba(255, 255, 255, 0.2);
-  }
-
-  &:active {
-    transform: scale(0.95);
-  }
-}
-
-

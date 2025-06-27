@@ -29,8 +29,8 @@ export class ReelsComponent implements OnInit, AfterViewInit, OnDestroy {
   mutedStates: boolean[] = [];
   likedStates: boolean[] = [];
   hoveredIndex: number | null = null;
-  private currentIndex = 0;
   isFullscreen = false;
+  private currentIndex = 0;
 
   private videoUrl = environment.apiUrl + 'uploads/videos/';
   private imageUrl = environment.apiUrl + 'uploads/images/';
@@ -51,7 +51,7 @@ export class ReelsComponent implements OnInit, AfterViewInit, OnDestroy {
 
         const count = this.reels.length;
         this.videoStates = new Array(count).fill(true);
-        this.mutedStates = new Array(count).fill(true);
+        this.mutedStates = new Array(count).fill(true); // Start muted
         this.likedStates = new Array(count).fill(false);
       },
       error: (err) => console.error('Error loading reels:', err)
@@ -68,10 +68,20 @@ export class ReelsComponent implements OnInit, AfterViewInit, OnDestroy {
         entries.forEach((entry) => {
           const video = entry.target as HTMLVideoElement;
           const index = Array.from(this.videos).findIndex((v) => v.nativeElement === video);
+
           if (entry.isIntersecting) {
             video.play();
             this.videoStates[index] = true;
             document.querySelector('.site-header')?.classList.add('hidden-header');
+
+            // Apply previous mute state to new video
+            if (index !== this.currentIndex) {
+              const prevMuted = this.mutedStates[this.currentIndex];
+              this.mutedStates[index] = prevMuted;
+              video.muted = prevMuted;
+              this.currentIndex = index;
+            }
+
           } else {
             video.pause();
             this.videoStates[index] = false;
@@ -105,23 +115,31 @@ export class ReelsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   scrollToNext(): void {
     if (this.currentIndex < this.reels.length - 1) {
-      this.currentIndex++;
-      this.scrollToIndex(this.currentIndex);
+      this.scrollToIndex(this.currentIndex + 1);
     }
   }
 
   scrollToPrev(): void {
     if (this.currentIndex > 0) {
-      this.currentIndex--;
-      this.scrollToIndex(this.currentIndex);
+      this.scrollToIndex(this.currentIndex - 1);
     }
   }
 
   private scrollToIndex(index: number): void {
     const container = this.reelScroll.nativeElement;
     const reelElements = container.querySelectorAll('.reel-container');
+
     if (reelElements[index]) {
       reelElements[index].scrollIntoView({ behavior: 'smooth' });
+
+      // Apply same mute state from previous video
+      const prevMuted = this.mutedStates[this.currentIndex];
+      this.mutedStates[index] = prevMuted;
+
+      const video = this.videos.get(index)?.nativeElement;
+      if (video) video.muted = prevMuted;
+
+      this.currentIndex = index;
     }
   }
 
@@ -131,11 +149,9 @@ export class ReelsComponent implements OnInit, AfterViewInit, OnDestroy {
       if (video.paused) {
         video.play();
         this.videoStates[index] = true;
-        document.querySelector('.site-header')?.classList.add('hidden-header');
       } else {
         video.pause();
         this.videoStates[index] = false;
-        document.querySelector('.site-header')?.classList.remove('hidden-header');
       }
 
       this.hoveredIndex = index;

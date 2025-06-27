@@ -1,11 +1,15 @@
 <div class="reel-wrapper">
-  <!-- Back Button -->
-  <button class="back-btn" (click)="navigateHome()" aria-label="Back to Home">
-    <svg viewBox="0 0 24 24">
-      <path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" />
-    </svg>
-  </button>
+  <!-- Back Button with Logo -->
+  <div class="back-logo-container">
+    <button class="back-btn" (click)="navigateHome()" aria-label="Back to Home">
+      <svg viewBox="0 0 24 24">
+        <path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+    </button>
+    <img src="assets/images/logo-collapsed.png" alt="Logo" class="reel-logo" />
+  </div>
 
+  <!-- Reel List -->
   <div class="reel-scroll" #reelScroll>
     <div *ngFor="let reel of reels; let i = index" class="reel-container">
       <div class="reel-inner" (mouseenter)="onHover(i)" (mouseleave)="onLeave(i)">
@@ -25,18 +29,18 @@
           <i class="fas" [ngClass]="isFullscreen ? 'fa-compress' : 'fa-expand'"></i>
         </button>
 
-        <!-- Play/Pause Button -->
+        <!-- Play/Pause -->
         <button class="play-pause-btn" *ngIf="hoveredIndex === i" (click)="togglePlayPause(i); $event.stopPropagation()">
           <i [ngClass]="videoStates[i] ? 'fas fa-pause' : 'fas fa-play'"></i>
         </button>
 
-        <!-- Text Info -->
+        <!-- Text -->
         <div class="reel-text">
           <div class="title">{{ reel.title }}</div>
           <div class="decp">{{ reel.description }}</div>
         </div>
 
-        <!-- Control Icons -->
+        <!-- Icons -->
         <div class="cntl-icos">
           <i class="fas" [ngClass]="likedStates[i] ? 'fa-heart text-danger' : 'fa-heart'" (click)="toggleLike(i)"></i>
           <i class="fas" [ngClass]="mutedStates[i] ? 'fa-volume-mute' : 'fa-volume-up'" (click)="toggleMute(i)"></i>

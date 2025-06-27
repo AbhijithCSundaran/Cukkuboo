@@ -65,11 +65,11 @@ export class SignInComponent {
               localStorage.setItem('token', response.user?.jwt_token);
               this.storageService.updateItem('username', response.user?.name || 'User');
               this.storageService.updateItem('token', response.user?.jwt_token || 'token');
-              this.snackBar.open('Login successful', '', {
-                duration: 3000,
-                verticalPosition: 'top',
-                panelClass: ['snackbar-success']
-              });
+              // this.snackBar.open('Login successful', '', {
+              //   duration: 3000,
+              //   verticalPosition: 'top',
+              //   panelClass: ['snackbar-success']
+              // });
               this.router.navigate(['/home']);
             } else {
               this.snackBar.open('Not a customer', '', {

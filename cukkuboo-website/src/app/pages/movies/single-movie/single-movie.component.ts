@@ -117,7 +117,6 @@ export class SingleMovieComponent implements OnInit {
     private movieService: MovieService,
   ) {
     this.route.paramMap.subscribe(params => {
-      debugger;
       const id = Number(params.get('id'));
       const autoplay = this.route.snapshot.queryParamMap.get('ap');
       if (id) this.getMovie(id, autoplay);

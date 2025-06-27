@@ -49,4 +49,45 @@
     font-family: var(--title-fonts);
   }
 
-  
+
+
+
+@media (max-width: 767px) {
+   .gen-account-menu {
+  display: none;
+  background: #fff;
+  border-top: 1px solid #eee;
+
+  &.gen-form-show {
+    display: block;
+  }
+
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    li a {
+      display: block;
+      padding: 10px 0;
+      color: #333;
+    }
+  }
+}
+
+.user-title {
+  font-weight: 600;
+  font-size: 1rem;
+}
+header#gen-header .gen-bottom-header .navbar .navbar-nav li a {
+        width: 45%;
+        display: inline-block;
+        padding: 15px;
+    }
+
+}
+.user-icon{
+  border: 2px solid white;
+    border-radius: 30px;
+}
+

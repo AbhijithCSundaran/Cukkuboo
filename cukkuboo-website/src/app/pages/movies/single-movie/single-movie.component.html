@@ -7,10 +7,10 @@
       <!-- Movie Info & Play Button -->
       <div class="col-12 col-xl-8">
         <div class="gen-movie-info">
-          <h3>{{ movieData.title }}</h3>
+          <h3><a>{{ movieData.title }}</a></h3>
         </div>
 
-        <div class="gen-movie-action d-flex mt-4">
+        <div class="gen-movie-action d-block d-sm-flex align-items-center mt-4">
           <div class="gen-btn-container">
             <a class="playBut popup-youtube popup-vimeo popup-gmaps" (click)="playVideo(movieData.video)">
               <svg xmlns="http://www.w3.org/2000/svg" width="60px" height="70px" viewBox="0 0 213.7 213.7">
@@ -23,8 +23,8 @@
               <span class="text p-1  play-movie">Play Movie</span>
             </a>
           </div>
-          <div class="ms-3 gen-btn-container d-block d-xl-none" (click)="playVideo(movieData.trailer)">
-            <a class="gen-button gen-button-outline">
+          <div class="mt-2 mt-sm-0 ms-sm-3 gen-btn-container d-block d-xl-none" (click)="playVideo(movieData.trailer)">
+            <a class="gen-button gen-button-outline py-2 px-3">
               <i class="fas fa-play"></i><span class="text">Watch Trailer</span>
             </a>
           </div>
@@ -60,7 +60,7 @@
 <section class="py-0 px-5 gen-single-movie">
   <div class="gen-single-movie-wrapper style-1">
     <div class="gen-single-movie-info">
-      <h2 class="gen-title">{{ movieData.title }}</h2>
+     <h2> <a class="gen-title">{{ movieData.title }}</a></h2>
       <div class="gen-single-meta-holder">
         <ul>
           <li class="gen-sen-rating">

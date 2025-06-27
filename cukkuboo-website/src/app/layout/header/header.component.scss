@@ -1,21 +1,23 @@
 :host {
-    position: sticky;
+    position: fixed;
     top: 0;
+    width: 100vw;
     z-index: 100;
 }
 
   .mobile-sidebar {
     position: fixed;
-    top: 70px; 
+    top: 0;
     left: 0;
+    padding-top: 50px;
     width: 300px;
-    height: calc(100vh - 70px); 
+    height: calc(100vh - 0px);
     background-color: black;
     overflow-x: hidden;
     overflow-y: auto;
-    z-index: 1050;
+    z-index: -1;
     transform: translateX(-100%);
-    transition: width 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
    
 
     &.open {

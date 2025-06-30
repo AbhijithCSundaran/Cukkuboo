@@ -1,14 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '../../services/user/user.service';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { CommonModule } from '@angular/common';
 
 
 @Component({
   selector: 'app-profile',
   imports: [
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    CommonModule,
   ],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss'
@@ -17,6 +19,12 @@ export class ProfileComponent implements OnInit {
 
   profileForm!: FormGroup;
   userId: number | null = null;
+  showProfileInfo: boolean = true; // show profile info by default
+  changePasswordForm!: FormGroup;
+  showCurrentPassword: boolean = false;
+  showNewPassword: boolean = false;
+  showConfirmPassword: boolean = false;
+  
 
   constructor(private userService: UserService, private fb: FormBuilder, private snackBar: MatSnackBar,) { }
 
@@ -25,8 +33,17 @@ export class ProfileComponent implements OnInit {
     this.profileForm = this.fb.group({
       username: [''],
       email: [''],
-      phone: [''],
+      phone: ['',[
+        Validators.pattern('^[0-9]{1,15}$')  
+      ]],
+      country_code: ['+91']
 
+
+    });
+    this.changePasswordForm = this.fb.group({
+      currentPassword: ['', Validators.required],
+      newPassword: ['', Validators.required],
+      confirmPassword: ['', Validators.required],
     });
 
     this.loadUserData();
@@ -42,6 +59,7 @@ export class ProfileComponent implements OnInit {
           username: data.username,
           email: data.email,
           phone: data.phone,
+          country_code: data.country_code || '+91'
 
         });
       },
@@ -53,6 +71,7 @@ export class ProfileComponent implements OnInit {
   //update Profile
   onSubmit(): void {
     if (this.profileForm.valid) {
+      
       const updatedData = {
         ...this.profileForm.value,
         user_id: this.userId
@@ -63,7 +82,7 @@ export class ProfileComponent implements OnInit {
           this.snackBar.open('Profile updated successfully.', 'Close', {
             duration: 3000,
             verticalPosition: 'top',
-            panelClass: ['snackbar-success'] 
+            panelClass: ['snackbar-success']
           });
         },
         error: (err) => {
@@ -71,7 +90,7 @@ export class ProfileComponent implements OnInit {
           this.snackBar.open('Failed to update profile.', 'Close', {
             duration: 3000,
             verticalPosition: 'top',
-            panelClass: ['snackbar-error'] 
+            panelClass: ['snackbar-error']
           });
         }
       });
@@ -84,7 +103,72 @@ export class ProfileComponent implements OnInit {
       });
     }
   }
+  allowOnlyDigits(event: KeyboardEvent): void {
+  const charCode = event.which ? event.which : event.keyCode;
+  if (charCode < 48 || charCode > 57) {
+    event.preventDefault();
+  }
+}
 
+
+  toggleChangePassword(): void {
+    this.showProfileInfo = false;
+  }
+
+  backToProfile(): void {
+    this.showProfileInfo = true;
+  }
+  onChangePassword(): void {
+    if (this.changePasswordForm.valid) {
+      const { currentPassword, newPassword, confirmPassword } = this.changePasswordForm.value;
+
+      if (newPassword !== confirmPassword) {
+        this.snackBar.open('New passwords do not match.', '', {
+          duration: 3000,
+          verticalPosition: 'top',
+          panelClass: ['snackbar-error']
+        });
+        return;
+      }
+
+      // TODO: Call API to update password
+      console.log('Password change submitted:', {
+        currentPassword,
+        newPassword
+      });
+
+      this.snackBar.open('Password updated successfully.', '', {
+        duration: 3000,
+        verticalPosition: 'top',
+        panelClass: ['snackbar-success']
+      });
+
+      // Optional: Go back to profile form
+      this.showProfileInfo = true;
+    } else {
+      this.snackBar.open('Please fill in all password fields.', '', {
+        duration: 3000,
+        verticalPosition: 'top',
+        panelClass: ['snackbar-error']
+      });
+    }
+  }
+
+  // Create toggle functions
+togglePasswordVisibility(field: string): void {
+  switch (field) {
+    case 'current':
+      this.showCurrentPassword = !this.showCurrentPassword;
+      break;
+    case 'new':
+      this.showNewPassword = !this.showNewPassword;
+      break;
+    case 'confirm':
+      this.showConfirmPassword = !this.showConfirmPassword;
+      break;
+  }
+
+}
 
 
 

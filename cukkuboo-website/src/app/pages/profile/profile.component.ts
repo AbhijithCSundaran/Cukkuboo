@@ -4,6 +4,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CommonModule } from '@angular/common';
+import { StorageService } from '../../core/services/TempStorage/storageService';
+import { ValidationService } from '../../core/services/validation.service';
 
 
 @Component({
@@ -26,14 +28,18 @@ export class ProfileComponent implements OnInit {
   showConfirmPassword: boolean = false;
   
 
-  constructor(private userService: UserService, private fb: FormBuilder, private snackBar: MatSnackBar,) { }
+  constructor(
+    private userService: UserService, 
+    private storageService: StorageService, 
+    private fb: FormBuilder, 
+    private snackBar: MatSnackBar,) { }
 
   ngOnInit(): void {
 
     this.profileForm = this.fb.group({
-      username: [''],
-      email: [''],
-      phone: ['',[
+      username: ['',[Validators.required]],
+      email: ['',[Validators.required,ValidationService.emailValidator]],
+      phone: ['',[Validators.required,
         Validators.pattern('^[0-9]{1,15}$')  
       ]],
       country_code: ['+91']
@@ -72,22 +78,21 @@ export class ProfileComponent implements OnInit {
   onSubmit(): void {
     if (this.profileForm.valid) {
       
-      const updatedData = {
-        ...this.profileForm.value,
-        user_id: this.userId
-      };
+      const updatedData = this.profileForm.value
 
       this.userService.register(updatedData).subscribe({
         next: (res) => {
-          this.snackBar.open('Profile updated successfully.', 'Close', {
+          this.snackBar.open('Profile updated successfully.', '', {
             duration: 3000,
             verticalPosition: 'top',
             panelClass: ['snackbar-success']
           });
+           localStorage.setItem('u_n', updatedData?.username || 'User');
+              this.storageService.updateItem('username', updatedData?.username || 'User');
         },
         error: (err) => {
           console.error('Error updating profile:', err);
-          this.snackBar.open('Failed to update profile.', 'Close', {
+          this.snackBar.open('Failed to update profile.', '', {
             duration: 3000,
             verticalPosition: 'top',
             panelClass: ['snackbar-error']
@@ -96,10 +101,10 @@ export class ProfileComponent implements OnInit {
       });
     } else {
       console.warn('Form is invalid');
-      this.snackBar.open('Please fill out all required fields.', 'Close', {
+      this.snackBar.open('Form is invalid', '', {
         duration: 3000,
         verticalPosition: 'top',
-        panelClass: ['snackbar-warning']
+        panelClass: ['snackbar-error']
       });
     }
   }
@@ -131,16 +136,22 @@ export class ProfileComponent implements OnInit {
         return;
       }
 
-      // TODO: Call API to update password
-      console.log('Password change submitted:', {
-        currentPassword,
-        newPassword
-      });
-
-      this.snackBar.open('Password updated successfully.', '', {
-        duration: 3000,
-        verticalPosition: 'top',
-        panelClass: ['snackbar-success']
+       this.userService.register(this.changePasswordForm.value).subscribe({
+        next: (res) => {
+          this.snackBar.open('password updated successfully.', '', {
+            duration: 3000,
+            verticalPosition: 'top',
+            panelClass: ['snackbar-success']
+          });
+        },
+        error: (err) => {
+          // console.error('Error updating password:', err);
+          this.snackBar.open('Failed to update password.', '', {
+            duration: 3000,
+            verticalPosition: 'top',
+            panelClass: ['snackbar-error']
+          });
+        }
       });
 
       // Optional: Go back to profile form

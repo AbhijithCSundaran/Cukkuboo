@@ -26,9 +26,9 @@ export class InterceptorService implements HttpInterceptor {
       next: (event: HttpEvent<any>) => {
         if (event instanceof HttpResponse) {
           // this.hideLoader();
-          if (event.body?.Success === false) {
-            if ((event.body?.Message).includes("Invalid Token")) {
-              this.router.navigate(['/']);
+          if (event.body?.success === false) {
+            if ((event.body?.message).includes("Invalid Token")) {
+              this.router.navigate(['/signin']);
             }
           }
         }

@@ -42,4 +42,9 @@ getProfile(): Observable<any> {
     headers: this.headers
   });
 }
+
+logout(): Observable<any> {
+  return this.http.post(`${this.apiUrl}login/logout`, {}, { headers: this.headers });
+}
+
 }

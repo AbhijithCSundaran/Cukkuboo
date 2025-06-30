@@ -10,6 +10,7 @@ use App\Libraries\AuthService;
 class User extends ResourceController
 {
     protected $UserModel;
+    
 
     public function __construct()
     {
@@ -364,7 +365,33 @@ public function updateEmailPreference()
             'data' => $activeCount
         ]);
     }
+    public function changePassword()
+    {
     
+    $email           = $this->request->getPost('email');
+    $newPassword     = $this->request->getPost('newPassword');
+    $confirmPassword = $this->request->getPost('confirmPassword');
 
+    if (empty($email) || empty($newPassword) || empty($confirmPassword)) {
+        return $this->response->setJSON(['status' => 0, 'msg' => 'All fields are required.']);
+    }
 
+    if ($newPassword !== $confirmPassword) {
+        return $this->response->setJSON(['status' => 0, 'msg' => 'Passwords do not match.']);
+    }
+
+    $user = $this->UserModel->where('email', $email)->first();
+
+    if (!$user) {
+        return $this->response->setJSON(['status' => 0, 'msg' => 'User not found.']);
+    }
+
+    $hashedPassword = password_hash($newPassword, PASSWORD_BCRYPT);
+    $this->UserModel->update($user['user_id'], [
+        'password'    => $hashedPassword,
+        'updated_at'  => date('Y-m-d H:i:s')
+    ]);
+
+    return $this->response->setJSON(['status' => 1, 'msg' => 'Password reset successfully.']);
+}
 }

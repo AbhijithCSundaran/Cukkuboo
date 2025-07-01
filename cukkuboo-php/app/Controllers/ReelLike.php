@@ -30,16 +30,12 @@ class ReelLike extends ResourceController
         }
 
         $data = $this->request->getJSON(true);
-        $userId = $data['user_id'] ?? null;
+        $userId = $user['user_id']; 
         $reelId = $data['reels_id'] ?? null;
         $status = $data['status'] ?? null;
 
         if (!$userId || !$reelId || !in_array($status, [1, 2])) {
             return $this->failValidationError('Missing or invalid fields.');
-        }
-
-        if ($userId != $user['user_id']) {
-            return $this->failUnauthorized('User ID mismatch');
         }
 
         $existing = $this->reelLikeModel->getUserReelLike($userId, $reelId);

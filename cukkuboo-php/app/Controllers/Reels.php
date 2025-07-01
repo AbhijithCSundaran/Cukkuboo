@@ -78,16 +78,76 @@ class Reels extends ResourceController
     }
 }
 
-  public function getAllReels()
+//   public function getAllReels()
+// {
+//     $pageIndex = (int) $this->request->getGet('pageIndex');
+//     $pageSize  = (int) $this->request->getGet('pageSize');
+//     $search    = $this->request->getGet('search');
+//     // $authHeader = $this->request->getHeaderLine('Authorization');
+//     // $user = $this->authService->getAuthenticatedUser($authHeader);
+//     // if(!$user){ 
+//     //         return $this->failUnauthorized('Invalid or missing token.');
+//     // }
+//     if ($pageSize <= 0) {
+//         $pageSize = 10;
+//     }
+
+//     $offset = $pageIndex * $pageSize;
+
+//     $builder = $this->reelsModel->where('status !=', 9);
+
+//     if (!empty($search)) {
+//         $builder->groupStart()
+//             ->like('title', $search)
+//             ->orLike('access', $search)
+//             ->groupEnd();
+//     }
+
+//     // If pageIndex < 0, return all (no pagination)
+//     if ($pageIndex < 0) {
+//         $reels = $builder
+//             ->orderBy('reels_id', 'DESC')
+//             ->findAll();
+
+//         return $this->response->setJSON([
+//             'success'  => true,
+//             'message' => 'All reels fetched (no pagination).',
+//             'data'    => $reels,
+//             'total'   => count($reels)
+//         ]);
+//     }
+
+//     // Get total count
+//     $total = $builder->countAllResults(false); // Don't reset the builder
+
+//     // Get paginated data
+//     $reels = $builder
+//         ->orderBy('reels_id', 'DESC')
+//         ->findAll($pageSize, $offset);
+
+//     return $this->response->setJSON([
+//         'success'  => true,
+//         'message' => 'Paginated reels fetched successfully.',
+//         'data'    => $reels,
+//         'total'   => $total
+//     ]);
+// }
+
+ public function getAllReels()
 {
     $pageIndex = (int) $this->request->getGet('pageIndex');
     $pageSize  = (int) $this->request->getGet('pageSize');
     $search    = $this->request->getGet('search');
-    // $authHeader = $this->request->getHeaderLine('Authorization');
-    // $user = $this->authService->getAuthenticatedUser($authHeader);
-    // if(!$user){ 
-    //         return $this->failUnauthorized('Invalid or missing token.');
-    // }
+
+    $authHeader = $this->request->getHeaderLine('Authorization');
+    $user = $this->authService->getAuthenticatedUser($authHeader);
+
+    if (!$user) {
+        return $this->failUnauthorized('Invalid or missing token.');
+    }
+
+    $user_id = $user['user_id'];
+
     if ($pageSize <= 0) {
         $pageSize = 10;
     }
@@ -103,27 +163,17 @@ class Reels extends ResourceController
             ->groupEnd();
     }
 
-    // If pageIndex < 0, return all (no pagination)
-    if ($pageIndex < 0) {
-        $reels = $builder
-            ->orderBy('reels_id', 'DESC')
-            ->findAll();
+    $total = $builder->countAllResults(false);
 
-        return $this->response->setJSON([
-            'success'  => true,
-            'message' => 'All reels fetched (no pagination).',
-            'data'    => $reels,
-            'total'   => count($reels)
-        ]);
-    }
-
-    // Get total count
-    $total = $builder->countAllResults(false); // Don't reset the builder
-
-    // Get paginated data
     $reels = $builder
         ->orderBy('reels_id', 'DESC')
         ->findAll($pageSize, $offset);
+
+    // Attach is_liked_by_user field
+    foreach ($reels as &$reel) {
+        $isLiked = $this->reelsModel->isLikedByUser($reel['reels_id'], $user_id);
+        $reel['is_liked_by_user'] = $isLiked;
+    }
 
     return $this->response->setJSON([
         'success'  => true,
@@ -132,7 +182,6 @@ class Reels extends ResourceController
         'total'   => $total
     ]);
 }
-
 public function getReelById($id)
 {
     // $authHeader = $this->request->getHeaderLine('Authorization');

@@ -59,6 +59,15 @@ public function softDeleteReelById($status, $reels_id)
         'modify_on'  => date('Y-m-d H:i:s')
     ]);
 }
+public function isLikedByUser($reels_id, $user_id)
+{
+    $result = $this->db->table('likes')
+        ->where('reels_id', $reels_id)
+        ->where('user_id', $user_id)
+        ->get()
+        ->getRow();
 
+    return $result ? true : false;
+}
 
 }

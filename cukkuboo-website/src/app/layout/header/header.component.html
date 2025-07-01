@@ -4,40 +4,29 @@
       <div class="row">
         <div class="col-lg-12">
           <nav class="navbar navbar-expand-lg navbar-light">
+
             <!-- Logo -->
             <a class="navbar-brand" routerLink="/" (click)="closeMenu()">
               <img class="img-fluid logo" src="assets/images/logo.png" alt="streamlab-image" />
             </a>
 
-            <!-- Toggle Button -->
+            <!-- Toggle Button (Mobile) -->
             <div class="d-flex d-lg-none align-items-center">
-              <a routerLink="/movies" [queryParams]="{ search: 1 }" (click)="closeMenu()"><i
-                  class="fa-solid fa-magnifying-glass search"></i></a>
+              <a routerLink="/movies" [queryParams]="{ search: 1 }" (click)="closeMenu()">
+                <i class="fa-solid fa-magnifying-glass search"></i>
+              </a>
               <button class="navbar-toggler" type="button" (click)="menuOpen = !menuOpen">
                 <i class="fas fa-bars"></i>
               </button>
             </div>
 
             <!-- Mobile Sidebar -->
-
             <div class="mobile-sidebar d-lg-none" [class.open]="menuOpen">
               <div id="gen-menu-contain" class="gen-menu-contain w-100">
-                <!-- User Info (only if signed in) -->
-                <!-- <ng-container *ngIf="isSignedIn">
-                  <div
-                    class="gen-account-holder d-flex align-items-center justify-content-between px-3 py-2 border-bottom">
-                    <div class="d-flex align-items-center">
-                      <i class="fa fa-user me-3 p-1 user-icon"></i>
-                      <span class="user-title">{{ username }}</span>
-                    </div>
-                   </div>
-                  
 
-                </ng-container> -->
-                <!-- User Info with dropdown (only if signed in) -->
+                <!-- User Info (Mobile) -->
                 <ng-container *ngIf="isSignedIn">
-                  <div
-                    class="gen-account-holder d-flex align-items-center justify-content-between px-3 py-3 border-bottom"
+                  <div class="gen-account-holder d-flex align-items-center justify-content-between px-3 py-3 border-bottom"
                     (click)="showUserDropdown = !showUserDropdown">
                     <div class="d-flex align-items-center">
                       <i class="fa fa-user me-3 p-1 user-icon"></i>
@@ -46,7 +35,7 @@
                     <i class="fa fa-caret-down"></i>
                   </div>
 
-                  <!-- Dropdown with profile link -->
+                  <!-- Dropdown (Mobile) -->
                   <div class="gen-account-menu" [class.gen-form-show]="showUserDropdown">
                     <ul class="col-12 px-3">
                       <li>
@@ -58,9 +47,8 @@
                   </div>
                 </ng-container>
 
-
+                <!-- Navigation Links -->
                 <ul id="gen-main-menu" class="navbar-nav">
-                  <!-- Main Navigation Links -->
                   <li class="menu-item" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
                     <a routerLink="/" (click)="closeMenu()">Home</a>
                   </li>
@@ -71,20 +59,12 @@
                     <a routerLink="/reels" (click)="closeMenu()">Reels</a>
                   </li>
 
-                  <!-- Auth Links -->
                   <ng-container *ngIf="!isSignedIn">
                     <li class="nav-item mt-3">
                       <a routerLink="/signin" class="nav-link" (click)="closeMenu()">Sign In</a>
                     </li>
-                    <!-- <li class="nav-item">
-          <a routerLink="/signup" class="nav-link" (click)="closeMenu()">Sign Up</a>
-        </li> -->
                   </ng-container>
 
-                  <!-- Subscribe Link (shown to all users) -->
-                  <!-- <li class="menu-item mt-3">
-                    <a routerLink="/subscribe" class="nav-link" (click)="closeMenu()">Subscribe</a>
-                  </li> -->
                   <li class="menu-item ml-3">
                     <a routerLink="/subscribe" class="gen-button py-0 text-center" (click)="closeMenu()">
                       <div class="gen-button-block">
@@ -94,8 +74,18 @@
                     </a>
                   </li>
 
-                  <!-- Sign Out at the bottom (if signed in) -->
+                  <!-- Signed In Extra Links (Mobile) -->
                   <ng-container *ngIf="isSignedIn">
+                    <li class="nav-item mt-3">
+                      <a routerLink="/watch-later" class="nav-link" (click)="closeMenu()">
+                        <i class="fa fa-clock mr-1"></i> Watch Later
+                      </a>
+                    </li>
+                    <li class="nav-item mt-1">
+                      <a routerLink="/history" class="nav-link" (click)="closeMenu()">
+                        <i class="fa fa-history mr-1"></i> History
+                      </a>
+                    </li>
                     <li class="nav-item mt-3 border-top pt-2">
                       <a (click)="signOut(); closeMenu()" class="nav-link">
                         <i class="fa fa-sign-out mr-1"></i> Sign Out
@@ -110,7 +100,6 @@
             <div class="navbar-collapse d-none d-xl-flex" id="navbarSupportedContent">
               <div id="gen-menu-contain" class="gen-menu-contain w-100 d-flex justify-content-end">
                 <ul id="gen-main-menu" class="navbar-nav ml-auto">
-                  <!-- Common Menu -->
                   <li class="menu-item" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
                     <a routerLink="/" (click)="closeMenu()">Home</a>
                   </li>
@@ -120,20 +109,16 @@
                   <li class="menu-item" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
                     <a routerLink="/reels" (click)="closeMenu()">Reels</a>
                   </li>
-
                   <li class="menu-item" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
-                    <a routerLink="/movies" [queryParams]="{ search: 1 }" (click)="closeMenu()"><i
-                        class="fa-solid fa-magnifying-glass search"></i></a>
+                    <a routerLink="/movies" [queryParams]="{ search: 1 }" (click)="closeMenu()">
+                      <i class="fa-solid fa-magnifying-glass search"></i>
+                    </a>
                   </li>
 
-                  <!-- If NOT signed in -->
                   <ng-container *ngIf="!isSignedIn">
                     <li class="menu-item ml-3">
                       <a routerLink="/signin" (click)="closeMenu()">Sign In</a>
                     </li>
-                    <!-- <li class="menu-item ml-3">
-                      <a routerLink="/signup" (click)="closeMenu()">Sign Up</a>
-                    </li> -->
                     <li class="menu-item ml-3">
                       <a routerLink="/subscribe" class="gen-button" (click)="closeMenu()">
                         <div class="gen-button-block">
@@ -147,24 +132,31 @@
               </div>
             </div>
 
-            <!-- Desktop Header Right (Only if signed in) -->
+            <!-- Desktop User Info (Right Side) -->
             <div *ngIf="isSignedIn" class="gen-header-info-box d-none d-lg-flex align-items-center ml-auto">
-              <!-- User Icon -->
               <div class="gen-account-holder ml-3">
                 <a href="javascript:void(0)" id="gen-user-btn" (click)="showUserDropdown = !showUserDropdown">
                   <i class="fa fa-user p-2 user-icon"></i>
                   <span class="mx-1 p-2 user-title">{{ username }}</span>
-
-                  <!-- Only caret icon toggles the dropdown -->
                   <i class="fa-solid fa-caret-down"></i>
                 </a>
 
                 <div class="gen-account-menu" [class.gen-form-show]="showUserDropdown">
                   <ul class="col-12">
-
                     <li>
-                      <a routerLink="/profile"><i class="fa fa-user"></i>
-                        Profile </a>
+                      <a routerLink="/profile">
+                        <i class="fa fa-user"></i> Profile
+                      </a>
+                    </li>
+                    <li>
+                      <a routerLink="/watch-later">
+                        <i class="fa fa-clock"></i> Watch Later
+                      </a>
+                    </li>
+                    <li>
+                      <a routerLink="/history">
+                        <i class="fa fa-history"></i> History
+                      </a>
                     </li>
                     <li>
                       <a (click)="signOut()">
@@ -185,6 +177,7 @@
                 </a>
               </div>
             </div>
+
           </nav>
         </div>
       </div>

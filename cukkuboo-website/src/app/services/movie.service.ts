@@ -46,10 +46,55 @@ export class MovieService {
     });
   }
 
-getReelsData(): Observable<any> {
-  return this.http.get(`${this.apiUrl}reels/details`, {
+saveHistory(model: any): Observable<any> {
+  const body = model;
+  return this.http.post(this.apiUrl + 'savehistory/save', body, { headers: this.headers });
+}  
+
+getHistory(): Observable<any> {
+return this.http.get(this.apiUrl + 'savehistory/history', { headers: this.headers });
+}
+
+
+saveWatchlater(model: any): Observable<any> {
+  const body = model;
+  return this.http.post(this.apiUrl + 'watch/save', body, { headers: this.headers });
+}
+
+getWatchLaterList(): Observable<any> {
+  return this.http.get(this.apiUrl + 'watch/list', { headers: this.headers });
+}
+
+
+getReelsData(pageIndex: number = 0, pageSize: number = 10, searchText: string = ''): Observable<any> {
+  const params = {
+    pageIndex: pageIndex.toString(),
+    pageSize: pageSize.toString(),
+    search: searchText
+  };
+
+  return this.http.get(this.apiUrl + 'reels/details', {
+    headers: this.headers,
+    params
+  });
+}
+
+
+
+
+likeReel(model: any): Observable<any> {
+  const body = model;
+  return this.http.post(this.apiUrl + 'reellike/like', body, { headers: this.headers });
+}
+
+
+
+
+viewReel(): Observable<any> {
+  return this.http.post(`${this.apiUrl}reelview/view`, {
     headers: this.headers
   });
 }
+
 
 }

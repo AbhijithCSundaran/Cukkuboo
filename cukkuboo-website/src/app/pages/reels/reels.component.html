@@ -6,7 +6,6 @@
         <path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" />
       </svg>
     </button>
-    <!-- <img src="assets/images/logo-collapsed.png" alt="Logo" class="reel-logo" /> -->
   </div>
 
   <!-- Reel List -->
@@ -34,21 +33,37 @@
           <i [ngClass]="videoStates[i] ? 'fas fa-pause' : 'fas fa-play'"></i>
         </button>
 
-        <!-- Text -->
+        <!-- Reel Info -->
         <div class="reel-text">
-           <img class="logo reels-icon-logo" src="assets/images/logo.png" alt="streamlab-image" />
+          <img class="logo reels-icon-logo" src="assets/images/logo.png" alt="streamlab-image" />
           <div class="title">{{ reel.title }}</div>
           <div class="decp">{{ reel.description }}</div>
         </div>
 
-        <!-- Icons -->
+        <!-- Icons: Like, View, Mute, Share -->
         <div class="cntl-icos">
-          <i class="fas" [ngClass]="likedStates[i] ? 'fa-heart text-danger' : 'fa-heart'" (click)="toggleLike(i)"></i>
-          <i class="fas" [ngClass]="mutedStates[i] ? 'fa-volume-mute' : 'fa-volume-up'" (click)="toggleMute(i)"></i>
-          <i class="fas fa-share" (click)="onShare(i)"></i>
+          <div class="icon-block" (click)="toggleLike(reel)">
+            <i class="fas" [ngClass]="likedStates[i] ? 'fa-heart text-danger' : 'fa-heart'"></i>
+            <div class="icon-label">{{ reel.likes }}</div>
+          </div>
+
+          <div class="icon-block">
+            <i class="fas fa-eye"></i>
+            <div class="icon-label">{{ reel.views }}</div>
+          </div>
+
+          <div class="icon-block" (click)="toggleMute(i)">
+            <i class="fas" [ngClass]="mutedStates[i] ? 'fa-volume-mute' : 'fa-volume-up'"></i>
+          </div>
+
+          <div class="icon-block" (click)="onShare(i)">
+            <i class="fas fa-share"></i>
+          </div>
         </div>
       </div>
     </div>
+            <div *ngIf="!stopInfiniteScroll" infiniteScroll (scrolled)="onScroll($event)" style="height: 1px"></div>
+
   </div>
 
   <!-- Navigation Arrows -->
@@ -60,4 +75,5 @@
       <svg viewBox="0 0 24 24"><path d="M12 16L18 10H6L12 16Z" fill="currentColor" /></svg>
     </button>
   </div>
+  
 </div>

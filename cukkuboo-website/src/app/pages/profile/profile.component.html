@@ -6,11 +6,37 @@
             <div class="card mb-3 ca-body">
                 <div class="card-body text-center">
                     <i class="fa-solid fa-user icon-style"></i>
+
+                    <!-- Username -->
                     <h5 class="card-title p-2">{{ profileForm.get('username')?.value }}</h5>
-                    <button class="btn update-btn text-white" (click)="toggleChangePassword()">Change Password</button>
+
+                    <!-- Subscription Display -->
+                    <div *ngIf="profileForm.get('subscription')?.value"
+                        class="d-flex justify-content-center align-items-center mt-1">
+                        <!-- Premium: gold star icon and bold text -->
+                        <ng-container
+                            *ngIf="profileForm.get('subscription')?.value.toLowerCase() === 'premium'; else showText">
+                            <i class="fa-solid fa-star text-warning me-2"></i>
+                            <span class="fw-bold">Premium</span>
+                        </ng-container>
+
+                        <!-- Standard or Free: plain text only -->
+                        <ng-template #showText>
+                            <span class="plan">
+                                {{ profileForm.get('subscription')?.value | titlecase }}
+                            </span>
+                        </ng-template>
+                    </div>
+
+                    <!-- Change Password Button -->
+                    <button class="btn update-btn text-white mt-3" (click)="toggleChangePassword()">
+                        Change Password
+                    </button>
                 </div>
             </div>
         </div>
+
+
 
         <div class="col-md-8 p-3">
 

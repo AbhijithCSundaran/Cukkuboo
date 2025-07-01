@@ -42,6 +42,7 @@ export class ProfileComponent implements OnInit {
       phone: ['',[Validators.required,
         Validators.pattern('^[0-9]{1,15}$')  
       ]],
+      subscription: [''],
       country_code: ['+91']
 
 
@@ -65,6 +66,7 @@ export class ProfileComponent implements OnInit {
           username: data.username,
           email: data.email,
           phone: data.phone,
+          subscription: data.subscription,
           country_code: data.country_code || '+91'
 
         });

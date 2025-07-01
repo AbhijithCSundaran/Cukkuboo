@@ -13,7 +13,7 @@ $routes->post('login/login', 'Login::loginFun',['filter' => 'cors']);
 $routes->post('login/logout', 'Login::logout');
 $routes->post('login/forgot-password', 'Login::sendOtp');
 $routes->post('login/reset-password', 'Login::resetPassword');
-
+$routes->post('user/change-password', 'User::changePassword');
 //User 
 
 $routes->post('user/register','User::registerFun');
@@ -111,6 +111,8 @@ $routes->get('savehistory/history', 'Savehistory::saveHistory');
 //Video view count
 
 $routes->post('video/videoview', 'VideoView::viewVideo');
+$routes->post('watch/save', 'WatchLater::add');
+$routes->get('watch/list', 'WatchLater::getlist');
 
 
 ?>

@@ -1,9 +1,11 @@
 import { Component, ElementRef, HostListener } from '@angular/core';
+import { Router } from '@angular/router';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { StorageService } from '../../core/services/TempStorage/storageService';
 import { Subject, takeUntil } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { UserService } from '../../services/user/user.service';
 
 @Component({
   selector: 'app-header',
@@ -35,7 +37,9 @@ export class HeaderComponent {
   constructor(
     private storageService: StorageService,
     private elementRef: ElementRef,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private userService: UserService, 
+    private router: Router 
   ) {
     this.storageService.onUpdateItem
       .pipe(takeUntil(this._unsubscribeAll))
@@ -47,13 +51,27 @@ export class HeaderComponent {
   }
 
   signOut() {
-    localStorage.clear();
-    this.storageService.updateItem('token', '');
-    this.snackBar.open('Signed out successfully', 'Close', {
-      duration: 3000,
-      verticalPosition: 'top',
-      horizontalPosition: 'center',
-      panelClass: ['snackbar-success']
+    this.userService.logout().subscribe({
+      next: () => {
+        localStorage.clear();
+        this.storageService.updateItem('token', '');
+        this.snackBar.open('Signed out successfully', 'Close', {
+          duration: 3000,
+          verticalPosition: 'top',
+          horizontalPosition: 'center',
+          panelClass: ['snackbar-success']
+        });
+        this.router.navigate(['/signin']); 
+      },
+      error: (err) => {
+        console.error('Logout failed:', err);
+        this.snackBar.open('Failed to sign out. Please try again.', 'Close', {
+          duration: 3000,
+          verticalPosition: 'top',
+          horizontalPosition: 'center',
+          panelClass: ['snackbar-error']
+        });
+      }
     });
   }
 
@@ -61,7 +79,6 @@ export class HeaderComponent {
     this.menuOpen = false;
     this.showUserDropdown = false;
   }
-  
 
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent) {
@@ -70,6 +87,4 @@ export class HeaderComponent {
       this.closeMenu();
     }
   }
-
- 
 }

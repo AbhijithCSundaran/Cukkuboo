@@ -1,0 +1,53 @@
+<div class="container-fluid py-4" style="background-color: #000; min-height: 100vh;">
+  <!-- Header -->
+  <div class="container mb-4 text-white d-flex justify-content-between align-items-center">
+    <h4 class="mb-0">Watch Later</h4>
+    <button *ngIf="watchLaterList.length" class="btn btn-danger btn-sm" (click)="clearWatchLater()">
+      Clear All
+    </button>
+  </div>
+
+  <!-- Watch Later Grid -->
+  <div class="container">
+    <div *ngIf="watchLaterList.length; else noItems" class="row g-3">
+      <div *ngFor="let item of watchLaterList; index as i" class="col-lg-3 col-md-6 col-12">
+        <div class="card bg-dark text-white border-0 shadow-sm h-100">
+          <!-- Thumbnail -->
+          <div class="position-relative">
+            <img
+              [src]="imageUrl + item.thumbnail"
+              class="card-img-top"
+              alt="{{ item.title }}"
+              style="height: 150px; object-fit: cover;"
+            />
+          </div>
+
+          <!-- Card Body -->
+          <div class="card-body p-2 d-flex flex-column">
+            <h6 class="card-title text-truncate mb-2" title="{{ item.title }}">{{ item.title }}</h6>
+            <div class="d-flex justify-content-between mt-auto">
+              <a
+                [routerLink]="['/movies', item.mov_id]"
+                [queryParams]="{ ap: 1 }"
+                class="btn btn-danger btn-sm px-3 py-1 d-flex align-items-center gap-2"
+              >
+                <i class="fas fa-play"></i> Play
+              </a>
+              <button class="btn btn-outline-light btn-sm px-3 py-1" (click)="removeItem(i)">
+                <i class="fas fa-trash-alt"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- No Watch Later Fallback -->
+    <ng-template #noItems>
+      <div class="text-center text-secondary mt-5">
+        <i class="fas fa-clock fa-3x mb-3"></i>
+        <p class="lead">No items in Watch Later list.</p>
+      </div>
+    </ng-template>
+  </div>
+</div>

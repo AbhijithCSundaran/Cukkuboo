@@ -7,11 +7,14 @@ import { MovieService } from '../../../services/movie.service';
 import { MatDialog } from '@angular/material/dialog';
 import { InfiniteScrollDirective } from '../../../core/directives/infinite-scroll/infinite-scroll.directive';
 import { JsPlayerComponent } from '../../_common/js-player/js-player.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-single-movie',
   standalone: true,
-  imports: [CommonModule, RouterLink,
+  imports: [
+    CommonModule,
+    RouterLink,
     JsPlayerComponent,
     InfiniteScrollDirective
   ],
@@ -19,166 +22,143 @@ import { JsPlayerComponent } from '../../_common/js-player/js-player.component';
   styleUrls: ['./single-movie.component.scss']
 })
 export class SingleMovieComponent implements OnInit {
-  pageIndex: number = 0;
-  pageSize: number = 10;
-  stopInfiniteScroll: boolean = false;
+  pageIndex = 0;
+  pageSize = 10;
+  stopInfiniteScroll = false;
   movieData: any;
-  selectedVideo: string = '';
-  fullScreen: boolean = false;
+  selectedVideo = '';
+  fullScreen = false;
   videoUrl = environment.apiUrl + 'uploads/videos/';
   imageUrl = environment.apiUrl + 'uploads/images/';
   suggetionList: any[] = [];
-  //   list=[{
-  //     id: 1,
-  //     title: 'The Warrior Life',
-  //     duration: '2hr 00mins',
-  //     minutes: 120,
-  //     genres: ['Action', 'Adventure', 'Drama'],
-  //     image: 'assets/images/background/asset-5.jpeg'
-  //   },
-  //   {
-  //     id: 2,
-  //     title: 'Machine War',
-  //     duration: '1hr 22mins',
-  //     minutes: 82,
-  //     genres: ['Action'],
-  //     image: 'assets/images/background/asset-6.jpeg'
-  //   },
-  //   {
-  //     id: 3,
-  //     title: 'The Horse Lady',
-  //     duration: '1hr 24mins',
-  //     minutes: 84,
-  //     genres: ['Drama'],
-  //     image: 'assets/images/background/asset-7.jpeg'
-  //   },
-  //   {
-  //     id: 4,
-  //     title: 'Thieve The Bank',
-  //     duration: '30min',
-  //     minutes: 30,
-  //     genres: ['Action'],
-  //     image: 'assets/images/background/asset-4.jpeg'
-  //   },
-  //   {
-  //     id: 5,
-  //     title: 'Ship Of Full Moon',
-  //     duration: '1hr 35mins',
-  //     minutes: 95,
-  //     genres: ['Action'],
-  //     image: 'assets/images/background/asset-8.jpeg'
-  //   },
-  //   {
-  //     id: 6,
-  //     title: 'The Giant Ship',
-  //     duration: '1h 02 mins',
-  //     minutes: 62,
-  //     genres: ['Action'],
-  //     image: 'assets/images/background/asset-11.jpeg'
-  //   },
-  //   {
-  //     id: 7,
-  //     title: 'Common Man’s Idea',
-  //     duration: '1hr 51 mins',
-  //     minutes: 111,
-  //     genres: ['Action'],
-  //     image: 'assets/images/background/asset-12.jpeg'
-  //   },
-  //   {
-  //     id: 8,
-  //     title: 'The Jin’s Friend',
-  //     duration: '1hr 42 mins',
-  //     minutes: 102,
-  //     genres: ['Action'],
-  //     image: 'assets/images/background/asset-13.jpeg'
-  //   },
-  //   {
-  //     id: 9,
-  //     title: 'Rebuneka the Doll',
-  //     duration: '1hr 44 mins',
-  //     minutes: 104,
-  //     genres: ['Action'],
-  //     image: 'assets/images/background/asset-9.jpeg'
-  //   },
-  //   {
-  //     id: 10,
-  //     title: 'Iron Mountain',
-  //     duration: '1hr 28 mins',
-  //     minutes: 88,
-  //     genres: ['Action'],
-  //     image: 'assets/images/background/asset-14.jpeg'
-  //   }
-  // ];
+  isInWatchLater = false;
 
   constructor(
     private route: ActivatedRoute,
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
     private movieService: MovieService,
+    private router: Router
   ) {
     this.route.paramMap.subscribe(params => {
       const id = Number(params.get('id'));
       const autoplay = this.route.snapshot.queryParamMap.get('ap');
       if (id) this.getMovie(id, autoplay);
     });
-
   }
 
-  ngOnInit(): void {
-    // const id = Number(this.route.snapshot.paramMap.get('id'));
-    // if (id) this.getMovie(id);
-  }
+  ngOnInit(): void {}
 
   getMovie(id: number, autoplay: any): void {
-    this.selectedVideo = ''
+    this.selectedVideo = '';
     this.movieService.getMovieById(id).subscribe({
       next: (res) => {
         if (res?.data) {
           const data = Array.isArray(res.data) ? res.data[0] : res.data;
-          // console.log('Movie Response:', data);
           this.movieData = data;
-          if (autoplay)
-            this.playVideo(this.movieData.video)
+          if (autoplay) this.playVideo(this.movieData.video);
           this.pageIndex = 0;
           this.stopInfiniteScroll = false;
           this.suggetionList = [];
-          this.getrelatedMovies(this.pageIndex, this.pageSize);
+          this.isInWatchLater = false; 
+          this.getrelatedMovies();
         } else {
-          this.snackBar.open('Failed to load movie.', '', {
-            duration: 3000,
-            verticalPosition: 'top',
-            panelClass: ['snackbar-error']
-          });
+          this.snackBar.open('Failed to load movie.', '', { duration: 3000, panelClass: ['snackbar-error'] });
         }
       },
-      error: (err) => {
-        console.error(err);
-        this.snackBar.open('Error loading movie data.', '', {
-          duration: 3000,
-          verticalPosition: 'top',
-          panelClass: ['snackbar-error']
-        });
+      error: () => {
+        this.snackBar.open('Error loading movie data.', '', { duration: 3000, panelClass: ['snackbar-error'] });
       }
     });
   }
 
-  playVideo(video: string, isfull: boolean = false): void {
-    // this.fullScreen = isfull
-    this.selectedVideo = video;
-  }
-  onScroll(event: any) {
-    this.pageIndex++;
-    this.getrelatedMovies(this.pageIndex, this.pageSize);
+  playVideo(video: string): void {
+    this.selectedVideo = video;  if (!video) {
+    this.snackBar.open('Please subscribe to watch this Movie.', '', {
+      duration: 3000,
+      verticalPosition: 'top',
+      panelClass: ['snackbar-error']
+    });
+ 
+    this.router.navigate(['/subscribe']);
+    return;
   }
 
-  getrelatedMovies(pageIndex: number = 0, pageSize: number = 20, search: string = '') {
-    this.movieService.getrelatedMovies(this.movieData.mov_id, pageIndex, pageSize).subscribe({
+
+
+    if (video === this.movieData.video) {
+      const model = { mov_id: this.movieData.mov_id };
+      this.movieService.saveHistory(model).subscribe({
+        next: () => console.log('Watch history saved.'),
+        error: (err) => console.error('Error saving watch history:', err)
+      });
+    }
+  }
+
+addToWatchLater(): void {
+  if (this.isInWatchLater || !this.movieData?.mov_id) return;
+
+  const model = { mov_id: this.movieData.mov_id };
+
+  this.movieService.saveWatchlater(model).subscribe({
+    next: (res) => {
+      console.log('Watch Later response:', res); 
+
+      if (res?.success) {
+        this.isInWatchLater = true;
+        this.snackBar.open('Added to Watch Later!', '', {
+          duration: 3000,
+          panelClass: ['snackbar-success']
+        });
+      } else {
+        this.snackBar.open(res?.message || 'Failed to add.', '', {
+          duration: 3000,
+          panelClass: ['snackbar-error']
+        });
+      }
+    },
+    error: (err) => {
+      console.error('Error saving Watch Later:', err);
+      this.snackBar.open('Error saving Watch Later.', '', {
+        duration: 3000,
+        panelClass: ['snackbar-error']
+      });
+    }
+  });
+}
+
+  shareMovie(): void {
+    const movieUrl = window.location.href;
+    if (navigator.share) {
+      navigator.share({
+        title: this.movieData.title,
+        text: 'Check out this movie!',
+        url: movieUrl
+      }).catch(err => console.error('Share failed:', err));
+    } else {
+      navigator.clipboard.writeText(movieUrl).then(() => {
+        this.snackBar.open('Link copied to clipboard!', '', {
+          duration: 3000,
+          panelClass: ['snackbar-success']
+        });
+      });
+    }
+  }
+
+  onScroll() {
+    this.pageIndex++;
+    this.getrelatedMovies();
+  }
+
+  getrelatedMovies() {
+    this.movieService.getrelatedMovies(this.movieData.mov_id, this.pageIndex, this.pageSize).subscribe({
       next: (res) => {
         if (res?.success) {
-          if (res.data.length)
+          if (res.data.length) {
             this.suggetionList = [...this.suggetionList, ...res.data];
-          else
+          } else {
             this.stopInfiniteScroll = true;
+          }
         }
       }
     });

@@ -144,20 +144,33 @@ public function getAllMovieDetails()
     ]);
 }
 
+public function getMovieById($id)
+{
+    $authHeader = $this->request->getHeaderLine('Authorization');
+    $user = $this->authService->getAuthenticatedUser($authHeader);
 
-    public function getMovieById($id)
-    {
-        $authHeader = $this->request->getHeaderLine('Authorization');
-        $user = $this->authService->getAuthenticatedUser($authHeader);
-        if(!$user) 
-            return $this->failUnauthorized('Invalid or missing token.');
-        $getmoviesdetails = $this->moviedetail->getMovieDetailsById($id);
-        return $this->response->setJSON([
-            'success' => true,
-            'message' => 'movie details fetched successfully.',
-            'data' => $getmoviesdetails
-        ]);
+    if (!$user) {
+        return $this->failUnauthorized('Invalid or missing token.');
     }
+
+    $getmoviesdetails = $this->moviedetail->getMovieDetailsById($id);
+
+    
+    if (
+        strtolower($user['subscription']) === "free" &&
+        strtolower($user['user_type']) === "customer" &&
+        isset($getmoviesdetails['access']) &&
+        $getmoviesdetails['access'] != 1 // 1 = free, 2 = standard, 3 = premium
+    ) {
+        $getmoviesdetails['video'] = null;
+    }
+
+    return $this->response->setJSON([
+        'success' => true,
+        'message' => 'Movie details fetched successfully.',
+        'data' => $getmoviesdetails
+    ]);
+}
 
     public function deleteMovieDetails($mov_id)
     {

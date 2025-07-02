@@ -155,12 +155,24 @@ public function getMovieById($id)
 
     $getmoviesdetails = $this->moviedetail->getMovieDetailsById($id);
 
+    if (!$getmoviesdetails) {
+        return $this->failNotFound('Movie not found.');
+    }
+
+    $user_id = $user['user_id']; 
+
     
+    $isInWatchLater = $this->moviedetail->isInWatchLater($user_id, $id);
+    $isInWatchHistory = $this->moviedetail->isInWatchHistory($user_id, $id);
+
+    $getmoviesdetails['is_in_watch_later'] = $isInWatchLater;
+    $getmoviesdetails['is_in_watch_history'] = $isInWatchHistory;
+
     if (
         strtolower($user['subscription']) === "free" &&
         strtolower($user['user_type']) === "customer" &&
         isset($getmoviesdetails['access']) &&
-        $getmoviesdetails['access'] != 1 // 1 = free, 2 = standard, 3 = premium
+        $getmoviesdetails['access'] != 1
     ) {
         $getmoviesdetails['video'] = null;
     }

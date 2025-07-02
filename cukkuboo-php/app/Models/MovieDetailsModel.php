@@ -197,5 +197,23 @@ public function getMostWatchedMovies()
 
     return $builder;
 }
+
+public function isInWatchHistory($user_id, $mov_id)
+{
+    return $this->db->table('video')
+        ->where('user_id', $user_id)
+        ->where('mov_id', $mov_id)
+        ->where('status', 1)
+        ->countAllResults() > 0;
+}
+public function isInWatchLater($user_id, $mov_id)
+{
+    return $this->db->table('video')
+        ->where('user_id', $user_id)
+        ->where('mov_id', $mov_id)
+        ->where('status', 2)
+        ->countAllResults() > 0;
+}
+
 }
 

@@ -44,5 +44,25 @@ getProfile(): Observable<any> {
 logout(): Observable<any> {
   return this.http.post(`${this.apiUrl}login/logout`, {}, { headers: this.headers });
 }
+changePassword(data: any): Observable<any> {
+  return this.http.post(`${this.apiUrl}user/change-password`, data, {
+    headers: this.headers
+  });
+}
+// changePassword(data: any): Observable<any> {
+//   const body = new URLSearchParams();
+//   body.set('oldPassword', data.oldPassword);
+//   body.set('newPassword', data.newPassword);
+//   body.set('confirmPassword', data.confirmPassword);
+
+//   const token = localStorage.getItem('token'); // or however you store the token
+
+//   const headers = {
+//     'Content-Type': 'application/x-www-form-urlencoded',
+//     'Authorization': `Bearer ${token}`
+//   };
+
+//   return this.http.post(`${this.apiUrl}user/change-password`, body.toString(), { headers });
+// }
 
 }

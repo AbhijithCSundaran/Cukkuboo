@@ -126,46 +126,59 @@ export class ProfileComponent implements OnInit {
     this.showProfileInfo = true;
   }
   onChangePassword(): void {
-    if (this.changePasswordForm.valid) {
-      const { currentPassword, newPassword, confirmPassword } = this.changePasswordForm.value;
+  if (this.changePasswordForm.valid) {
+    const { currentPassword, newPassword, confirmPassword } = this.changePasswordForm.value;
 
-      if (newPassword !== confirmPassword) {
-        this.snackBar.open('New passwords do not match.', '', {
-          duration: 3000,
-          verticalPosition: 'top',
-          panelClass: ['snackbar-error']
-        });
-        return;
-      }
+    if (newPassword !== confirmPassword) {
+      this.snackBar.open('New passwords do not match.', '', {
+        duration: 3000,
+        verticalPosition: 'top',
+        panelClass: ['snackbar-error']
+      });
+      return;
+    }
 
-       this.userService.register(this.changePasswordForm.value).subscribe({
-        next: (res) => {
-          this.snackBar.open('password updated successfully.', '', {
+    const body = {
+      currentPassword: currentPassword,
+      newPassword: newPassword,
+      confirmPassword: confirmPassword
+    };
+
+    this.userService.changePassword(body).subscribe({
+      next: (res) => {
+        if (res.status === 1) {
+          this.snackBar.open(res.msg, '', {
             duration: 3000,
             verticalPosition: 'top',
             panelClass: ['snackbar-success']
           });
-        },
-        error: (err) => {
-          // console.error('Error updating password:', err);
-          this.snackBar.open('Failed to update password.', '', {
+          this.showProfileInfo = true; 
+        } else {
+          this.snackBar.open(res.msg, '', {
             duration: 3000,
             verticalPosition: 'top',
             panelClass: ['snackbar-error']
           });
         }
-      });
+      },
+      error: (err) => {
+        this.snackBar.open('Something went wrong. Please try again.', '', {
+          duration: 3000,
+          verticalPosition: 'top',
+          panelClass: ['snackbar-error']
+        });
+      }
+    });
 
-      // Optional: Go back to profile form
-      this.showProfileInfo = true;
-    } else {
-      this.snackBar.open('Please fill in all password fields.', '', {
-        duration: 3000,
-        verticalPosition: 'top',
-        panelClass: ['snackbar-error']
-      });
-    }
+  } else {
+    this.snackBar.open('Please fill in all password fields.', '', {
+      duration: 3000,
+      verticalPosition: 'top',
+      panelClass: ['snackbar-error']
+    });
   }
+}
+
 
   // Create toggle functions
 togglePasswordVisibility(field: string): void {

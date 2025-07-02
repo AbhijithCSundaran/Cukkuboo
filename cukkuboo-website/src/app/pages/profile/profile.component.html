@@ -1,38 +1,73 @@
 <section class="container bootstrap p-2">
-    <!-- <h6 class="text-white">Profile</h6>
-    <hr /> -->
     <div class="row">
-         <!-- edit form column -->
+
+        <!-- Right Column: User Info -->
+        <div class="col-md-4 p-3">
+            <div class="card mb-3 ca-body">
+                <div class="card-body text-center">
+                    <i class="fa-solid fa-user icon-style"></i>
+
+                    <!-- Username -->
+                    <h5 class="card-title p-2">{{ profileForm.get('username')?.value }}</h5>
+
+                    <!-- Subscription Display -->
+                    <div *ngIf="profileForm.get('subscription')?.value"
+                        class="d-flex justify-content-center align-items-center mt-1">
+                        <!-- Premium: gold star icon and bold text -->
+                        <ng-container
+                            *ngIf="profileForm.get('subscription')?.value.toLowerCase() === 'premium'; else showText">
+                            <i class="fa-solid fa-star text-warning me-2"></i>
+                            <span class="fw-bold">Premium</span>
+                        </ng-container>
+
+                        <!-- Standard or Free: plain text only -->
+                        <ng-template #showText>
+                            <span class="plan">
+                                {{ profileForm.get('subscription')?.value | titlecase }}
+                            </span>
+                        </ng-template>
+                    </div>
+
+                    <!-- Change Password Button -->
+                    <button class="btn update-btn text-white mt-3" (click)="toggleChangePassword()">
+                        Change Password
+                    </button>
+                </div>
+            </div>
+        </div>
+
+
+
         <div class="col-md-8 p-3">
-            <div class="card shadow-sm rounded-3 ca-body">
+
+            <!-- Profile Info Section -->
+            <div *ngIf="showProfileInfo" class="card shadow-sm rounded-3 ca-body">
                 <div class="card-header text-white">
                     <h5 class="mb-0 personal">Personal Info</h5>
                     <hr class="p-2" style="color:#c70d47;">
                 </div>
                 <div class="card-body ca-body">
-                    <form [formGroup]="profileForm" class="profileForm">
+                    <form [formGroup]="profileForm" (ngSubmit)="onSubmit()" class="profileForm">
 
+                        <!-- Name -->
                         <div class="form-group row align-items-center mb-3">
                             <label class="col-sm-3 col-form-label">Name:</label>
-                            <div class="col-sm-8 position-relative">
+                            <div class="col-sm-9 position-relative">
                                 <input class="form-control" type="text" formControlName="username" />
-                                <span class="position-absolute top-50 end-0 translate-middle-y pe-3 text-muted">
-                                    
-                                </span>
                             </div>
                         </div>
 
+                        <!-- Email -->
                         <div class="form-group row align-items-center mb-3">
                             <label class="col-sm-3 col-form-label">Email Address:</label>
-                            <div class="col-sm-8 position-relative">
+                            <div class="col-sm-9 position-relative">
                                 <input class="form-control" type="text" formControlName="email" />
-                                <span class="position-absolute top-50 end-0 translate-middle-y pe-3 text-muted">
-                                    
-                                </span>
                             </div>
                         </div>
 
-                        <div class="form-group row align-items-center mb-3">
+                        <!-- Contact -->
+
+                        <!-- <div class="form-group row align-items-center mb-3">
                             <label class="col-sm-3 col-form-label">Contact:</label>
                             <div class="col-sm-8 position-relative">
                                 <input class="form-control" type="text" formControlName="phone" />
@@ -40,30 +75,99 @@
                                     
                                 </span>
                             </div>
+                        </div> -->
+                        <div class="form-group row align-items-center mb-3">
+                            <label class="col-sm-3 col-form-label">Contact:</label>
+                            <div class="col-sm-9 position-relative d-flex flex-column">
+                                <!-- Country code select -->
+                                <div class="d-flex mb-1">
+                                    <select class="form-select me-2 country-code" formControlName="country_code">
+                                        <option value="+91">+91</option>
+                                        <option value="+1">+1</option>
+                                        <option value="+44">+44</option>
+                                        <option value="+61">+61</option>
+                                    </select>
+                                    <!-- Phone number input -->
+                                    <input class="form-control" type="text" formControlName="phone" maxlength="15"
+                                        placeholder="Enter phone number" (keypress)="allowOnlyDigits($event)" />
+                                </div>
+
+                                <!-- Validation message -->
+                                <div class="text-danger mt-1"
+                                    *ngIf="profileForm.get('phone')?.invalid && profileForm.get('phone')?.touched">
+                                    Please enter a valid phone number (only digits, max 15).
+                                </div>
+                            </div>
                         </div>
+
+                        <!-- Submit Button -->
                         <div class="text-end">
                             <button type="submit" class="btn update-btn">Update Details</button>
                         </div>
+                    </form>
+                </div>
+            </div>
 
+            <!-- Change Password Section -->
+            <div *ngIf="!showProfileInfo" class="card shadow-sm rounded-3 ca-body">
+                <div class="card-header text-white">
+                    <h5 class="mb-0">Change Password</h5>
+                    <hr class="p-2" style="color:#c70d47;">
+                </div>
+                <div class="card-body">
+                    <form [formGroup]="changePasswordForm" (ngSubmit)="onChangePassword()">
+
+                        <!-- Current Password -->
+                        <div class="mb-3 password-wrapper">
+                            <label for="currentPassword">Current Password</label>
+                            <div class="position-relative">
+                                <input [type]="showCurrentPassword ? 'text' : 'password'" class="form-control pe-4"
+                                    id="currentPassword" formControlName="currentPassword" />
+                                <!-- Current Password -->
+                                <i class="fa password-toggle-icon current-icon" [class.fa-eye]="showCurrentPassword"
+                                    [class.fa-eye-slash]="!showCurrentPassword"
+                                    (click)="togglePasswordVisibility('current')">
+                                </i>
+                            </div>
+                        </div>
+
+                        <!-- New Password -->
+                        <div class="mb-3 password-wrapper">
+                            <label for="newPassword">New Password</label>
+                            <div class="poistion-relative">
+                                <input [type]="showNewPassword ? 'text' : 'password'" class="form-control pe-4"
+                                    id="newPassword" formControlName="newPassword" />
+                                <i class="fa password-toggle-icon new-icon" [class.fa-eye]="showNewPassword"
+                                    [class.fa-eye-slash]="!showNewPassword" (click)="togglePasswordVisibility('new')">
+                                </i>
+                            </div>
+                        </div>
+
+                        <!-- Confirm Password -->
+                        <div class="mb-3 password-wrapper">
+                            <label for="confirmPassword">Confirm New Password</label>
+                            <div class="position-relative">
+                                <input [type]="showConfirmPassword ? 'text' : 'password'" class="form-control pe-4"
+                                    id="confirmPassword" formControlName="confirmPassword" />
+                                <i class="fa password-toggle-icon confirm-icon" [class.fa-eye]="showConfirmPassword"
+                                    [class.fa-eye-slash]="!showConfirmPassword"
+                                    (click)="togglePasswordVisibility('confirm')">
+                                </i>
+                            </div>
+                        </div>
+
+                        <div class="text-end">
+                            <button type="submit" class="btn update-btn mt-2">Update Password</button>
+                            <button type="button" class="btn btn-secondary ms-2 mt-2"
+                                (click)="backToProfile()">Back</button>
+                        </div>
                     </form>
                 </div>
             </div>
         </div>
 
-        <div class="col-md-4 p-3">
-            <div class="card mb-3 ca-body">
-                <div class="card-body text-center">
-                    <i class="fa-solid fa-user icon-style"></i>
-                    <h5 class="card-title p-2">User Name </h5>
-                    <!-- <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                    <a href="#" class="btn btn-primary">Button</a> -->
-                     <button class="btn update-btn text-white"> Delete Account</button>
-                </div>
-            </div>
-            <div class="row">
-               
-            </div>
-        </div>
+
+
     </div>
 </section>
 <hr />

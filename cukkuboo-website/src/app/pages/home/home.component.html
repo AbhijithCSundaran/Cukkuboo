@@ -45,6 +45,11 @@
                                           </svg>
                                           <span class="text p-1 play-movie">Play Movie</span>
                                        </a>
+                                       <div class="mt-3 mt-0 gen-btn-container d-block d-xl-none" (click)="playTrailer(item)">
+                                          <a class="gen-button gen-button-outline py-2 px-3">
+                                          <i class="fas fa-play"></i><span class="text">Watch Trailer</span>
+                                          </a>
+                                       </div>
                                     </div>
 
 
@@ -86,7 +91,7 @@
 </section>
 
 <ng-container *ngFor="let list of listSections">
-   <section class="gen-section-padding-2 bg-gradient">
+   <section class="gen-section-padding-2">
       <div class="container">
          <div class="d-flex justify-content-between">
             <h4 class="gen-heading-title">{{ list.heading }}</h4>
@@ -115,7 +120,7 @@
                                        <div class="gen-movie-action">
                                           <a [routerLink]="['/movies', movie.mov_id]" [queryParams]="{ ap: 1 }"
                                              class="gen-button playBut">
-                                             <i class="fa fa-play me-1"></i>
+                                             <i class="fa fa-play"></i>
                                           </a>
                                        </div>
 

@@ -1,21 +1,23 @@
 :host {
-    position: sticky;
+    position: fixed;
     top: 0;
+    width: 100vw;
     z-index: 100;
 }
 
   .mobile-sidebar {
     position: fixed;
-    top: 70px; 
+    top: 0;
     left: 0;
+    padding-top: 50px;
     width: 300px;
-    height: calc(100vh - 70px); 
+    height: calc(100vh - 0px);
     background-color: black;
     overflow-x: hidden;
     overflow-y: auto;
-    z-index: 1050;
+    z-index: -1;
     transform: translateX(-100%);
-    transition: width 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
    
 
     &.open {
@@ -49,4 +51,45 @@
     font-family: var(--title-fonts);
   }
 
-  
+
+
+
+@media (max-width: 767px) {
+   .gen-account-menu {
+  display: none;
+  background: #fff;
+  border-top: 1px solid #eee;
+
+  &.gen-form-show {
+    display: block;
+  }
+
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    li a {
+      display: block;
+      padding: 10px 0;
+      color: #333;
+    }
+  }
+}
+
+.user-title {
+  font-weight: 600;
+  font-size: 1rem;
+}
+header#gen-header .gen-bottom-header .navbar .navbar-nav li a {
+        width: 45%;
+        display: inline-block;
+        padding: 15px;
+    }
+
+}
+.user-icon{
+  border: 2px solid white;
+    border-radius: 30px;
+}
+

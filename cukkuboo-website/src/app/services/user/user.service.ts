@@ -36,10 +36,13 @@ export class UserService {
   
 
 getProfile(): Observable<any> {
-  const userId = localStorage.getItem('user_id');
-  console.log(userId);
-  return this.http.get(`${this.apiUrl}user/profile/${userId}`, {
+  return this.http.get(`${this.apiUrl}user/profile`, {
     headers: this.headers
   });
 }
+
+logout(): Observable<any> {
+  return this.http.post(`${this.apiUrl}login/logout`, {}, { headers: this.headers });
+}
+
 }

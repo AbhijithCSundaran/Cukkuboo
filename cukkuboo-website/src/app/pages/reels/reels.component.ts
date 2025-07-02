@@ -12,11 +12,12 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { MovieService } from '../../services/movie.service';
 import { environment } from '../../../environments/environment';
+import { InfiniteScrollDirective } from '../../core/directives/infinite-scroll/infinite-scroll.directive';
 
 @Component({
   selector: 'app-reels',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, InfiniteScrollDirective],
   templateUrl: './reels.component.html',
   styleUrls: ['./reels.component.scss']
 })
@@ -24,13 +25,28 @@ export class ReelsComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChildren('videoEl') videos!: QueryList<ElementRef<HTMLVideoElement>>;
   @ViewChild('reelScroll') reelScroll!: ElementRef<HTMLDivElement>;
 
-  reels: { video: string; image: string; title: string; description: string }[] = [];
+  reels: {
+    id: number;
+    video: string;
+    image: string;
+    title: string;
+    description: string;
+    likes: number;
+    views: number;
+  }[] = [];
+
   videoStates: boolean[] = [];
   mutedStates: boolean[] = [];
   likedStates: boolean[] = [];
   hoveredIndex: number | null = null;
   isFullscreen = false;
   private currentIndex = 0;
+
+  stopInfiniteScroll: boolean = false;
+  pageIndex: number = 0;
+  pageSize: number = 10;
+  searchText: string = '';
+  searchTimeout: any;
 
   private videoUrl = environment.apiUrl + 'uploads/videos/';
   private imageUrl = environment.apiUrl + 'uploads/images/';
@@ -39,23 +55,57 @@ export class ReelsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit(): void {
     document.body.classList.add('reels-page');
+    this.loadReels();
+  }
 
-    this.movieService.getReelsData().subscribe({
-      next: (response) => {
-        this.reels = response?.data?.map((data: any) => ({
-          video: this.videoUrl + (data.video || ''),
-          image: this.imageUrl + (data.thumbnail || 'default-thumb.jpg'),
-          title: this.capitalizeFirst(data.title),
-          description: this.capitalizeFirst(data.description)
-        })) || [];
+  onScroll(event: any) {
+    console.log('Scrolled - loading more reels...');
+    this.pageIndex++;
+    this.loadReels(this.pageIndex, this.pageSize, this.searchText);
+  }
 
-        const count = this.reels.length;
-        this.videoStates = new Array(count).fill(true);
-        this.mutedStates = new Array(count).fill(true); // Start muted
-        this.likedStates = new Array(count).fill(false);
+  loadReels(pageIndex: number = 0, pageSize: number = 10, search: string = ''): void {
+    this.movieService.getReelsData(pageIndex, pageSize, search).subscribe({
+      next: (res) => {
+        if (res?.success) {
+          const newReels = res.data?.map((data: any) => ({
+            id: Number(data.reels_id),
+            video: this.videoUrl + (data.video || ''),
+            image: this.imageUrl + (data.thumbnail || 'default-thumb.jpg'),
+            title: this.capitalizeFirst(data.title),
+            description: this.capitalizeFirst(data.description),
+            likes: Number(data.likes) || 0,
+            views: Number(data.views) || 0
+          })) || [];
+
+          console.log('Reels loaded:', newReels);
+
+          if (newReels.length) {
+            this.reels = [...this.reels, ...newReels];
+            this.videoStates.push(...new Array(newReels.length).fill(true));
+            this.mutedStates.push(...new Array(newReels.length).fill(true));
+            this.likedStates.push(...new Array(newReels.length).fill(false));
+          } else {
+            this.stopInfiniteScroll = true;
+          }
+        }
       },
-      error: (err) => console.error('Error loading reels:', err)
+      error: (err) => {
+        console.error('Error loading reels:', err);
+        this.stopInfiniteScroll = true;
+      }
     });
+  }
+
+  onSearchChange() {
+    clearTimeout(this.searchTimeout);
+    this.searchTimeout = setTimeout(() => {
+      this.pageIndex = 0;
+      this.stopInfiniteScroll = false;
+      this.reels = [];
+      console.log('Search text changed:', this.searchText);
+      this.loadReels(this.pageIndex, this.pageSize, this.searchText);
+    }, 400);
   }
 
   capitalizeFirst(text: string): string {
@@ -74,7 +124,6 @@ export class ReelsComponent implements OnInit, AfterViewInit, OnDestroy {
             this.videoStates[index] = true;
             document.querySelector('.site-header')?.classList.add('hidden-header');
 
-            // Apply previous mute state to new video
             if (index !== this.currentIndex) {
               const prevMuted = this.mutedStates[this.currentIndex];
               this.mutedStates[index] = prevMuted;
@@ -132,7 +181,6 @@ export class ReelsComponent implements OnInit, AfterViewInit, OnDestroy {
     if (reelElements[index]) {
       reelElements[index].scrollIntoView({ behavior: 'smooth' });
 
-      // Apply same mute state from previous video
       const prevMuted = this.mutedStates[this.currentIndex];
       this.mutedStates[index] = prevMuted;
 
@@ -171,12 +219,26 @@ export class ReelsComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  toggleLike(index: number): void {
-    this.likedStates[index] = !this.likedStates[index];
+  toggleLike(reel: any): void {
+    const model = {
+      reels_id: reel.id,
+      status: 1
+    };
+
+    this.movieService.likeReel(model).subscribe({
+      next: (res) => {
+        reel.likes += 1;
+        console.log('Reel liked:', res);
+      },
+      error: (err) => {
+        console.error('Like failed:', err);
+      }
+    });
   }
 
   onShare(index: number): void {
-    console.log('Shared reel at index:', index);
+    // TODO: Share logic here
+    console.log('Share clicked for reel index:', index);
   }
 
   onHover(index: number): void {

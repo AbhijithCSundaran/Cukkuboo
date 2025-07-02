@@ -107,6 +107,9 @@ $routes->get('resume/viewhistory', 'Resume::viewHistory');
 
 $routes->post('savehistory/save', 'Savehistory::saveMovie');
 $routes->get('savehistory/history', 'Savehistory::saveHistory');
+$routes->get('savehistory/view/(:num)', 'Savehistory::getById/$1');
+$routes->delete('savehistory/delete/(:num)', 'Savehistory::deleteHistory/$1');
+$routes->get('savehistory/user', 'Savehistory::getUserHistory');
 
 //Video view count
 

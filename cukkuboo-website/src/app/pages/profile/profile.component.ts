@@ -125,7 +125,9 @@ export class ProfileComponent implements OnInit {
   backToProfile(): void {
     this.showProfileInfo = true;
   }
-  onChangePassword(): void {
+
+  
+onChangePassword(): void {
   if (this.changePasswordForm.valid) {
     const { currentPassword, newPassword, confirmPassword } = this.changePasswordForm.value;
 
@@ -138,13 +140,13 @@ export class ProfileComponent implements OnInit {
       return;
     }
 
-    const body = {
-      currentPassword: currentPassword,
-      newPassword: newPassword,
-      confirmPassword: confirmPassword
-    };
+    // Build FormData to send to backend
+    const formData = new FormData();
+    formData.append('oldPassword', currentPassword.trim());
+    formData.append('newPassword', newPassword.trim());
+    formData.append('confirmPassword', confirmPassword.trim());
 
-    this.userService.changePassword(body).subscribe({
+    this.userService.changePassword(formData).subscribe({
       next: (res) => {
         if (res.status === 1) {
           this.snackBar.open(res.msg, '', {
@@ -152,7 +154,7 @@ export class ProfileComponent implements OnInit {
             verticalPosition: 'top',
             panelClass: ['snackbar-success']
           });
-          this.showProfileInfo = true; 
+          this.showProfileInfo = true;
         } else {
           this.snackBar.open(res.msg, '', {
             duration: 3000,
@@ -161,7 +163,7 @@ export class ProfileComponent implements OnInit {
           });
         }
       },
-      error: (err) => {
+      error: () => {
         this.snackBar.open('Something went wrong. Please try again.', '', {
           duration: 3000,
           verticalPosition: 'top',
@@ -169,7 +171,6 @@ export class ProfileComponent implements OnInit {
         });
       }
     });
-
   } else {
     this.snackBar.open('Please fill in all password fields.', '', {
       duration: 3000,
@@ -178,6 +179,7 @@ export class ProfileComponent implements OnInit {
     });
   }
 }
+
 
 
   // Create toggle functions

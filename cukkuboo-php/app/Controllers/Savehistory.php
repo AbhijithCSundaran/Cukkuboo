@@ -41,7 +41,7 @@ class Savehistory extends ResourceController
         ]);
     }
 
-    public function saveHistory()
+    public function getHistory()
 {
     $authHeader = $this->request->getHeaderLine('Authorization');
     $user = $this->authService->getAuthenticatedUser($authHeader);
@@ -112,8 +112,6 @@ public function deleteHistory($mov_id)
     }
 
     $userId = $user['user_id'];
-
-    // Call model method to soft delete
     $deleted = $this->model->softDeleteHistory($userId, $mov_id);
 
     if ($deleted) {
@@ -142,7 +140,7 @@ public function getUserHistory()
 
     $userId = $authUser['user_id'];
 
-    $history = $this->model->getCompletedHistory($userId); // Must return list of history items for the user
+    $history = $this->model->getCompletedHistory($userId); 
 
     $total = count($history);
 
@@ -154,5 +152,28 @@ public function getUserHistory()
     ]);
 }
 
+public function clearAllHistory()
+{
+    $authHeader = $this->request->getHeaderLine('Authorization');
+    $user = $this->authService->getAuthenticatedUser($authHeader);
+
+    if (!$user) {
+        return $this->failUnauthorized('Invalid or missing token.');
+    }
+
+    $userId = $user['user_id'];
+
+    $cleared = $this->model->softDeleteAllHistoryByUser($userId);
+
+    if ($cleared) {
+        return $this->respond([
+            'success' => true,
+            'message' => 'All history entries have been cleared (soft-deleted) successfully.',
+            'data' => []
+        ]);
+    } else {
+        return $this->failNotFound('No active history entries found to delete.');
+    }
+}
 
 }

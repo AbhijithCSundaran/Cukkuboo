@@ -82,5 +82,14 @@ public function getCompletedHistory($userId)
                     ->orderBy('save_history.created_by', 'DESC')
                     ->findAll();
     }
+public function softDeleteAllHistoryByUser($userId)
+{
+    return $this->where('user_id', $userId)
+                ->where('status !=', 9)
+                ->set(['status' => 9])
+                ->update();
+}
+
+
 }
 

@@ -98,7 +98,7 @@ return $this->db->query("update user set status = '".$status."', updated_at=NOW(
 
     $data = [
         'password'    => $hashedPassword,
-        'modify_at'  => date('Y-m-d H:i:s')
+        'updated_at'  => date('Y-m-d H:i:s')
     ];
 
     if ($this->update($userId, $data)) {

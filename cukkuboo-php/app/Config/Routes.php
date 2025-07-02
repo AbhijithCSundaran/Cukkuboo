@@ -109,16 +109,15 @@ $routes->post('savehistory/save', 'Savehistory::saveMovie');
 $routes->get('savehistory/history', 'Savehistory::getHistory');
 $routes->get('savehistory/view/(:num)', 'Savehistory::getById/$1');
 $routes->delete('savehistory/delete/(:num)', 'Savehistory::deleteHistory/$1');
-$routes->delete('savehistory/delete/(:num)', 'Savehistory::deleteHistory/$1');
 $routes->get('savehistory/user', 'Savehistory::getUserHistory');
-
+$routes->delete('savehistory/clear-all', 'Savehistory::clearAllHistory');
 //Video view count
 
 $routes->post('video/videoview', 'VideoView::viewVideo');
  //Watch Later
 $routes->post('watch/save', 'WatchLater::add');
 $routes->get('watch/list', 'WatchLater::getlist');
-$routes->get('watch/get/(:num)', 'WatchLater::getByMovie/$1');
+$routes->get('watch/get/(:num)', 'WatchLater::getById/$1');
 $routes->get('watch/user', 'WatchLater::getUserWatchLater');
 $routes->delete('watch/delete/(:num)', 'WatchLater::delete/$1');
 $routes->delete('watch/clear-all', 'WatchLater::clearAllHistory');

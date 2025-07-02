@@ -103,7 +103,7 @@ public function getById($id)
 }
 
 
-public function deleteHistory($mov_id)
+public function deleteHistory($saveHistoryId)
 {
     $authHeader = $this->request->getHeaderLine('Authorization');
     $user = $this->authService->getAuthenticatedUser($authHeader);
@@ -112,22 +112,21 @@ public function deleteHistory($mov_id)
         return $this->respond(['status' => false, 'message' => 'Unauthorized user.'], 401);
     }
 
-    $userId = $user['user_id'];
-    $deleted = $this->model->softDeleteHistory($userId, $mov_id);
+    $deleted = $this->model->softDeleteHistoryById($saveHistoryId);
 
     if ($deleted) {
         return $this->respond([
             'success' => true,
-            'message' => "History entry for movie ID $mov_id deleted successfully.",
+            'message' => "History entry ID $saveHistoryId deleted successfully.",
             'data'    => []
         ]);
     }
 
     return $this->respond([
         'success' => false,
-        'message' => "No active history found for movie ID $mov_id to delete or already deleted.",
+        'message' => "No active history found for ID $saveHistoryId to delete or already deleted.",
         'data'    => []
-    ], 404);
+    ]);
 }
 
 public function getUserHistory()

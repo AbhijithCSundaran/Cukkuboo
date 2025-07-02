@@ -80,7 +80,10 @@ export class ProfileComponent implements OnInit {
   onSubmit(): void {
     if (this.profileForm.valid) {
       
-      const updatedData = this.profileForm.value
+        const updatedData = {
+      ...this.profileForm.value,
+      user_id: this.userId  
+    };
 
       this.userService.register(updatedData).subscribe({
         next: (res) => {

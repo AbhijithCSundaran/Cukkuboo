@@ -18,6 +18,10 @@ export class HeaderComponent {
   username: string = '';
   isSignedIn: boolean = false;
   showUserDropdown: boolean = false;
+  showNotificationDropdown: boolean = false;
+
+  notifications: string[] = ['New release: "Dune"', 'Trailer: "Batman" is live'];
+  notificationCount: number = this.notifications.length;
 
   private _menuOpen = false;
   get menuOpen(): boolean {
@@ -38,8 +42,8 @@ export class HeaderComponent {
     private storageService: StorageService,
     private elementRef: ElementRef,
     private snackBar: MatSnackBar,
-    private userService: UserService, 
-    private router: Router 
+    private userService: UserService,
+    private router: Router
   ) {
     this.storageService.onUpdateItem
       .pipe(takeUntil(this._unsubscribeAll))
@@ -61,7 +65,7 @@ export class HeaderComponent {
           horizontalPosition: 'center',
           panelClass: ['snackbar-success']
         });
-        this.router.navigate(['/signin']); 
+        this.router.navigate(['/']); // Redirect to home
       },
       error: (err) => {
         console.error('Logout failed:', err);
@@ -78,6 +82,16 @@ export class HeaderComponent {
   closeMenu() {
     this.menuOpen = false;
     this.showUserDropdown = false;
+    this.showNotificationDropdown = false;
+  }
+
+  toggleNotificationDropdown() {
+    this.showNotificationDropdown = !this.showNotificationDropdown;
+  }
+
+  goToNotifications(): void {
+    this.closeMenu(); // Close dropdowns
+    this.router.navigate(['/notifications']); // Redirect to notifications page
   }
 
   @HostListener('document:click', ['$event'])

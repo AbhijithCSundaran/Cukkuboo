@@ -1,0 +1,40 @@
+<div class="notifications-container">
+  <!-- Left -->
+  <div class="notifications-list">
+    <div class="header">
+      <span>Notifications</span>
+      <button class="mark-toggle" (click)="toggleAllRead()">
+        {{ allRead ? 'Mark All as Unread' : 'Mark All as Read' }}
+      </button>
+    </div>
+
+    <div class="scrollable-list">
+      <div
+        *ngFor="let notification of notifications"
+        class="notification-item"
+        [class.active]="notification === selectedNotification"
+        [class.read]="notification.read"
+        (click)="selectNotification(notification)"
+      >
+        <div class="title-wrapper">
+          <div class="title">{{ notification.title }}</div>
+          <span *ngIf="!notification.read" class="dot"></span>
+        </div>
+        <div class="date">{{ notification.date | date: 'short' }}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right Details -->
+  <div class="notification-detail" *ngIf="selectedNotification">
+    <div class="detail-header">
+      <div class="detail-title">{{ selectedNotification.title }}</div>
+      <!-- <button class="toggle-btn" (click)="toggleRead(selectedNotification)">
+        {{ selectedNotification.read ? 'Mark as Unread' : 'Mark as Read' }}
+      </button> -->
+    </div>
+    <div class="detail-body">
+      {{ selectedNotification.message }}
+    </div>
+  </div>
+</div>

@@ -92,7 +92,10 @@
 
                         <!-- Submit Button -->
                         <div class="text-end">
-                            <button type="submit" class="btn update-btn">Update Details</button>
+                            <button type="submit" class="btn update-btn"
+                                [disabled]="!isFormChanged() || profileForm.invalid">
+                                Update Details
+                            </button>
                         </div>
                     </form>
                 </div>
@@ -108,43 +111,52 @@
                     <form [formGroup]="changePasswordForm" (ngSubmit)="onChangePassword()">
 
                         <!-- Current Password -->
-                        <div class="mb-3 password-wrapper">
-                            <label for="currentPassword">Current Password</label>
-                            <div class="position-relative">
-                                <input [type]="showCurrentPassword ? 'text' : 'password'" class="form-control pe-4"
-                                    id="currentPassword" formControlName="currentPassword" />
-                                <!-- Current Password -->
-                                <i class="fa password-toggle-icon current-icon" [class.fa-eye]="showCurrentPassword"
-                                    [class.fa-eye-slash]="!showCurrentPassword"
-                                    (click)="togglePasswordVisibility('current')">
-                                </i>
-                            </div>
-                        </div>
+                        <mat-form-field appearance="outline" class="w-100">
+                            <mat-label>Current Password</mat-label>
+                            <input matInput [type]="hideCurrent ? 'password' : 'text'" formControlName="currentPassword"
+                                placeholder="Enter your current password" id="currentPassword" />
+                            <button mat-icon-button matSuffix (click)="hideCurrent = !hideCurrent" type="button"
+                                [attr.aria-label]="'Toggle password visibility'" [attr.aria-pressed]="hideCurrent">
+                                <mat-icon class="small-eye-icon">{{ hideCurrent ? 'visibility_off' : 'visibility'
+                                    }}</mat-icon>
+                            </button>
+                            <mat-error>
+                                <Validation-Messages
+                                    [control]="changePasswordForm.controls['currentPassword']"></Validation-Messages>
+                            </mat-error>
+                        </mat-form-field>
 
                         <!-- New Password -->
-                        <div class="mb-3 password-wrapper">
-                            <label for="newPassword">New Password</label>
-                            <div class="poistion-relative">
-                                <input [type]="showNewPassword ? 'text' : 'password'" class="form-control pe-4"
-                                    id="newPassword" formControlName="newPassword" />
-                                <i class="fa password-toggle-icon new-icon" [class.fa-eye]="showNewPassword"
-                                    [class.fa-eye-slash]="!showNewPassword" (click)="togglePasswordVisibility('new')">
-                                </i>
-                            </div>
-                        </div>
+                        <mat-form-field appearance="outline" class="w-100">
+                            <mat-label>New Password</mat-label>
+                            <input matInput [type]="hideNew ? 'password' : 'text'" formControlName="newPassword"
+                                placeholder="Enter your new password" id="newPassword" />
+                            <button mat-icon-button matSuffix (click)="hideNew = !hideNew" type="button"
+                                [attr.aria-label]="'Toggle password visibility'" [attr.aria-pressed]="hideNew">
+                                <mat-icon class="small-eye-icon">{{ hideNew ? 'visibility_off' : 'visibility'
+                                    }}</mat-icon>
+                            </button>
+                            <mat-error>
+                                <Validation-Messages
+                                    [control]="changePasswordForm.controls['newPassword']"></Validation-Messages>
+                            </mat-error>
+                        </mat-form-field>
 
                         <!-- Confirm Password -->
-                        <div class="mb-3 password-wrapper">
-                            <label for="confirmPassword">Confirm New Password</label>
-                            <div class="position-relative">
-                                <input [type]="showConfirmPassword ? 'text' : 'password'" class="form-control pe-4"
-                                    id="confirmPassword" formControlName="confirmPassword" />
-                                <i class="fa password-toggle-icon confirm-icon" [class.fa-eye]="showConfirmPassword"
-                                    [class.fa-eye-slash]="!showConfirmPassword"
-                                    (click)="togglePasswordVisibility('confirm')">
-                                </i>
-                            </div>
-                        </div>
+                        <mat-form-field appearance="outline" class="w-100">
+                            <mat-label>New Password</mat-label>
+                            <input matInput [type]="hideConfirm ? 'password' : 'text'" formControlName="confirmPassword"
+                                placeholder="Enter your Confirm password" id="confirmPassword" />
+                            <button mat-icon-button matSuffix (click)="hideConfirm = !hideConfirm" type="button"
+                                [attr.aria-label]="'Toggle password visibility'" [attr.aria-pressed]="hideConfirm">
+                                <mat-icon class="small-eye-icon">{{ hideConfirm ? 'visibility_off' : 'visibility'
+                                    }}</mat-icon>
+                            </button>
+                            <mat-error>
+                                <Validation-Messages
+                                    [control]="changePasswordForm.controls['confirmPassword']"></Validation-Messages>
+                            </mat-error>
+                        </mat-form-field>
 
                         <div class="text-end">
                             <button type="submit" class="btn update-btn mt-2">Update Password</button>

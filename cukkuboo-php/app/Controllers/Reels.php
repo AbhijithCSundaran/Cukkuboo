@@ -138,15 +138,7 @@ class Reels extends ResourceController
     $pageIndex = (int) $this->request->getGet('pageIndex');
     $pageSize  = (int) $this->request->getGet('pageSize');
     $search    = $this->request->getGet('search');
-
-    $authHeader = $this->request->getHeaderLine('Authorization');
-    $user = $this->authService->getAuthenticatedUser($authHeader);
-
-    if (!$user) {
-        return $this->failUnauthorized('Invalid or missing token.');
-    }
-
-    $user_id = $user['user_id'];
+    $user_id   = (int) $this->request->getGet('user_id'); // 👈 Required
 
     if ($pageSize <= 0) {
         $pageSize = 10;
@@ -169,19 +161,18 @@ class Reels extends ResourceController
         ->orderBy('reels_id', 'DESC')
         ->findAll($pageSize, $offset);
 
-    // Attach is_liked_by_user field
     foreach ($reels as &$reel) {
-        $isLiked = $this->reelsModel->isLikedByUser($reel['reels_id'], $user_id);
-        $reel['is_liked_by_user'] = $isLiked;
+        $reel['is_liked_by_user'] = $this->reelsModel->isLikedByUser($reel['reels_id'], $user_id);
     }
 
     return $this->response->setJSON([
-        'success'  => true,
-        'message' => 'Paginated reels fetched successfully.',
+        'success' => true,
+        'message' => 'Reels fetched successfully.',
         'data'    => $reels,
         'total'   => $total
     ]);
 }
+
 public function getReelById($id)
 {
     // $authHeader = $this->request->getHeaderLine('Authorization');

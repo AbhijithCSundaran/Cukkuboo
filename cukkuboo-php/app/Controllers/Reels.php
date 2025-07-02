@@ -138,7 +138,8 @@ class Reels extends ResourceController
     $pageIndex = (int) $this->request->getGet('pageIndex');
     $pageSize  = (int) $this->request->getGet('pageSize');
     $search    = $this->request->getGet('search');
-    $user_id   = (int) $this->request->getGet('user_id'); // 👈 Required
+    $authHeader = $this->request->getHeaderLine('Authorization');
+    $user = $this->authService->getAuthenticatedUser($authHeader);
 
     if ($pageSize <= 0) {
         $pageSize = 10;
@@ -160,9 +161,11 @@ class Reels extends ResourceController
     $reels = $builder
         ->orderBy('reels_id', 'DESC')
         ->findAll($pageSize, $offset);
-
-    foreach ($reels as &$reel) {
+    if($user){
+        $user_id = $user['user_id'];
+     foreach ($reels as &$reel) {
         $reel['is_liked_by_user'] = $this->reelsModel->isLikedByUser($reel['reels_id'], $user_id);
+     }
     }
 
     return $this->response->setJSON([

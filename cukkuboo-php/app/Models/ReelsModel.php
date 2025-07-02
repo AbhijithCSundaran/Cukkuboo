@@ -61,13 +61,15 @@ public function softDeleteReelById($status, $reels_id)
 }
 public function isLikedByUser($reels_id, $user_id)
 {
-    $result = $this->db->table('likes')
+    $result = $this->db->table('reel_like')
         ->where('reels_id', $reels_id)
         ->where('user_id', $user_id)
+        ->where('status', 1) 
         ->get()
         ->getRow();
 
     return $result ? true : false;
 }
+
 
 }

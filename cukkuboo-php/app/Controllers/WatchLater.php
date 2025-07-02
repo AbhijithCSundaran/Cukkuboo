@@ -49,30 +49,161 @@ class WatchLater extends ResourceController
             'data'=>$data
         ]);
     }
+public function getlist()
+{
+    $authHeader = $this->request->getHeaderLine('Authorization');
+    $user = $this->authService->getAuthenticatedUser($authHeader);
 
-    public function getlist()
-    {
-        $authHeader = $this->request->getHeaderLine('Authorization');
-        $user = $this->authService->getAuthenticatedUser($authHeader);
-        if (!$user) 
-            return $this->failUnauthorized('Invalid or missing token.');
+    if (!$user || !isset($user['user_id'])) {
+        return $this->failUnauthorized('Invalid or missing token.');
+    }
 
-        if (!$user || !isset($user['user_id'])) {
-            return $this->respond([
-                'success' => false,
-                'message' => 'Unauthorized user.',
-                'data'=>[]
-            ]);
+    $pageIndex = (int) ($this->request->getGet('pageIndex') ?? 0);
+    $pageSize = $this->request->getGet('pageSize');
+    $search = trim($this->request->getGet('search') ?? '');
+
+    $isFullList = ($pageSize === null || $pageSize == -1);
+
+    if (!$isFullList) {
+        $pageSize = (int) $pageSize;
+        if ($pageSize <= 0) {
+            $pageSize = 10;
         }
+        $offset = $pageIndex * $pageSize;
+    }
 
-        $data = $this->watchLaterModel->getWatchLaterByUserId($user['user_id']);
+    $db = \Config\Database::connect();
+    $builder = $db->table('watch_later wl')
+        ->select('wl.*, m.title, m.thumbnail')
+        ->join('movies_details m', 'm.mov_id = wl.mov_id', 'left')
+        ->where('wl.status !=', 9);  
 
+    if (!empty($search)) {
+        $builder->like('m.title', $search);
+    }
+    $totalBuilder = clone $builder;
+    $total = $totalBuilder->countAllResults(false);
+
+    if (!$isFullList) {
+        $builder->limit($pageSize, $offset);
+    }
+
+    $data = $builder
+        ->orderBy('wl.watch_later_id', 'DESC')
+        ->get()
+        ->getResult();
+
+    return $this->respond([
+        'success' => true,
+        'message' => 'Watch Later list fetched successfully.',
+        'total' => $total,
+        'data' => $data
+    ]);
+}
+
+
+ public function getById($id)
+{
+    $authHeader = $this->request->getHeaderLine('Authorization');
+    $user = $this->authService->getAuthenticatedUser($authHeader);
+
+    if (!$user) {
+        return $this->failUnauthorized('Invalid or missing token.');
+    }
+
+    $entry = $this->watchLaterModel->getById($id); 
+
+    if (!$entry) {
         return $this->respond([
-            'success' => true,
-            'message' => 'Watch Later list fetched successfully.',
-            'data' => $data
+            'success' => false,
+            'message' => "No watch later entry found for ID $id.",
+            'data' => []
         ]);
     }
+
+    return $this->respond([
+        'success' => true,
+        'message' => "Watch later entry fetched successfully.",
+        'data' => $entry
+    ]);
+}
+
+public function getUserWatchLater($userId = null)
+{
+    $authHeader = $this->request->getHeaderLine('Authorization');
+    $authUser = $this->authService->getAuthenticatedUser($authHeader);
+
+    if (!$authUser) {
+        return $this->failUnauthorized('Invalid or missing token.');
+    }
+
+    if ($userId === null) {
+        $userId = $authUser['user_id'];
+    }
+
+    if (!$userId) {
+        return $this->failValidationErrors('User ID is required.');
+    }
+
+    $watchLaterList = $this->watchLaterModel->getWatchLaterByToken($userId);
+    $total = count($watchLaterList);
+
+    return $this->respond([
+        'success' => true,
+        'message' => 'Watch Later list fetched successfully.',
+        'total' => $total,
+        'data' => $watchLaterList
+    ]);
+}
+public function delete($id = null)
+{
+    $authHeader = $this->request->getHeaderLine('Authorization');
+    $user = $this->authService->getAuthenticatedUser($authHeader);
+    
+    if (!$user) {
+        return $this->failUnauthorized('Invalid or missing token.');
+    }
+
+    if ($id === null) {
+        return $this->failValidationErrors('Watch Later ID is required.');
+    }
+
+    $watchLaterModel = new \App\Models\WatchLaterModel();
+
+    if ($watchLaterModel->softDeleteById($id)) {
+        return $this->respond([
+            'success' => true,
+            'message' => "Watch Later item with ID $id soft-deleted successfully.",
+            'data' => []
+        ]);
+    } else {
+        return $this->failServerError("Failed to delete Watch Later item with ID $id.");
+    }
+}
+public function clearAllHistory()
+{
+    $authHeader = $this->request->getHeaderLine('Authorization');
+    $user = $this->authService->getAuthenticatedUser($authHeader);
+
+    if (!$user || !isset($user['user_id'])) {
+        return $this->failUnauthorized('Invalid or missing token.');
+    }
+
+    $userId = $user['user_id'];
+
+    $clearedCount = $this->watchLaterModel->softDeleteAllHistoryByUser($userId);
+
+    if ($clearedCount > 0) {
+        return $this->respond([
+            'success' => true,
+            'message' => 'All history entries have been cleared successfully.',
+            'data'    => ['cleared' => $clearedCount]
+        ]);
+    } else {
+        return $this->failNotFound('No history entries found to delete or already cleared.');
+    }
+}
+
 
     
 }

@@ -68,17 +68,19 @@ class Notification extends ResourceController
 
     $pageIndex = (int) $this->request->getGet('pageIndex');
     $pageSize  = (int) $this->request->getGet('pageSize');
-
+    $search    = $this->request->getGet('search');
     if ($pageSize <= 0) {
         $pageSize = 10;
     }
 
     $offset = $pageIndex * $pageSize;
     $builder = $this->notificationModel->where('status !=', 9);
-    // $builder = $this->notificationModel
-    //                 ->where('user_id', $user['user_id'])
-    //                 ->whereIn('status', [1, 2]);
-
+    if (!empty($search)) {
+        $builder->groupStart()
+            ->like('title', $search)
+            ->orLike('content', $search)
+            ->groupEnd();
+    }
     $total = $builder->countAllResults(false);
 
     $notifications = $builder->orderBy('created_on', 'DESC')->findAll($pageSize, $offset);
@@ -190,13 +192,37 @@ class Notification extends ResourceController
     if ($userId === null) {
         $userId = $authUser['user_id'];
     }
+
     if (!$userId) {
         return $this->failValidationErrors('User ID is required.');
     }
 
-    $notifications = $this->notificationModel->getByUserId($userId);
-    $total = count($notifications);
-    return $this->response->setJSON([
+    $pageIndex = (int) $this->request->getGet('pageIndex') ?? 0;
+    $pageSize  = (int) $this->request->getGet('pageSize') ?? 10;
+    $search    = trim($this->request->getGet('search') ?? '');
+    $offset    = $pageIndex * $pageSize;
+
+    // Query builder
+    $builder = $this->notificationModel
+        ->where('user_id', $userId)
+        ->where('status !=', 9);
+
+    if (!empty($search)) {
+        $builder->groupStart()
+                ->like('title', $search)
+                ->orLike('content', $search)
+                ->groupEnd();
+    }
+
+    // Clone to get total count
+    $total = $builder->countAllResults(false);
+
+    $notifications = $builder
+        ->orderBy('notification_id', 'DESC')
+        ->limit($pageSize, $offset)
+        ->findAll();
+
+    return $this->respond([
         'success' => true,
         'message' => 'Notifications fetched successfully.',
         'total' => $total,
@@ -204,6 +230,32 @@ class Notification extends ResourceController
     ]);
 }
 
+
+public function getNotificationById($notificationId = null)
+{
+    $authHeader = $this->request->getHeaderLine('Authorization');
+    $authUser = $this->authService->getAuthenticatedUser($authHeader);
+
+    if (!$authUser) {
+        return $this->failUnauthorized('Invalid or missing token.');
+    }
+
+    if ($notificationId === null) {
+        return $this->failValidationErrors('Notification ID is required.');
+    }
+
+    $notification = $this->notificationModel->find($notificationId);
+
+    if (!$notification || $notification['status'] == 9) {
+        return $this->failNotFound('Notification not found.');
+    }
+
+    return $this->respond([
+        'success' => true,
+        'message' => 'Notification fetched successfully.',
+        'data' => $notification
+    ]);
+}
 
 
 }

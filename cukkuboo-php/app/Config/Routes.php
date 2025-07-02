@@ -95,7 +95,7 @@ $routes->post('notification/save', 'Notification::createOrUpdate');
 $routes->get('notification/list', 'Notification::getAllNotifications');          
 $routes->delete('notification/delete/(:num)', 'Notification::delete/$1'); 
 $routes->post('notification/markall', 'Notification::markAllAsReadOrUnread'); 
-$routes->get('notification/get/(:num)', 'Notification::getUserNotifications/$1');
+$routes->get('notification/get/(:num)', 'Notification::getNotificationById/$1');
 $routes->get('notification/get', 'Notification::getUserNotifications');
 
 // Watched history
@@ -106,13 +106,20 @@ $routes->get('resume/viewhistory', 'Resume::viewHistory');
 //Save Completed History
 
 $routes->post('savehistory/save', 'Savehistory::saveMovie');
-$routes->get('savehistory/history', 'Savehistory::saveHistory');
-
+$routes->get('savehistory/history', 'Savehistory::getHistory');
+$routes->get('savehistory/view/(:num)', 'Savehistory::getById/$1');
+$routes->delete('savehistory/delete/(:num)', 'Savehistory::deleteHistory/$1');
+$routes->get('savehistory/user', 'Savehistory::getUserHistory');
+$routes->delete('savehistory/clear-all', 'Savehistory::clearAllHistory');
 //Video view count
 
 $routes->post('video/videoview', 'VideoView::viewVideo');
+ //Watch Later
 $routes->post('watch/save', 'WatchLater::add');
 $routes->get('watch/list', 'WatchLater::getlist');
-
+$routes->get('watch/get/(:num)', 'WatchLater::getById/$1');
+$routes->get('watch/user', 'WatchLater::getUserWatchLater');
+$routes->delete('watch/delete/(:num)', 'WatchLater::delete/$1');
+$routes->delete('watch/clear-all', 'WatchLater::clearAllHistory');
 
 ?>

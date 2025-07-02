@@ -82,12 +82,12 @@ class SubscriptionPlan extends ResourceController
         $pageSize = (int)$this->request->getGet('pageSize') ?? 10;
         $search = $this->request->getGet('search');
  
-        $authHeader = $this->request->getHeaderLine('Authorization');
-        $user = $this->authService->getAuthenticatedUser($authHeader);
+        // $authHeader = $this->request->getHeaderLine('Authorization');
+        // $user = $this->authService->getAuthenticatedUser($authHeader);
  
-        if (!$user) {
-            return $this->failUnauthorized('Invalid or missing token.');
-        }
+        // if (!$user) {
+        //     return $this->failUnauthorized('Invalid or missing token.');
+        // }
  
         $offset = $pageIndex * $pageSize;
  

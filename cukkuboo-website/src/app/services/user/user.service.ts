@@ -45,4 +45,15 @@ logout(): Observable<any> {
   return this.http.post(`${this.apiUrl}login/logout`, {}, { headers: this.headers });
 }
 
+changePassword(formData: FormData): Observable<any> {
+  return this.http.post(`${this.apiUrl}user/change-password`, formData, {
+    headers: {
+      Authorization: `Bearer ${this.token || ''}`
+    }
+    
+  });
+}
+
+
+
 }

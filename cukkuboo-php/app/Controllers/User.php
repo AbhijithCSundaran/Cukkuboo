@@ -367,31 +367,44 @@ public function updateEmailPreference()
     }
     public function changePassword()
     {
-    
-    $email           = $this->request->getPost('email');
+    $authHeader = $this->request->getHeaderLine('Authorization');
+    $authuser = $this->authService->getAuthenticatedUser($authHeader);
+        if(!$authuser) {
+            return $this->failUnauthorized('Invalid or missing token.');
+        }
+    $userId = $authuser['user_id'] ?? null;
+    if (!$userId) {
+        return $this->response->setJSON(['status' => 0, 'msg' => 'User not logged in.']);
+    }
+
+    $oldPassword     = $this->request->getPost('oldPassword');
     $newPassword     = $this->request->getPost('newPassword');
     $confirmPassword = $this->request->getPost('confirmPassword');
 
-    if (empty($email) || empty($newPassword) || empty($confirmPassword)) {
+    if (empty($oldPassword) || empty($newPassword) || empty($confirmPassword)) {
         return $this->response->setJSON(['status' => 0, 'msg' => 'All fields are required.']);
     }
 
     if ($newPassword !== $confirmPassword) {
-        return $this->response->setJSON(['status' => 0, 'msg' => 'Passwords do not match.']);
+        return $this->response->setJSON(['status' => 0, 'msg' => 'New password and confirm password do not match.']);
     }
 
-    $user = $this->UserModel->where('email', $email)->first();
+    $user = $this->UserModel->find($userId);
 
-    if (!$user) {
-        return $this->response->setJSON(['status' => 0, 'msg' => 'User not found.']);
+    if (!$user || !password_verify($oldPassword, $user['password'])) {
+        return $this->response->setJSON(['status' => 0, 'msg' => 'Old password is incorrect.']);
     }
 
-    $hashedPassword = password_hash($newPassword, PASSWORD_BCRYPT);
-    $this->UserModel->update($user['user_id'], [
-        'password'    => $hashedPassword,
-        'updated_at'  => date('Y-m-d H:i:s')
+    $updated = $this->UserModel->update($userId, [
+        'password'   => password_hash($newPassword, PASSWORD_BCRYPT),
+        'updated_at' => date('Y-m-d H:i:s')
     ]);
 
-    return $this->response->setJSON(['status' => 1, 'msg' => 'Password reset successfully.']);
-}
+    if ($updated) {
+        return $this->response->setJSON(['status' => 1, 'msg' => 'Password updated successfully.']);
+    }
+
+    return $this->response->setJSON(['status' => 0, 'msg' => 'Failed to update password.']);
+    }
+
 }

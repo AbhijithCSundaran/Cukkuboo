@@ -76,33 +76,36 @@ return $this->db->query("update user set status = '".$status."', updated_at=NOW(
         return $this->where('status', 1)->countAllResults();
     }
     // -----------------------------------Password changing-----------------------//
-    public function changePassword(int $userId, string $oldPassword, string $newPassword): array
-    {
-      $email = $this->request->getPost('email');
-    $newPassword = $this->request->getPost('newPassword');
-    $confirmPassword = $this->request->getPost('confirmPassword');
-
-    if (empty($email) || empty($newPassword) || empty($confirmPassword)) {
-        return $this->response->setJSON(['status' => 0, 'msg' => 'All fields are required.']);
-    }
-
-    if ($newPassword !== $confirmPassword) {
-        return $this->response->setJSON(['status' => 0, 'msg' => 'Passwords do not match.']);
-    }
-
-    $user = $this->UserModel->where('email', $email)->first();
+    public function changePassword($userId, $oldPassword, $newPassword)
+{
+    $user = $this->find($userId);
 
     if (!$user) {
-        return $this->response->setJSON(['status' => 0, 'msg' => 'User not found.']);
+        return ['status' => 0, 'msg' => 'User not found.'];
+    }
+
+    
+    if (!password_verify($oldPassword, $user['password'])) {
+        return ['status' => 0, 'msg' => 'Old password does not match.'];
+    }
+
+   
+    if (password_verify($newPassword, $user['password'])) {
+        return ['status' => 0, 'msg' => 'Please use a new password different from the old one.'];
     }
 
     $hashedPassword = password_hash($newPassword, PASSWORD_BCRYPT);
-    $this->UserModel->update($user['user_id'], [
-        'password' => $hashedPassword,
-        'updated_at' => date('Y-m-d H:i:s')
-    ]);
 
-    return $this->response->setJSON(['status' => 1, 'msg' => 'Password reset successfully.']);
+    $data = [
+        'password'    => $hashedPassword,
+        'modify_at'  => date('Y-m-d H:i:s')
+    ];
+
+    if ($this->update($userId, $data)) {
+        return ['status' => 1, 'msg' => 'Password updated successfully.'];
+    } else {
+        return ['status' => 0, 'msg' => 'Could not update the password. Please try again.'];
+    }
 }
-    
+
 }

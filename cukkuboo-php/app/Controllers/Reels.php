@@ -162,6 +162,7 @@ class Reels extends ResourceController
         ->orderBy('reels_id', 'DESC')
         ->findAll($pageSize, $offset);
     if($user){
+        $user_id = $user['user_id'];
      foreach ($reels as &$reel) {
         $reel['is_liked_by_user'] = $this->reelsModel->isLikedByUser($reel['reels_id'], $user_id);
      }

@@ -149,40 +149,40 @@ public function getMovieById($id)
     $authHeader = $this->request->getHeaderLine('Authorization');
     $user = $this->authService->getAuthenticatedUser($authHeader);
 
-    if (!$user) {
-        return $this->failUnauthorized('Invalid or missing token.');
-    }
-
     $getmoviesdetails = $this->moviedetail->getMovieDetailsById($id);
 
     if (!$getmoviesdetails) {
         return $this->failNotFound('Movie not found.');
     }
 
-    $user_id = $user['user_id']; 
-
     
-    $isInWatchLater = $this->moviedetail->isInWatchLater($user_id, $id);
-    $isInWatchHistory = $this->moviedetail->isInWatchHistory($user_id, $id);
-
-    $getmoviesdetails['is_in_watch_later'] = $isInWatchLater;
-    $getmoviesdetails['is_in_watch_history'] = $isInWatchHistory;
-
-    if (
-        strtolower($user['subscription']) === "free" &&
-        strtolower($user['user_type']) === "customer" &&
-        isset($getmoviesdetails['access']) &&
-        $getmoviesdetails['access'] != 1
-    ) {
+    if (!$user) {
         $getmoviesdetails['video'] = null;
+    } else {
+        $user_id = $user['user_id'];
+
+      
+        $getmoviesdetails['is_in_watch_later'] = $this->moviedetail->isInWatchLater($user_id, $id);
+        $getmoviesdetails['is_in_watch_history'] = $this->moviedetail->isInWatchHistory($user_id, $id);
+
+        
+        if (
+            strtolower($user['subscription']) === "free" &&
+            strtolower($user['user_type']) === "customer" &&
+            isset($getmoviesdetails['access']) &&
+            $getmoviesdetails['access'] != 1 // 1 = free
+        ) {
+            $getmoviesdetails['video'] = null;
+        }
     }
 
     return $this->response->setJSON([
         'success' => true,
         'message' => 'Movie details fetched successfully.',
-        'data' => $getmoviesdetails
+        'data'    => $getmoviesdetails
     ]);
 }
+
 
     public function deleteMovieDetails($mov_id)
     {

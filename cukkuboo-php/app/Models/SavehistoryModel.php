@@ -62,23 +62,14 @@ public function getCompletedHistoryById($historyId)
 }
 
 
-public function softDeleteHistory($userId, $movId)
+public function softDeleteHistoryById($saveHistoryId)
 {
-    $existing = $this->where([
-        'user_id' => $userId,
-        'mov_id'  => $movId
-    ])->first(); 
-
-    if ($existing && $existing['status'] != 9) {
-        return $this->update($existing['save_history_id'], [
-            'status'     => 9,
-            'modify_by'  => $userId,
-            'modify_on'  => date('Y-m-d H:i:s')
-        ]);
-    }
-
-    return false;
+    return $this->where('save_history_id', $saveHistoryId)
+                ->where('status !=', 9)
+                ->set(['status' => 9, 'modify_on' => date('Y-m-d H:i:s')])
+                ->update();
 }
+
 
 
 public function getCompletedHistory($userId)

@@ -52,19 +52,19 @@ class Savehistory extends ResourceController
 
     $pageIndex = (int) $this->request->getGet('pageIndex');
     $pageSize  = (int) $this->request->getGet('pageSize');
+    $search    = trim($this->request->getGet('search') ?? '');
+
     if ($pageSize <= 0) {
         $pageSize = 10;
     }
+
     $offset = $pageIndex * $pageSize;
 
-   
-    $builder = $this->model->getAllUsersCompletedHistory();
+    $builder = $this->model->getAllUsersCompletedHistory($search);
 
-    
     $totalBuilder = clone $builder;
     $totalCount = $totalBuilder->countAllResults(false); 
 
-    
     $history = $builder
         ->orderBy('save_history.created_by', 'DESC') 
         ->limit($pageSize, $offset)
@@ -85,15 +85,14 @@ public function getById($id)
     $user = $this->authService->getAuthenticatedUser($authHeader);
 
     if (!$user || !isset($user['user_id'])) {
-        return $this->respond(['success' => false, 'message' => 'Unauthorized user.'], 401);
+        return $this->respond(['success' => false, 'message' => 'Unauthorized user.']);
     }
 
     $userId = $user['user_id'];
-
-    $data = $this->model->getCompletedHistoryById($userId, $id);
+    $data = $this->model->getCompletedHistoryById($id);
 
     if (!$data) {
-        return $this->respond(['success' => false, 'message' => 'History entry not found.'], 404);
+        return $this->respond(['success' => false, 'message' => 'History entry not found.']);
     }
 
     return $this->respond([
@@ -102,6 +101,8 @@ public function getById($id)
         'data'    => $data
     ]);
 }
+
+
 public function deleteHistory($mov_id)
 {
     $authHeader = $this->request->getHeaderLine('Authorization');
@@ -157,23 +158,25 @@ public function clearAllHistory()
     $authHeader = $this->request->getHeaderLine('Authorization');
     $user = $this->authService->getAuthenticatedUser($authHeader);
 
-    if (!$user) {
+    if (!$user || !isset($user['user_id'])) {
         return $this->failUnauthorized('Invalid or missing token.');
     }
 
     $userId = $user['user_id'];
 
-    $cleared = $this->model->softDeleteAllHistoryByUser($userId);
+    $clearedCount = $this->model->softDeleteAllHistoryByUser($userId);
 
-    if ($cleared) {
+    if ($clearedCount > 0) {
         return $this->respond([
             'success' => true,
-            'message' => 'All history entries have been cleared (soft-deleted) successfully.',
-            'data' => []
+            'message' => 'All history entries have been cleared successfully.',
+            'data'    => ['cleared' => $clearedCount]
         ]);
     } else {
-        return $this->failNotFound('No active history entries found to delete.');
+        return $this->failNotFound('No history entries found to delete or already cleared.');
     }
 }
+
+
 
 }

@@ -102,7 +102,7 @@ public function getlist()
 }
 
 
- public function getByMovie($mov_id)
+ public function getById($id)
 {
     $authHeader = $this->request->getHeaderLine('Authorization');
     $user = $this->authService->getAuthenticatedUser($authHeader);
@@ -111,22 +111,23 @@ public function getlist()
         return $this->failUnauthorized('Invalid or missing token.');
     }
 
-    $entry = $this->watchLaterModel->getByMovieId($mov_id, $user['user_id']);
+    $entry = $this->watchLaterModel->getById($id); 
 
     if (!$entry) {
         return $this->respond([
             'success' => false,
-            'message' => "No watch later entry found for movie ID $mov_id.",
+            'message' => "No watch later entry found for ID $id.",
             'data' => []
         ]);
     }
 
     return $this->respond([
         'success' => true,
-        'message' => "Watch later entry found.",
+        'message' => "Watch later entry fetched successfully.",
         'data' => $entry
     ]);
 }
+
 public function getUserWatchLater($userId = null)
 {
     $authHeader = $this->request->getHeaderLine('Authorization');
@@ -190,16 +191,16 @@ public function clearAllHistory()
 
     $userId = $user['user_id'];
 
-    $cleared = $this->watchLaterModel->softDeleteAllHistoryByUser($userId);
+    $clearedCount = $this->watchLaterModel->softDeleteAllHistoryByUser($userId);
 
-    if ($cleared) {
+    if ($clearedCount > 0) {
         return $this->respond([
             'success' => true,
             'message' => 'All history entries have been cleared successfully.',
-            'data' => []
+            'data'    => ['cleared' => $clearedCount]
         ]);
     } else {
-        return $this->failNotFound('No history entries found to delete.');
+        return $this->failNotFound('No history entries found to delete or already cleared.');
     }
 }
 

@@ -35,25 +35,33 @@ class SavehistoryModel extends Model
 }
 
 
-    public function getAllUsersCompletedHistory()
+   public function getAllUsersCompletedHistory($search = '')
 {
-    return $this->db->table('save_history')
-        ->select('save_history.*, user.username, movies_details.title, movies_details.thumbnail')
-        ->join('user', 'user.user_id = save_history.user_id', 'left')
-        ->join('movies_details', 'movies_details.mov_id = save_history.mov_id', 'left');
+    $builder = $this->builder()
+        ->select('save_history.*, movies_details.title')
+        ->join('movies_details', 'movies_details.mov_id = save_history.mov_id', 'left')
+        ->where('save_history.status !=', 9);  
+
+    if (!empty($search)) {
+        $builder->like('movies_details.title', $search);
+    }
+
+    return $builder;
 }
 
 
-public function getCompletedHistoryById($userId, $movId)
+public function getCompletedHistoryById($historyId)
 {
-    return $this->db->table('save_history c')
-        ->select('c.mov_id, m.title, m.description, m.thumbnail, c.modify_on as created_by')
-        ->join('movies_details m', 'c.mov_id = m.mov_id')
-        ->where('c.user_id', $userId)
-        ->where('c.mov_id', $movId)
+    return $this->builder()
+        ->select('save_history.*, movies_details.title, movies_details.thumbnail, movies_details.release_date')
+        ->join('movies_details', 'movies_details.mov_id = save_history.mov_id', 'left')
+        ->where('save_history.save_history_id', $historyId)
+        ->where('save_history.status !=', 9)
         ->get()
-        ->getRow();
+        ->getRow();  
 }
+
+
 public function softDeleteHistory($userId, $movId)
 {
     $existing = $this->where([
@@ -84,12 +92,20 @@ public function getCompletedHistory($userId)
     }
 public function softDeleteAllHistoryByUser($userId)
 {
-    return $this->where('user_id', $userId)
-                ->where('status !=', 9)
-                ->set(['status' => 9])
-                ->update();
-}
+    $builder = $this->builder(); 
 
+    $builder->where('user_id', $userId)
+            ->where('status !=', 9)
+            ->set([
+                'status'     => 9,
+                'modify_on'  => date('Y-m-d H:i:s'),
+                'modify_by'  => $userId
+            ]);
+
+    $builder->update();
+
+    return $builder->db()->affectedRows();
+}
 
 }
 

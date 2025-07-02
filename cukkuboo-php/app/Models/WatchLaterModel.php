@@ -66,15 +66,15 @@ class WatchLaterModel extends Model
         return $builder->countAllResults();
     }
 
-    public function getByMovieId($mov_id, $user_id)
+    public function getById($watchLaterId)
 {
-    return $this->select('movies_details.*')
+    return $this->select('watch_later.*, movies_details.title, movies_details.thumbnail, movies_details.release_date')
                 ->join('movies_details', 'movies_details.mov_id = watch_later.mov_id')
-                ->where('watch_later.user_id', $user_id)
-                ->where('watch_later.mov_id', $mov_id)
+                ->where('watch_later.watch_later_id', $watchLaterId)
                 ->where('watch_later.status !=', 9)
                 ->first();
 }
+
 public function getWatchLaterByToken($userId)
 {
     return $this->db->table($this->table)
@@ -90,11 +90,21 @@ public function softDeleteById($watchLaterId)
     return $this->update($watchLaterId, ['status' => 9]);
 }
 public function softDeleteAllHistoryByUser($userId)
-    {
-        return $this->where('user_id', $userId)
-                    ->where('status !=', 9)
-                    ->set(['status' => 9])
-                    ->update();
-    }
+{
+    $builder = $this->builder(); 
+
+    $builder->where('user_id', $userId)
+            ->where('status !=', 9)
+            ->set([
+                'status'     => 9,
+                'modify_on'  => date('Y-m-d H:i:s'),
+                'modify_by'  => $userId
+            ]);
+
+    $builder->update();
+
+    return $builder->db()->affectedRows();
+}
+
 
 }

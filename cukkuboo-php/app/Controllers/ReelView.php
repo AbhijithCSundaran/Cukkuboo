@@ -30,7 +30,7 @@ class ReelView extends ResourceController
     }
 
     $data = $this->request->getJSON(true);
-    $userId = $user['user_id']; // ✅ Get user_id from token only
+    $userId = $user['user_id']; 
     $reelId = $data['reels_id'] ?? null;
     $status = $data['status'] ?? null;
 

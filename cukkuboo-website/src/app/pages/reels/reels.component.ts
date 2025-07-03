@@ -59,7 +59,6 @@ export class ReelsComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onScroll(event: any) {
-    console.log('Scrolled - loading more reels...');
     this.pageIndex++;
     this.loadReels(this.pageIndex, this.pageSize, this.searchText);
   }
@@ -78,13 +77,11 @@ export class ReelsComponent implements OnInit, AfterViewInit, OnDestroy {
             views: Number(data.views) || 0
           })) || [];
 
-          console.log('Reels loaded:', newReels);
-
           if (newReels.length) {
             this.reels = [...this.reels, ...newReels];
             this.videoStates.push(...new Array(newReels.length).fill(true));
             this.mutedStates.push(...new Array(newReels.length).fill(true));
-            this.likedStates.push(...new Array(newReels.length).fill(false));
+            this.likedStates.push(...new Array(newReels.length).fill(false)); // set from API if available
           } else {
             this.stopInfiniteScroll = true;
           }
@@ -97,13 +94,35 @@ export class ReelsComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
+  toggleLike(reel: any, index: number): void {
+    const alreadyLiked = this.likedStates[index];
+    const model = {
+      reels_id: reel.id,
+      status: alreadyLiked ? 2 : 1
+    };
+
+    this.movieService.likeReel(model).subscribe({
+      next: (res) => {
+        if (alreadyLiked) {
+          reel.likes = Math.max(0, reel.likes - 1);
+        } else {
+          reel.likes += 1;
+        }
+        this.likedStates[index] = !alreadyLiked;
+        console.log(`Reel ${alreadyLiked ? 'disliked' : 'liked'}:`, res);
+      },
+      error: (err) => {
+        console.error('Error toggling like:', err);
+      }
+    });
+  }
+
   onSearchChange() {
     clearTimeout(this.searchTimeout);
     this.searchTimeout = setTimeout(() => {
       this.pageIndex = 0;
       this.stopInfiniteScroll = false;
       this.reels = [];
-      console.log('Search text changed:', this.searchText);
       this.loadReels(this.pageIndex, this.pageSize, this.searchText);
     }, 400);
   }
@@ -219,25 +238,7 @@ export class ReelsComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  toggleLike(reel: any): void {
-    const model = {
-      reels_id: reel.id,
-      status: 1
-    };
-
-    this.movieService.likeReel(model).subscribe({
-      next: (res) => {
-        reel.likes += 1;
-        console.log('Reel liked:', res);
-      },
-      error: (err) => {
-        console.error('Like failed:', err);
-      }
-    });
-  }
-
   onShare(index: number): void {
-    // TODO: Share logic here
     console.log('Share clicked for reel index:', index);
   }
 

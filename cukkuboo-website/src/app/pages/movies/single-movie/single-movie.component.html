@@ -1,7 +1,7 @@
 @if(movieData) {
 <!-- Banner Section -->
 <section class="p-0 gen-banner-movies single">
-  <div class="item p-5 position-relative" [ngStyle]="{ 'background-image': 'url(' +imageUrl+ movieData.banner + ')' }">
+  <div class="item p-5 position-relative" [ngStyle]="{ 'background-image': 'url(' + imageUrl + movieData.banner + ')' }">
     <div class="position-relative d-flex align-items-center h-100">
       <div class="col-12 col-xl-8">
         <div class="gen-movie-info">
@@ -20,6 +20,7 @@
               <span class="text p-1 play-movie">Play Movie</span>
             </a>
           </div>
+
           <div class="mt-2 mt-sm-0 ms-sm-3 gen-btn-container d-block d-xl-none" (click)="playVideo(movieData.trailer)">
             <a class="gen-button gen-button-outline py-2 px-3">
               <i class="fas fa-play"></i><span class="text">Watch Trailer</span>
@@ -44,6 +45,7 @@
       </div>
     </div>
 
+    <!-- Video Player -->
     <js-player *ngIf="selectedVideo" class="video_player" (onClose)="selectedVideo = ''"
       [videoSrc]="videoUrl + selectedVideo">
     </js-player>
@@ -65,9 +67,9 @@
 
       <!-- Watch Later + Share -->
       <div class="w-100 d-flex flex-wrap gap-2 my-3">
-        <button class="gen-button gen-button-outline py-1 px-3" (click)="addToWatchLater()">
+        <button class="gen-button gen-button-outline py-1 px-3" (click)="toggleWatchLater()">
           <i [class]="isInWatchLater ? 'fas fa-clock' : 'far fa-clock'"></i>
-          {{ isInWatchLater ? 'Added to Watch Later' : 'Watch Later' }}
+          {{ isInWatchLater ? 'Remove from Watch Later' : 'Watch Later' }}
         </button>
         <button class="gen-button gen-button-outline py-1 px-3" (click)="shareMovie()">
           <i class="fas fa-share-alt"></i> Share
@@ -94,5 +96,43 @@
       </div>
     </div>
   </div>
+</section>
+
+<!-- Suggested movies -->
+<section class="px-5 pt-0 pb-3">
+  <div class="gen-more-like">
+    <h5 class="gen-more-title mb-3">More Like This</h5>
+    @if(suggetionList.length){
+    <div class="row col-12 mb-3">
+      <div class="col-xl-3 col-lg-4 col-md-6 mb-2" *ngFor="let movie of suggetionList">
+        <div class="gen-carousel-movies-style-3 movie-grid h-100 style-3" [routerLink]="['/movies', movie.mov_id]">
+          <div class="gen-movie-contain h-100 d-flex flex-column">
+            <div class="gen-movie-img">
+              <img [src]="imageUrl + movie.thumbnail" alt="{{ movie.title }} thumbnail" />
+              <div class="gen-movie-action">
+                <a [routerLink]="['/movies', movie.mov_id]" [queryParams]="{ 'ap': 1 }" class="gen-button playBut">
+                  <i class="fa fa-play"></i>
+                </a>
+              </div>
+            </div>
+            <div class="gen-info-contain">
+              <div class="gen-movie-info">
+                <h3><a>{{ movie.title }}</a></h3>
+              </div>
+              <div class="gen-movie-meta-holder">
+                <ul>
+                  <li>{{ movie.duration || '0m 0s' }}</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    }@else {
+    <p class="py-3">No related movies...</p>
+    }
+  </div>
+  <div *ngIf="!stopInfiniteScroll" infiniteScroll (scrolled)="onScroll()" style="height: 1px;"></div>
 </section>
 }

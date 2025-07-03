@@ -163,16 +163,16 @@ public function clearAllHistory()
 
     $userId = $user['user_id'];
 
-    $clearedCount = $this->model->softDeleteAllHistoryByUser($userId);
+    $clearedCount = $this->model->hardDeleteAllHistoryByUser($userId);
 
     if ($clearedCount > 0) {
         return $this->respond([
             'success' => true,
-            'message' => 'All history entries have been cleared successfully.',
+            'message' => 'All history entries have been permanently deleted.',
             'data'    => ['cleared' => $clearedCount]
         ]);
     } else {
-        return $this->failNotFound('No history entries found to delete or already cleared.');
+        return $this->failNotFound('No history entries found to delete.');
     }
 }
 

@@ -131,7 +131,7 @@ body.sidebar-open {
  
       li a {
         display: block;
-        padding: 10px 0;
+        padding: 5px 0;
         color: #333;
       }
     }
@@ -145,8 +145,24 @@ body.sidebar-open {
   header#gen-header .gen-bottom-header .navbar .navbar-nav li a {
     width: 45%;
     display: inline-block;
-    padding: 15px;
+    padding: 13px;
   }
+  .user-subscribe{
+  background: #e50916;
+  color: white;
+    padding: 10px 8px !important;
 }
+.subscribe-btn{
+   width: 100% !important;
+}
+}
+.user-icon{
+    padding: 13px;
+    font-size: 20px;
+}
+.myaccount{
+  padding:0px !important;
+}
+
  
  

@@ -22,12 +22,11 @@
                 <i class="fa-solid fa-bell search" (click)="toggleNotificationDropdown()"></i>
                 <span class="notification-badge" *ngIf="notificationCount > 0">{{ notificationCount }}</span>
                 <div class="notification-dropdown" *ngIf="showNotificationDropdown">
-                  <a *ngFor="let item of notifications"
-                     (click)="openNotification(item.notification_id)"
-                     class="dropdown-item"
-                     style="cursor: pointer; display: block; padding: 10px 12px; color: #fff; border-bottom: 1px solid rgba(255,255,255,0.1); text-decoration: none;">
+                  <a *ngFor="let item of notifications" (click)="openNotification(item.notification_id)"
+                    class="dropdown-item"
+                    style="cursor: pointer; display: block; padding: 10px 12px; color: #fff; border-bottom: 1px solid rgba(255,255,255,0.1); text-decoration: none;">
                     <div style="font-weight: 600;">{{ item.title }}</div>
-                    
+
                   </a>
                 </div>
               </div>
@@ -42,27 +41,52 @@
             <div class="mobile-sidebar d-lg-none" [class.open]="menuOpen">
               <div id="gen-menu-contain" class="gen-menu-contain w-100">
                 <ng-container *ngIf="isSignedIn">
-                  <div class="gen-account-holder d-flex align-items-center justify-content-between px-3 py-3 border-bottom"
-                       (click)="showUserDropdown = !showUserDropdown">
+                  <div class="gen-account-holder d-flex align-items-center justify-content-between px-3 py-3 "
+                    (click)="showUserDropdown = !showUserDropdown">
                     <div class="d-flex align-items-center">
-                      <i class="fa fa-user me-3 p-1 user-icon"></i>
-                      <span class="user-title">{{ username }}</span>
+                      <!-- Icon -->
+                      <div class="me-3">
+                        <i class="fa fa-user user-icon"></i>
+                      </div>
+
+                      <!-- Username and My Account (stacked) -->
+                      <div class="d-flex flex-column">
+                        <span class="user-title">{{ username }}</span>
+                        <a routerLink="/profile" (click)="closeMenu()" class="myaccount">
+                          My Account
+                        </a>
+                      </div>
                     </div>
-                    <i class="fa fa-caret-down"></i>
+
                   </div>
 
-                  <div class="gen-account-menu" [class.gen-form-show]="showUserDropdown">
+                  <!-- <div class="gen-account-menu" [class.gen-form-show]="showUserDropdown">
                     <ul class="col-12 px-3">
                       <li>
                         <a routerLink="/profile" (click)="closeMenu()">
-                          <i class="fa fa-user"></i> Profile
+                          <i class="fa fa-user p-2"></i> My Account
                         </a>
                       </li>
                     </ul>
-                  </div>
+                  </div> -->
                 </ng-container>
 
                 <ul id="gen-main-menu" class="navbar-nav">
+
+                  <!-- ✅ SUBSCRIBE for signed-in users (top position) -->
+                  <ng-container *ngIf="isSignedIn">
+                    <li class="menu-item ml-3">
+                      <a routerLink="/subscribe" class="gen-button py-0 text-center subscribe-btn"
+                        (click)="closeMenu()">
+                        <div class="gen-button-block">
+                          <span class="gen-button-line-left"></span>
+                          <span class="gen-button-text">Subscribe</span>
+                        </div>
+                      </a>
+                    </li>
+                  </ng-container>
+
+                  <!-- Static nav items -->
                   <li class="menu-item" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
                     <a routerLink="/" (click)="closeMenu()">Home</a>
                   </li>
@@ -73,28 +97,32 @@
                     <a routerLink="/reels" (click)="closeMenu()">Reels</a>
                   </li>
 
+                  <!-- Sign In and Subscribe for GUESTS (subscribe below sign in) -->
                   <ng-container *ngIf="!isSignedIn">
-                    <li class="nav-item mt-3">
+                    <li class="nav-item">
                       <a routerLink="/signin" class="nav-link" (click)="closeMenu()">Sign In</a>
+                    </li>
+
+                    <!-- ✅ SUBSCRIBE for non-logged-in users (after Sign In) -->
+                    <li class="menu-item ml-3">
+                      <a routerLink="/subscribe" class="gen-button py-0 text-center subscribe-btn"
+                        (click)="closeMenu()">
+                        <div class="gen-button-block">
+                          <span class="gen-button-line-left"></span>
+                          <span class="gen-button-text">Subscribe</span>
+                        </div>
+                      </a>
                     </li>
                   </ng-container>
 
-                  <li class="menu-item ml-3">
-                    <a routerLink="/subscribe" class="gen-button py-0 text-center" (click)="closeMenu()">
-                      <div class="gen-button-block">
-                        <span class="gen-button-line-left"></span>
-                        <span class="gen-button-text">Subscribe</span>
-                      </div>
-                    </a>
-                  </li>
-
+                  <!-- Authenticated user links -->
                   <ng-container *ngIf="isSignedIn">
-                    <li class="nav-item mt-3">
+                    <li class="nav-item">
                       <a routerLink="/watch-later" class="nav-link" (click)="closeMenu()">
                         <i class="fa fa-clock mr-1"></i> Watch Later
                       </a>
                     </li>
-                    <li class="nav-item mt-1">
+                    <li class="nav-item">
                       <a routerLink="/history" class="nav-link" (click)="closeMenu()">
                         <i class="fa fa-history mr-1"></i> History
                       </a>
@@ -105,7 +133,9 @@
                       </a>
                     </li>
                   </ng-container>
+
                 </ul>
+
               </div>
             </div>
 
@@ -179,12 +209,11 @@
                 <i class="fa-solid fa-bell search" (click)="toggleNotificationDropdown()"></i>
                 <span class="notification-badge" *ngIf="notificationCount > 0">{{ notificationCount }}</span>
                 <div class="notification-dropdown" *ngIf="showNotificationDropdown">
-                  <a *ngFor="let item of notifications"
-                     (click)="openNotification(item.notification_id)"
-                     class="dropdown-item"
-                     style="cursor: pointer; display: block; padding: 10px 12px; color: #fff; border-bottom: 1px solid rgba(255,255,255,0.1); text-decoration: none;">
+                  <a *ngFor="let item of notifications" (click)="openNotification(item.notification_id)"
+                    class="dropdown-item"
+                    style="cursor: pointer; display: block; padding: 10px 12px; color: #fff; border-bottom: 1px solid rgba(255,255,255,0.1); text-decoration: none;">
                     <div style="font-weight: 600;">{{ item.title }}</div>
-                    
+
                   </a>
                 </div>
               </div>

@@ -1,0 +1,151 @@
+.notifications-container {
+  display: flex;
+  height: 100vh;
+  color: white;
+  background-color: #000;
+
+  .notifications-list {
+    width: 30%;
+    background: #111;
+    border-right: 1px solid #222;
+    display: flex;
+    flex-direction: column;
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem;
+      font-size: 1.2rem;
+      background: #000;
+      border-bottom: 1px solid #222;
+      color: white;
+
+      .mark-toggle {
+        background: transparent;
+        border: 1px solid white;
+        color: white;
+        padding: 0.3rem 0.6rem;
+        border-radius: 4px;
+        font-size: 0.85rem;
+        cursor: pointer;
+
+        &:hover {
+          background-color: red;
+          color: black;
+          border-color: red;
+        }
+      }
+    }
+
+    .scrollable-list {
+      overflow-y: auto;
+      flex: 1;
+
+      .notification-item {
+        padding: 1rem;
+        border-bottom: 1px solid #222;
+        cursor: pointer;
+        transition: background 0.2s;
+
+        &.read {
+          background-color: #1a1a1a;
+          color: #aaa;
+        }
+
+        &.active {
+          background-color: #222;
+          border-left: 4px solid red;
+        }
+
+        .title-wrapper {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+
+          .title {
+            font-weight: bold;
+            font-size: 1rem;
+          }
+
+          .dot {
+            width: 10px;
+            height: 10px;
+            background-color: red;
+            border-radius: 50%;
+            display: inline-block;
+            margin-left: 0.5rem;
+          }
+        }
+
+        .date {
+          font-size: 0.8rem;
+          color: #888;
+          margin-top: 0.3rem;
+        }
+
+        .action-buttons {
+          display: flex;
+          gap: 0.5rem;
+          margin-top: 0.5rem;
+
+          button {
+            font-size: 0.75rem;
+            padding: 0.2rem 0.5rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+          }
+
+          .read-btn {
+            background-color: red;
+            color: white;
+
+            &:hover {
+              background-color: darkred;
+            }
+          }
+
+          .delete-btn {
+            background-color: transparent;
+            color: white;
+            border: 1px solid white;
+
+            &:hover {
+              background-color: red;
+              color: black;
+              border-color: red;
+            }
+          }
+        }
+
+        &:hover {
+          background-color: #222;
+        }
+      }
+    }
+  }
+
+  .notification-detail {
+    flex: 1;
+    padding: 2rem;
+
+    .detail-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      .detail-title {
+        font-size: 2rem;
+        color: white;
+      }
+    }
+
+    .detail-body {
+      margin-top: 1.5rem;
+      font-size: 1.1rem;
+      line-height: 1.6;
+      color: #ddd;
+    }
+  }
+}

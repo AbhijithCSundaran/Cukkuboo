@@ -5,15 +5,7 @@ import { MovieService } from '../../services/movie.service';
 import { environment } from '../../../environments/environment';
 
 interface HistoryItem {
-  mov_id: string;
-  title: string;
-  description: string;
-  thumbnail: string;
-  completed_at: string;
-}
-
-interface ProcessedHistoryItem {
-  id: number;
+  save_history_id: number;
   mov_id: string;
   title: string;
   description: string;
@@ -29,7 +21,7 @@ interface ProcessedHistoryItem {
   styleUrls: ['./history.component.scss']
 })
 export class HistoryComponent implements OnInit {
-  historyList: ProcessedHistoryItem[] = [];
+  historyList: HistoryItem[] = [];
   imageUrl: string = environment.apiUrl + 'uploads/images/';
 
   constructor(private movieService: MovieService) {}
@@ -39,42 +31,60 @@ export class HistoryComponent implements OnInit {
   }
 
   fetchHistory(): void {
-    console.log('Calling getHistory API...');
-
     this.movieService.getHistory().subscribe({
       next: (res) => {
-        console.log('History API Success:', res);
-
         if (res?.success && Array.isArray(res.data)) {
-          const rawData: HistoryItem[] = res.data;
-
-          this.historyList = rawData.map((item) => ({
-            id: Number(item.mov_id),
+          this.historyList = res.data.map((item: any) => ({
+            save_history_id: item.save_history_id,
             mov_id: item.mov_id,
             title: item.title,
             description: item.description,
             thumbnail: this.imageUrl + item.thumbnail,
             completed_at: item.completed_at
           }));
-
-          console.log('Processed historyList:', this.historyList);
         } else {
-          console.warn('No valid history data.');
           this.historyList = [];
         }
       },
       error: (err) => {
-        console.error('History API Error:', err);
+        console.error('History fetch error:', err);
         this.historyList = [];
       }
     });
   }
 
   clearHistory(): void {
-    this.historyList = [];
+    if (!confirm('Are you sure you want to clear all history?')) return;
+
+    this.movieService.clearAllHistory().subscribe({
+      next: (res) => {
+        if (res?.success) {
+          this.historyList = [];
+          alert('History cleared.');
+        }
+      },
+      error: (err) => {
+        console.error('Clear history error:', err);
+      }
+    });
   }
 
   removeItem(index: number): void {
-    this.historyList.splice(index, 1);
+    const item = this.historyList[index];
+    if (!item || !item.save_history_id) return;
+
+    if (!confirm(`Remove "${item.title}" from history?`)) return;
+
+    this.movieService.deleteHistoryItem(item.save_history_id).subscribe({
+      next: (res) => {
+        if (res?.success) {
+          this.historyList.splice(index, 1);
+          alert('Item deleted.');
+        }
+      },
+      error: (err) => {
+        console.error('Delete item error:', err);
+      }
+    });
   }
 }

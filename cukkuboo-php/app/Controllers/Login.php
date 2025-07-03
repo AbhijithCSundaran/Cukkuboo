@@ -50,7 +50,7 @@ class Login extends BaseController
     if (empty($data['fcm_token'])) {
     $this->loginModel->update($user['user_id'], $updateData);
         return $this->response->setJSON([
-            'status' => true,
+            'success' => true,
             'message' => 'Login successful (type 1)',
             'data' => [
             'user_id' =>  $user['user_id'],
@@ -75,7 +75,7 @@ class Login extends BaseController
     
     $this->loginModel->update($user['user_id'], $updateData);
     return $this->response->setJSON([
-        'status' => true,
+        'success' => true,
         'message' => 'Login successful (type 2)',
         'data' => [
             'user_id' =>  $user['user_id'],

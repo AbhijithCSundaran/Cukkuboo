@@ -60,7 +60,7 @@ export class SignInComponent {
         next: (response) => {
           console.log('response from login:', response);
 
-          if (response.status) {
+          if (response.success) {
             if (response.data.user_type === 'Customer') {
               localStorage.setItem('t_k', response.data?.jwt_token);
               localStorage.setItem('u_n', response.data?.username || 'User');

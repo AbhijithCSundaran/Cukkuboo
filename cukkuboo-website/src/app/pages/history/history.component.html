@@ -52,5 +52,24 @@
         <p class="lead">No watch history available.</p>
       </div>
     </ng-template>
+
+    <!-- Pagination -->
+    <div *ngIf="totalItems > pageSize" class="d-flex justify-content-center mt-4">
+      <nav>
+        <ul class="pagination pagination-sm mb-0">
+          <li class="page-item" [class.disabled]="pageIndex === 0">
+            <button class="page-link" (click)="prevPage()">Previous</button>
+          </li>
+          <li class="page-item disabled">
+            <span class="page-link">
+              Page {{ pageIndex + 1 }} of {{ totalPages() }}
+            </span>
+          </li>
+          <li class="page-item" [class.disabled]="(pageIndex + 1) * pageSize >= totalItems">
+            <button class="page-link" (click)="nextPage()">Next</button>
+          </li>
+        </ul>
+      </nav>
+    </div>
   </div>
 </div>

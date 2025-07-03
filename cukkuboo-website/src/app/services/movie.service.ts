@@ -51,9 +51,15 @@ saveHistory(model: any): Observable<any> {
   return this.http.post(this.apiUrl + 'savehistory/save', body, { headers: this.headers });
 }  
 
-getHistory(): Observable<any> {
-return this.http.get(this.apiUrl + 'savehistory/history', { headers: this.headers });
+getHistory(pageIndex: number = 0, pageSize: number = 10, searchText: string = ''): Observable<any> {
+  const params = {
+    page: pageIndex.toString(),
+    size: pageSize.toString(),
+    search: searchText
+  };
+  return this.http.get(this.apiUrl + 'savehistory/user', { headers: this.headers, params });
 }
+
 
 deleteHistoryItem(historyId: number): Observable<any> {
   return this.http.delete(this.apiUrl + 'savehistory/delete/' + historyId, {
@@ -76,7 +82,7 @@ getWatchLaterList(pageIndex: number = 0, pageSize: number = 10, searchText: stri
     size: pageSize.toString(),
     search: searchText
   };
-  return this.http.get(this.apiUrl + 'watch/list', { headers: this.headers, params });
+  return this.http.get(this.apiUrl + 'watch/user', { headers: this.headers, params });
 }
 
 

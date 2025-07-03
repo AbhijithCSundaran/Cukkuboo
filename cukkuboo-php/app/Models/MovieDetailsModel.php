@@ -200,20 +200,21 @@ public function getMostWatchedMovies()
 
 public function isInWatchHistory($user_id, $mov_id)
 {
-    return $this->db->table('video')
+    return $this->db->table('save_history')
         ->where('user_id', $user_id)
         ->where('mov_id', $mov_id)
-        ->where('status', 1)
+        ->where('status', 1)  
         ->countAllResults() > 0;
 }
 public function isInWatchLater($user_id, $mov_id)
 {
-    return $this->db->table('video')
+    return $this->db->table('watch_later')
         ->where('user_id', $user_id)
         ->where('mov_id', $mov_id)
-        ->where('status', 2)
+        ->where('status', 1)  
         ->countAllResults() > 0;
 }
+
 
 }
 

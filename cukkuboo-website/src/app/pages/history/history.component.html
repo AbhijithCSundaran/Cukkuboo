@@ -20,7 +20,6 @@
               alt="{{ item.title }}"
               style="height: 150px; object-fit: cover;"
             />
-            <!-- Watched on overlay -->
             <div class="position-absolute bottom-0 start-0 w-100 px-2 py-1 bg-black bg-opacity-75 text-white small">
               Watched on: <strong>{{ item.completed_at | date: 'shortDate' }}</strong>
             </div>

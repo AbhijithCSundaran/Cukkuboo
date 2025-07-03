@@ -96,7 +96,7 @@ markAllAsRead() {
 
 
  deleteNotification(notification: any) {
-  console.log('Delete clicked for notification:', notification); // log the notification object
+  console.log('Delete clicked for notification:', notification); 
 
   const confirmDelete = confirm(`Are you sure you want to delete "${notification.title}"?`);
   if (!confirmDelete) {
@@ -108,11 +108,9 @@ markAllAsRead() {
     next: () => {
       console.log(`Notification with ID ${notification.id} deleted successfully.`);
 
-      // Update the local list
       this.notifications = this.notifications.filter(n => n.id !== notification.id);
       console.log('Updated notifications list:', this.notifications);
 
-      // Deselect if deleted item was selected
       if (this.selectedNotification?.id === notification.id) {
         console.log('Deleted notification was selected. Clearing selectedNotification.');
         this.selectedNotification = null;

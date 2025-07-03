@@ -12,7 +12,6 @@
 
             <!-- Toggle Button (Mobile) -->
             <div class="d-flex d-lg-none align-items-center">
-
               <!-- Search Icon -->
               <a routerLink="/movies" [queryParams]="{ search: 1 }" (click)="closeMenu()">
                 <i class="fa-solid fa-magnifying-glass search"></i>
@@ -24,10 +23,11 @@
                 <span class="notification-badge" *ngIf="notificationCount > 0">{{ notificationCount }}</span>
                 <div class="notification-dropdown" *ngIf="showNotificationDropdown">
                   <a *ngFor="let item of notifications"
-                     (click)="goToNotifications()"
+                     (click)="openNotification(item.notification_id)"
                      class="dropdown-item"
-                     style="cursor: pointer; display: block; padding: 8px; color: #fff;">
-                    {{ item }}
+                     style="cursor: pointer; display: block; padding: 10px 12px; color: #fff; border-bottom: 1px solid rgba(255,255,255,0.1); text-decoration: none;">
+                    <div style="font-weight: 600;">{{ item.title }}</div>
+                    
                   </a>
                 </div>
               </div>
@@ -180,10 +180,11 @@
                 <span class="notification-badge" *ngIf="notificationCount > 0">{{ notificationCount }}</span>
                 <div class="notification-dropdown" *ngIf="showNotificationDropdown">
                   <a *ngFor="let item of notifications"
-                     (click)="goToNotifications()"
+                     (click)="openNotification(item.notification_id)"
                      class="dropdown-item"
-                     style="cursor: pointer; display: block; padding: 8px; color: #fff;">
-                    {{ item }}
+                     style="cursor: pointer; display: block; padding: 10px 12px; color: #fff; border-bottom: 1px solid rgba(255,255,255,0.1); text-decoration: none;">
+                    <div style="font-weight: 600;">{{ item.title }}</div>
+                    
                   </a>
                 </div>
               </div>

@@ -47,7 +47,7 @@ class Savehistory extends ResourceController
     $user = $this->authService->getAuthenticatedUser($authHeader);
 
     if (!$user || !isset($user['user_id'])) {
-        return $this->respond(['success' => false, 'message' => 'Unauthorized user.'], 401);
+        return $this->respond(['success' => false, 'message' => 'Unauthorized user.']);
     }
 
     $pageIndex = (int) $this->request->getGet('pageIndex');
@@ -109,7 +109,7 @@ public function deleteHistory($saveHistoryId)
     $user = $this->authService->getAuthenticatedUser($authHeader);
 
     if (!$user || !isset($user['user_id'])) {
-        return $this->respond(['status' => false, 'message' => 'Unauthorized user.'], 401);
+        return $this->respond(['success' => false, 'message' => 'Unauthorized user.']);
     }
 
     $deleted = $this->model->softDeleteHistoryById($saveHistoryId);

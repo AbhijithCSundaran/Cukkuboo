@@ -17,7 +17,7 @@ $routes->post('user/change-password', 'User::changePassword');
 //User 
 
 $routes->post('user/register','User::registerFun');
-$routes->delete('user/delete/(:any)', 'User::deleteUser/$1');
+$routes->post('user/delete/(:any)', 'User::deleteUser/$1');
 $routes->get('user/profile/(:num)', 'User::getUserDetailsById/$1');
 $routes->get('user/profile', 'User::getUserDetailsById');
 $routes->get('user/list', 'User::getUserList');

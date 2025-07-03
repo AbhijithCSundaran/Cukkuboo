@@ -148,25 +148,40 @@ class User extends ResourceController
 
 
  public function deleteUser($user_id)
-    {
-        $authHeader = $this->request->getHeaderLine('Authorization');
-        $user = $this->authService->getAuthenticatedUser($authHeader);
-        if(!$user) 
-            return $this->failUnauthorized('Invalid or missing token.');
-
-        $status = 9;
-
-        // Call model method to update the status
-        if ($this->UserModel->deleteUserById($status, $user_id)) {
-            return $this->respond([
-                'success' => true,
-                'message' => "User with ID $user_id marked as deleted successfully.",
-                'data'=>[]
-            ]);
-        } else {
-            return $this->failServerError("Failed to delete user with ID $user_id.");
-        }
+{
+    $authHeader = $this->request->getHeaderLine('Authorization');
+    $user = $this->authService->getAuthenticatedUser($authHeader);
+    
+    if (!$user || $user['user_id'] != $user_id) {
+        return $this->failUnauthorized('Unauthorized access or invalid token.');
     }
+
+    $password = $this->request->getJSON()->password;
+    if (empty($password)) {
+        return $this->failValidationError('Password is required to delete the account.');
+    }
+
+    $userData = $this->UserModel->find($user_id);
+
+    if (!$userData) {
+        return $this->failNotFound("User not found.");
+    }
+
+    if (!password_verify($password, $userData['password'])) {
+        return $this->failUnauthorized("Incorrect password. Account not deleted.");
+    }
+    $status = 9;
+    if ($this->UserModel->deleteUserById($status, $user_id)) {
+        return $this->respond([
+            'success' => true,
+            'message' => "User with ID $user_id has been deleted successfully.",
+            'data' => []
+        ]);
+    } else {
+        return $this->failServerError("Failed to delete user with ID $user_id.");
+    }
+}
+
 
 
 

@@ -49,11 +49,10 @@ class UserModel extends Model
         return $this->update($userId, $data);
     }
 
-   public function deleteUserById($status, $userId)
-		{
-			
-return $this->db->query("update user set status = '".$status."', updated_at=NOW() where user_id = '".$userId."'");
-		}
+    public function deleteUserById($status, $user_id)
+    {
+        return $this->where('user_id', $user_id)->set(['status' => $status])->update();
+    }
 
     public function getUserById($userId)
     {

@@ -81,21 +81,9 @@ public function getCompletedHistory($userId)
                     ->orderBy('save_history.created_by', 'DESC')
                     ->findAll();
     }
-public function softDeleteAllHistoryByUser($userId)
+public function hardDeleteAllHistoryByUser($userId)
 {
-    $builder = $this->builder(); 
-
-    $builder->where('user_id', $userId)
-            ->where('status !=', 9)
-            ->set([
-                'status'     => 9,
-                'modify_on'  => date('Y-m-d H:i:s'),
-                'modify_by'  => $userId
-            ]);
-
-    $builder->update();
-
-    return $builder->db()->affectedRows();
+    return $this->where('user_id', $userId)->delete();
 }
 
 }

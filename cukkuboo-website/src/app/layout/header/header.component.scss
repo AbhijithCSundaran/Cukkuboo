@@ -80,16 +80,31 @@
 .user-title {
   font-weight: 600;
   font-size: 1rem;
+  padding: 8px;
+  
 }
 header#gen-header .gen-bottom-header .navbar .navbar-nav li a {
         width: 45%;
         display: inline-block;
-        padding: 15px;
+        padding: 12px;
     }
 
 }
 .user-icon{
   border: 2px solid white;
     border-radius: 30px;
+    padding: 15px;
+    font-size: 25px;
 }
+.user-subscribe{
+  padding: 2px !important;
+  //  margin-top: 2px;
+  font-size: 0.85rem;
+  color: #ccc;
+  margin-left: 5px;
 
+}
+.user-subscribe span{
+      background: #e50916;
+    padding: 5px;
+}

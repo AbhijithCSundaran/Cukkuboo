@@ -158,9 +158,10 @@ class Reels extends ResourceController
 
     $total = $builder->countAllResults(false);
 
-    $reels = $builder
-        ->orderBy('reels_id', 'DESC')
-        ->findAll($pageSize, $offset);
+    $reels = $builder->findAll();
+    shuffle($reels);
+    $reels = array_slice($reels, $offset, $pageSize);
+
     if($user){
         $user_id = $user['user_id'];
      foreach ($reels as &$reel) {

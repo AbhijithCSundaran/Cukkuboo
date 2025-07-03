@@ -32,7 +32,7 @@ export class ProfileComponent implements OnInit {
   hideConfirm = true;
   profileForm!: FormGroup;
   userId: number | null = null;
-  showProfileInfo: boolean = true; 
+  showProfileInfo: boolean = true;
   changePasswordForm!: FormGroup;
   initialFormValue: any;
 
@@ -46,6 +46,8 @@ export class ProfileComponent implements OnInit {
 
   ngOnInit(): void {
 
+    const savedView = localStorage.getItem('showProfileInfo');
+    this.showProfileInfo = savedView !== 'false';
     this.profileForm = this.fb.group({
       username: ['', [Validators.required]],
       email: ['', [Validators.required, ValidationService.emailValidator]],
@@ -140,10 +142,12 @@ export class ProfileComponent implements OnInit {
 
   toggleChangePassword(): void {
     this.showProfileInfo = false;
+     localStorage.setItem('showProfileInfo', 'false');
   }
 
   backToProfile(): void {
     this.showProfileInfo = true;
+    localStorage.setItem('showProfileInfo', 'true');
   }
 
 

@@ -78,3 +78,15 @@ select.form-select {
   background-color: #e50916;
   cursor: not-allowed;
 }
+
+.field-space{
+     margin-bottom: 0.5rem !important;
+}
+.field-space .mat-form-field-wrapper {
+  padding-bottom: 0rem; 
+}
+
+mat-error {
+  margin-top: -4px; 
+  font-size: 12px;  
+}

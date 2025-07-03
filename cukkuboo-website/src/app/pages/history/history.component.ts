@@ -53,21 +53,24 @@ export class HistoryComponent implements OnInit {
     });
   }
 
-  clearHistory(): void {
-    if (!confirm('Are you sure you want to clear all history?')) return;
+clearHistory(): void {
+  if (!confirm('Are you sure you want to clear all history?')) return;
 
-    this.movieService.clearAllHistory().subscribe({
-      next: (res) => {
-        if (res?.success) {
-          this.historyList = [];
-          alert('History cleared.');
-        }
-      },
-      error: (err) => {
-        console.error('Clear history error:', err);
+  this.movieService.clearAllHistory().subscribe({
+    next: (res) => {
+      if (res?.success) {
+        this.historyList = [];
+        console.log('History cleared successfully.');
+        alert('History cleared.');
+      } else {
+        console.warn('History clear failed:', res);
       }
-    });
-  }
+    },
+    error: (err) => {
+      console.error('Clear history error:', err);
+    }
+  });
+}
 
   removeItem(index: number): void {
     const item = this.historyList[index];

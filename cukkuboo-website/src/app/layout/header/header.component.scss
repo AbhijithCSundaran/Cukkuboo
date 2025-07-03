@@ -4,37 +4,37 @@
   width: 100vw;
   z-index: 100;
 }
-
+ 
 .search {
   font-size: 16px !important;
   color: white !important;
   cursor: pointer;
 }
-
+ 
 .user-icon {
   border: 2px solid white;
   border-radius: 30px;
 }
-
+ 
 .user-title {
   text-transform: capitalize;
   font-family: var(--title-fonts);
   font-weight: 600;
   font-size: 1rem;
 }
-
+ 
 // =======================
 // Notification Icon & Dropdown
 // =======================
 .notification-icon {
   position: relative;
-
+ 
   .fa-bell {
     font-size: 16px;
     color: white;
     cursor: pointer;
   }
-
+ 
   .notification-badge {
     font-size: 10px;
     position: absolute;
@@ -46,7 +46,7 @@
     padding: 2px 5px;
     line-height: 1;
   }
-
+ 
   .notification-dropdown {
     position: absolute;
     top: 30px;
@@ -59,19 +59,19 @@
     padding: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
     font-size: 14px;
-
+ 
     p {
       margin: 0;
       padding: 6px 0;
       border-bottom: 1px solid #444;
-
+ 
       &:last-child {
         border-bottom: none;
       }
     }
   }
 }
-
+ 
 // =======================
 // Sidebar & Mobile
 // =======================
@@ -87,30 +87,30 @@
   transform: translateX(-100%);
   transition: all 0.3s ease-in-out;
   z-index: -1;
-
+ 
   &.open {
     transform: translateX(0);
   }
-
+ 
   #gen-menu-contain {
     padding: 1rem;
   }
-
+ 
   ul.navbar-nav {
     flex-direction: column;
     padding-left: 0;
   }
-
+ 
   a {
     display: block;
     padding: 10px 0;
   }
 }
-
+ 
 body.sidebar-open {
   overflow: hidden;
 }
-
+ 
 // =======================
 // Mobile Profile Dropdown
 // =======================
@@ -119,16 +119,16 @@ body.sidebar-open {
     display: none;
     background: #fff;
     border-top: 1px solid #eee;
-
+ 
     &.gen-form-show {
       display: block;
     }
-
+ 
     ul {
       list-style: none;
       margin: 0;
       padding: 0;
-
+ 
       li a {
         display: block;
         padding: 10px 0;
@@ -136,15 +136,17 @@ body.sidebar-open {
       }
     }
   }
-
+ 
   .user-title {
     font-weight: 600;
     font-size: 1rem;
   }
-
+ 
   header#gen-header .gen-bottom-header .navbar .navbar-nav li a {
     width: 45%;
     display: inline-block;
     padding: 15px;
   }
 }
+ 
+ 

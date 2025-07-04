@@ -23,10 +23,12 @@
 
 <!-- Watch Later Section -->
 <section class="search-section pb-2">
-  <div class="col-12 d-flex justify-content-end mr-2" *ngIf="watchLaterList.length">
+  <!-- Clear All Button -->
+  <div class="col-12 d-flex justify-content-end mr-2 clear-all-btn-wrapper" *ngIf="watchLaterList.length">
     <button class="btn btn-danger btn-sm" (click)="openClearAllModal()">Clear All</button>
   </div>
 
+  <!-- Watch Later Grid -->
   <div class="col-12 d-flex flex-column">
     @if(watchLaterList.length){
     <div class="d-flex flex-wrap col-12 movie-class">
@@ -36,33 +38,24 @@
             <div class="gen-movie-img">
               <img [src]="imageUrl + movie.thumbnail" alt="{{ movie.title }} thumbnail" />
               <div class="gen-movie-add">
-                <div class="wpulike wpulike-heart">
-                  <div class="wp_ulike_general_class wp_ulike_is_not_liked">
-                    <button type="button" class="wp_ulike_btn wp_ulike_put_image"></button>
-                  </div>
-                </div>
-                <ul class="menu bottomRight">
-                  <li class="share top">
-                    <i class="fa fa-share-alt"></i>
-                    <ul class="submenu">
-                      <li><a href="#" class="facebook"><i class="fab fa-facebook-f"></i></a></li>
-                      <li><a href="#" class="facebook"><i class="fab fa-instagram"></i></a></li>
-                      <li><a href="#" class="facebook"><i class="fab fa-twitter"></i></a></li>
-                    </ul>
-                  </li>
-                </ul>
-                <button class="btn btn-sm btn-outline-light position-absolute top-0 end-0 m-2"
-                        (click)="openDeleteModal(movie, i)">
+                <button
+                  class="btn btn-sm btn-outline-light position-absolute top-0 end-0 m-2"
+                  (click)="openDeleteModal(movie, i)"
+                >
                   <i class="fas fa-trash-alt"></i>
                 </button>
               </div>
               <div class="gen-movie-action">
-                <a [routerLink]="['/movies', movie.mov_id]" [queryParams]="{ ap: 1 }"
-                   class="gen-button playBut">
+                <a
+                  [routerLink]="['/movies', movie.mov_id]"
+                  [queryParams]="{ ap: 1 }"
+                  class="gen-button playBut"
+                >
                   <i class="fa fa-play"></i>
                 </a>
               </div>
             </div>
+
             <div class="gen-info-contain">
               <div class="gen-movie-info">
                 <h3><a>{{ movie.title }}</a></h3>
@@ -78,15 +71,18 @@
       </div>
     </div>
 
+    <!-- Pagination -->
     <div *ngIf="totalItems > pageSize" class="mt-4 text-center">
       <nav>
         <ul class="pagination justify-content-center">
           <li class="page-item" [class.disabled]="pageIndex === 0">
             <button class="page-link" (click)="onPageChange(pageIndex - 1)">Previous</button>
           </li>
-          <li class="page-item"
-              *ngFor="let page of [].constructor(Math.ceil(totalItems / pageSize)); let i = index"
-              [class.active]="i === pageIndex">
+          <li
+            class="page-item"
+            *ngFor="let page of [].constructor(Math.ceil(totalItems / pageSize)); let i = index"
+            [class.active]="i === pageIndex"
+          >
             <button class="page-link" (click)="onPageChange(i)">{{ i + 1 }}</button>
           </li>
           <li class="page-item" [class.disabled]="(pageIndex + 1) >= Math.ceil(totalItems / pageSize)">
@@ -96,6 +92,7 @@
       </nav>
     </div>
     }@else{
+    <!-- Empty Fallback -->
     <div class="text-center text-secondary mt-5">
       <i class="fas fa-clock fa-3x mb-3"></i>
       <p class="lead">No items in Watch Later list.</p>

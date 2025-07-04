@@ -16,13 +16,13 @@
       <div
         *ngFor="let notification of notifications"
         class="notification-item"
-        [class.active]="notification.id === selectedNotification?.id"
+        [class.active]="notification.notification_id === selectedNotification?.notification_id"
         [class.read]="notification.read"
         (click)="selectNotification(notification)"
       >
         <div class="title-wrapper">
           <div class="title">{{ notification.title }}</div>
-          <span *ngIf="!notification.read" class="dot"></span>
+          <span *ngIf="notification.status == 1" class="dot"></span>
         </div>
         <div class="date">{{ notification.date | date: 'short' }}</div>
         <div class="action-buttons">
@@ -49,7 +49,7 @@
     </div>
     <div class="detail-body">
       <ng-container *ngIf="!isLoadingDetail; else loading">
-        {{ selectedNotification.message }}
+        {{ selectedNotification.content }}
       </ng-container>
       <ng-template #loading>
         <div class="loading">Loading...</div>

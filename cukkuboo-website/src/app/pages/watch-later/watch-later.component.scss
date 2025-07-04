@@ -1,48 +1,72 @@
-// .card {
-//   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-// }
-
 .mr-2 {
   margin-right: 10px;
 }
 
-
 .search-section {
-  padding-top: 1rem;
-  padding-bottom: 1rem;
-  padding-left: 1rem;
-  padding-right: 1rem;
-}
+  padding: 1rem;
 
+  .clear-all-btn-wrapper {
+    margin-bottom: 1rem;
+  }
+}
 
 .gen-breadcrumb {
   margin-bottom: 1rem;
 }
 
-
 #gen-footer {
-  padding-top: 1rem;  
+  padding-top: 1rem;
   padding-bottom: 1rem;
 }
 
+.gen-movie-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
 
-.mb-gap {
-  margin-bottom: 1rem; 
+  h3 {
+    flex: 1;
+    margin-right: 8px;
+
+    a {
+      cursor: pointer;
+      text-decoration: none;
+      color: inherit;
+
+      &:hover {
+        color: red;
+      }
+    }
+  }
+
+  button i.fas.fa-trash-alt {
+    color: #dc3545;
+  }
 }
-.gen-movie-info h3 a {
-  cursor: pointer;
-  text-decoration: none; 
-  color: inherit; 
-}
-.gen-movie-info h3 a:hover {
-  color: red;
+
+.gen-movie-meta-holder ul {
+  list-style: none;
+  padding-left: 0;
+  margin-top: 4px;
+
+  li {
+    font-size: 14px;
+    color: #999;
+
+    i {
+      margin-right: 4px;
+    }
+  }
 }
 
 .modal {
   display: none;
   position: fixed;
   z-index: 9999;
-  left: 0; top: 0; width: 100%; height: 100%;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
   background-color: rgba(0, 0, 0, 0.85);
   justify-content: center;
   align-items: center;
@@ -108,9 +132,34 @@
     }
   }
 }
-.search-section {
-  .clear-all-btn-wrapper {
-    margin-bottom: 12px;
+
+.gen-movie-img {
+  position: relative;
+
+  img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .centered-play {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+
+    .gen-button.playBut {
+      background-color: rgba(0, 0, 0, 0.6);
+      border-radius: 50%;
+      padding: 12px;
+      font-size: 20px;
+      color: #fff;
+      transition: background-color 0.3s;
+
+      &:hover {
+        background-color: #e53935;
+      }
+    }
   }
 }
-

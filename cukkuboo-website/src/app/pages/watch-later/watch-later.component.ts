@@ -22,7 +22,6 @@ export class WatchLaterComponent implements OnInit {
   totalItems: number = 0;
   isLoading: boolean = false;
 
-  // Modal & delete
   showDeleteModal: boolean = false;
   showClearAllModal: boolean = false;
   itemToDelete: any = null;
@@ -86,6 +85,7 @@ export class WatchLaterComponent implements OnInit {
       next: (res) => {
         if (res?.success) {
           this.watchLaterList.splice(index, 1);
+          this.totalItems--;
           this.snackBar.open('Successfully removed', '', {
             duration: 3000,
             verticalPosition: 'top',

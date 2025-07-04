@@ -30,7 +30,7 @@ class Savehistory extends ResourceController
         $movId = $data['mov_id'] ?? null;
 
         if (!$movId) {
-            return $this->respond(['status' => false, 'message' => 'Movie ID is required.'], 400);
+            return $this->respond(['status' => false, 'message' => 'Movie ID is required.']);
         }
 
         $result = $this->model->saveCompleted($user['user_id'], $movId);

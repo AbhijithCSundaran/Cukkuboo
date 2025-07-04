@@ -101,8 +101,9 @@ $routes->get('notification/get', 'Notification::getUserNotifications');
 // Watched history
 
 $routes->post('resume/saveprogress', 'Resume::saveProgress');
-$routes->get('resume/viewhistory', 'Resume::viewHistory');
-
+$routes->get('resume/viewhistory', 'Resume::getAllHistory');
+$routes->get('resume/view/(:num)', 'Resume::getById/$1');
+$routes->get('resume/delete/(:num)', 'Resume::deleteHistoryById/$1');
 //Save Completed History
 
 $routes->post('savehistory/save', 'Savehistory::saveMovie');

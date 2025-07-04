@@ -28,9 +28,7 @@ class User extends ResourceController
     public function registerFun()
     {
         $data = $this->request->getJSON(true);
-
-        // Try to get authenticated user from JWT
-        $user_id =  $data['user_id']??0;//$this->getAuthenticatedUser();
+        $user_id =  $data['user_id']??0;
         $authHeader = $this->request->getHeaderLine('Authorization');
         $authenticatedUser= $this->authService->getAuthenticatedUser($authHeader);
         
@@ -151,9 +149,9 @@ class User extends ResourceController
 {
     $authHeader = $this->request->getHeaderLine('Authorization');
     $user = $this->authService->getAuthenticatedUser($authHeader);
-    
-    if (!$user || $user['user_id'] != $user_id) {
-        return $this->failUnauthorized('Unauthorized access or invalid token.');
+
+    if (!$user) {
+        return $this->failUnauthorized('Invalid or missing token.');
     }
 
     $password = $this->request->getJSON()->password;
@@ -162,7 +160,6 @@ class User extends ResourceController
     }
 
     $userData = $this->UserModel->find($user_id);
-
     if (!$userData) {
         return $this->failNotFound("User not found.");
     }
@@ -170,6 +167,7 @@ class User extends ResourceController
     if (!password_verify($password, $userData['password'])) {
         return $this->failUnauthorized("Incorrect password. Account not deleted.");
     }
+
     $status = 9;
     if ($this->UserModel->deleteUserById($status, $user_id)) {
         return $this->respond([
@@ -181,8 +179,6 @@ class User extends ResourceController
         return $this->failServerError("Failed to delete user with ID $user_id.");
     }
 }
-
-
 
 
 public function getUserDetailsById($userId = null)

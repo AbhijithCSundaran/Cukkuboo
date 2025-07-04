@@ -1,55 +1,57 @@
 <section class="container bootstrap p-2">
     <div class="row">
-
         <!-- Right Column: User Info -->
         <div class="col-md-4 p-3">
             <div class="card mb-3 ca-body">
-                <div class="card-body text-center p-3"> <!-- reduce padding -->
-                    <i class="fa-solid fa-user icon-style mb-2"></i>
+                <div class="card-body p-5">
+                    <!-- reduce padding -->
+                    <div class="d-flex col-12">
+                        <i class="fa-solid fa-user icon-style mb-2 col-3"></i>
 
-                    <!-- Username -->
-                    <h5 class="card-title mb-1">{{ profileForm.get('username')?.value }}</h5>
+                        <!-- Username -->
+                        <div class="d-flex flex-column justify-content-center col-9 ps-3">
+                            <h5 class="card-title mb-0">
+                                {{ profileForm.get("username")?.value }}
+                            </h5>
 
-                    <!-- Subscription Display -->
-                    <div *ngIf="profileForm.get('subscription')?.value"
-                        class="d-flex justify-content-center align-items-center mb-2">
-                        <!-- Premium -->
-                        <ng-container
-                            *ngIf="profileForm.get('subscription')?.value.toLowerCase() === 'premium'; else showText">
-                            <i class="fa-solid fa-star text-warning me-2"></i>
-                            <span class="fw-bold">Premium</span>
-                        </ng-container>
-
-                        <!-- Other plans -->
-                        <ng-template #showText>
-                            <span class="plan">
-                                {{ profileForm.get('subscription')?.value | titlecase }}
-                            </span>
-                        </ng-template>
+                            <!-- Subscription Display -->
+                            <div *ngIf="profileForm.get('subscription')?.value"
+                                class="d-flex align-items-center mb-2">
+                                <!-- Premium -->
+                                @if(profileForm?.value?.subscription?.toLowerCase() === 'premium'){
+                                    <i class="fa-solid fa-star text-warning me-2"></i>
+                                    <span class="fw-bold">Premium</span>
+                                }@else{
+                                    <span class="plan">{{ profileForm?.value?.subscription | titlecase }}</span>
+                                }
+                               
+                            </div>
+                        </div>
                     </div>
 
                     <!-- Change Password Button -->
-                    <button class="btn update-btn text-white btn-sm" (click)="toggleChangePassword()">
-                        Change Password
-                    </button>
+                    <div class="d-flex gap-2 mt-4">
+                        <button class="btn update-btn text-white btn-sm col-6" (click)="toggleChangePassword()">
+                            Change Password
+                        </button>
+
+                        <button class="btn update-btn btn-danger text-white btn-sm col-6" (click)="toggleDeleteAccount()">
+                            Delete Account
+                        </button>
+                    </div>
                 </div>
             </div>
-
         </div>
 
-
-
         <div class="col-md-8 p-3">
-
             <!-- Profile Info Section -->
             <div *ngIf="showProfileInfo" class="card shadow-sm rounded-3 ca-body">
                 <div class="card-header text-white">
                     <h5 class="mb-0 personal">Personal Info</h5>
-                    <hr class="p-2" style="color:#c70d47;">
+                    <hr class="p-2" style="color: #c70d47" />
                 </div>
                 <div class="card-body ca-body">
                     <form [formGroup]="profileForm" (ngSubmit)="onSubmit()" class="profileForm">
-
                         <!-- Name -->
                         <div class="form-group row align-items-center mb-3">
                             <label class="col-sm-3 col-form-label">Name:</label>
@@ -103,14 +105,13 @@
             </div>
 
             <!-- Change Password Section -->
-            <div *ngIf="!showProfileInfo" class="card shadow-sm rounded-3 ca-body">
+            <div *ngIf="showChangePassword" class="card shadow-sm rounded-3 ca-body">
                 <div class="card-header text-white">
                     <h5 class="mb-0">Change Password</h5>
-                    <hr class="p-2" style="color:#c70d47;">
+                    <hr class="p-2" style="color: #c70d47" />
                 </div>
                 <div class="card-body">
                     <form [formGroup]="changePasswordForm" (ngSubmit)="onChangePassword()">
-
                         <!-- Current Password -->
                         <mat-form-field appearance="outline" class="w-100 field-space">
                             <mat-label>Current Password</mat-label>
@@ -118,7 +119,8 @@
                                 placeholder="Enter your current password" id="currentPassword" />
                             <button mat-icon-button matSuffix (click)="hideCurrent = !hideCurrent" type="button"
                                 [attr.aria-label]="'Toggle password visibility'" [attr.aria-pressed]="hideCurrent">
-                                <mat-icon class="small-eye-icon">{{ hideCurrent ? 'visibility_off' : 'visibility'
+                                <mat-icon class="small-eye-icon">{{
+                                    hideCurrent ? "visibility_off" : "visibility"
                                     }}</mat-icon>
                             </button>
                             <mat-error>
@@ -134,7 +136,8 @@
                                 placeholder="Enter your new password" id="newPassword" />
                             <button mat-icon-button matSuffix (click)="hideNew = !hideNew" type="button"
                                 [attr.aria-label]="'Toggle password visibility'" [attr.aria-pressed]="hideNew">
-                                <mat-icon class="small-eye-icon">{{ hideNew ? 'visibility_off' : 'visibility'
+                                <mat-icon class="small-eye-icon">{{
+                                    hideNew ? "visibility_off" : "visibility"
                                     }}</mat-icon>
                             </button>
                             <mat-error>
@@ -150,7 +153,8 @@
                                 placeholder="Enter your Confirm password" id="confirmPassword" />
                             <button mat-icon-button matSuffix (click)="hideConfirm = !hideConfirm" type="button"
                                 [attr.aria-label]="'Toggle password visibility'" [attr.aria-pressed]="hideConfirm">
-                                <mat-icon class="small-eye-icon">{{ hideConfirm ? 'visibility_off' : 'visibility'
+                                <mat-icon class="small-eye-icon">{{
+                                    hideConfirm ? "visibility_off" : "visibility"
                                     }}</mat-icon>
                             </button>
                             <mat-error>
@@ -160,17 +164,56 @@
                         </mat-form-field>
 
                         <div class="text-end">
-                            <button type="submit" class="btn update-btn mt-2">Update Password</button>
-                            <button type="button" class="btn btn-secondary ms-2 mt-2"
-                                (click)="backToProfile()">Back</button>
+                            <button type="submit" class="btn update-btn mt-2">
+                                Update Password
+                            </button>
+                            <button type="button" class="btn btn-secondary ms-2 mt-2" (click)="backToProfile()">
+                                Back
+                            </button>
                         </div>
                     </form>
                 </div>
             </div>
+
+             <!--Delete Account section-->
+
+             <div *ngIf="ShowDeleteAccount" class="card shadow-sm rounded-3 ca-body" >
+               <div class="card-header text-white">
+                    <h5 class="mb-0">Delete Account</h5>
+                    <hr class="p-2" style="color: #c70d47" />
+                </div>
+                <div class="card-body">
+                    <form [formGroup]="changePasswordForm" (ngSubmit)="onChangePassword()">
+                        <!-- Current Password -->
+                        <mat-form-field appearance="outline" class="w-100 field-space">
+                            <mat-label>Current Password</mat-label>
+                            <input matInput [type]="hideCurrent ? 'password' : 'text'" formControlName="currentPassword"
+                                placeholder="Enter your current password" id="currentPassword" />
+                            <button mat-icon-button matSuffix (click)="hideCurrent = !hideCurrent" type="button"
+                                [attr.aria-label]="'Toggle password visibility'" [attr.aria-pressed]="hideCurrent">
+                                <mat-icon class="small-eye-icon">{{
+                                    hideCurrent ? "visibility_off" : "visibility"
+                                    }}</mat-icon>
+                            </button>
+                            <mat-error>
+                                <Validation-Messages
+                                    [control]="changePasswordForm.controls['currentPassword']"></Validation-Messages>
+                            </mat-error>
+                        </mat-form-field>
+                       <div class="text-end">
+                            <button type="submit" class="btn update-btn mt-2">
+                                Delete
+                            </button>
+                            <button type="button" class="btn btn-secondary ms-2 mt-2" (click)="backToProfile()">
+                                Back
+                            </button>
+                        </div>
+                    </form>
+                </div>
+             </div>
+
+
         </div>
-
-
-
     </div>
 </section>
 <hr />

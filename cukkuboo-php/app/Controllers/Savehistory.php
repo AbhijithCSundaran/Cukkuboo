@@ -66,7 +66,7 @@ class Savehistory extends ResourceController
     $totalCount = $totalBuilder->countAllResults(false); 
 
     $history = $builder
-        ->orderBy('save_history.created_by', 'DESC') 
+        ->orderBy('watch_history.created_by', 'DESC') 
         ->limit($pageSize, $offset)
         ->get()
         ->getResult();

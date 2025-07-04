@@ -78,8 +78,7 @@ $routes->get('reels/get/(:any)', 'Reels::getReelById/$1');
 $routes->delete('reels/delete/(:any)', 'Reels::deleteReel/$1');
 
 //User subscription
-
-$routes->post('usersub/add', 'Usersub::saveSubscription');
+$routes->post('usersub/save', 'Usersub::autoSubscribe');
 $routes->get('usersub/details', 'Usersub::getUserSubscriptions');
 $routes->get('usersub/get/(:num)', 'Usersub::getSubscriptionById/$1');
 $routes->delete('usersub/delete/(:num)', 'Usersub::deleteSubscription/$1');
@@ -103,7 +102,8 @@ $routes->get('notification/get', 'Notification::getUserNotifications');
 $routes->post('resume/saveprogress', 'Resume::saveProgress');
 $routes->get('resume/viewhistory', 'Resume::getAllHistory');
 $routes->get('resume/view/(:num)', 'Resume::getById/$1');
-$routes->get('resume/delete/(:num)', 'Resume::deleteHistoryById/$1');
+$routes->get('resume/user', 'Resume::getUserHistory');
+$routes->delete('resume/delete/(:num)', 'Resume::deleteById/$1');
 //Save Completed History
 
 $routes->post('savehistory/save', 'Savehistory::saveMovie');

@@ -53,6 +53,14 @@ changePassword(formData: FormData): Observable<any> {
     
   });
 }
+deleteAccount(formData: FormData, userId: number) {
+  return this.http.post(`${this.apiUrl}user/delete/${userId}`, formData, {
+    headers: {
+      Authorization: `Bearer ${this.token || ''}`
+    }
+  });
+}
+
 
 
 

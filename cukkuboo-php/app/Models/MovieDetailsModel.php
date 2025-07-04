@@ -10,7 +10,7 @@ class MovieDetailsModel extends Model
     protected $primaryKey = 'mov_id';
     protected $allowedFields = [
         'video', 'title', 'genre', 'description', 'cast_details', 'category',
-        'release_date', 'age_rating', 'access', 'status', 'thumbnail', 'trailer', 'banner', 'duration', 'rating','likes','dislikes', 'user_type', 
+        'release_date', 'age_rating', 'access', 'status', 'thumbnail', 'trailer', 'banner', 'duration', 'rating', 'user_type', 
         'created_by', 'created_on', 'modify_by', 'modify_on'
     ];
 

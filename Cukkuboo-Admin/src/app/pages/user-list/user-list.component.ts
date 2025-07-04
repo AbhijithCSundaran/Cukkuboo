@@ -43,7 +43,7 @@ export class UserListComponent implements OnInit, AfterViewInit {
     private router: Router,
     private userService: UserService,
     private snackBar: MatSnackBar
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.loadUsers(this.pageIndex, this.pageSize, this.searchText);
@@ -60,9 +60,10 @@ export class UserListComponent implements OnInit, AfterViewInit {
   loadUsers(pageIndex: number = 0, pageSize: number = 10, search: string = ''): void {
     this.userService.list(pageIndex, pageSize, search).subscribe({
       next: (response) => {
-        
-        this.dataSource.data = response?.data || [];
-        this.totalItems = response?.total || 0;
+        if (response.success) {
+          this.dataSource.data = response?.data || [];
+          this.totalItems = response?.total || 0;
+        }
       },
       error: (error) => {
         console.error('Error loading users:', error);

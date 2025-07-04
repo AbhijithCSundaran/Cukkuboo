@@ -28,6 +28,11 @@ export class HistoryComponent implements OnInit {
   pageSize: number = 8;
   totalItems: number = 0;
 
+  showDeleteModal: boolean = false;
+  showClearAllModal: boolean = false;
+  itemToDelete: HistoryItem | null = null;
+  itemToDeleteIndex: number = -1;
+
   constructor(
     private movieService: MovieService,
     private snackBar: MatSnackBar
@@ -63,55 +68,25 @@ export class HistoryComponent implements OnInit {
     });
   }
 
-clearHistory(): void {
+  openDeleteModal(item: HistoryItem, index: number): void {
+    this.itemToDelete = item;
+    this.itemToDeleteIndex = index;
+    this.showDeleteModal = true;
+  }
 
+  cancelDelete(): void {
+    this.itemToDelete = null;
+    this.itemToDeleteIndex = -1;
+    this.showDeleteModal = false;
+  }
 
-  if (!confirm('Are you sure you want to clear all history items?')) return;
+  confirmDelete(): void {
+    if (!this.itemToDelete) return;
 
-  this.movieService.clearAllHistory().subscribe({
-    next: (res) => {
-      if (res?.success && res?.data?.cleared) {
-        this.historyList = [];
-        this.totalItems = 0;
-
-        this.snackBar.open(res.message || 'All history cleared.', '', {
-          duration: 3000,
-          verticalPosition: 'top',
-          horizontalPosition: 'center',
-          panelClass: ['snackbar-success']
-        });
-      } else {
-        this.snackBar.open(res.message || 'Failed to clear history.', '', {
-          duration: 3000,
-          verticalPosition: 'top',
-          horizontalPosition: 'center',
-          panelClass: ['snackbar-danger']
-        });
-      }
-    },
-    error: (err) => {
-      console.error('Clear history error:', err);
-      this.snackBar.open('Something went wrong', '', {
-        duration: 3000,
-        verticalPosition: 'top',
-        horizontalPosition: 'center',
-        panelClass: ['snackbar-danger']
-      });
-    }
-  });
-}
-
-
-  removeItem(index: number): void {
-    const item = this.historyList[index];
-    if (!item || !item.save_history_id) return;
-
-    if (!confirm(`Remove "${item.title}" from history?`)) return;
-
-    this.movieService.deleteHistoryItem(item.save_history_id).subscribe({
+    this.movieService.deleteHistoryItem(this.itemToDelete.save_history_id).subscribe({
       next: (res) => {
         if (res?.success) {
-          this.historyList.splice(index, 1);
+          this.historyList.splice(this.itemToDeleteIndex, 1);
           this.totalItems--;
           this.snackBar.open('Item deleted from history', '', {
             duration: 3000,
@@ -119,16 +94,66 @@ clearHistory(): void {
             horizontalPosition: 'center',
             panelClass: ['snackbar-success']
           });
+        } else {
+          this.snackBar.open('Failed to delete item', '', {
+            duration: 3000,
+            verticalPosition: 'top',
+            horizontalPosition: 'center',
+            panelClass: ['snackbar-danger']
+          });
         }
+        this.cancelDelete();
       },
-      error: (err) => {
-        console.error('Delete item error:', err);
+      error: () => {
         this.snackBar.open('Error deleting item', '', {
           duration: 3000,
           verticalPosition: 'top',
           horizontalPosition: 'center',
           panelClass: ['snackbar-danger']
         });
+        this.cancelDelete();
+      }
+    });
+  }
+
+  openClearAllModal(): void {
+    this.showClearAllModal = true;
+  }
+
+  cancelClearAll(): void {
+    this.showClearAllModal = false;
+  }
+
+  confirmClearAll(): void {
+    this.movieService.clearAllHistory().subscribe({
+      next: (res) => {
+        if (res?.success && res?.data?.cleared) {
+          this.historyList = [];
+          this.totalItems = 0;
+          this.snackBar.open(res.message || 'All history cleared.', '', {
+            duration: 3000,
+            verticalPosition: 'top',
+            horizontalPosition: 'center',
+            panelClass: ['snackbar-success']
+          });
+        } else {
+          this.snackBar.open(res.message || 'Failed to clear history.', '', {
+            duration: 3000,
+            verticalPosition: 'top',
+            horizontalPosition: 'center',
+            panelClass: ['snackbar-danger']
+          });
+        }
+        this.cancelClearAll();
+      },
+      error: () => {
+        this.snackBar.open('Something went wrong', '', {
+          duration: 3000,
+          verticalPosition: 'top',
+          horizontalPosition: 'center',
+          panelClass: ['snackbar-danger']
+        });
+        this.cancelClearAll();
       }
     });
   }

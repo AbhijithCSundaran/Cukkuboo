@@ -9,6 +9,7 @@
         </div>
 
         <div class="gen-movie-action d-block d-sm-flex align-items-center mt-4">
+          <!-- Play Movie Button -->
           <div class="gen-btn-container">
             <a class="playBut popup-youtube popup-vimeo popup-gmaps" (click)="playVideo(movieData.video)">
               <svg xmlns="http://www.w3.org/2000/svg" width="60px" height="70px" viewBox="0 0 213.7 213.7">
@@ -21,6 +22,7 @@
             </a>
           </div>
 
+          <!-- Watch Trailer for mobile -->
           <div class="mt-2 mt-sm-0 ms-sm-3 gen-btn-container d-block d-xl-none" (click)="playVideo(movieData.trailer)">
             <a class="gen-button gen-button-outline py-2 px-3">
               <i class="fas fa-play"></i><span class="text">Watch Trailer</span>
@@ -29,6 +31,7 @@
         </div>
       </div>
 
+      <!-- Right-side poster + trailer -->
       <div class="col-xl-4 d-none d-xl-flex">
         <div class="gen-front-image mx-auto">
           <img [src]="imageUrl + movieData.thumbnail" alt="carousel-image" />
@@ -45,14 +48,14 @@
       </div>
     </div>
 
-    <!-- Video Player -->
+    <!-- Inline video player -->
     <js-player *ngIf="selectedVideo" class="video_player" (onClose)="selectedVideo = ''"
       [videoSrc]="videoUrl + selectedVideo">
     </js-player>
   </div>
 </section>
 
-<!-- Movie Details -->
+<!-- Movie Info Section -->
 <section class="py-0 px-5 gen-single-movie">
   <div class="gen-single-movie-wrapper style-1">
     <div class="gen-single-movie-info">
@@ -98,7 +101,7 @@
   </div>
 </section>
 
-<!-- Suggested movies -->
+<!-- Suggested Movies Section -->
 <section class="px-5 pt-0 pb-3">
   <div class="gen-more-like">
     <h5 class="gen-more-title mb-3">More Like This</h5>

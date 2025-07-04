@@ -2,7 +2,7 @@
   <!-- Header -->
   <div class="container mb-4 text-white d-flex justify-content-between align-items-center">
     <h4 class="mb-0">Watch History</h4>
-    <button *ngIf="historyList.length" class="btn btn-danger btn-sm" (click)="clearHistory()">
+    <button *ngIf="historyList.length" class="btn btn-danger btn-sm" (click)="openClearAllModal()">
       Clear All History
     </button>
   </div>
@@ -36,7 +36,7 @@
               >
                 <i class="fas fa-play"></i> Play
               </a>
-              <button class="btn btn-outline-light btn-sm px-3 py-1" (click)="removeItem(i)">
+              <button class="btn btn-outline-light btn-sm px-3 py-1" (click)="openDeleteModal(item, i)">
                 <i class="fas fa-trash-alt"></i>
               </button>
             </div>
@@ -70,6 +70,31 @@
           </li>
         </ul>
       </nav>
+    </div>
+  </div>
+
+  <!-- Delete Confirmation Modal -->
+  <div class="modal" [class.show]="showDeleteModal">
+    <div class="modal-content">
+      <p>
+        Are you sure you want to remove
+        <span class="highlight">"{{ itemToDelete?.title }}"</span> from history?
+      </p>
+      <div class="modal-actions">
+        <button class="btn-yes" (click)="confirmDelete()">Delete</button>
+        <button class="btn-no" (click)="cancelDelete()">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Clear All Confirmation Modal -->
+  <div class="modal" [class.show]="showClearAllModal">
+    <div class="modal-content">
+      <p>Are you sure you want to <span class="highlight">clear all</span> history items?</p>
+      <div class="modal-actions">
+        <button class="btn-yes" (click)="confirmClearAll()">Clear</button>
+        <button class="btn-no" (click)="cancelClearAll()">Cancel</button>
+      </div>
     </div>
   </div>
 </div>

@@ -14,18 +14,23 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class WatchLaterComponent implements OnInit {
   watchLaterList: any[] = [];
-   Math = Math;
   imageUrl: string = environment.apiUrl + 'uploads/images/';
+  Math = Math;
 
- 
   pageIndex: number = 0;
   pageSize: number = 8;
   totalItems: number = 0;
   isLoading: boolean = false;
 
+  // Modal & delete
+  showDeleteModal: boolean = false;
+  showClearAllModal: boolean = false;
+  itemToDelete: any = null;
+  itemToDeleteIndex: number = -1;
+
   constructor(
     private snackBar: MatSnackBar,
-    private movieService: MovieService,
+    private movieService: MovieService
   ) {}
 
   ngOnInit(): void {
@@ -59,9 +64,25 @@ export class WatchLaterComponent implements OnInit {
     }
   }
 
-  removeItem(index: number): void {
-    const removedItem = this.watchLaterList[index];
-    this.movieService.deleteWatchLater(removedItem?.watch_later_id).subscribe({
+  openDeleteModal(item: any, index: number): void {
+    this.itemToDelete = item;
+    this.itemToDeleteIndex = index;
+    this.showDeleteModal = true;
+  }
+
+  cancelDelete(): void {
+    this.itemToDelete = null;
+    this.itemToDeleteIndex = -1;
+    this.showDeleteModal = false;
+  }
+
+  confirmDelete(): void {
+    const id = this.itemToDelete?.watch_later_id;
+    const index = this.itemToDeleteIndex;
+
+    if (!id || index < 0) return;
+
+    this.movieService.deleteWatchLater(id).subscribe({
       next: (res) => {
         if (res?.success) {
           this.watchLaterList.splice(index, 1);
@@ -79,16 +100,29 @@ export class WatchLaterComponent implements OnInit {
             panelClass: ['snackbar-danger']
           });
         }
+        this.cancelDelete();
       },
-      error: (err) => {
-        console.error('Delete API error:', err);
+      error: () => {
+        this.snackBar.open('Something went wrong', '', {
+          duration: 3000,
+          verticalPosition: 'top',
+          horizontalPosition: 'center',
+          panelClass: ['snackbar-danger']
+        });
+        this.cancelDelete();
       }
     });
   }
 
-  clearWatchLater(): void {
-    if (!confirm('Are you sure you want to clear all items from Watch Later?')) return;
+  openClearAllModal(): void {
+    this.showClearAllModal = true;
+  }
 
+  cancelClearAll(): void {
+    this.showClearAllModal = false;
+  }
+
+  confirmClearAll(): void {
     this.movieService.clearAllWatchLater().subscribe({
       next: (res) => {
         if (res?.success) {
@@ -108,6 +142,7 @@ export class WatchLaterComponent implements OnInit {
             panelClass: ['snackbar-danger']
           });
         }
+        this.cancelClearAll();
       },
       error: (err) => {
         console.error('Clear Watch Later error:', err);
@@ -117,6 +152,7 @@ export class WatchLaterComponent implements OnInit {
           horizontalPosition: 'center',
           panelClass: ['snackbar-danger']
         });
+        this.cancelClearAll();
       }
     });
   }

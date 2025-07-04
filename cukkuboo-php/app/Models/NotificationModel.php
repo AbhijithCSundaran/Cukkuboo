@@ -57,7 +57,9 @@ class NotificationModel extends Model
 }
 public function getById($notificationId)
 {
-    return $this->update($notificationId, ['status' => 2]);
+    return $this->where('notification_id', $notificationId)
+                ->where('status !=', 9)
+                ->first();
 }
 
 }

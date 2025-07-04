@@ -202,6 +202,7 @@ class Notification extends ResourceController
     $search    = trim($this->request->getGet('search') ?? '');
     $offset    = $pageIndex * $pageSize;
 
+    // Query builder
     $builder = $this->notificationModel
         ->where('user_id', $userId)
         ->where('status !=', 9);
@@ -242,7 +243,7 @@ public function getNotificationById($notificationId = null)
     if ($notificationId === null) {
         return $this->failValidationErrors('Notification ID is required.');
     }
-
+    $this->notificationModel->getById($notificationId);
     $notification = $this->notificationModel->find($notificationId);
 
     if (!$notification || $notification['status'] == 9) {

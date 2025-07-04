@@ -8,19 +8,7 @@ class ResumeModel extends Model
 {
     protected $table = 'resume_history';
     protected $primaryKey = 'resume_id';
-    protected $allowedFields = ['user_id', 'mov_id', 'duration', 'created_by', 'created_on', 'modify_by', 'modify_on'];
-
-    public function getHistoryByUserId($userId)
-{
-    return $this->db->table('resume_history r')
-        ->select('r.mov_id, m.title, m.description, m.thumbnail, r.duration, r.modify_on as viewed_at')
-        ->join('movies_details m', 'r.mov_id = m.mov_id')
-        ->where('r.user_id', $userId)
-        ->orderBy('r.modify_on', 'DESC')
-        ->get()
-        ->getResult();
-}
-
+    protected $allowedFields = ['user_id', 'mov_id', 'duration','status', 'created_by', 'created_on', 'modify_by', 'modify_on'];
 
     public function saveOrUpdate($userId, $movId, $duration)
     {
@@ -30,6 +18,7 @@ class ResumeModel extends Model
         if ($existing) {
             $this->update($existing['resume_id'], [
                 'duration' => $duration,
+                'status'   => 1,
                 'modify_by' => $userId,
                 'modify_on' => $now
             ]);
@@ -38,6 +27,7 @@ class ResumeModel extends Model
                 'user_id' => $userId,
                 'mov_id' => $movId,
                 'duration' => $duration,
+                 'status'     => 1,
                 'created_by' => $userId,
                 'created_on' => $now,
                 'modify_by' => $userId,
@@ -45,4 +35,33 @@ class ResumeModel extends Model
             ]);
         }
     }
+    public function getHistoryByUserId($userId, $search = '')
+{
+    $builder = $this->builder()
+        ->select('resume_history.*, movies_details.title')
+        ->join('movies_details', 'movies_details.mov_id = resume_history.mov_id', 'left')
+        ->where('resume_history.status !=', 9)
+        ->where('resume_history.user_id', $userId);
+
+    if (!empty($search)) {
+        $builder->like('movies_details.title', $search);
+    }
+
+    return $builder;
+}
+public function getHistoryById($historyId)
+{
+    return $this->builder()
+        ->select('resume_history.*, movies_details.title, movies_details.thumbnail, movies_details.release_date')
+        ->join('movies_details', 'movies_details.mov_id = resume_history.mov_id', 'left')
+        ->where('resume_history.save_history_id', $historyId)
+        ->where('resume_history.status !=', 9)
+        ->get()
+        ->getRow();  
+}
+public function softDeleteById($id)
+{
+    return $this->update($id, ['status' => 9]);
+}
+
 }

@@ -85,10 +85,10 @@ class MovieDetail extends ResourceController
 
 public function getAllMovieDetails()
 {
-    $authHeader = $this->request->getHeaderLine('Authorization');
-    $user = $this->authService->getAuthenticatedUser($authHeader);
-    if (!$user) 
-        return $this->failUnauthorized('Invalid or missing token.');
+    // $authHeader = $this->request->getHeaderLine('Authorization');
+    // $user = $this->authService->getAuthenticatedUser($authHeader);
+    // if (!$user) 
+    //     return $this->failUnauthorized('Invalid or missing token.');
 
     $pageIndex = $this->request->getGet('pageIndex');
     $pageSize  = $this->request->getGet('pageSize');

@@ -33,8 +33,10 @@ export class ProfileComponent implements OnInit {
   profileForm!: FormGroup;
   userId: number | null = null;
   showProfileInfo: boolean = true;
+  showChangePassword: boolean = false;
   changePasswordForm!: FormGroup;
   initialFormValue: any;
+  ShowDeleteAccount: boolean = false;
 
 
 
@@ -142,14 +144,24 @@ export class ProfileComponent implements OnInit {
 
   toggleChangePassword(): void {
     this.showProfileInfo = false;
-     localStorage.setItem('showProfileInfo', 'false');
+    this.ShowDeleteAccount = false;
+    this.showChangePassword = true;
+    localStorage.setItem('showProfileInfo', 'false');
   }
 
   backToProfile(): void {
     this.showProfileInfo = true;
+    this.showChangePassword = false;
+    this.ShowDeleteAccount = false;
     localStorage.setItem('showProfileInfo', 'true');
   }
 
+  toggleDeleteAccount(): void {
+    this.showProfileInfo = false;
+    this.showChangePassword = false;
+    this.ShowDeleteAccount = true;
+    
+  }
 
   onChangePassword(): void {
     if (this.changePasswordForm.valid) {
@@ -179,9 +191,9 @@ export class ProfileComponent implements OnInit {
               panelClass: ['snackbar-success']
             });
 
-             this.showProfileInfo = true;
+            this.showProfileInfo = true;
             this.changePasswordForm.reset();
-                
+
           } else {
             this.snackBar.open(res.msg, '', {
               duration: 3000,
@@ -206,4 +218,6 @@ export class ProfileComponent implements OnInit {
       });
     }
   }
+
+
 }

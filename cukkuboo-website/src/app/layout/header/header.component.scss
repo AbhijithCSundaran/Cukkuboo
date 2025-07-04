@@ -231,3 +231,6 @@ body.sidebar-open {
   border-radius: 6px;
   cursor: pointer;
 }
+.gen-button:hover .gen-button-text {
+  color: white !important;
+}

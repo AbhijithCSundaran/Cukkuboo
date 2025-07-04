@@ -6,7 +6,7 @@ use CodeIgniter\Model;
 
 class VideoviewModel extends Model
 {
-    protected $table = 'video';
+    protected $table = 'video_view';
     protected $primaryKey = 'mview_id';
 
     public function getUserVideoView($userId, $movieId)

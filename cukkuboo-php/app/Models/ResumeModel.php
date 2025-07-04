@@ -6,13 +6,13 @@ use CodeIgniter\Model;
 
 class ResumeModel extends Model
 {
-    protected $table = 'resume';
+    protected $table = 'resume_history';
     protected $primaryKey = 'resume_id';
     protected $allowedFields = ['user_id', 'mov_id', 'duration', 'created_by', 'created_on', 'modify_by', 'modify_on'];
 
     public function getHistoryByUserId($userId)
 {
-    return $this->db->table('resume r')
+    return $this->db->table('resume_history r')
         ->select('r.mov_id, m.title, m.description, m.thumbnail, r.duration, r.modify_on as viewed_at')
         ->join('movies_details m', 'r.mov_id = m.mov_id')
         ->where('r.user_id', $userId)

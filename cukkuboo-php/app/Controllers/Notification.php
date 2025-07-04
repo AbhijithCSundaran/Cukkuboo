@@ -202,9 +202,10 @@ class Notification extends ResourceController
     $search    = trim($this->request->getGet('search') ?? '');
     $offset    = $pageIndex * $pageSize;
 
+    // Query builder
     $builder = $this->notificationModel
         ->where('user_id', $userId)
-        ->whereNotIn('status', [2, 9]);
+        ->where('status !=', 9);
 
     if (!empty($search)) {
         $builder->groupStart()
@@ -212,6 +213,7 @@ class Notification extends ResourceController
                 ->orLike('content', $search)
                 ->groupEnd();
     }
+
 
     $total = $builder->countAllResults(false);
 
@@ -241,21 +243,16 @@ public function getNotificationById($notificationId = null)
     if ($notificationId === null) {
         return $this->failValidationErrors('Notification ID is required.');
     }
-
+    $this->notificationModel->getById($notificationId);
     $notification = $this->notificationModel->find($notificationId);
 
     if (!$notification || $notification['status'] == 9) {
         return $this->failNotFound('Notification not found.');
     }
 
-    $this->notificationModel->getById($notificationId);
-
-    
-    $notification = $this->notificationModel->find($notificationId);
-
     return $this->respond([
         'success' => true,
-        'message' => 'Notification fetched and marked as read.',
+        'message' => 'Notification fetched successfully.',
         'data' => $notification
     ]);
 }

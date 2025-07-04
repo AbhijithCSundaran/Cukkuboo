@@ -178,8 +178,10 @@ export class ProfileComponent implements OnInit {
               verticalPosition: 'top',
               panelClass: ['snackbar-success']
             });
+
              this.showProfileInfo = true;
-                // this.changePasswordForm.reset();
+            this.changePasswordForm.reset();
+                
           } else {
             this.snackBar.open(res.msg, '', {
               duration: 3000,

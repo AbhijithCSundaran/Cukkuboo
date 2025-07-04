@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { NotificationService } from '../../services/notification.service';
 
 @Component({
@@ -19,7 +20,14 @@ export class NotificationsComponent implements OnInit {
   isLoadingDetail = false;
   isMarkingAll = false;
 
-  constructor(private notificationService: NotificationService) {}
+  // Modal
+  showDeleteModal = false;
+  notificationToDelete: any = null;
+
+  constructor(
+    private notificationService: NotificationService,
+    private snackBar: MatSnackBar
+  ) {}
 
   ngOnInit() {
     this.loadNotifications();
@@ -38,6 +46,10 @@ export class NotificationsComponent implements OnInit {
             date: new Date(n.created_on),
             read: n.status === '1'
           }));
+
+          if (this.notifications.length > 0) {
+            this.selectNotification(this.notifications[0]);
+          }
         },
         error: (err) => {
           console.error('Error loading notifications:', err);
@@ -47,81 +59,100 @@ export class NotificationsComponent implements OnInit {
 
   selectNotification(notification: any) {
     this.isLoadingDetail = true;
-    this.notificationService.getNotificationById(notification.id).subscribe((res: any) => {
-      const data = res.data;
-      this.selectedNotification = {
-        id: data.notification_id,
-        title: data.title,
-        message: data.content,
-        date: new Date(data.created_on),
-        read: data.status === '1'
-      };
-      const target = this.notifications.find(n => n.id === this.selectedNotification.id);
-      if (target) {
-        target.read = true;
+    this.notificationService.getNotificationById(notification.id).subscribe({
+      next: (res: any) => {
+        const data = res.data;
+        this.selectedNotification = {
+          id: data.notification_id,
+          title: data.title,
+          message: data.content,
+          date: new Date(data.created_on),
+          read: data.status === '1'
+        };
+
+        const target = this.notifications.find(n => n.id === this.selectedNotification.id);
+        if (target) {
+          target.read = true;
+        }
+
+        this.isLoadingDetail = false;
+      },
+      error: (err) => {
+        console.error('Error loading notification detail:', err);
+        this.isLoadingDetail = false;
       }
-      this.isLoadingDetail = false;
     });
   }
 
-  markAsRead(notification: any) {
-    notification.read = true;
-  }
+  markAllAsRead() {
+    if (this.isMarkingAll) return;
+    this.isMarkingAll = true;
 
-markAllAsRead() {
-  if (this.isMarkingAll) {
-    console.log('Already marking all as read, please wait...');
-    return;
-  }
-
-  console.log('Calling markAllAsRead API...');
-
-  this.isMarkingAll = true;
-
-  this.notificationService.markAllAsRead().subscribe({
-    next: (res) => {
-      console.log('markAllAsRead API response:', res);
-
-      this.notifications.forEach(n => (n.read = true));
-      this.isMarkingAll = false;
-
-      console.log('All notifications marked as read locally.');
-    },
-    error: (err) => {
-      console.error('Failed to mark all as read:', err);
-      this.isMarkingAll = false;
-    }
-  });
-}
-
-
- deleteNotification(notification: any) {
-  console.log('Delete clicked for notification:', notification); 
-
-  const confirmDelete = confirm(`Are you sure you want to delete "${notification.title}"?`);
-  if (!confirmDelete) {
-    console.log('Delete cancelled by user.');
-    return;
-  }
-
-  this.notificationService.deleteNotification(notification.id).subscribe({
-    next: () => {
-      console.log(`Notification with ID ${notification.id} deleted successfully.`);
-
-      this.notifications = this.notifications.filter(n => n.id !== notification.id);
-      console.log('Updated notifications list:', this.notifications);
-
-      if (this.selectedNotification?.id === notification.id) {
-        console.log('Deleted notification was selected. Clearing selectedNotification.');
-        this.selectedNotification = null;
+    this.notificationService.markAllAsRead().subscribe({
+      next: () => {
+        this.notifications.forEach(n => (n.read = true));
+        this.isMarkingAll = false;
+        this.snackBar.open('All notifications marked as read.', '', {
+          duration: 3000,
+          verticalPosition: 'top',
+          horizontalPosition: 'center',
+          panelClass: ['snackbar-success']
+        });
+      },
+      error: () => {
+        this.isMarkingAll = false;
+        this.snackBar.open('Failed to mark all as read.', '', {
+          duration: 3000,
+          verticalPosition: 'top',
+          horizontalPosition: 'center',
+          panelClass: ['snackbar-danger']
+        });
       }
-    },
-    error: (err) => {
-      console.error(`Failed to delete notification with ID ${notification.id}`, err);
-    }
-  });
-}
+    });
+  }
 
+  openDeleteModal(notification: any) {
+    this.notificationToDelete = notification;
+    this.showDeleteModal = true;
+  }
+
+  cancelDelete() {
+    this.notificationToDelete = null;
+    this.showDeleteModal = false;
+  }
+
+  confirmDelete() {
+    const notification = this.notificationToDelete;
+    if (!notification) return;
+
+    this.notificationService.deleteNotification(notification.id).subscribe({
+      next: () => {
+        this.notifications = this.notifications.filter(n => n.id !== notification.id);
+        if (this.selectedNotification?.id === notification.id) {
+          this.selectedNotification = null;
+        }
+
+        this.snackBar.open('Successfully removed', '', {
+          duration: 3000,
+          verticalPosition: 'top',
+          horizontalPosition: 'center',
+          panelClass: ['snackbar-success']
+        });
+
+        this.cancelDelete();
+      },
+      error: () => {
+        this.snackBar.open('Failed to remove', '', {
+          duration: 3000,
+          verticalPosition: 'top',
+          horizontalPosition: 'center',
+          panelClass: ['snackbar-danger']
+        });
+
+        this.cancelDelete();
+      }
+    });
+  }
 
   onSearch(text: string) {
     this.searchText = text;

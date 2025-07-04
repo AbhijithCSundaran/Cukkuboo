@@ -19,10 +19,11 @@ export class HeaderComponent implements OnInit {
   username: string = '';
   isSignedIn: boolean = false;
   showUserDropdown: boolean = false;
-  showNotificationDropdown: boolean = false;
 
   notifications: any[] = [];
-  notificationCount: number = 0;
+  hasUnreadNotification: boolean = false;
+
+  showSignOutModal: boolean = false;
 
   private _menuOpen = false;
   get menuOpen(): boolean {
@@ -30,11 +31,7 @@ export class HeaderComponent implements OnInit {
   }
   set menuOpen(value: boolean) {
     this._menuOpen = value;
-    if (value) {
-      document.body.classList.add('sidebar-open');
-    } else {
-      document.body.classList.remove('sidebar-open');
-    }
+    document.body.classList.toggle('sidebar-open', value);
   }
 
   private _unsubscribeAll: Subject<void> = new Subject<void>();
@@ -49,18 +46,14 @@ export class HeaderComponent implements OnInit {
   ) {
     this.storageService.onUpdateItem
       .pipe(takeUntil(this._unsubscribeAll))
-      .subscribe(() => {
-        const token = this.storageService.getItem('token');
-        this.username = this.storageService.getItem('username');
-        this.isSignedIn = !!token;
-
-        if (this.isSignedIn) {
-          this.loadNotifications();
-        }
-      });
+      .subscribe(() => this.checkAuthAndLoadNotifications());
   }
 
   ngOnInit(): void {
+    this.checkAuthAndLoadNotifications();
+  }
+
+  checkAuthAndLoadNotifications(): void {
     const token = this.storageService.getItem('token');
     this.username = this.storageService.getItem('username');
     this.isSignedIn = !!token;
@@ -73,9 +66,8 @@ export class HeaderComponent implements OnInit {
   loadNotifications(): void {
     this.notificationService.getNotifications(0, 10).subscribe({
       next: (res) => {
-        console.log('Notification list response:', res);
         this.notifications = res?.data || [];
-        this.notificationCount = this.notifications.filter((n: any) => n.status === '0').length;
+        this.hasUnreadNotification = this.notifications.some((n: any) => n.status === '1');
       },
       error: (err) => {
         console.error('Failed to load notifications', err);
@@ -83,29 +75,37 @@ export class HeaderComponent implements OnInit {
     });
   }
 
-  toggleNotificationDropdown() {
-    this.showNotificationDropdown = !this.showNotificationDropdown;
-  }
-
-  openNotification(id: number): void {
-    this.notificationService.getNotificationById(id).subscribe({
-      next: (res) => {
-        console.log('Notification details:', res);
-        this.closeMenu();
+  goToNotifications(): void {
+    this.closeMenu();
+    this.notificationService.markAllAsRead().subscribe({
+      next: () => {
+        this.hasUnreadNotification = false;
         this.router.navigate(['/notifications']);
       },
       error: (err) => {
-        console.error('Failed to fetch notification details:', err);
+        console.error('Failed to mark notifications as read', err);
+        this.router.navigate(['/notifications']);
       }
     });
   }
 
-  signOut() {
+ 
+  openSignOutModal(): void {
+    this.showSignOutModal = true;
+  }
+
+  cancelSignOut(): void {
+    this.showSignOutModal = false;
+  }
+
+  confirmSignOut(): void {
+    this.showSignOutModal = false;
+
     this.userService.logout().subscribe({
       next: () => {
         localStorage.clear();
         this.storageService.updateItem('token', '');
-        this.snackBar.open('Signed out successfully', 'Close', {
+        this.snackBar.open('Signed out successfully', '', {
           duration: 3000,
           verticalPosition: 'top',
           horizontalPosition: 'center',
@@ -115,7 +115,7 @@ export class HeaderComponent implements OnInit {
       },
       error: (err) => {
         console.error('Logout failed:', err);
-        this.snackBar.open('Failed to sign out. Please try again.', 'Close', {
+        this.snackBar.open('Failed to sign out. Please try again.', '', {
           duration: 3000,
           verticalPosition: 'top',
           horizontalPosition: 'center',
@@ -128,7 +128,6 @@ export class HeaderComponent implements OnInit {
   closeMenu() {
     this.menuOpen = false;
     this.showUserDropdown = false;
-    this.showNotificationDropdown = false;
   }
 
   @HostListener('document:click', ['$event'])

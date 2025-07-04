@@ -48,11 +48,19 @@ export class SingleMovieComponent implements OnInit {
 
   ngOnInit(): void {}
 
+  showSnackbar(message: string, type: 'success' | 'error'): void {
+    this.snackBar.open(message, '', {
+      duration: 3000,
+      verticalPosition: 'top',
+      horizontalPosition: 'center',
+      panelClass: [type === 'success' ? 'snackbar-success' : 'snackbar-error']
+    });
+  }
+
   getMovie(id: number, autoplay: any): void {
     this.selectedVideo = '';
     this.movieService.getMovieById(id).subscribe({
       next: (res) => {
-         console.log('API Response from getMovieById:', res);
         if (res?.data) {
           const data = Array.isArray(res.data) ? res.data[0] : res.data;
           this.movieData = data;
@@ -63,11 +71,11 @@ export class SingleMovieComponent implements OnInit {
           this.isInWatchLater = !!this.movieData.is_in_watch_later;
           this.getrelatedMovies();
         } else {
-          this.snackBar.open('Failed to load movie.', '', { duration: 3000, panelClass: ['snackbar-error'] });
+          this.showSnackbar('Failed to load movie.', 'error');
         }
       },
       error: () => {
-        this.snackBar.open('Error loading movie data.', '', { duration: 3000, panelClass: ['snackbar-error'] });
+        this.showSnackbar('Error loading movie data.', 'error');
       }
     });
   }
@@ -76,11 +84,7 @@ export class SingleMovieComponent implements OnInit {
     this.selectedVideo = video;
 
     if (!video) {
-      this.snackBar.open('Please subscribe to watch this Movie.', '', {
-        duration: 3000,
-        verticalPosition: 'top',
-        panelClass: ['snackbar-error']
-      });
+      this.showSnackbar('Access this movie by subscribing to our platform', 'error');
       this.router.navigate(['/subscribe']);
       return;
     }
@@ -110,23 +114,14 @@ export class SingleMovieComponent implements OnInit {
       next: (res) => {
         if (res?.success) {
           this.isInWatchLater = true;
-          console.log('Movie added to Watch Later:', this.movieData.mov_id);
-          this.snackBar.open('Added to Watch Later!', '', {
-            duration: 3000,
-            panelClass: ['snackbar-success']
-          });
+          this.movieData.is_in_watch_later = true;
+          this.showSnackbar('Added to Watch Later!', 'success');
         } else {
-          this.snackBar.open(res?.message || 'Failed to add.', '', {
-            duration: 3000,
-            panelClass: ['snackbar-error']
-          });
+          this.showSnackbar(res?.message || 'Failed to add.', 'error');
         }
       },
       error: () => {
-        this.snackBar.open('Error saving Watch Later.', '', {
-          duration: 3000,
-          panelClass: ['snackbar-error']
-        });
+        this.showSnackbar('Error saving Watch Later.', 'error');
       }
     });
   }
@@ -138,29 +133,20 @@ export class SingleMovieComponent implements OnInit {
       next: (res) => {
         if (res?.success) {
           this.isInWatchLater = false;
-          console.log('Movie removed from Watch Later:', this.movieData.mov_id);
-          this.snackBar.open('Removed from Watch Later!', '', {
-            duration: 3000,
-            panelClass: ['snackbar-success']
-          });
+          this.movieData.is_in_watch_later = false;
+          this.showSnackbar('Removed from Watch Later!', 'success');
         } else {
-          this.snackBar.open(res?.message || 'Failed to remove.', '', {
-            duration: 3000,
-            panelClass: ['snackbar-error']
-          });
+          this.showSnackbar(res?.message || 'Failed to remove.', 'error');
         }
       },
       error: () => {
-        this.snackBar.open('Error removing Watch Later.', '', {
-          duration: 3000,
-          panelClass: ['snackbar-error']
-        });
+        this.showSnackbar('Error removing Watch Later.', 'error');
       }
     });
   }
 
   shareMovie(): void {
-    // Add sharing logic here
+    // implement share logic
   }
 
   onScroll(): void {

@@ -171,27 +171,27 @@ public function getMovieById($id)
         $getmoviesdetails['is_in_watch_later'] = $this->moviedetail->isInWatchLater($user_id, $id);
         $getmoviesdetails['is_in_watch_history'] = $this->moviedetail->isInWatchHistory($user_id, $id);
 
-    //     $reaction = $this->db->table('movie_reactions')
-    //     ->select('status')
-    //     ->where('user_id', $user_id)
-    //     ->where('mov_id', $mov_id)
-    //     ->get()
-    //     ->getRow();
+        $reaction = $this->db->table('movie_reactions')
+        ->select('status')
+        ->where('user_id', $user_id)
+        ->where('mov_id', $id)
+        ->get()
+        ->getRow();
 
-    // $isLiked = false;
-    // $isDisliked = false;
+    $isLiked = false;
+    $isDisliked = false;
 
-    // if ($reaction) {
-    //     if ($reaction->status == 1) {
-    //         $isLiked = true;
-    //     } elseif ($reaction->status == 2) {
-    //         $isDisliked = true;
-    //     }
-    // }
+    if ($reaction) {
+        if ($reaction->status == 1) {
+            $isLiked = true;
+        } elseif ($reaction->status == 2) {
+            $isDisliked = true;
+        }
+    }
 
     // Add flags to movie array
-    // $movie['is_liked_by_user'] = $isLiked;
-    // $movie['is_disliked_by_user'] = $isDisliked;
+    $getmoviesdetails['is_liked_by_user'] = $isLiked;         
+    $getmoviesdetails['is_disliked_by_user'] = $isDisliked;   
 
 
        
@@ -211,73 +211,73 @@ public function getMovieById($id)
         'data'    => $getmoviesdetails
     ]);
 }
-// public function movieReaction($mov_id)
-// {
-//     $authHeader = $this->request->getHeaderLine('Authorization');
-//     $user = $this->authService->getAuthenticatedUser($authHeader);
-//     if (!$user) return $this->failUnauthorized('Invalid or missing token.');
+public function movieReaction($mov_id)
+{
+    $authHeader = $this->request->getHeaderLine('Authorization');
+    $user = $this->authService->getAuthenticatedUser($authHeader);
+    if (!$user) return $this->failUnauthorized('Invalid or missing token.');
  
-//     $user_id = $user['user_id'];
-//     $status = $this->request->getJSON(true)['status']; // 1 for like, 2 for dislike
+    $user_id = $user['user_id'];
+    $status = $this->request->getJSON(true)['status']; // 1 for like, 2 for dislike
  
-//     if (!in_array($status, [1, 2])) {
-//         return $this->failValidationError('Invalid status value. Use 1 for like, 2 for dislike.');
-//     }
+    if (!in_array($status, [1, 2])) {
+        return $this->failValidationError('Invalid status value. Use 1 for like, 2 for dislike.');
+    }
  
-//     $existing = $this->db->table('movie_reactions')
-//         ->where('user_id', $user_id)
-//         ->where('mov_id', $mov_id)
-//         ->get()
-//         ->getRow();
+    $existing = $this->db->table('movie_reactions')
+        ->where('user_id', $user_id)
+        ->where('mov_id', $mov_id)
+        ->get()
+        ->getRow();
  
-//     $movieTable = $this->db->table('movies_details');
-//     $reactionField = $status == 1 ? 'likes' : 'dislikes';
-//     $oppositeField = $status == 1 ? 'dislikes' : 'likes';
+    $movieTable = $this->db->table('movies_details');
+    $reactionField = $status == 1 ? 'likes' : 'dislikes';
+    $oppositeField = $status == 1 ? 'dislikes' : 'likes';
  
-//     if ($existing) {
-//         if ($existing->status == $status) {
-//             // Remove existing reaction
-//             $this->db->table('movie_reactions')->delete(['reaction_id' => $existing->reaction_id]);
+    if ($existing) {
+        if ($existing->status == $status) {
+            // Remove existing reaction
+            $this->db->table('movie_reactions')->delete(['reaction_id' => $existing->reaction_id]);
  
-//             $movieTable->set($reactionField, "$reactionField - 1", false)
-//                 ->where('mov_id', $mov_id)->update();
+            $movieTable->set($reactionField, "$reactionField - 1", false)
+                ->where('mov_id', $mov_id)->update();
  
-//             return $this->respond([
-//                 'success' => true,
-//                 'message' => ucfirst($reactionField) . ' removed.',
-//             ]);
-//         } else {
-//             // Switch reaction
-//             $this->db->table('movie_reactions')
-//                 ->where('reaction_id', $existing->reaction_id)
-//                 ->update(['status' => $status]);
+            return $this->respond([
+                'success' => true,
+                'message' => ucfirst($reactionField) . ' removed.',
+            ]);
+        } else {
+            // Switch reaction
+            $this->db->table('movie_reactions')
+                ->where('reaction_id', $existing->reaction_id)
+                ->update(['status' => $status]);
  
-//             $movieTable->set($reactionField, "$reactionField + 1", false)
-//                 ->set($oppositeField, "$oppositeField - 1", false)
-//                 ->where('mov_id', $mov_id)->update();
+            $movieTable->set($reactionField, "$reactionField + 1", false)
+                ->set($oppositeField, "$oppositeField - 1", false)
+                ->where('mov_id', $mov_id)->update();
  
-//             return $this->respond([
-//                 'success' => true,
-//                 'message' => ucfirst($reactionField) . ' updated.',
-//             ]);
-//         }
-//     } else {
-//         // New reaction
-//         $this->db->table('movie_reactions')->insert([
-//             'user_id' => $user_id,
-//             'mov_id' => $mov_id,
-//             'status' => $status,
-//         ]);
+            return $this->respond([
+                'success' => true,
+                'message' => ucfirst($reactionField) . ' updated.',
+            ]);
+        }
+    } else {
+        // New reaction
+        $this->db->table('movie_reactions')->insert([
+            'user_id' => $user_id,
+            'mov_id' => $mov_id,
+            'status' => $status,
+        ]);
  
-//         $movieTable->set($reactionField, "$reactionField + 1", false)
-//             ->where('mov_id', $mov_id)->update();
+        $movieTable->set($reactionField, "$reactionField + 1", false)
+            ->where('mov_id', $mov_id)->update();
  
-//         return $this->respond([
-//             'success' => true,
-//             'message' => ucfirst($reactionField) . ' added.',
-//         ]);
-//     }
-// }
+        return $this->respond([
+            'success' => true,
+            'message' => ucfirst($reactionField) . ' added.',
+        ]);
+    }
+}
  
  
  

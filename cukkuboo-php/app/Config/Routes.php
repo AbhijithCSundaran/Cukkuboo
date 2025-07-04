@@ -44,7 +44,7 @@ $routes->get('getmovie/(:any)', 'MovieDetail::getMovieById/$1');
 $routes->delete('movie/delete/(:any)','MovieDetail::deleteMovieDetails/$1');
 $routes->get('movies/latest', 'MovieDetail::getLatestMovies');
 $routes->get('movies/most-watched', 'MovieDetail::mostWatchedMovies');
-//$routes->post('movie/movieReaction/(:num)', 'MovieDetail::movieReaction/$1');
+$routes->post('movie/movieReaction/(:num)', 'MovieDetail::movieReaction/$1');
 
 //Admin Home Display
 

@@ -71,8 +71,8 @@
       <!-- Watch Later + Share -->
       <div class="w-100 d-flex flex-wrap gap-2 my-3">
         <button class="gen-button gen-button-outline py-1 px-3" (click)="toggleWatchLater()">
-          <i [class]="isInWatchLater ? 'fas fa-clock' : 'far fa-clock'"></i>
-          {{ isInWatchLater ? 'Remove from Watch Later' : 'Watch Later' }}
+          <i [class]="movieData.is_in_watch_later ? 'fas fa-clock' : 'far fa-clock'"></i>
+          {{ movieData.is_in_watch_later ? 'Remove from Watch Later' : 'Watch Later' }}
         </button>
         <button class="gen-button gen-button-outline py-1 px-3" (click)="shareMovie()">
           <i class="fas fa-share-alt"></i> Share

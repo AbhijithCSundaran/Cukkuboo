@@ -30,7 +30,6 @@ export class SingleMovieComponent implements OnInit {
   videoUrl = environment.apiUrl + 'uploads/videos/';
   imageUrl = environment.apiUrl + 'uploads/images/';
   suggetionList: any[] = [];
-  isInWatchLater = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -46,7 +45,7 @@ export class SingleMovieComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
   showSnackbar(message: string, type: 'success' | 'error'): void {
     this.snackBar.open(message, '', {
@@ -61,14 +60,12 @@ export class SingleMovieComponent implements OnInit {
     this.selectedVideo = '';
     this.movieService.getMovieById(id).subscribe({
       next: (res) => {
-        if (res?.data) {
-          const data = Array.isArray(res.data) ? res.data[0] : res.data;
-          this.movieData = data;
+        if (res?.success) {
+          this.movieData = res.data;
           if (autoplay) this.playVideo(this.movieData.video);
           this.pageIndex = 0;
           this.stopInfiniteScroll = false;
           this.suggetionList = [];
-          this.isInWatchLater = !!this.movieData.is_in_watch_later;
           this.getrelatedMovies();
         } else {
           this.showSnackbar('Failed to load movie.', 'error');
@@ -99,7 +96,7 @@ export class SingleMovieComponent implements OnInit {
   }
 
   toggleWatchLater(): void {
-    if (this.isInWatchLater) {
+    if (this.movieData.is_in_watch_later) {
       this.removeFromWatchLater();
     } else {
       this.addToWatchLater();
@@ -109,11 +106,9 @@ export class SingleMovieComponent implements OnInit {
   addToWatchLater(): void {
     if (!this.movieData?.mov_id) return;
     const model = { mov_id: this.movieData.mov_id };
-
     this.movieService.saveWatchlater(model).subscribe({
       next: (res) => {
         if (res?.success) {
-          this.isInWatchLater = true;
           this.movieData.is_in_watch_later = true;
           this.showSnackbar('Added to Watch Later!', 'success');
         } else {
@@ -132,7 +127,6 @@ export class SingleMovieComponent implements OnInit {
     this.movieService.deleteWatchLater(this.movieData.mov_id).subscribe({
       next: (res) => {
         if (res?.success) {
-          this.isInWatchLater = false;
           this.movieData.is_in_watch_later = false;
           this.showSnackbar('Removed from Watch Later!', 'success');
         } else {
@@ -146,7 +140,7 @@ export class SingleMovieComponent implements OnInit {
   }
 
   shareMovie(): void {
-    // implement share logic
+
   }
 
   onScroll(): void {

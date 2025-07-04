@@ -33,11 +33,11 @@ export class ReelsComponent implements OnInit, AfterViewInit, OnDestroy {
     description: string;
     likes: number;
     views: number;
+    is_liked_by_user: boolean;
   }[] = [];
 
   videoStates: boolean[] = [];
   mutedStates: boolean[] = [];
-  likedStates: boolean[] = [];
   hoveredIndex: number | null = null;
   isFullscreen = false;
   private currentIndex = 0;
@@ -58,7 +58,7 @@ export class ReelsComponent implements OnInit, AfterViewInit, OnDestroy {
     this.loadReels();
   }
 
-  onScroll(event: any) {
+  onScroll(): void {
     this.pageIndex++;
     this.loadReels(this.pageIndex, this.pageSize, this.searchText);
   }
@@ -74,14 +74,14 @@ export class ReelsComponent implements OnInit, AfterViewInit, OnDestroy {
             title: this.capitalizeFirst(data.title),
             description: this.capitalizeFirst(data.description),
             likes: Number(data.likes) || 0,
-            views: Number(data.views) || 0
+            views: Number(data.views) || 0,
+            is_liked_by_user: data.is_liked_by_user === true || data.is_liked_by_user === 1
           })) || [];
 
           if (newReels.length) {
             this.reels = [...this.reels, ...newReels];
             this.videoStates.push(...new Array(newReels.length).fill(true));
             this.mutedStates.push(...new Array(newReels.length).fill(true));
-            this.likedStates.push(...new Array(newReels.length).fill(false)); // set from API if available
           } else {
             this.stopInfiniteScroll = true;
           }
@@ -94,22 +94,17 @@ export class ReelsComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
-  toggleLike(reel: any, index: number): void {
-    const alreadyLiked = this.likedStates[index];
+  toggleLike(reel: any): void {
+    const alreadyLiked = reel.is_liked_by_user;
     const model = {
       reels_id: reel.id,
       status: alreadyLiked ? 2 : 1
     };
 
     this.movieService.likeReel(model).subscribe({
-      next: (res) => {
-        if (alreadyLiked) {
-          reel.likes = Math.max(0, reel.likes - 1);
-        } else {
-          reel.likes += 1;
-        }
-        this.likedStates[index] = !alreadyLiked;
-        console.log(`Reel ${alreadyLiked ? 'disliked' : 'liked'}:`, res);
+      next: () => {
+        reel.is_liked_by_user = !alreadyLiked;
+        reel.likes += alreadyLiked ? -1 : 1;
       },
       error: (err) => {
         console.error('Error toggling like:', err);
@@ -117,14 +112,46 @@ export class ReelsComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
-  onSearchChange() {
-    clearTimeout(this.searchTimeout);
-    this.searchTimeout = setTimeout(() => {
-      this.pageIndex = 0;
-      this.stopInfiniteScroll = false;
-      this.reels = [];
-      this.loadReels(this.pageIndex, this.pageSize, this.searchText);
-    }, 400);
+  togglePlayPause(index: number): void {
+    const video = this.videos.get(index)?.nativeElement;
+    if (video) {
+      if (video.paused) {
+        video.play();
+        this.videoStates[index] = true;
+      } else {
+        video.pause();
+        this.videoStates[index] = false;
+      }
+
+      this.hoveredIndex = index;
+      setTimeout(() => {
+        if (this.hoveredIndex === index) {
+          this.hoveredIndex = null;
+        }
+      }, 1000);
+    }
+  }
+
+  toggleMute(index: number): void {
+    const video = this.videos.get(index)?.nativeElement;
+    if (video) {
+      this.mutedStates[index] = !this.mutedStates[index];
+      video.muted = this.mutedStates[index];
+    }
+  }
+
+  onShare(index: number): void {
+   
+  }
+
+  onHover(index: number): void {
+    this.hoveredIndex = index;
+  }
+
+  onLeave(index: number): void {
+    if (this.hoveredIndex === index) {
+      this.hoveredIndex = null;
+    }
   }
 
   capitalizeFirst(text: string): string {
@@ -149,7 +176,6 @@ export class ReelsComponent implements OnInit, AfterViewInit, OnDestroy {
               video.muted = prevMuted;
               this.currentIndex = index;
             }
-
           } else {
             video.pause();
             this.videoStates[index] = false;
@@ -210,51 +236,10 @@ export class ReelsComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  togglePlayPause(index: number): void {
-    const video = this.videos.get(index)?.nativeElement;
-    if (video) {
-      if (video.paused) {
-        video.play();
-        this.videoStates[index] = true;
-      } else {
-        video.pause();
-        this.videoStates[index] = false;
-      }
-
-      this.hoveredIndex = index;
-      setTimeout(() => {
-        if (this.hoveredIndex === index) {
-          this.hoveredIndex = null;
-        }
-      }, 1000);
-    }
-  }
-
-  toggleMute(index: number): void {
-    const video = this.videos.get(index)?.nativeElement;
-    if (video) {
-      this.mutedStates[index] = !this.mutedStates[index];
-      video.muted = this.mutedStates[index];
-    }
-  }
-
-  onShare(index: number): void {
-    console.log('Share clicked for reel index:', index);
-  }
-
-  onHover(index: number): void {
-    this.hoveredIndex = index;
-  }
-
-  onLeave(index: number): void {
-    if (this.hoveredIndex === index) {
-      this.hoveredIndex = null;
-    }
-  }
-
   toggleFullscreen(event: MouseEvent): void {
     event.stopPropagation();
     const elem = document.documentElement;
+
     if (!document.fullscreenElement) {
       elem.requestFullscreen().then(() => (this.isFullscreen = true));
     } else {

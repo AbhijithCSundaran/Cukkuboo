@@ -27,28 +27,22 @@ export class NotificationsComponent implements OnInit {
   constructor(
     private notificationService: NotificationService,
     private snackBar: MatSnackBar
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.loadNotifications();
   }
 
   loadNotifications() {
+    debugger;
     this.notificationService
-      .getNotifications(this.pageIndex, this.pageSize, this.searchText)
-      .subscribe({
+      .getNotifications(this.pageIndex, this.pageSize, this.searchText).subscribe({
         next: (res: any) => {
-          const rawData = res?.data || [];
-          this.notifications = rawData.map((n: any) => ({
-            id: n.notification_id,
-            title: n.title,
-            message: n.content,
-            date: new Date(n.created_on),
-            read: n.status === '1'
-          }));
+          if (res?.success) {
+            this.notifications = res?.data || [];
+            if (this.notifications.length > 0)
+              this.selectNotification(this.notifications[0]);
 
-          if (this.notifications.length > 0) {
-            this.selectNotification(this.notifications[0]);
           }
         },
         error: (err) => {
@@ -59,22 +53,12 @@ export class NotificationsComponent implements OnInit {
 
   selectNotification(notification: any) {
     this.isLoadingDetail = true;
-    this.notificationService.getNotificationById(notification.id).subscribe({
+    this.notificationService.getNotificationById(notification.notification_id).subscribe({
       next: (res: any) => {
-        const data = res.data;
-        this.selectedNotification = {
-          id: data.notification_id,
-          title: data.title,
-          message: data.content,
-          date: new Date(data.created_on),
-          read: data.status === '1'
-        };
-
-        const target = this.notifications.find(n => n.id === this.selectedNotification.id);
-        if (target) {
-          target.read = true;
+        if (res.success) {
+          notification.status = 2
+          this.selectedNotification = res.data
         }
-
         this.isLoadingDetail = false;
       },
       error: (err) => {

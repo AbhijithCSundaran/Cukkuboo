@@ -11,7 +11,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { ValidationMessagesComponent } from '../../core/components/validation-messsage/validaation-message.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-profile',
   imports: [
@@ -37,6 +37,8 @@ export class ProfileComponent implements OnInit {
   changePasswordForm!: FormGroup;
   initialFormValue: any;
   ShowDeleteAccount: boolean = false;
+  deleteAccountForm!: FormGroup;
+  showSignOutModal: boolean = false;
 
 
 
@@ -44,7 +46,8 @@ export class ProfileComponent implements OnInit {
     private userService: UserService,
     private storageService: StorageService,
     private fb: FormBuilder,
-    private snackBar: MatSnackBar,) { }
+    private snackBar: MatSnackBar,
+    private router:Router) { }
 
   ngOnInit(): void {
 
@@ -218,6 +221,54 @@ export class ProfileComponent implements OnInit {
       });
     }
   }
+
+
+  onDeleteAccount(): void {
+  const password = this.deleteAccountForm.get('currentPassword')?.value;
+  if (!password) return;
+
+  const formData = new FormData();
+  formData.append('password', password.trim());
+
+  const userId = this.userId;
+
+  this.userService.deleteAccount(formData, userId!).subscribe({
+    next: (res) => {
+      if (res) {
+        this.snackBar.open('Account deleted successfully.', '', {
+          duration: 3000,
+          verticalPosition: 'top',
+          panelClass: ['snackbar-success']
+        });
+        // Optionally: log out user, redirect
+        localStorage.clear();
+        this.router.navigate(['/signin']);
+      } else {
+        this.snackBar.open('Failed to delete account.', '', {
+          duration: 3000,
+          verticalPosition: 'top',
+          panelClass: ['snackbar-error']
+        });
+      }
+    },
+    error: (err) => {
+      console.error('Error deleting account:', err);
+      this.snackBar.open('Incorrect password or server error.', '', {
+        duration: 3000,
+        verticalPosition: 'top',
+        panelClass: ['snackbar-error']
+      });
+    }
+  });
+}
+
+ confirmSignOut(): void {
+   
+  }
+  cancelSignOut(): void{
+    
+  }
+
 
 
 }

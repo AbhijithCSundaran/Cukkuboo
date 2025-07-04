@@ -183,7 +183,7 @@
                     <hr class="p-2" style="color: #c70d47" />
                 </div>
                 <div class="card-body">
-                    <form [formGroup]="changePasswordForm" (ngSubmit)="onChangePassword()">
+                    <form [formGroup]="deleteAccountForm" (ngSubmit)="onDeleteAccount()">
                         <!-- Current Password -->
                         <mat-form-field appearance="outline" class="w-100 field-space">
                             <mat-label>Current Password</mat-label>
@@ -201,9 +201,10 @@
                             </mat-error>
                         </mat-form-field>
                        <div class="text-end">
-                            <button type="submit" class="btn update-btn mt-2">
-                                Delete
-                            </button>
+                          <button type="button" class="btn update-btn mt-2" >
+  Delete
+</button>
+                           
                             <button type="button" class="btn btn-secondary ms-2 mt-2" (click)="backToProfile()">
                                 Back
                             </button>
@@ -216,4 +217,15 @@
         </div>
     </div>
 </section>
+
+  <!--  Sign Out Confirmation Modal -->
+  <div class="modal" [class.show]="showSignOutModal">
+    <div class="modal-content">
+      <p>Are you sure you want to <span class="highlight">sign out</span>?</p>
+      <div class="modal-actions">
+        <button class="btn-yes" (click)="confirmSignOut()">Sign Out</button>
+        <button class="btn-no" (click)="cancelSignOut()">Cancel</button>
+      </div>
+    </div>
+  </div>
 <hr />

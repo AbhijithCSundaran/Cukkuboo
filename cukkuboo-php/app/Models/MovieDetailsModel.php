@@ -10,7 +10,7 @@ class MovieDetailsModel extends Model
     protected $primaryKey = 'mov_id';
     protected $allowedFields = [
         'video', 'title', 'genre', 'description', 'cast_details', 'category',
-        'release_date', 'age_rating', 'access', 'status', 'thumbnail', 'trailer', 'banner', 'duration', 'rating', 'user_type', 
+        'release_date', 'age_rating', 'access', 'status', 'thumbnail', 'trailer', 'banner', 'duration', 'rating','likes','dislikes', 'user_type', 
         'created_by', 'created_on', 'modify_by', 'modify_on'
     ];
 
@@ -32,10 +32,19 @@ public function getAllMoviesDetails() {
     // )->getResult();
 
 }
-public function getMovieDetailsById($id){
-     return $this->db->query('select * from movies_details where mov_id="'.$id.'"')->getRowArray();
+// public function getMovieDetailsById($id){
+//      return $this->db->query('select * from movies_details where mov_id="'.$id.'"')->getRowArray();
 
+//}
+public function getMovieDetailsById($id)
+{
+    return $this->where('mov_id', $id)
+        ->where('status !=', 9)
+        ->select('*, likes, dislikes')  // make sure likes/dislikes are selected
+        ->get()
+        ->getRowArray();
 }
+
 public function deleteMovieDetailsById($status, $mov_id)
 {
   return $this->db->query("update movies_details set status = '".$status."', modify_on=NOW() where mov_id = '".$mov_id."'");

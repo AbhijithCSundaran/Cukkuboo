@@ -48,43 +48,42 @@ class Resume extends ResourceController
     }
 
     public function getAllHistory()
-    {
-        $authHeader = $this->request->getHeaderLine('Authorization');
-        $user = $this->authService->getAuthenticatedUser($authHeader);
+{
+    $authHeader = $this->request->getHeaderLine('Authorization');
+    $user = $this->authService->getAuthenticatedUser($authHeader);
 
-        if (!$user || !isset($user['user_id'])) {
-            return $this->respond(['success' => false, 'message' => 'Unauthorized user.']);
+    if (!$user || !isset($user['user_id'])) {
+        return $this->respond(['success' => false, 'message' => 'Unauthorized user.']);
     }
 
-        $pageIndex = (int) $this->request->getGet('pageIndex');
-        $pageSize  = (int) $this->request->getGet('pageSize');
-        $search    = trim($this->request->getGet('search') ?? '');
+    $pageIndex = (int) $this->request->getGet('pageIndex');
+    $pageSize  = (int) $this->request->getGet('pageSize');
+    $search    = trim($this->request->getGet('search') ?? '');
 
-        if ($pageSize <= 0) {
-            $pageSize = 10;
-        }
-
-        $offset = $pageIndex * $pageSize;
-
-         $builder = $this->resumeModel->getHistoryByUserId($user['user_id'], $search);
-
-        $totalBuilder = clone $builder;
-        $totalCount = $totalBuilder->countAllResults(false);
-
-        
-        $history = $builder
-            ->orderBy('resume_history.created_by', 'DESC') 
-            ->limit($pageSize, $offset)
-            ->get()
-            ->getResult();
-
-        return $this->respond([
-            'success' => true,
-            'message' => 'Viewed movie history fetched successfully.',
-            'total'   => $totalCount,
-            'data'    => $history
-        ]);
+    if ($pageSize <= 0) {
+        $pageSize = 10;
     }
+
+    $offset = $pageIndex * $pageSize;
+    $builder = $this->resumeModel->getAllUsersHistory($search);
+
+    $totalBuilder = clone $builder;
+    $totalCount = $totalBuilder->countAllResults(false);
+
+    $history = $builder
+        ->orderBy('resume_history.created_by', 'DESC')
+        ->limit($pageSize, $offset)
+        ->get()
+        ->getResult();
+
+    return $this->respond([
+        'success' => true,
+        'message' => 'All users’ viewed movie history fetched successfully.',
+        'total'   => $totalCount,
+        'data'    => $history
+    ]);
+}
+
     public function getById($id)
 {
     $authHeader = $this->request->getHeaderLine('Authorization');
@@ -107,42 +106,52 @@ class Resume extends ResourceController
         'data'    => $data
     ]);
 }
-public function deleteHistoryById($id = null)
+public function getUserHistory()
+{
+    $authHeader = $this->request->getHeaderLine('Authorization');
+    $authUser = $this->authService->getAuthenticatedUser($authHeader);
+
+    if (!$authUser) {
+        return $this->failUnauthorized('Invalid or missing token.');
+    }
+
+    $userId = $authUser['user_id'];
+
+    $history = $this->resumeModel->getCompletedHistory($userId); 
+
+    $total = count($history);
+
+    return $this->response->setJSON([
+        'success' => true,
+        'message' => 'History entries fetched successfully.',
+        'total'   => $total,
+        'data'    => $history
+    ]);
+}
+
+public function deleteById($Id)
 {
     $authHeader = $this->request->getHeaderLine('Authorization');
     $user = $this->authService->getAuthenticatedUser($authHeader);
 
     if (!$user || !isset($user['user_id'])) {
-        return $this->respond([
-            'success' => false,
-            'message' => 'Unauthorized user.'
-        ]);
+        return $this->respond(['success' => false, 'message' => 'Unauthorized user.']);
     }
 
-    if ($id === null) {
-        return $this->failValidationErrors('History ID is required.');
-    }
-    $history = $this->resumeModel->where('id', $id)  
-                                 ->where('user_id', $user['user_id'])
-                                 ->where('status !=', 9)
-                                 ->first();
+    $deleted = $this->resumeModel->softDeleteById($Id);
 
-    if (!$history) {
-        return $this->failNotFound('History record not found or already deleted.');
-    }
-    $updated = $this->resumeModel->update($id, ['status' => 9]);
-
-    if ($updated) {
+    if ($deleted) {
         return $this->respond([
             'success' => true,
-            'message' => 'History entry deleted successfully.'
-        ]);
-    } else {
-        return $this->respond([
-            'success' => false,
-            'message' => 'Failed to delete history entry.'
+            'message' => "History entry ID $Id deleted successfully.",
+            'data'    => []
         ]);
     }
-}
 
+    return $this->respond([
+        'success' => false,
+        'message' => "No active history found for ID $Id to delete or already deleted.",
+        'data'    => []
+    ]);
+}
 }

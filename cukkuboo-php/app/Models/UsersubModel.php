@@ -25,18 +25,15 @@ class UsersubModel extends Model
     protected $returnType = 'array';
 
 
-    public function addSubscription($data)
-    {
-        return $this->insert($data);
+    public function saveUserSubscription(array $payload, $id = null)
+{
+    if ($id) {
+        $this->update($id, $payload);
+        return $id;
+    } else {
+        return $this->insert($payload);
     }
-
-    
-    public function updateSubscription($id, $data)
-    {
-        return $this->db->table($this->table)
-                        ->where($this->primaryKey, $id)
-                        ->update($data);
-    }
+}
 
     
     public function getAllSubscriptions()
@@ -59,6 +56,7 @@ class UsersubModel extends Model
         'modify_by'  => $modifiedBy
     ]);
 }
+
 
 
    

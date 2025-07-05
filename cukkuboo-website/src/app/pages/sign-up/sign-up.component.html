@@ -5,7 +5,6 @@
       <div class="col-lg-12">
         <div class="form-aligned">
           <form id="pms_register-form" class="pms-form" [formGroup]="signUpForm" (ngSubmit)="onSubmit()">
-            <!-- Logo -->
             <div class="text-center mb-3">
               <img src="assets/images/logo-collapsed.png" routerLink="/" alt="Logo" style="max-width: 60px;" />
             </div>
@@ -14,16 +13,8 @@
 
             <ul class="pms-form-fields-wrapper list-unstyled">
 
-              <!-- <li class="pms-field pms-user-login-field">
-                <mat-form-field appearance="outline" class="w-100">
-                  <mat-label>Username</mat-label>
-                  <input matInput formControlName="username" placeholder="Enter username" />
-                  <mat-error *ngIf="signUpForm.controls['username'].touched && signUpForm.controls['username'].invalid">
-                    <Validation-Messages [control]="signUpForm.controls['username']"></Validation-Messages>
-                  </mat-error>
-                </mat-form-field>
-              </li> -->
-                            <li class="pms-field pms-user-login-field">
+              <!-- Username -->
+              <li class="pms-field pms-user-login-field">
                 <mat-form-field appearance="outline" class="w-100">
                   <mat-label>Username</mat-label>
                   <input matInput formControlName="username" placeholder="Enter username" />
@@ -33,18 +24,24 @@
                 </mat-form-field>
               </li>
 
-                 <li class="pms-field pms-user-login-field">
+              <!-- Mobile Number -->
+              <li class="pms-field pms-user-login-field">
                 <mat-form-field appearance="outline" class="w-100">
-            <mat-label>Mobile Number</mat-label>
-            <input
-              matInput
-              formControlName="phone"
-              placeholder="Enter mobile number"
-              maxlength="15"
-              (input)="onNumberInput($event)">
-          </mat-form-field>
-             </li>
+                  <mat-label>Mobile Number</mat-label>
+                  <input
+                    matInput
+                    formControlName="phone"
+                    placeholder="Enter mobile number"
+                    maxlength="15"
+                    (input)="onNumberInput($event)"
+                  />
+                  <mat-error *ngIf="signUpForm.controls['phone'].touched && signUpForm.controls['phone'].invalid">
+                    <Validation-Messages [control]="signUpForm.controls['phone']"></Validation-Messages>
+                  </mat-error>
+                </mat-form-field>
+              </li>
 
+              <!-- Email -->
               <li class="pms-field pms-user-email-field">
                 <mat-form-field appearance="outline" class="w-100">
                   <mat-label>Email</mat-label>
@@ -54,47 +51,26 @@
                   </mat-error>
                 </mat-form-field>
               </li>
-            
 
-                 <!-- <li class="pms-field pms-first-name-field">
-                <mat-form-field appearance="outline" class="w-100">
-                  <mat-label>First Name</mat-label>
-                  <input matInput formControlName="firstName" placeholder="Enter first name" />
-                  <mat-error *ngIf="signUpForm.controls['firstName'].touched && signUpForm.controls['firstName'].invalid">
-                    <Validation-Messages [control]="signUpForm.controls['firstName']"></Validation-Messages>
-                  </mat-error>
-                </mat-form-field>
-              </li> -->
-
-              <!-- <li class="pms-field pms-last-name-field">
-                <mat-form-field appearance="outline" class="w-100">
-                  <mat-label>Last Name</mat-label>
-                  <input matInput formControlName="lastName" placeholder="Enter last name" />
-                  <mat-error *ngIf="signUpForm.controls['lastName'].touched && signUpForm.controls['lastName'].invalid">
-                    <Validation-Messages [control]="signUpForm.controls['lastName']"></Validation-Messages>
-                  </mat-error>
-                </mat-form-field>
-              </li>  -->
               <!-- Date of Birth -->
               <li class="pms-field pms-date-of-birth-field">
-            
-                  <mat-form-field appearance="outline" class="w-100">
-                    <mat-label>Date of Birth</mat-label>
-                    <input
-                      matInput
-                      [matDatepicker]="dobPicker"
-                      formControlName="date_of_birth"
-                      placeholder="Choose a date"
-                      (click)="dobPicker.open()"
-                      readonly
-                    />
-                    <mat-datepicker-toggle matSuffix [for]="dobPicker"></mat-datepicker-toggle>
-                    <mat-datepicker #dobPicker></mat-datepicker>
-                    <mat-error *ngIf="signUpForm.controls['date_of_birth'].touched && signUpForm.controls['date_of_birth'].invalid">
-                      <Validation-Messages [control]="signUpForm.controls['date_of_birth']"></Validation-Messages>
-                    </mat-error>
-                  </mat-form-field>
-              
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Date of Birth</mat-label>
+                  <input
+                    matInput
+                    [matDatepicker]="dobPicker"
+                    formControlName="date_of_birth"
+                    placeholder="Choose a date"
+                    [max]="maxDate"
+                    (click)="dobPicker.open()"
+                    readonly
+                  />
+                  <mat-datepicker-toggle matSuffix [for]="dobPicker"></mat-datepicker-toggle>
+                  <mat-datepicker #dobPicker></mat-datepicker>
+                  <mat-error *ngIf="signUpForm.controls['date_of_birth'].touched && signUpForm.controls['date_of_birth'].invalid">
+                    <Validation-Messages [control]="signUpForm.controls['date_of_birth']"></Validation-Messages>
+                  </mat-error>
+                </mat-form-field>
               </li>
 
               <!-- Password -->
@@ -107,12 +83,7 @@
                     formControlName="password"
                     placeholder="Enter password"
                   />
-                  <button
-                    mat-icon-button
-                    matSuffix
-                    (click)="hidePassword = !hidePassword"
-                    type="button"
-                  >
+                  <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" type="button">
                     <mat-icon class="small-eye-icon">{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
                   </button>
                   <mat-error *ngIf="signUpForm.controls['password'].touched && signUpForm.controls['password'].invalid">
@@ -131,12 +102,7 @@
                     formControlName="confirmPassword"
                     placeholder="Repeat password"
                   />
-                  <button
-                    mat-icon-button
-                    matSuffix
-                    (click)="hideConfirmPassword = !hideConfirmPassword"
-                    type="button"
-                  >
+                  <button mat-icon-button matSuffix (click)="hideConfirmPassword = !hideConfirmPassword" type="button">
                     <mat-icon class="small-eye-icon">{{ hideConfirmPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
                   </button>
                   <mat-error *ngIf="signUpForm.controls['confirmPassword'].touched && signUpForm.controls['confirmPassword'].invalid">
@@ -148,17 +114,13 @@
             </ul>
 
             <div class="text-start mt-3">
-              <button type="submit" class="red-button">
-                Sign-up
-              </button>
+              <button type="submit" class="red-button">Sign-up</button>
             </div>
 
-            <!-- Sign In Link -->
             <div class="text-start mt-2">
               <span class="me-2">Already have an account?</span>
               <a (click)="navigateToSignIn()" class="signup-link red-link">Sign In</a>
             </div>
-
           </form>
         </div>
       </div>

@@ -113,7 +113,7 @@ export class AddUserComponent implements OnInit {
       this.userService.register(model).subscribe({
         next: (response) => {
           // console.log('Register API success response:', response);
-          if (response.status) {
+          if (response.success) {
             this.snackBar.open('User registered successfully', '', {
               duration: 3000,
               verticalPosition: 'top',

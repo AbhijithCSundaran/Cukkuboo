@@ -14,7 +14,6 @@ import { UserService } from '../../services/user/user.service';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 
-
 @Component({
   selector: 'app-sign-up',
   standalone: true,
@@ -23,8 +22,8 @@ import { MatNativeDateModule } from '@angular/material/core';
   imports: [
     CommonModule,
     RouterModule,
-     MatDatepickerModule,
-     MatNativeDateModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
@@ -37,29 +36,29 @@ import { MatNativeDateModule } from '@angular/material/core';
 })
 export class SignUpComponent implements OnInit {
   signUpForm!: FormGroup;
-
-
   hidePassword = true;
   hideConfirmPassword = true;
+  maxDate: Date = new Date(); 
 
   constructor(
     private fb: FormBuilder,
     private userService: UserService,
     private snackBar: MatSnackBar,
     private router: Router,
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.signUpForm = this.fb.group({
       username: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      // firstName: [''],
-      // lastName: [''],
       password: ['', Validators.required],
       confirmPassword: ['', Validators.required],
       date_of_birth: ['', Validators.required],
-            phone: ['', [Validators.pattern(/^\d{0,15}$/), Validators.maxLength(15)]],
-
+      phone: ['', [
+        Validators.required,
+        Validators.pattern(/^\d{10,15}$/),
+        Validators.maxLength(15)
+      ]]
     });
   }
 
@@ -89,8 +88,17 @@ export class SignUpComponent implements OnInit {
           }
         },
         error: (error) => {
-          // console.error('Registration error:', error);
-          this.snackBar.open('Something went wrong. Please try again.', '', {
+          const phoneControl = this.signUpForm.get('phone');
+          if (phoneControl?.invalid) {
+            this.snackBar.open('Please enter a valid mobile number.', '', {
+              duration: 3000,
+              verticalPosition: 'top',
+              panelClass: ['snackbar-error']
+            });
+            return;
+          }
+
+          this.snackBar.open(error?.error?.message || 'Something went wrong. Please try again.', '', {
             duration: 3000,
             verticalPosition: 'top',
             panelClass: ['snackbar-error']
@@ -107,7 +115,7 @@ export class SignUpComponent implements OnInit {
     }
   }
 
-   onNumberInput(event: any): void {
+  onNumberInput(event: any): void {
     const input = event.target;
     const filteredValue = input.value.replace(/[^0-9]/g, '').slice(0, 15);
     input.value = filteredValue;

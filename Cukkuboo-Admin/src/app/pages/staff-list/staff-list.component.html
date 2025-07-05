@@ -76,7 +76,9 @@
     <ng-container matColumnDef="action">
       <th mat-header-cell *matHeaderCellDef> Action </th>
       <td mat-cell *matCellDef="let staff">
-        <mat-icon class="icon" (click)="editStaff(staff)">edit</mat-icon>
+        <!-- <mat-icon class="icon" (click)="editStaff(staff)">edit</mat-icon> -->
+        <mat-icon class="icon" [routerLink]="['edit-staff',staff.user_id]">edit</mat-icon>
+
         <mat-icon class="icon" (click)="openDeleteModal(staff)">delete</mat-icon>
       </td>
     </ng-container>

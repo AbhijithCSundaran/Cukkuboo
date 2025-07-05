@@ -5,6 +5,8 @@ use CodeIgniter\RESTful\ResourceController;
 
 use App\Models\UserModel;
 use App\Libraries\Jwt;
+use App\Models\UsersubModel;
+use App\Models\SubscriptionPlanModel;
 use App\Libraries\AuthService;
 
 class User extends ResourceController
@@ -17,6 +19,8 @@ class User extends ResourceController
         $this->session = \Config\Services::session();
         $this->input = \Config\Services::request();
         $this->UserModel = new UserModel();
+        $this->usersubModel = new UsersubModel();
+        $this->subscriptionPlanModel = new SubscriptionPlanModel();
         $this->authService = new AuthService();
     }
 
@@ -180,34 +184,57 @@ class User extends ResourceController
     }
 }
 
-
 public function getUserDetailsById($userId = null)
 {
     $authHeader = $this->request->getHeaderLine('Authorization');
     $authuser = $this->authService->getAuthenticatedUser($authHeader);
-        if(!$authuser) 
-            return $this->failUnauthorized('Invalid or missing token.');
-        
+
+    if (!$authuser) {
+        return $this->failUnauthorized('Invalid or missing token.');
+    }
+
     if ($userId === null) {
         $userId = $authuser['user_id'];
     }
+
     $user = $this->UserModel->getUserById($userId);
 
-   
     if (!$user) {
         return $this->response->setJSON([
             'success' => false,
             'message' => 'User not found',
-            'data'=>[]
+            'data'    => []
         ]);
+    }
+    $usersubModel = new \App\Models\UsersubModel();
+    $subscription = $usersubModel
+        ->where('user_id', $userId)
+        ->where('status !=', 9) 
+        ->orderBy('user_subscription_id', 'DESC')
+        ->first();
+
+    if ($subscription) {
+        $planType = ($subscription['status'] == 1) ? 'Free' : 'Premium';
+        $user['plan_type'] = $planType;
+        $user['subscriptionplan_id'] = $subscription['subscriptionplan_id'];
+        $user['plan_name'] = $subscription['plan_name'];
+        $user['start_date'] = $subscription['start_date'];
+        $user['end_date'] = $subscription['end_date'];
+    } else {
+        $user['plan_type'] = 'No active subscription';
+        $user['subscriptionplan_id'] = null;
+        $user['plan_name'] = null;
+        $user['start_date'] = null;
+        $user['end_date'] = null;
     }
 
     return $this->response->setJSON([
         'success' => true,
-        'message'=>'success',
-        'data' => $user
+        'message' => 'Success',
+        'data'    => $user
     ]);
 }
+
 
 public function getUserList()
 {
@@ -417,5 +444,31 @@ public function updateEmailPreference()
 
     return $this->response->setJSON(['status' => 0, 'msg' => 'Failed to update password.']);
     }
+    public function deleteUserById($user_id)
+{
+    $authHeader = $this->request->getHeaderLine('Authorization');
+    $user = $this->authService->getAuthenticatedUser($authHeader);
+
+    if (!$user) {
+        return $this->failUnauthorized('Invalid or missing token.');
+    }
+
+    $userData = $this->UserModel->find($user_id);
+    if (!$userData) {
+        return $this->failNotFound("User not found.");
+    }
+
+    $status = 9;
+
+    if ($this->UserModel->deleteById($status, $user_id)) {
+        return $this->respond([
+            'success' => true,
+            'message' => "User with ID $user_id has been deleted successfully.",
+            'data' => []
+        ]);
+    } else {
+        return $this->failServerError("Failed to delete user with ID $user_id.");
+    }
+}
 
 }

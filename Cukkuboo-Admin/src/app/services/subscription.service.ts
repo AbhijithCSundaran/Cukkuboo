@@ -13,7 +13,7 @@ export class UserSubscriptionService {
 
   // Token getter from localStorage or sessionStorage
   get token(): string | null {
-    return localStorage.getItem('t_k') || sessionStorage.getItem('token');
+    return localStorage.getItem('token') || sessionStorage.getItem('token');
   }
 
   // Authorization headers

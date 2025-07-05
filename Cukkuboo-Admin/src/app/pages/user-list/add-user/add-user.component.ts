@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { MatIconModule } from '@angular/material/icon';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { UserService } from '../../../services/user.service';
 
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -10,9 +11,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-
-import { UserService } from '../../../services/user.service';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-add-user',
@@ -35,6 +35,7 @@ export class AddUserComponent implements OnInit {
   public UserId: number = 0;
   public userForm!: FormGroup;
   public hidePassword = true;
+  public today: Date = new Date();
 
   constructor(
     private router: Router,
@@ -52,7 +53,8 @@ export class AddUserComponent implements OnInit {
       phone: ['', [Validators.pattern(/^\d{0,15}$/), Validators.maxLength(15)]],
       email: ['', [Validators.email]],
       country: ['', [Validators.pattern(/^[a-zA-Z\s]*$/)]],
-      status: ['active', Validators.required],
+      dob: ['', Validators.required],
+      status: ['1', Validators.required],
       subscription: ['free', Validators.required]
     });
 
@@ -70,17 +72,16 @@ export class AddUserComponent implements OnInit {
   loadUserData(id: number): void {
     this.userService.getUserById(id).subscribe({
       next: (response) => {
-        console.log('User prefill API response:', response);
         const data = Array.isArray(response?.data) ? response.data[0] : response.data;
-
         if (data) {
           this.userForm.patchValue({
             user_id: data.user_id,
             username: data.username,
-            password: '', 
+            password: '',
             phone: data.phone,
             email: data.email,
             country: data.country,
+            dob: data.dob ? new Date(data.dob) : '',
             status: data.status,
             subscription: data.subscription
           });
@@ -112,7 +113,6 @@ export class AddUserComponent implements OnInit {
       const model = this.userForm.value;
       this.userService.register(model).subscribe({
         next: (response) => {
-          // console.log('Register API success response:', response);
           if (response.success) {
             this.snackBar.open('User registered successfully', '', {
               duration: 3000,

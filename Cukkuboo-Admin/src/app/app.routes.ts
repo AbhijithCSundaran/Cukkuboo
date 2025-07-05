@@ -22,6 +22,8 @@ export const routes: Routes = [
       { path: 'genres', loadComponent: () => import('./pages/genres/genres.component').then((m) => m.GenresComponent) },
       { path: 'reels', loadComponent: () => import('./pages/list-reels/list-reels.component').then((m) => m.ListReelsComponent) },
       { path: 'add-reels', loadComponent: () => import('./pages/list-reels/add-reels/add-reels.component').then((m)=>m.AddReelsComponent)},
+            { path: 'notifications', loadComponent: () => import('./pages/notifications/notifications.component').then((m)=>m.NotificationsComponent)},
+
 
 {
   path: 'edit-reel/:id',

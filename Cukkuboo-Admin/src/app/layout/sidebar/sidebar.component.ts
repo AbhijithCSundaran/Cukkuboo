@@ -71,7 +71,7 @@ onResize(event: any) {
       ],
     },
     { name: 'Reports & Analytics', icon: 'fa-chart-bar', path: '/reports' },
-    { name: 'Push Notifications', icon: 'fa-bell', path: '/notifications' },
+    { name: 'Notifications', icon: 'fa-bell', path: '/notifications' },
     { name: 'Settings', icon: 'fa-sliders-h', subItems: [
       { name: 'Subscription Plans', path: '/subscription-plans' },
      

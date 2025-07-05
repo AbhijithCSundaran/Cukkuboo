@@ -4,19 +4,16 @@
     <div class="card-body ca-body">
       <ul class="list-unstyled">
         <li class="py-2">
-          <i class="fa-solid fa-star text-danger me-2"></i>Interruption free
-          entertainment.
+          <i class="fa-solid fa-star text-danger me-2"></i>Interruption free entertainment.
         </li>
         <li class="py-2">
           <i class="fa-solid fa-star text-danger me-2"></i>All latest movies.
         </li>
         <li class="py-2">
-          <i class="fa-solid fa-star text-danger me-2"></i>Every week 2 new
-          releases.
+          <i class="fa-solid fa-star text-danger me-2"></i>Every week 2 new releases.
         </li>
         <li class="py-2">
-          <i class="fa-solid fa-star text-danger me-2"></i>Selected movies free
-          after login
+          <i class="fa-solid fa-star text-danger me-2"></i>Selected movies free after login
         </li>
       </ul>
     </div>
@@ -38,7 +35,7 @@
               <span class="fw-bold price-text">{{ plan.discount_price }}</span>
               <span class="text-white ms-2 text-decoration-line-through">{{ plan.price }}</span>
             </div>
-            <a class="btn btn-subscribe btn-sm" (click)="subscribeToPlan(plan)">Subscribe</a>
+            <a class="btn btn-subscribe btn-sm" (click)="subscribeToPlan(plan.subscriptionplan_id)">Subscribe</a>
           </div>
         </div>
       </div>

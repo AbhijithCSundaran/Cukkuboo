@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
+
 
 @Injectable({
   providedIn: 'root'
 })
-export class UserSubscriptionService {
+export class NotificationService {
   private apiUrl: string = environment.apiUrl; 
 
   constructor(private http: HttpClient) {}
@@ -25,8 +26,8 @@ export class UserSubscriptionService {
   }
 
 
-  listUserSubscriptions(pageIndex: number = 0, pageSize: number = 10, searchText: string = ''): Observable<any> {
-    const url = `${this.apiUrl}usersub/details?pageIndex=${pageIndex}&pageSize=${pageSize}&searchText=${searchText}`;
+  getNotifications(pageIndex: number = 0, pageSize: number = 10, searchText: string = ''): Observable<any> {
+    const url = `${this.apiUrl}notification/list?pageIndex=${pageIndex}&pageSize=${pageSize}&searchText=${encodeURIComponent(searchText)}`;
     return this.http.get(url, { headers: this.headers });
   }
 }

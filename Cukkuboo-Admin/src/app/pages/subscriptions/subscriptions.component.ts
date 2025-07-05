@@ -13,8 +13,8 @@ import { HttpClientModule } from '@angular/common/http';
 interface Subscription {
   username: string;
   plan_name: string;
-  start_date: Date;
-  end_date: Date;
+  start_date: string;
+  end_date: string;
   status: 'active' | 'expired';
 }
 
@@ -46,7 +46,7 @@ export class SubscriptionsComponent implements OnInit, AfterViewInit {
   constructor(private userSubscriptionService: UserSubscriptionService) {}
 
   ngOnInit(): void {
-    this.fetchSubscriptions(0, this.pageSize, '');
+    this.fetchSubscriptions(this.pageIndex, this.pageSize, this.searchText);
   }
 
   ngAfterViewInit(): void {
@@ -59,29 +59,40 @@ export class SubscriptionsComponent implements OnInit, AfterViewInit {
     });
   }
 
-  fetchSubscriptions(pageIndex: number = 0, pageSize: number = 10, searchText: string = ''): void {
-    this.userSubscriptionService.listUserSubscriptions(pageIndex, pageSize, searchText).subscribe({
-      next: (response) => {
-        console.log('Subscriptions response:', response);
-
-        this.dataSource.data = response?.data || [];
-        this.totalItems = response?.totalCount || this.dataSource.data.length;
-
-        // Force refresh paginator length (needed if response.totalCount is updated)
-        if (this.paginator) {
-          this.paginator.length = this.totalItems;
-        }
-      },
-      error: (error) => {
-        console.error('Error fetching subscriptions:', error);
-      }
-    });
-  }
-
   applyGlobalFilter(event: KeyboardEvent): void {
     const value = (event.target as HTMLInputElement).value;
     this.searchText = value.trim().toLowerCase();
+    this.pageIndex = 0;
     this.paginator.pageIndex = 0;
-    this.fetchSubscriptions(0, this.pageSize, this.searchText);
+    this.fetchSubscriptions(this.pageIndex, this.pageSize, this.searchText);
+  }
+
+  fetchSubscriptions(pageIndex: number, pageSize: number, searchText: string): void {
+    this.userSubscriptionService
+      .listUserSubscriptions(pageIndex, pageSize, searchText)
+      .subscribe({
+        next: (response) => {
+          if (response.success) {
+            const mappedData: Subscription[] = response.data.map((item: any) => ({
+               username: item.username,
+              plan_name: item.plan_name,
+              start_date: item.start_date,
+              end_date: item.end_date,
+              status: item.status === '1' ? 'active' : 'expired'
+            }));
+
+            this.dataSource.data = mappedData;
+            this.totalItems = mappedData.length; // Adjust if API supports paginated total
+          } else {
+            this.dataSource.data = [];
+            this.totalItems = 0;
+          }
+        },
+        error: (error) => {
+          console.error('Failed to fetch subscriptions:', error);
+          this.dataSource.data = [];
+          this.totalItems = 0;
+        }
+      });
   }
 }

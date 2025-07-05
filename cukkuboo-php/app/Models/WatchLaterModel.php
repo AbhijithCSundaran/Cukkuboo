@@ -37,7 +37,7 @@ class WatchLaterModel extends Model
     public function fetchList($search = '', $offset = 0, $limit = null)
     {
         $builder = $this->db->table('watch_later wl')
-            ->select('wl.*, m.title, m.thumbnail')
+            ->select('wl.*, m.title, m.thumbnail,m.banner')
             ->join('movies_details m', 'm.mov_id = wl.mov_id', 'left')
             ->where('wl.status !=', 9);
 
@@ -68,7 +68,7 @@ class WatchLaterModel extends Model
 
     public function getById($watchLaterId)
 {
-    return $this->select('watch_later.*, movies_details.title, movies_details.thumbnail, movies_details.release_date')
+    return $this->select('watch_later.*, movies_details.title, movies_details.thumbnail,movies_details.banner, movies_details.release_date')
                 ->join('movies_details', 'movies_details.mov_id = watch_later.mov_id')
                 ->where('watch_later.watch_later_id', $watchLaterId)
                 ->where('watch_later.status !=', 9)
@@ -78,7 +78,7 @@ class WatchLaterModel extends Model
 public function getWatchLaterByToken($userId)
 {
     return $this->db->table($this->table)
-        ->select('watch_later.*, movies_details.title, movies_details.thumbnail, movies_details.release_date')
+        ->select('watch_later.*, movies_details.title, movies_details.thumbnail,movies_details.banner, movies_details.release_date')
         ->join('movies_details', 'movies_details.mov_id = watch_later.mov_id')
         ->where('watch_later.user_id', $userId)
         ->where('watch_later.status !=', 9)

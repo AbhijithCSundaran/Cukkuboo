@@ -35,13 +35,12 @@ class ResumeModel extends Model
             ]);
         }
     }
-    public function getHistoryByUserId($userId, $search = '')
+    public function getAllUsersHistory($search = '')
 {
     $builder = $this->builder()
         ->select('resume_history.*, movies_details.title')
         ->join('movies_details', 'movies_details.mov_id = resume_history.mov_id', 'left')
-        ->where('resume_history.status !=', 9)
-        ->where('resume_history.user_id', $userId);
+        ->where('resume_history.status !=', 9);  
 
     if (!empty($search)) {
         $builder->like('movies_details.title', $search);
@@ -49,16 +48,26 @@ class ResumeModel extends Model
 
     return $builder;
 }
+
 public function getHistoryById($historyId)
 {
     return $this->builder()
         ->select('resume_history.*, movies_details.title, movies_details.thumbnail, movies_details.release_date')
         ->join('movies_details', 'movies_details.mov_id = resume_history.mov_id', 'left')
-        ->where('resume_history.save_history_id', $historyId)
+        ->where('resume_history.resume_id', $historyId)
         ->where('resume_history.status !=', 9)
         ->get()
         ->getRow();  
 }
+public function getCompletedHistory($userId)
+    {
+        return $this->select('resume_history.*, movies_details.title, movies_details.thumbnail') 
+                    ->join('movies_details', 'movies_details.mov_id = resume_history.mov_id', 'left') 
+                    ->where('resume_history.user_id', $userId)
+                    ->where('resume_history.status !=', 9) 
+                    ->orderBy('resume_history.created_by', 'DESC')
+                    ->findAll();
+    }
 public function softDeleteById($id)
 {
     return $this->update($id, ['status' => 9]);

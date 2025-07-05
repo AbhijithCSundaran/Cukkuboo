@@ -74,7 +74,7 @@ public function getlist()
 
     $db = \Config\Database::connect();
     $builder = $db->table('watch_later wl')
-        ->select('wl.*, m.title, m.thumbnail')
+        ->select('wl.*, m.title, m.thumbnail,m.banner')
         ->join('movies_details m', 'm.mov_id = wl.mov_id', 'left')
         ->where('wl.status !=', 9);  
 

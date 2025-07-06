@@ -212,6 +212,7 @@ public function getUserSubscriptions()
     if (!$authuser) {
         return $this->failUnauthorized('Invalid or missing token.');
     }
+
     $pageIndex = (int) $this->request->getGet('pageIndex');
     $pageSize  = (int) $this->request->getGet('pageSize');
     $search    = $this->request->getGet('search');
@@ -223,22 +224,22 @@ public function getUserSubscriptions()
     $offset = $pageIndex * $pageSize;
 
     $userSubModel = new \App\Models\UsersubModel();
-
-    
-    $query = $userSubModel->where('status !=', 9); 
+    $builder = $userSubModel->select('user_subscription.*, user.username')
+                            ->join('user', 'user.user_id = user_subscription.user_id', 'left')
+                            ->where('user_subscription.status !=', 9);
 
     if (!empty($search)) {
-        $query->groupStart()
-              ->like('plan_name', $search)
-              ->orLike('user_id', $search)
-              ->orLike('start_date', $search)
-              ->orLike('end_date', $search)
-              ->groupEnd();
+        $builder->groupStart()
+                ->like('user.username', $search)
+                ->orLike('user_subscription.user_id', $search)
+                ->orLike('user_subscription.start_date', $search)
+                ->orLike('user_subscription.end_date', $search)
+                ->groupEnd();
     }
+    $total = $builder->countAllResults(false);
 
-    $total = $query->countAllResults(false);
-    $subscriptions = $query->orderBy('user_subscription_id', 'DESC')
-                           ->findAll($pageSize, $offset);
+    $subscriptions = $builder->orderBy('user_subscription.user_subscription_id', 'DESC')
+                             ->findAll($pageSize, $offset);
     foreach ($subscriptions as &$sub) {
         $sub['plan_type'] = ($sub['status'] == 1) ? 'Free' : 'Premium';
     }

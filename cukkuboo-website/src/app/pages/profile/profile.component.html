@@ -184,6 +184,18 @@
                 </div>
 
                 <div class="card-body">
+                    <div class="row justify-content-center">
+                        <div class="col-auto mb- d-flex align-items-center user-email">
+                            <i class="fa-solid fa-envelope me-2"></i>
+                            <span>{{ profileForm.get('email')?.value }}</span>
+                        </div>
+                    </div>
+
+                    <p class="text-center mb-3">
+                       To Delete your account permanently, Enter your password.
+
+                    </p>
+
                     <form [formGroup]="deleteAccountForm" (ngSubmit)="onDeleteAccount()">
                         <!-- Current Password -->
                         <mat-form-field appearance="outline" class="w-100 field-space">
@@ -201,6 +213,18 @@
                                     [control]="deleteAccountForm.controls['deleteProfile']"></Validation-Messages>
                             </mat-error>
                         </mat-form-field>
+                        <div class="row justify-content-center">
+                            <div class="alert alert-warning  col-md-6" role="alert">
+                                <h6 class="alert-heading text-center">
+                                    <i class="fa-solid fa-triangle-exclamation"></i> Warning
+                                </h6>
+                                <p class="mb-0 text-white text-center">
+                                    All your data, watch history, and subscriptions will be lost. This action is
+                                    irreversible.
+                                </p>
+                            </div>
+                        </div>
+
 
                         <!-- Buttons -->
                         <div class="text-end">

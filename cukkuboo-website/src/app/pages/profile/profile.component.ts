@@ -50,9 +50,29 @@ export class ProfileComponent implements OnInit {
     private router: Router) { }
 
   ngOnInit(): void {
-
+    const activeTab = localStorage.getItem('activeTab');
     const savedView = localStorage.getItem('showProfileInfo');
     this.showProfileInfo = savedView !== 'false';
+
+
+    // Reset all first
+    this.showProfileInfo = false;
+    this.showChangePassword = false;
+    this.ShowDeleteAccount = false;
+
+    if (activeTab === 'changePassword') {
+      this.showChangePassword = true;
+    } else if (activeTab === 'deleteAccount') {
+      this.ShowDeleteAccount = true;
+    } else {
+      this.showProfileInfo = true; // default to profile
+    }
+
+
+
+
+
+
     this.profileForm = this.fb.group({
       username: ['', [Validators.required]],
       email: ['', [Validators.required, ValidationService.emailValidator]],
@@ -64,6 +84,10 @@ export class ProfileComponent implements OnInit {
 
 
     });
+
+
+
+
     this.changePasswordForm = this.fb.group({
       currentPassword: ['', Validators.required],
       newPassword: ['', Validators.required],
@@ -153,22 +177,23 @@ export class ProfileComponent implements OnInit {
     this.showProfileInfo = false;
     this.ShowDeleteAccount = false;
     this.showChangePassword = true;
-    localStorage.setItem('showProfileInfo', 'false');
+    localStorage.setItem('activeTab', 'changePassword');
   }
 
   backToProfile(): void {
     this.showProfileInfo = true;
     this.showChangePassword = false;
     this.ShowDeleteAccount = false;
-    localStorage.setItem('showProfileInfo', 'true');
+    localStorage.setItem('activeTab', 'profile');
   }
 
   toggleDeleteAccount(): void {
     this.showProfileInfo = false;
     this.showChangePassword = false;
     this.ShowDeleteAccount = true;
-
+    localStorage.setItem('activeTab', 'deleteAccount');
   }
+
 
   onChangePassword(): void {
     if (this.changePasswordForm.valid) {
@@ -199,6 +224,9 @@ export class ProfileComponent implements OnInit {
             });
 
             this.showProfileInfo = true;
+            this.showChangePassword = false;
+            localStorage.setItem('activeTab', 'profile');
+
             this.changePasswordForm.reset();
 
           } else {
@@ -227,16 +255,15 @@ export class ProfileComponent implements OnInit {
   }
 
 
+
+
   onDeleteAccount(): void {
     const password = this.deleteAccountForm.get('deleteProfile')?.value;
     if (!password) return;
 
-    const formData = new FormData();
-    formData.append('password', password.trim());
-
     const userId = this.userId;
 
-    this.userService.deleteAccount(formData, userId!).subscribe({
+    this.userService.deleteAccount(password.trim(), userId!).subscribe({
       next: (res) => {
         if (res) {
           this.snackBar.open('Account deleted successfully.', '', {
@@ -244,10 +271,13 @@ export class ProfileComponent implements OnInit {
             verticalPosition: 'top',
             panelClass: ['snackbar-success']
           });
-          // Optionally: log out user, redirect
+
           localStorage.clear();
-          this.storageService.updateItem('username', null); 
-          this.router.navigate(['/']);
+          this.storageService.updateItem('username', null);
+
+          this.router.navigate(['/']).then(() => {
+            window.location.reload();
+          });
         } else {
           this.snackBar.open('Failed to delete account.', '', {
             duration: 3000,
@@ -258,7 +288,7 @@ export class ProfileComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error deleting account:', err);
-        this.snackBar.open('Incorrect password or server error.', '', {
+        this.snackBar.open('Incorrect password or Account not Deleted.', '', {
           duration: 3000,
           verticalPosition: 'top',
           panelClass: ['snackbar-error']

@@ -35,9 +35,8 @@ export const routes: Routes = [
                     { path: 'help-center', loadComponent: () => import('./pages/help-center/help-center.component').then(m => m.HelpCenterComponent) },
                     { path: 'watch-later', loadComponent: () => import('./pages/watch-later/watch-later.component').then(m => m.WatchLaterComponent) },
                     { path: 'history', loadComponent: () => import('./pages/history/history.component').then(m => m.HistoryComponent) },
-                    { path: 'notifications', loadComponent: () => import('./pages/notifications/notifications.component').then(m => m.NotificationsComponent) }
-
-
+                    { path: 'notifications', loadComponent: () => import('./pages/notifications/notifications.component').then(m => m.NotificationsComponent) },
+                    { path: 'subscription-details', loadComponent: () => import('./pages/subscription-details/subscription-details.component').then(m => m.SubscriptionDetailsComponent) },
                 ]
             },
         ]

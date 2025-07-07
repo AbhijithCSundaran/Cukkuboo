@@ -6,6 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatPaginatorModule, MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { StaffService } from '../../staff.service';
 
 @Component({
@@ -18,7 +19,8 @@ import { StaffService } from '../../staff.service';
     MatIconModule,
     MatPaginatorModule,
     MatInputModule,
-    MatFormFieldModule
+    MatFormFieldModule,
+    MatSnackBarModule
   ],
   templateUrl: './staff-list.component.html',
   styleUrls: ['./staff-list.component.scss']
@@ -36,7 +38,11 @@ export class StaffListComponent implements OnInit, AfterViewInit {
   confirmDeleteVisible = false;
   confirmDeleteStaff: any = null;
 
-  constructor(private router: Router, private staffservice: StaffService) {}
+  constructor(
+    private router: Router,
+    private staffservice: StaffService,
+    private snackBar: MatSnackBar
+  ) {}
 
   ngOnInit(): void {
     this.getStaffList();
@@ -56,18 +62,18 @@ export class StaffListComponent implements OnInit, AfterViewInit {
       next: (response) => {
         this.dataSource.data = (response.data || []).map((staff: any) => ({
           ...staff,
-          join_date: this.fixDateString(staff.join_date) // Prevent timezone shift
+          join_date: this.fixDateString(staff.join_date)
         }));
         this.totalItems = response.totalItems || 0;
       },
       error: (err) => {
         console.error('Failed to fetch staff list:', err);
+        this.showSnackbar('Failed to fetch staff list.', 'snackbar-error');
       }
     });
   }
 
   fixDateString(date: string): string {
-    // Converts date to yyyy-MM-dd format string, no timezone issues
     const d = new Date(date);
     const offsetDate = new Date(d.getTime() + Math.abs(d.getTimezoneOffset() * 60000));
     return offsetDate.toISOString().split('T')[0];
@@ -84,10 +90,6 @@ export class StaffListComponent implements OnInit, AfterViewInit {
     this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
     this.getStaffList();
-  }
-
-  editStaff(staff: any): void {
-    this.router.navigate(['/edit-staff', staff.user_id]);
   }
 
   openDeleteModal(staff: any): void {
@@ -107,11 +109,22 @@ export class StaffListComponent implements OnInit, AfterViewInit {
       next: () => {
         this.getStaffList();
         this.cancelDelete();
+        this.showSnackbar('Staff deleted successfully.', 'snackbar-success');
       },
       error: (err) => {
         console.error('Failed to delete staff:', err);
         this.cancelDelete();
+        this.showSnackbar('Failed to delete staff. Please try again.', 'snackbar-error');
       }
+    });
+  }
+
+  showSnackbar(message: string, panelClass: string = 'snackbar-success'): void {
+    this.snackBar.open(message, 'Close', {
+      duration: 3000,
+      panelClass: [panelClass],
+      horizontalPosition: 'center',
+      verticalPosition: 'top'
     });
   }
 }

@@ -1,14 +1,15 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { PlanService } from '../../services/plan.service';
 import { SubscriptionService } from '../../services/subscription.service';
-import { CommonModule } from '@angular/common';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-subscribe',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, MatSnackBarModule],
   templateUrl: './subscribe.component.html',
-  styleUrls: ['./subscribe.component.scss']
+  styleUrl: './subscribe.component.scss'
 })
 export class SubscribeComponent implements OnInit {
   plans: any[] = [];
@@ -20,14 +21,15 @@ export class SubscribeComponent implements OnInit {
 
   constructor(
     private planService: PlanService,
-    private subscriptionService: SubscriptionService
+    private subscriptionService: SubscriptionService,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
     this.loadPlans(this.pageIndex, this.pageSize, this.searchText);
   }
 
-  loadPlans(pageIndex: number = 0, pageSize: number = 20, search: string = ''): void {
+  loadPlans(pageIndex: number = 0, pageSize: number = 20, search: string = '') {
     this.planService.listPlans(pageIndex, pageSize, search).subscribe({
       next: (res) => {
         if (res?.success) {
@@ -39,31 +41,58 @@ export class SubscribeComponent implements OnInit {
         }
       },
       error: (err) => {
-        console.error('Failed to load plans:', err);
+        console.error('Error loading plans', err);
+        this.snackBar.open('Failed to load plans', '', {
+          duration: 3000,
+          verticalPosition: 'top',
+          horizontalPosition: 'center',
+          panelClass: ['snackbar-danger']
+        });
       }
     });
   }
 
-  subscribeToPlan(plan: any): void {
- 
+  subscribeToPlan(planId: number): void {
+    if (!planId) {
+      this.snackBar.open('Invalid plan ID', '', {
+        duration: 3000,
+        verticalPosition: 'top',
+        horizontalPosition: 'center',
+        panelClass: ['snackbar-danger']
+      });
+      return;
+    }
 
     const model = {
-     
-      subscriptionplan_id: plan.id
-      
+      subscriptionplan_id: planId
     };
 
     this.subscriptionService.saveSubscription(model).subscribe({
       next: (res) => {
         if (res?.success) {
-          alert('Subscription successful!');
+          this.snackBar.open('Subscription successful!', '', {
+            duration: 3000,
+            verticalPosition: 'top',
+            horizontalPosition: 'center',
+            panelClass: ['snackbar-success']
+          });
         } else {
-          alert(res?.message || 'Subscription failed.');
+          this.snackBar.open(res?.messages?.error || 'Subscription failed.', '', {
+            duration: 3000,
+            verticalPosition: 'top',
+            horizontalPosition: 'center',
+            panelClass: ['snackbar-danger']
+          });
         }
       },
       error: (err) => {
-        console.error('Subscription error:', err);
-        alert('An error occurred. Please try again.');
+        console.error('Subscription error', err);
+        this.snackBar.open(err?.error?.messages?.error || 'Something went wrong. Try again.', '', {
+          duration: 3000,
+          verticalPosition: 'top',
+          horizontalPosition: 'center',
+          panelClass: ['snackbar-danger']
+        });
       }
     });
   }

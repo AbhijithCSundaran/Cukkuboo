@@ -44,7 +44,7 @@ export class AppComponent {
   @HostListener('document:contextmenu', ['$event'])
   onRightClick(event: MouseEvent): void {
     if (!this.isProd) return;
-    event.preventDefault(); // Disable right-click
+    // event.preventDefault(); // Disable right-click
   }
 
   @HostListener('window:keydown', ['$event'])

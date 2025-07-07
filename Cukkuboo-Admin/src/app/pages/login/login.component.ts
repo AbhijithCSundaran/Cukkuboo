@@ -85,7 +85,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
         next: (response) => {
             console.log('response from login:', response);
 
-          if (response.status) {
+          if (response.success) {
             // console.log(response)
             if (response.data.user_type == 'admin') {
               localStorage.setItem('token', response.data?.jwt_token);

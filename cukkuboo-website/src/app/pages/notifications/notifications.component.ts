@@ -27,22 +27,22 @@ export class NotificationsComponent implements OnInit {
   constructor(
     private notificationService: NotificationService,
     private snackBar: MatSnackBar
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.loadNotifications();
   }
 
   loadNotifications() {
-    debugger;
     this.notificationService
-      .getNotifications(this.pageIndex, this.pageSize, this.searchText).subscribe({
+      .getNotifications(this.pageIndex, this.pageSize, this.searchText)
+      .subscribe({
         next: (res: any) => {
           if (res?.success) {
             this.notifications = res?.data || [];
-            if (this.notifications.length > 0)
+            if (this.notifications.length > 0) {
               this.selectNotification(this.notifications[0]);
-
+            }
           }
         },
         error: (err) => {
@@ -53,19 +53,21 @@ export class NotificationsComponent implements OnInit {
 
   selectNotification(notification: any) {
     this.isLoadingDetail = true;
-    this.notificationService.getNotificationById(notification.notification_id).subscribe({
-      next: (res: any) => {
-        if (res.success) {
-          notification.status = 2
-          this.selectedNotification = res.data
+    this.notificationService
+      .getNotificationById(notification.notification_id)
+      .subscribe({
+        next: (res: any) => {
+          if (res.success) {
+            notification.status = 2;
+            this.selectedNotification = res.data;
+          }
+          this.isLoadingDetail = false;
+        },
+        error: (err) => {
+          console.error('Error loading notification detail:', err);
+          this.isLoadingDetail = false;
         }
-        this.isLoadingDetail = false;
-      },
-      error: (err) => {
-        console.error('Error loading notification detail:', err);
-        this.isLoadingDetail = false;
-      }
-    });
+      });
   }
 
   markAllAsRead() {
@@ -74,7 +76,7 @@ export class NotificationsComponent implements OnInit {
 
     this.notificationService.markAllAsRead().subscribe({
       next: () => {
-        this.notifications.forEach(n => (n.read = true));
+        this.notifications.forEach((n) => (n.read = true));
         this.isMarkingAll = false;
         this.snackBar.open('All notifications marked as read.', '', {
           duration: 3000,
@@ -109,33 +111,40 @@ export class NotificationsComponent implements OnInit {
     const notification = this.notificationToDelete;
     if (!notification) return;
 
-    this.notificationService.deleteNotification(notification.id).subscribe({
-      next: () => {
-        this.notifications = this.notifications.filter(n => n.id !== notification.id);
-        if (this.selectedNotification?.id === notification.id) {
-          this.selectedNotification = null;
+    this.notificationService
+      .deleteNotification(notification.notification_id)
+      .subscribe({
+        next: () => {
+          this.notifications = this.notifications.filter(
+            (n) => n.notification_id !== notification.notification_id
+          );
+          if (
+            this.selectedNotification?.notification_id ===
+            notification.notification_id
+          ) {
+            this.selectedNotification = null;
+          }
+
+          this.snackBar.open('Successfully removed', '', {
+            duration: 3000,
+            verticalPosition: 'top',
+            horizontalPosition: 'center',
+            panelClass: ['snackbar-success']
+          });
+
+          this.cancelDelete();
+        },
+        error: () => {
+          this.snackBar.open('Failed to remove', '', {
+            duration: 3000,
+            verticalPosition: 'top',
+            horizontalPosition: 'center',
+            panelClass: ['snackbar-danger']
+          });
+
+          this.cancelDelete();
         }
-
-        this.snackBar.open('Successfully removed', '', {
-          duration: 3000,
-          verticalPosition: 'top',
-          horizontalPosition: 'center',
-          panelClass: ['snackbar-success']
-        });
-
-        this.cancelDelete();
-      },
-      error: () => {
-        this.snackBar.open('Failed to remove', '', {
-          duration: 3000,
-          verticalPosition: 'top',
-          horizontalPosition: 'center',
-          panelClass: ['snackbar-danger']
-        });
-
-        this.cancelDelete();
-      }
-    });
+      });
   }
 
   onSearch(text: string) {

@@ -50,10 +50,10 @@ getNotifications(pageIndex: number = 0, pageSize: number = 20, searchText: strin
   }
 
   deleteNotification(id: number): Observable<any> {
-    return this.http.delete(this.apiUrl + 'notification/delete/' + id, {
+    return this.http.delete(`${this.apiUrl}notification/delete/${id}`, {
       headers: this.headers
     });
-  }
+}
 
  
   markAllAsRead(): Observable<any> {

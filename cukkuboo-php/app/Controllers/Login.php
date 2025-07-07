@@ -37,7 +37,13 @@ class Login extends BaseController
             'data' => []
         ]);
     }
-
+    if ($user['status'] == 9) {
+        return $this->response->setStatusCode(200)->setJSON([
+            'success' => false,
+            'message' => 'Account has been already deleted.',
+            'data' => []
+        ]);
+    }
     $now = date('Y-m-d H:i:s');
 
     $jwt = new Jwt();

@@ -157,11 +157,16 @@ class User extends ResourceController
     if (!$user) {
         return $this->failUnauthorized('Invalid or missing token.');
     }
-
+     if ($user['user_id'] != $user_id) {
+        return $this->failForbidden("You are not allowed to delete this account.");
+    }
     // $password = $this->request->getJSON()->password;
-    $password = $this->request->getPost('password');
+    $json = $this->request->getJSON();
+    $password = $json->password ?? $this->request->getPost('password');
     if (empty($password)) {
-        return $this->failValidationError('Password is required to delete the account.');
+         return $this->response->setJSON([
+        'success' => false,
+        'message' => 'Password is required to delete the account.']);
     }
 
     $userData = $this->UserModel->find($user_id);
@@ -181,7 +186,9 @@ class User extends ResourceController
             'data' => []
         ]);
     } else {
-        return $this->failServerError("Failed to delete user with ID $user_id.");
+        return $this->response->setJSON([
+        'success' => false,
+        'message' => 'Invalid or missing token.']);
     }
 }
 

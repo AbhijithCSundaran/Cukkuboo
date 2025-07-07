@@ -168,7 +168,13 @@ public function getMovieById($id)
         $user_id = $user['user_id'];
  
      
-        $getmoviesdetails['is_in_watch_later'] = $this->moviedetail->isInWatchLater($user_id, $id);
+       // $getmoviesdetails['is_in_watch_later'] = $this->moviedetail->isInWatchLater($user_id, $id);
+       $isInWatchLater = $this->moviedetail->isInWatchLater($user_id, $id);
+       $getmoviesdetails['is_in_watch_later'] = $isInWatchLater;
+       $getmoviesdetails['watch_later_id'] = $isInWatchLater
+       ? $this->moviedetail->getWatchLaterId($user_id, $id)
+       : null;
+
         $getmoviesdetails['is_in_watch_history'] = $this->moviedetail->isInWatchHistory($user_id, $id);
 
         $reaction = $this->db->table('movie_reactions')

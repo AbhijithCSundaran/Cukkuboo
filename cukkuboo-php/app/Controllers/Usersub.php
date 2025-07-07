@@ -286,5 +286,31 @@ else {
         return $this->failServerError("Failed to delete subscription with ID $id.");
     }
 }
+public function cancelSubscription()
+    {
+        $authHeader = $this->request->getHeaderLine('Authorization');
+        $user = $this->authService->getAuthenticatedUser($authHeader);
 
+        if (!$user) {
+            return $this->failUnauthorized('Invalid or missing token.');
+        }
+
+        $userId = $user['user_id'];
+        $this->usersubModel
+            ->where('user_id', $userId)
+            ->delete(); 
+        $this->userModel
+            ->where('user_id', $userId)
+            ->set(['subscription' => 'free'])
+            ->update();
+
+        return $this->respond([
+            'success' => true,
+            'message' => 'Subscription cancelled successfully.',
+            'data' => [
+                'user_id' => $userId,
+                'subscription' => 'free'
+            ]
+        ]);
+    }
 }

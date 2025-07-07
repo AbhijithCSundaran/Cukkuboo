@@ -158,7 +158,8 @@ class User extends ResourceController
         return $this->failUnauthorized('Invalid or missing token.');
     }
 
-    $password = $this->request->getJSON()->password;
+    // $password = $this->request->getJSON()->password;
+    $password = $this->request->getPost('password');
     if (empty($password)) {
         return $this->failValidationError('Password is required to delete the account.');
     }

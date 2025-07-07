@@ -53,7 +53,7 @@ class UserModel extends Model
     {
         return $this->where('user_id', $user_id)->set(['status' => $status])->update();
     }
-
+    
     public function getUserById($userId)
     {
         return $this->find($userId);
@@ -74,6 +74,11 @@ class UserModel extends Model
     {
         return $this->where('status', 1)->countAllResults();
     }
+    public function deleteById($status, $userId)
+    {
+        return $this->update($userId, ['status' => $status]);
+    }
+
     // -----------------------------------Password changing-----------------------//
     public function changePassword($userId, $oldPassword, $newPassword)
 {

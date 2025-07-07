@@ -51,6 +51,7 @@ $routes->post('movie/movieReaction/(:num)', 'MovieDetail::movieReaction/$1');
 $routes->get('movies/dashboard', 'MovieDetail::getAdminDashBoardData');
 $routes->get('movies/latestmovies', 'MovieDetail::latestMovies');
 $routes->get('movies/mostwatchmovie', 'MovieDetail::getMostWatchMovies');
+$routes->delete('user/delete/(:any)', 'User::deleteUserById/$1');
 // $routes->get('user/count-user', 'User::countActiveUsers');
 // $routes->get('user/subscriber', 'SubscriptionPlan::countSubscribers');
 // $routes->get('movies/countActive', 'MovieDetail::countActiveMovies');

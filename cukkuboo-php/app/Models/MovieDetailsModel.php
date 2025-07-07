@@ -209,7 +209,7 @@ public function getMostWatchedMovies()
 
 public function isInWatchHistory($user_id, $mov_id)
 {
-    return $this->db->table('save_history')
+    return $this->db->table('watch_history')
         ->where('user_id', $user_id)
         ->where('mov_id', $mov_id)
         ->where('status', 1)  

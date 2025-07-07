@@ -241,8 +241,14 @@ public function getUserSubscriptions()
     $subscriptions = $builder->orderBy('user_subscription.user_subscription_id', 'DESC')
                              ->findAll($pageSize, $offset);
     foreach ($subscriptions as &$sub) {
-        $sub['plan_type'] = ($sub['status'] == 1) ? 'Free' : 'Premium';
+    if ($sub['status'] == 1 && $sub['end_date'] < date('Y-m-d')) {
+        $this->usersubModel->update($sub['user_subscription_id'], ['status' => 2]);
+        $sub['status'] = 2;
     }
+
+    $sub['plan_type'] = ($sub['status'] == 1) ? 'Free' : 'Premium';
+}
+
 
     return $this->response->setJSON([
         'success' => true,

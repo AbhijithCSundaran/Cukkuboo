@@ -246,7 +246,8 @@ export class ProfileComponent implements OnInit {
           });
           // Optionally: log out user, redirect
           localStorage.clear();
-          this.router.navigate(['/signin']);
+          this.storageService.updateItem('username', null); 
+          this.router.navigate(['/']);
         } else {
           this.snackBar.open('Failed to delete account.', '', {
             duration: 3000,

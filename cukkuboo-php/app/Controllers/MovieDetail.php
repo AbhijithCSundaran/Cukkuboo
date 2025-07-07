@@ -120,7 +120,7 @@ public function getAllMovieDetails()
  
         return $this->response->setJSON([
             'success' => true,
-            'message' => 'All movies fetched (no pagination).',
+            'message' => 'All movies fetched successfully.',
             'data' => $movies,
             'total' => count($movies)
         ]);

@@ -223,7 +223,7 @@ public function getUserSubscriptions()
 
     $offset = $pageIndex * $pageSize;
 
-    $userSubModel = new \App\Models\UsersubModel();
+    $userSubModel = new UsersubModel();
     $builder = $userSubModel->select('user_subscription.*, user.username')
                             ->join('user', 'user.user_id = user_subscription.user_id', 'left')
                             ->where('user_subscription.status !=', 9);
@@ -287,30 +287,33 @@ else {
     }
 }
 public function cancelSubscription()
-    {
-        $authHeader = $this->request->getHeaderLine('Authorization');
-        $user = $this->authService->getAuthenticatedUser($authHeader);
+{
+    $authHeader = $this->request->getHeaderLine('Authorization');
+    $user = $this->authService->getAuthenticatedUser($authHeader);
 
-        if (!$user) {
-            return $this->failUnauthorized('Invalid or missing token.');
-        }
-
-        $userId = $user['user_id'];
-        $this->usersubModel
-            ->where('user_id', $userId)
-            ->delete(); 
-        $this->userModel
-            ->where('user_id', $userId)
-            ->set(['subscription' => 'free'])
-            ->update();
-
-        return $this->respond([
-            'success' => true,
-            'message' => 'Subscription cancelled successfully.',
-            'data' => [
-                'user_id' => $userId,
-                'subscription' => 'free'
-            ]
-        ]);
+    if (!$user) {
+        return $this->failUnauthorized('Invalid or missing token.');
     }
+
+    $userId = $user['user_id'];
+    $this->usersubModel
+        ->where('user_id', $userId)
+        ->where('status !=', 9)
+        ->set(['status' => 1]) 
+        ->update();
+    $this->userModel
+        ->where('user_id', $userId)
+        ->set(['subscription' => 'free'])
+        ->update();
+
+    return $this->respond([
+        'success' => true,
+        'message' => 'Subscription cancelled successfully.',
+        'data' => [
+            'user_id' => $userId,
+            'subscription' => 'free'
+        ]
+    ]);
+}
+
 }

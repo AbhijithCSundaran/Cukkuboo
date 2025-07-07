@@ -19,6 +19,7 @@ export class HeaderComponent implements OnInit {
   username: string = '';
   isSignedIn: boolean = false;
   showUserDropdown: boolean = false;
+  subscription: string = '';
 
   notifications: any[] = [];
   hasUnreadNotification: boolean = false;
@@ -56,6 +57,7 @@ export class HeaderComponent implements OnInit {
   checkAuthAndLoadNotifications(): void {
     const token = this.storageService.getItem('token');
     this.username = this.storageService.getItem('username');
+    this.subscription = (this.storageService.getItem('subscription') || '').toLowerCase();
     this.isSignedIn = !!token;
 
     if (this.isSignedIn) {

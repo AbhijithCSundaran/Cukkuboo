@@ -66,6 +66,7 @@ export class SignInComponent {
               localStorage.setItem('u_n', response.data?.username || 'User');
               this.storageService.updateItem('username', response.data?.username || 'User');
               this.storageService.updateItem('token', response.data?.jwt_token || 'token');
+              this.storageService.updateItem('subscription', response.data?.subscription || 'free');
               // this.snackBar.open('Login successful', '', {
               //   duration: 3000,
               //   verticalPosition: 'top',

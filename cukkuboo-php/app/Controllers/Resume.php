@@ -78,7 +78,7 @@ class Resume extends ResourceController
 
     return $this->respond([
         'success' => true,
-        'message' => 'All users’ viewed movie history fetched successfully.',
+        'message' => 'All users viewed movie history fetched successfully.',
         'total'   => $totalCount,
         'data'    => $history
     ]);

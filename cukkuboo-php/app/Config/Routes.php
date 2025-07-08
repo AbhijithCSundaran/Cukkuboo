@@ -51,6 +51,7 @@ $routes->post('movie/movieReaction/(:num)', 'MovieDetail::movieReaction/$1');
 $routes->get('movies/dashboard', 'MovieDetail::getAdminDashBoardData');
 $routes->get('movies/latestmovies', 'MovieDetail::latestMovies');
 $routes->get('movies/mostwatchmovie', 'MovieDetail::getMostWatchMovies');
+$routes->delete('user/delete/(:any)', 'User::deleteUserById/$1');
 // $routes->get('user/count-user', 'User::countActiveUsers');
 // $routes->get('user/subscriber', 'SubscriptionPlan::countSubscribers');
 // $routes->get('movies/countActive', 'MovieDetail::countActiveMovies');
@@ -83,7 +84,7 @@ $routes->post('usersub/save', 'Usersub::autoSubscribe');
 $routes->get('usersub/details', 'Usersub::getUserSubscriptions');
 $routes->get('usersub/get/(:num)', 'Usersub::getSubscriptionById/$1');
 $routes->delete('usersub/delete/(:num)', 'Usersub::deleteSubscription/$1');
-
+$routes->delete('usersub/cancelSubscription', 'Usersub::cancelSubscription');
 //Reels like and views
 
 $routes->post('reellike/like', 'ReelLike::reelLike');

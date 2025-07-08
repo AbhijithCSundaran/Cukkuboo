@@ -29,7 +29,7 @@
               <div id="gen-menu-contain" class="gen-menu-contain w-100">
                 <ng-container *ngIf="isSignedIn">
                   <div class="gen-account-holder d-flex align-items-center justify-content-between px-3 py-3"
-                       (click)="showUserDropdown = !showUserDropdown">
+                    (click)="showUserDropdown = !showUserDropdown">
                     <div class="d-flex align-items-center">
                       <div class="me-3"><i class="fa fa-user user-icon"></i></div>
                       <div class="d-flex flex-column">
@@ -43,7 +43,8 @@
                 <ul id="gen-main-menu" class="navbar-nav">
                   <ng-container *ngIf="isSignedIn">
                     <li class="menu-item ml-3">
-                      <a routerLink="/subscribe" class="gen-button py-0 text-center subscribe-btn" (click)="closeMenu()">
+                      <a routerLink="/subscribe" class="gen-button py-0 text-center subscribe-btn"
+                        (click)="closeMenu()">
                         <div class="gen-button-block">
                           <span class="gen-button-line-left"></span>
                           <span class="gen-button-text">Subscribe</span>
@@ -67,7 +68,8 @@
                       <a routerLink="/signin" class="nav-link" (click)="closeMenu()">Sign In</a>
                     </li>
                     <li class="menu-item ml-3">
-                      <a routerLink="/subscribe" class="gen-button py-0 text-center subscribe-btn" (click)="closeMenu()">
+                      <a routerLink="/subscribe" class="gen-button py-0 text-center subscribe-btn"
+                        (click)="closeMenu()">
                         <div class="gen-button-block">
                           <span class="gen-button-line-left"></span>
                           <span class="gen-button-text">Subscribe</span>
@@ -144,6 +146,11 @@
                 <div class="gen-account-menu" [class.gen-form-show]="showUserDropdown">
                   <ul class="col-12">
                     <li><a routerLink="/profile"><i class="fa fa-user"></i> Profile</a></li>
+                    <li *ngIf="subscription === 'premium'">
+                      <a routerLink="/subscription-details">
+                        <i class="fa-solid fa-star"></i> Subscription Details
+                      </a>
+                    </li>
                     <li><a routerLink="/watch-later"><i class="fa fa-clock"></i> Watch Later</a></li>
                     <li><a routerLink="/history"><i class="fa fa-history"></i> History</a></li>
                     <li><a (click)="openSignOutModal()"><i class="fa fa-sign-out mr-1"></i> Sign Out</a></li>

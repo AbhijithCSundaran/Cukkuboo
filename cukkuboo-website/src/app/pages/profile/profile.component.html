@@ -15,16 +15,15 @@
                             </h5>
 
                             <!-- Subscription Display -->
-                            <div *ngIf="profileForm.get('subscription')?.value"
-                                class="d-flex align-items-center mb-2">
+                            <div *ngIf="profileForm.get('subscription')?.value" class="d-flex align-items-center mb-2">
                                 <!-- Premium -->
                                 @if(profileForm?.value?.subscription?.toLowerCase() === 'premium'){
-                                    <i class="fa-solid fa-star text-warning me-2"></i>
-                                    <span class="fw-bold">Premium</span>
+                                <i class="fa-solid fa-star text-warning me-2"></i>
+                                <span class="fw-bold">Premium</span>
                                 }@else{
-                                    <span class="plan">{{ profileForm?.value?.subscription | titlecase }}</span>
+                                <span class="plan">{{ profileForm?.value?.subscription | titlecase }}</span>
                                 }
-                               
+
                             </div>
                         </div>
                     </div>
@@ -35,7 +34,8 @@
                             Change Password
                         </button>
 
-                        <button class="btn update-btn btn-danger text-white btn-sm col-6" (click)="toggleDeleteAccount()">
+                        <button class="btn update-btn btn-danger text-white btn-sm col-6"
+                            (click)="toggleDeleteAccount()">
                             Delete Account
                         </button>
                     </div>
@@ -47,7 +47,7 @@
             <!-- Profile Info Section -->
             <div *ngIf="showProfileInfo" class="card shadow-sm rounded-3 ca-body">
                 <div class="card-header text-white">
-                    <h5 class="mb-0 personal">Personal Info</h5>
+                    <h5 class="mb-0">Personal Info</h5>
                     <hr class="p-2" style="color: #c70d47" />
                 </div>
                 <div class="card-body ca-body">
@@ -175,57 +175,70 @@
                 </div>
             </div>
 
-             <!--Delete Account section-->
+            <!--Delete Account section-->
 
-             <div *ngIf="ShowDeleteAccount" class="card shadow-sm rounded-3 ca-body" >
-               <div class="card-header text-white">
+            <div *ngIf="ShowDeleteAccount" class="card shadow-sm rounded-3 ca-body">
+                <div class="card-header text-white">
                     <h5 class="mb-0">Delete Account</h5>
                     <hr class="p-2" style="color: #c70d47" />
                 </div>
+
                 <div class="card-body">
+                    <div class="row justify-content-center">
+                        <div class="col-auto mb- d-flex align-items-center user-email">
+                            <i class="fa-solid fa-envelope me-2"></i>
+                            <span>{{ profileForm.get('email')?.value }}</span>
+                        </div>
+                    </div>
+
+                    <p class="text-center mb-3">
+                       To Delete your account permanently, Enter your password.
+
+                    </p>
+
                     <form [formGroup]="deleteAccountForm" (ngSubmit)="onDeleteAccount()">
                         <!-- Current Password -->
                         <mat-form-field appearance="outline" class="w-100 field-space">
                             <mat-label>Current Password</mat-label>
-                            <input matInput [type]="hideCurrent ? 'password' : 'text'" formControlName="currentPassword"
-                                placeholder="Enter your current password" id="currentPassword" />
+                            <input matInput [type]="hideCurrent ? 'password' : 'text'" formControlName="deleteProfile"
+                                placeholder="Enter your current password" id="deleteProfile" />
                             <button mat-icon-button matSuffix (click)="hideCurrent = !hideCurrent" type="button"
                                 [attr.aria-label]="'Toggle password visibility'" [attr.aria-pressed]="hideCurrent">
-                                <mat-icon class="small-eye-icon">{{
-                                    hideCurrent ? "visibility_off" : "visibility"
-                                    }}</mat-icon>
+                                <mat-icon class="small-eye-icon">
+                                    {{ hideCurrent ? 'visibility_off' : 'visibility' }}
+                                </mat-icon>
                             </button>
                             <mat-error>
                                 <Validation-Messages
-                                    [control]="changePasswordForm.controls['currentPassword']"></Validation-Messages>
+                                    [control]="deleteAccountForm.controls['deleteProfile']"></Validation-Messages>
                             </mat-error>
                         </mat-form-field>
-                       <div class="text-end">
-                          <button type="button" class="btn update-btn mt-2" >
-  Delete
-</button>
-                           
-                            <button type="button" class="btn btn-secondary ms-2 mt-2" (click)="backToProfile()">
-                                Back
-                            </button>
+                        <div class="row justify-content-center">
+                            <div class="alert alert-warning  col-md-6" role="alert">
+                                <h6 class="alert-heading text-center">
+                                    <i class="fa-solid fa-triangle-exclamation"></i> Warning
+                                </h6>
+                                <p class="mb-0 text-white text-center">
+                                    All your data, watch history, and subscriptions will be lost. This action is
+                                    irreversible.
+                                </p>
+                            </div>
+                        </div>
+
+
+                        <!-- Buttons -->
+                        <div class="text-end">
+                            <button type="submit" class="btn update-btn mt-2">Delete</button>
+                            <button type="button" class="btn btn-secondary ms-2 mt-2"
+                                (click)="backToProfile()">Back</button>
                         </div>
                     </form>
                 </div>
-             </div>
+            </div>
 
 
         </div>
     </div>
 </section>
 
-  <!--  Sign Out Confirmation Modal -->
-  <div class="modal" [class.show]="showSignOutModal">
-    <div class="modal-content">
-      <p>Are you sure you want to <span class="highlight">sign out</span>?</p>
-      <div class="modal-actions">
-        <button class="btn-yes" (click)="confirmSignOut()">Sign Out</button>
-        <button class="btn-no" (click)="cancelSignOut()">Cancel</button>
-      </div>
-    </div>
-  </div>
 <hr />

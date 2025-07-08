@@ -454,22 +454,63 @@ public function latestMovies()
         ]);
     }
  
-    public function getUserHomeData()
-    {
-    // $authHeader = $this->request->getHeaderLine('Authorization');
-    // $user = $this->authService->getAuthenticatedUser($authHeader);
+//     public function getUserHomeData()
+//     {
+//     // $authHeader = $this->request->getHeaderLine('Authorization');
+//     // $user = $this->authService->getAuthenticatedUser($authHeader);
  
-    // if (!$user) {
-    //     return $this->failUnauthorized('Invalid or missing token.');
-    // }
+//     // if (!$user) {
+//     //     return $this->failUnauthorized('Invalid or missing token.');
+//     // }
    
    
+//     return $this->respond([
+//         'success' => true,
+//         'message' => true,
+//         'data' => [
+//             'active_movie_count' => $this->moviedetail->countActiveMovies(),
+//             'In_active_movie_count' => $this->moviedetail->countInactiveMovies(),
+//             'list_1' => [
+//                 'heading' => 'Featured Movies',
+//                 'data' => $this->moviedetail->getFeaturedMovies()
+//             ],
+//             'list_2' => [
+//                 'heading' => 'Trending Movies',
+//                 'data' => $this->moviedetail->getTrendingMovies()
+//             ],
+//             'list_3' => [
+//                 'heading' => 'Latest Movies',
+//                 'data' => $this->moviedetail->latestMovies()
+//             ],
+//             'list_4' => [
+//                 'heading' => 'Most Watched Movies',
+//                 'data' => $this->moviedetail->getMostWatchedMovies()
+//             ]
+           
+//         ]
+//     ]);
+// }
+ 
+public function getUserHomeData()
+{
+    $authHeader = $this->request->getHeaderLine('Authorization');
+    $user = $this->authService->getAuthenticatedUser($authHeader);
+
+    $hasUnread = false;
+
+    if ($user) {
+        $userId = $user['user_id'];
+        $notificationModel = new \App\Models\NotificationModel();
+        $hasUnread = $notificationModel->hasUnreadNotifications($userId);
+    }
+
     return $this->respond([
         'success' => true,
         'message' => true,
         'data' => [
             'active_movie_count' => $this->moviedetail->countActiveMovies(),
             'In_active_movie_count' => $this->moviedetail->countInactiveMovies(),
+            'has_unread_notifications' => $hasUnread,
             'list_1' => [
                 'heading' => 'Featured Movies',
                 'data' => $this->moviedetail->getFeaturedMovies()
@@ -486,11 +527,10 @@ public function latestMovies()
                 'heading' => 'Most Watched Movies',
                 'data' => $this->moviedetail->getMostWatchedMovies()
             ]
-           
         ]
     ]);
 }
- 
+
     public function getAdminDashBoardData()
     {
         $authHeader = $this->request->getHeaderLine('Authorization');

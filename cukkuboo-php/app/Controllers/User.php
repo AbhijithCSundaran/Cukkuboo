@@ -61,12 +61,56 @@ class User extends ResourceController
                 ]);
             }
 
-            if ($this->UserModel->isUserExists($data['phone'] ?? null, $data['email'] ?? null)) {
-                return $this->response->setJSON([
-                    'success' => false,
-                    'message' => 'User already exists.'
-                ]);
-            }
+            // if ($this->UserModel->isUserExists($data['phone'] ?? null, $data['email'] ?? null)) {
+            //     return $this->response->setJSON([
+            //         'success' => false,
+            //         'message' => 'User already exists.'
+            //     ]);
+            // }
+            $existingUser = $this->UserModel->isUserExists($data['phone'] ?? null, $data['email'] ?? null);
+
+if ($existingUser) {
+    if ($existingUser['status'] == 9) {
+        // Reactivate deleted user
+        $userData['status'] = 1;
+        $userData['updated_at'] = date('Y-m-d H:i:s');
+        $this->UserModel->update($existingUser['user_id'], $userData);
+
+        $jwt   = new Jwt();
+        $token = $jwt->encode(['user_id' => $existingUser['user_id']]);
+
+        $this->UserModel->update($existingUser['user_id'], ['jwt_token' => $token]);
+
+        $user = $this->UserModel->find($existingUser['user_id']);
+
+        return $this->response->setJSON([
+            'success' => true,
+            'message' => 'User re-registered successfully.',
+            'data'    => [
+                'user_id'             => $user['user_id'],
+                'username'            => $user['username'],
+                'email'               => $user['email'],
+                'password'            => $user['password'],
+                'phone'               => $user['phone'],
+                'status'              => $user['status'],
+                'join_date'           => $user['join_date'],
+                'date_of_birth'       => $user['date_of_birth'], 
+                'subscription_status' => $user['subscription'],
+                'user_type'           => $user['user_type'],
+                'created_at'          => $user['created_at'],
+                'created_by'          => $user['created_by'],
+                'jwt_token'           => $user['jwt_token']
+            ]
+        ]);
+    } else {
+        // Existing active user
+        return $this->response->setJSON([
+            'success' => false,
+            'message' => 'User already exists.'
+        ]);
+    }
+}
+
             $userData['join_date'] = $userData['join_date'] ?? date('Y-m-d');
             $userData['created_at'] = date('Y-m-d H:i:s');
             $userId = $this->UserModel->addUser($userData);

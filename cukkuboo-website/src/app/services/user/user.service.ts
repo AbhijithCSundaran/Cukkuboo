@@ -67,6 +67,29 @@ deleteAccount(password: string, userId: number) {
   );
 }
 
+getSubscriptionPlanByuserId(subId: number){
+ return this.http.get(
+    `${this.apiUrl}usersub/get/${subId}`,
+{
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${this.token || ''}`
+      }
+    }
+  );
+}
+
+cancelSubscriptionPlan() {
+  return this.http.delete(
+    `${this.apiUrl}usersub/cancelSubscription`,
+    {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${this.token || ''}`
+      }
+    }
+  );
+}
 
 
 

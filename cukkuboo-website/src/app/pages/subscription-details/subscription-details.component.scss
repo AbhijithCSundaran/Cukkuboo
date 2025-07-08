@@ -2,3 +2,64 @@
 background:#202020;
 color: white;
 }
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.05);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+
+.modal.show {
+  display: flex;
+}
+
+.modal-content {
+  background: #000;
+  color: #fff;
+  padding: 2rem;
+  border-radius: 12px;
+  border: 1px solid red;
+  text-align: center;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 0 10px red;
+}
+
+.modal-content .highlight {
+  color: red;
+  font-weight: bold;
+}
+
+.modal-actions {
+  margin-top: 1.5rem;
+  display: flex;
+  justify-content: space-around;
+}
+
+.btn-yes {
+  background-color: red;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-no {
+  background-color: transparent;
+  color: white;
+  border: 1px solid white;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.gen-button:hover .gen-button-text {
+  color: white !important;
+}

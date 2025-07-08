@@ -41,7 +41,7 @@ export class NotificationsComponent implements OnInit {
           if (res?.success) {
             this.notifications = res?.data || [];
             if (this.notifications.length > 0) {
-              this.selectNotification(this.notifications[0]);
+              // this.selectNotification(this.notifications[0]);
             }
           }
         },

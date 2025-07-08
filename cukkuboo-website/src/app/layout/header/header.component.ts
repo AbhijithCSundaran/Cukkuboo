@@ -22,7 +22,7 @@ export class HeaderComponent implements OnInit {
   subscription: string = '';
 
   notifications: any[] = [];
-  hasUnreadNotification: boolean = false;
+  hasUnreadNotification: boolean = true;
 
   showSignOutModal: boolean = false;
 
@@ -59,36 +59,22 @@ export class HeaderComponent implements OnInit {
     this.username = this.storageService.getItem('username');
     this.subscription = (this.storageService.getItem('subscription') || '').toLowerCase();
     this.isSignedIn = !!token;
-
-    if (this.isSignedIn) {
-      this.loadNotifications();
-    }
-  }
-
-  loadNotifications(): void {
-    this.notificationService.getNotifications(0, 10).subscribe({
-      next: (res) => {
-        this.notifications = res?.data || [];
-        this.hasUnreadNotification = this.notifications.some((n: any) => n.status === '1');
-      },
-      error: (err) => {
-        console.error('Failed to load notifications', err);
-      }
-    });
   }
 
   goToNotifications(): void {
-    this.closeMenu();
-    this.notificationService.markAllAsRead().subscribe({
-      next: () => {
+    // this.closeMenu();
+        this.router.navigate(['/notifications']);
         this.hasUnreadNotification = false;
-        this.router.navigate(['/notifications']);
-      },
-      error: (err) => {
-        console.error('Failed to mark notifications as read', err);
-        this.router.navigate(['/notifications']);
-      }
-    });
+
+    // this.notificationService.markAllAsRead().subscribe({
+    //   next: () => {
+    //     this.hasUnreadNotification = false;
+    //   },
+    //   error: (err) => {
+    //     console.error('Failed to mark notifications as read', err);
+    //     this.router.navigate(['/notifications']);
+    //   }
+    // });
   }
 
  

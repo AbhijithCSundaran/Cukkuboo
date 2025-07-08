@@ -15,7 +15,7 @@
               <a routerLink="/movies" [queryParams]="{ search: 1 }" (click)="closeMenu()">
                 <i class="fa-solid fa-magnifying-glass search"></i>
               </a>
-              <div class="notification-icon mx-2 position-relative d-lg-none">
+              <div *ngIf="isSignedIn" class="notification-icon mx-2 position-relative d-lg-none">
                 <i class="fa-solid fa-bell search" (click)="goToNotifications()"></i>
                 <span class="notification-dot" *ngIf="hasUnreadNotification"></span>
               </div>

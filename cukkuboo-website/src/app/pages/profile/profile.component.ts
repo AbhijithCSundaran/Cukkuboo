@@ -68,12 +68,7 @@ export class ProfileComponent implements OnInit {
       this.showProfileInfo = true; // default to profile
     }
 
-
-
-
-
-
-    this.profileForm = this.fb.group({
+     this.profileForm = this.fb.group({
       username: ['', [Validators.required]],
       email: ['', [Validators.required, ValidationService.emailValidator]],
       phone: ['', [Validators.required,

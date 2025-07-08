@@ -59,5 +59,11 @@ public function getById($notificationId)
 {
     return $this->update($notificationId, ['status' => 2]);
 }
+public function hasUnreadNotifications($userId)
+{
+    return $this->where('user_id', $userId)
+                ->where('status', 1) // 1 = unread
+                ->countAllResults() > 0;
+}
 
 }

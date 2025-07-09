@@ -102,39 +102,65 @@ class Usersub extends ResourceController
 
   public function getSubscriptionById($id = null)
 {
-    $authHeader = $this->request->getHeaderLine('Authorization');
-    $authuser = $this->authService->getAuthenticatedUser($authHeader);
+    $authUser = $this->authService->getAuthenticatedUser(
+        $this->request->getHeaderLine('Authorization')
+    );
 
-    if (!$authuser) {
+    if (!$authUser || !isset($authUser['user_id'])) {
         return $this->failUnauthorized('Invalid or missing token.');
     }
 
-    if (!$id) {
-        return $this->failValidationError('Subscription ID is required.');
+    $userId = $authUser['user_id'];
+
+    if ($id !== null) {
+        $subscription = $this->usersubModel->getUserSubscriptionById($userId, $id);
+
+        if (!$subscription) {
+            return $this->respond([
+                'success' => false,
+                'message' => 'Subscription not found or unauthorized access.',
+                'data'    => []
+            ]);
+        }
+
+        $subscription['plan_type'] = $this->mapPlanType($subscription['status']);
+
+        return $this->respond([
+            'success' => true,
+            'message' => 'Subscription fetched successfully.',
+            'data'    => $subscription
+        ]);
     }
 
-    $userSubModel = new UsersubModel();
+    $subscriptions = $this->usersubModel->getUserSubscriptions($userId);
 
-    $subscription = $userSubModel
-        ->where('user_subscription_id', $id)
-        ->where('status !=', 9)
-        ->first();
-
-    if (!$subscription) {
-        return $this->response->setJSON([
+    if (empty($subscriptions)) {
+        return $this->respond([
             'success' => false,
-            'message' => 'Subscription not found.',
+            'message' => 'No subscriptions found for the user.',
             'data'    => []
         ]);
     }
 
-    $subscription['plan_type'] = ($subscription['status'] == 1) ? 'Free' : 'Premium';
+    foreach ($subscriptions as &$sub) {
+        $sub['plan_type'] = $this->mapPlanType($sub['status']);
+    }
 
-    return $this->response->setJSON([
+    return $this->respond([
         'success' => true,
-        'message' => 'Subscription fetched successfully.',
-        'data'    => $subscription
+        'message' => 'Subscriptions fetched successfully.',
+        'data'    => $subscriptions
     ]);
+}
+
+private function mapPlanType($status)
+{
+    return match ((int) $status) {
+        1 => 'Free',
+        2 => 'Premium',
+        3 => 'Cancelled',
+        default => 'Unknown'
+    };
 }
 
 

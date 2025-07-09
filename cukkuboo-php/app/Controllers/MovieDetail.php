@@ -329,6 +329,7 @@ public function movieReaction($mov_id)
             'mov_id' => $movie['mov_id'],
             'title' => $movie['title'],
             'thumbnail' => $movie['thumbnail'],
+            'banner'=>$movie['banner'],
             'release_date' => $movie['release_date'],
             'views' => $movie['views'],
             'rating' => $movie['rating'],

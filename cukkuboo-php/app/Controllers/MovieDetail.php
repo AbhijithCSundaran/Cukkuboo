@@ -364,25 +364,23 @@ public function movieReaction($mov_id)
 public function getLatestMovies()
 {
     $pageIndex = (int) $this->request->getGet('pageIndex') ?? 0;
-    $pageSize = (int) $this->request->getGet('pageSize') ?? 10;
-    $offset = $pageIndex * $pageSize;
+    $pageSize  = (int) $this->request->getGet('pageSize') ?? 10;
+    $search    = $this->request->getGet('search'); 
+    $offset    = $pageIndex * $pageSize;
 
     $movieModel = new MovieDetailsModel();
-    $builder = $movieModel->where('status !=', 9); 
-    $total = $builder->countAllResults(false);
-   
-    $latestRaw = $builder->orderBy('release_date', 'DESC')
-                         ->findAll($pageSize, $offset);
+    $result = $movieModel->getLatestMovies($pageSize, $offset, $search);
 
-    $latest = array_map([$this, 'formatMovie'], $latestRaw);
+    $latest = array_map([$this, 'formatMovie'], $result['movies']);
 
     return $this->response->setJSON([
         'success' => true,
         'message' => 'success',
-        'data' => $latest,
-        'total' => $total
+        'data'    => $latest,
+        'total'   => $result['total']
     ]);
 }
+
 
  
 public function mostWatchedMovies()
@@ -414,11 +412,11 @@ public function latestMovies()
 
     $pageIndex = (int) $this->request->getGet('pageIndex') ?? 0;
     $pageSize = (int) $this->request->getGet('pageSize') ?? 10;
-
+    $search    = $this->request->getGet('search');
     $offset = $pageIndex * $pageSize;
 
     $movieModel = new MovieDetailsModel();
-    $result = $movieModel->latestAddedMovies($pageSize, $offset);
+    $result = $movieModel->latestAddedMovies($pageSize, $offset, $search);
 
     return $this->response->setJSON([
         'success' => true,
@@ -437,15 +435,16 @@ public function latestMovies()
             return $this->failUnauthorized('Invalid or missing token.');
         $pageIndex = (int) $this->request->getGet('pageIndex') ?? 0;
         $pageSize = (int) $this->request->getGet('pageSize') ?? 10;
-
+        $search    = $this->request->getGet('search');
         $offset = $pageIndex * $pageSize;
+        
         $movieModel = new MovieDetailsModel();
-        $mostWatched = $movieModel->getMostWatchMovies();
+        $result = $movieModel->getMostWatchMovies($pageSize, $offset, $search);
  
         return $this->response->setJSON([
             'success'  => true,
             'message' => 'Most watched movies fetched successfully.',
-            'data' => $mostWatched
+            'data' => $result
         ]);
     }
     public function countActiveMovies()

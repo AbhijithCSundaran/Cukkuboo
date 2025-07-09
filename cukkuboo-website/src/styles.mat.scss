@@ -30,6 +30,13 @@ html {
         color: #c20000;
     }
 }
+.snackbar-warn {
+    .mdc-snackbar__surface.mat-mdc-snackbar-surface {
+        border: 1px solid #f08400;
+        background-color: #ffebee;
+        color: #f08400;
+    }
+}
 
 .mat-mdc-snack-bar-label .mdc-snackbar__label {
     text-align: center;

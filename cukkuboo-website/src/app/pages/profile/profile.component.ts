@@ -103,25 +103,39 @@ export class ProfileComponent implements OnInit {
 
 
   loadUserData(): void {
-    this.userService.getProfile().subscribe({
-      next: (response) => {
-        const data = response.data;
-        this.userId = data.user_id;
-        this.profileForm.patchValue({
-          username: data.username,
-          email: data.email,
-          phone: data.phone,
-          subscription: data.subscription,
-          country_code: data.country_code || '+91',
+    const data = this.storageService.getItem('userData');
+    if (data) {
+      this.userId = data.user_id;
+      this.profileForm.patchValue({
+        username: data.username,
+        email: data.email,
+        phone: data.phone,
+        subscription: data.subscription,
+        country_code: data.country_code || '+91',
 
-        });
-        this.initialFormValue = this.profileForm.getRawValue();
-      },
+      });
+      this.initialFormValue = this.profileForm.getRawValue();
+    }
+    // this.storageService.onUpdateItem.subscribe(() => {    });
+    // this.userService.getProfile().subscribe({
+    //   next: (response) => {
+    //     const data = response.data;
+    //     this.userId = data.user_id;
+    //     this.profileForm.patchValue({
+    //       username: data.username,
+    //       email: data.email,
+    //       phone: data.phone,
+    //       subscription: data.subscription,
+    //       country_code: data.country_code || '+91',
 
-      error: (err) => {
-        console.error('Error fetching profile', err);
-      }
-    });
+    //     });
+    //     this.initialFormValue = this.profileForm.getRawValue();
+    //   },
+
+    //   error: (err) => {
+    //     console.error('Error fetching profile', err);
+    //   }
+    // });
   }
   isFormChanged(): boolean {
     const currentValue = this.profileForm.getRawValue();

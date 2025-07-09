@@ -64,6 +64,7 @@ export class SignInComponent {
             if (response.data.user_type === 'Customer') {
               localStorage.setItem('t_k', response.data?.jwt_token);
               localStorage.setItem('u_n', response.data?.username || 'User');
+              this.storageService.updateItem('userData', response.data);
               this.storageService.updateItem('username', response.data?.username || 'User');
               this.storageService.updateItem('token', response.data?.jwt_token || 'token');
               this.storageService.updateItem('subscription', response.data?.subscription || 'free');

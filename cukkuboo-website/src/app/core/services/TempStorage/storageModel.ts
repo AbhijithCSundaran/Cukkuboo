@@ -1,6 +1,6 @@
 export interface StorageItem {
     name: string;
-    value: string | number;
+    value: string | number | any;
 }
 
 export interface StorageList extends StorageItem {

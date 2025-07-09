@@ -4,6 +4,7 @@ import { StorageService } from './core/services/TempStorage/storageService';
 import devtools from 'devtools-detect';
 import { CommonModule } from '@angular/common';
 import { environment } from '../environments/environment';
+import { UserService } from './services/user/user.service';
 
 @Component({
   selector: 'app-root',
@@ -15,11 +16,16 @@ export class AppComponent {
   title = 'cukkuboo-website';
   isProd: boolean = environment.production;
   devToolIsOpen: boolean = false;
-  constructor(private storageService: StorageService) {
+  constructor(
+    private storageService: StorageService,
+    private userService: UserService,
+  ) {
     const token = localStorage.getItem('t_k');
     const name = localStorage.getItem('u_n');
-    if (token)
+    if (token){
       this.storageService.updateItem('token', token);
+      this.loadUserData();
+    }
     if (name)
       this.storageService.updateItem('username', name);
 
@@ -73,5 +79,20 @@ export class AppComponent {
       setTimeout(check, 1000);
     };
     check();
+  }
+
+  loadUserData(): void {
+    this.userService.getProfile().subscribe({
+      next: (response) => {
+        if (response.success) {
+          const data = response.data;
+          this.storageService.updateItem('userData', data);
+        }
+      },
+
+      error: (err) => {
+        console.error('Error fetching profile', err);
+      }
+    });
   }
 }

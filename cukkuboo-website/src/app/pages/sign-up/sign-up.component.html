@@ -14,7 +14,7 @@
             <ul class="pms-form-fields-wrapper list-unstyled">
 
               <!-- Username -->
-              <li class="pms-field pms-user-login-field">
+              <li class="pms-field">
                 <mat-form-field appearance="outline" class="w-100">
                   <mat-label>Username</mat-label>
                   <input matInput formControlName="username" placeholder="Enter username" />
@@ -25,7 +25,7 @@
               </li>
 
               <!-- Mobile Number -->
-              <li class="pms-field pms-user-login-field">
+              <li class="pms-field">
                 <mat-form-field appearance="outline" class="w-100">
                   <mat-label>Mobile Number</mat-label>
                   <input
@@ -42,7 +42,7 @@
               </li>
 
               <!-- Email -->
-              <li class="pms-field pms-user-email-field">
+              <li class="pms-field">
                 <mat-form-field appearance="outline" class="w-100">
                   <mat-label>Email</mat-label>
                   <input matInput type="email" formControlName="email" placeholder="Enter email" />
@@ -53,7 +53,7 @@
               </li>
 
               <!-- Date of Birth -->
-              <li class="pms-field pms-date-of-birth-field">
+              <li class="pms-field">
                 <mat-form-field appearance="outline" class="w-100">
                   <mat-label>Date of Birth</mat-label>
                   <input
@@ -74,7 +74,7 @@
               </li>
 
               <!-- Password -->
-              <li class="pms-field pms-pass1-field">
+              <li class="pms-field">
                 <mat-form-field appearance="outline" class="w-100">
                   <mat-label>Password</mat-label>
                   <input
@@ -93,7 +93,7 @@
               </li>
 
               <!-- Confirm Password -->
-              <li class="pms-field pms-pass2-field">
+              <li class="pms-field">
                 <mat-form-field appearance="outline" class="w-100">
                   <mat-label>Confirm Password</mat-label>
                   <input
@@ -105,12 +105,17 @@
                   <button mat-icon-button matSuffix (click)="hideConfirmPassword = !hideConfirmPassword" type="button">
                     <mat-icon class="small-eye-icon">{{ hideConfirmPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
                   </button>
+
                   <mat-error *ngIf="signUpForm.controls['confirmPassword'].touched && signUpForm.controls['confirmPassword'].invalid">
                     <Validation-Messages [control]="signUpForm.controls['confirmPassword']"></Validation-Messages>
                   </mat-error>
+
+                  <!-- Password mismatch error -->
+                  <mat-error *ngIf="signUpForm.hasError('passwordMismatch') && signUpForm.get('confirmPassword')?.touched">
+                    Password and Confirm Password do not match.
+                  </mat-error>
                 </mat-form-field>
               </li>
-
             </ul>
 
             <div class="text-start mt-3">

@@ -111,22 +111,28 @@ public function countAllMovies()
 //                     ->get()
 //                     ->getResultArray();
 // }
-public function latestMovies()
+public function getLatestMovies($limit = 10, $offset = 0, $search = null)
 {
-    $results = $this->db->table($this->table)
-        ->where('status', 1)
-        ->where('release_date <=', date('Y-m-d'))
-        ->orderBy('created_on', 'DESC')
-        ->limit(10)
-        ->get()
-        ->getResultArray();
+    $builder = $this->where('status !=', 9);
 
-    foreach ($results as &$row) {
-        unset($row['video']);
+    if (!empty($search)) {
+        $builder->groupStart()
+                ->like('title', $search)
+                ->orLike('cast_details', $search)
+                ->groupEnd();
     }
 
-    return $results;
+    $total = $builder->countAllResults(false);
+
+    $results = $builder->orderBy('release_date', 'DESC')
+                       ->findAll($limit, $offset);
+
+    return [
+        'movies' => $results,
+        'total'  => $total
+    ];
 }
+
 
 
 public function getMostWatchedMovies()
@@ -146,25 +152,42 @@ public function getMostWatchedMovies()
 
 // -------------------------------------Admin home Dispaly----------------------------------------
 
-    public function latestAddedMovies()
+    public function latestAddedMovies($limit = 10, $offset = 0,$search = null)
     {
-        return $this->select('title, release_date')
-                ->where('status', 1)
-                ->where('release_date <=', date('Y-m-d'))
-                ->orderBy('created_on', 'DESC')
-                ->limit(10)
-                ->findAll();
-    }
-
-
-    public function getMostWatchMovies()
-    {
-        return $this->select('title,views')  
+    $builder = $this->select('title, release_date')
                     ->where('status', 1)
-                    ->orderBy('views', 'DESC')
-                    ->limit(10)
-                    ->findAll();
+                    ->where('release_date <=', date('Y-m-d'));
+    if (!empty($search)) {
+        $builder->like('title', $search); 
     }
+    $total = $builder->countAllResults(false);
+    $results = $builder->orderBy('created_on', 'DESC')
+                       ->findAll($limit, $offset);
+
+    return [
+        'movies' => $results,
+        'total' => $total
+    ];
+    }
+
+
+    public function getMostWatchMovies($limit = 10, $offset = 0,$search = null)
+{
+    $builder = $this->select('title, views')
+                    ->where('status', 1);
+    if (!empty($search)) {
+        $builder->like('title', $search); 
+    }
+    $total = $builder->countAllResults(false); 
+    $results = $builder->orderBy('views', 'DESC')
+                       ->findAll($limit, $offset);
+
+    return [
+        'movies' => $results,
+        'total' => $total
+    ];
+}
+
     public function countActiveMovies()
     {
         return $this->where('status', 1)->countAllResults();

@@ -88,9 +88,7 @@ class Usersub extends ResourceController
         $payload['user_subscription_id'] = $id;
         $msg = 'Subscription added successfully.';
     }
-    $this->userModel->update($userId, [
-    'subscription' => 'premium'
-    ]);
+    $this->userModel->update($userId, ['subscription' => 'premium']);
    
     $payload['plan_type'] = $planType;
 
@@ -115,7 +113,7 @@ class Usersub extends ResourceController
         return $this->failValidationError('Subscription ID is required.');
     }
 
-    $userSubModel = new \App\Models\UsersubModel();
+    $userSubModel = new UsersubModel();
 
     $subscription = $userSubModel
         ->where('user_subscription_id', $id)
@@ -139,71 +137,7 @@ class Usersub extends ResourceController
     ]);
 }
 
-// public function getUserSubscriptions()
-// {
-//     $authHeader = $this->request->getHeaderLine('Authorization');
-//     $authUser = $this->authService->getAuthenticatedUser($authHeader);
 
-//     if (!$authUser) {
-//         return $this->failUnauthorized('Invalid or missing token.');
-//     }
-//     $plans = $this->subscriptionPlanModel
-//         ->select('*') 
-//         ->where('status !=', 9)
-//         ->findAll();
-
-//     if (empty($plans)) {
-//         return $this->respond([
-//             'success' => false,
-//             'message' => 'No active subscription plans found.',
-//         ]);
-//     }
-
-//     foreach ($plans as $plan) {
-//         $targetUserId = $plan['created_by'];
-        
-//         $existing = $this->usersubModel->where([
-//             'user_id' => $targetUserId,
-//             'subscriptionplan_id' => $plan['subscriptionplan_id']
-//         ])->first();
-
-//         if ($existing) {
-//             continue;
-//         }
-
-       
-//         $startDate = new \DateTime($plan['created_on']);
-//         $endDate = (clone $startDate)->modify("+{$plan['period']} days");
-//         $status = (new \DateTime() > $endDate) ? 2 : 1;
-//         $this->usersubModel->insert([
-//             'user_id'             => $targetUserId,                     
-//             'subscriptionplan_id' => $plan['subscriptionplan_id'],
-//             'plan_name'           => $plan['plan_name'],
-//             'start_date'          => $startDate->format('Y-m-d'),
-//             'end_date'            => $endDate->format('Y-m-d'),
-//             'status'              => $status,
-//             'created_on'          => date('Y-m-d H:i:s'),
-//             'created_by'          => $plan['created_by'],               
-//             'modify_on'           => date('Y-m-d H:i:s'),
-//             'modify_by'           => $plan['created_by']                
-//         ]);
-//     }
-
-    
-//     $allSubscriptions = $this->usersubModel
-//     ->select('user_subscription.*, user.username')
-//     ->join('user', 'user.user_id = user_subscription.user_id')
-//     ->where('user_subscription.status !=', 9)
-//     ->findAll();
-
-// return $this->respond([
-//     'success' => true,
-//     'message' => 'User subscriptions synced and listed successfully.',
-//     'data'    => $allSubscriptions
-// ]);
-
-    
-// }
 public function getUserSubscriptions()
 {
     $authHeader = $this->request->getHeaderLine('Authorization');
@@ -233,7 +167,6 @@ public function getUserSubscriptions()
                 ->like('user.username', $search)
                 ->orLike('user_subscription.user_id', $search)
                 ->orLike('user_subscription.start_date', $search)
-                ->orLike('user_subscription.end_date', $search)
                 ->groupEnd();
     }
     $total = $builder->countAllResults(false);
@@ -282,7 +215,8 @@ public function deleteSubscription($id = null)
             'data'=>[]
         ]);
     } 
-else {
+    else 
+    {
         return $this->failServerError("Failed to delete subscription with ID $id.");
     }
 }

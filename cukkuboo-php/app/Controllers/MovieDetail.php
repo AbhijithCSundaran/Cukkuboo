@@ -284,8 +284,71 @@ public function movieReaction($mov_id)
         ]);
     }
 }
- 
- 
+ public function getMoviesList()
+{
+    $type = $this->request->getGet('type');
+    $page = (int) $this->request->getGet('page') ?: 1;
+    $limit = (int) $this->request->getGet('limit') ?: 10;
+    $offset = ($page - 1) * $limit;
+
+    $model = new MovieDetailsModel();
+    $data = [];
+    $totalMovies = 0;
+    $title = '';
+
+    switch ($type) {
+        case 'trending':
+            $data = $model->getTrendingList($limit, $offset);
+            $totalMovies = $model->countActiveMovies(); // or a separate trending count method
+            $title = 'Trending Movies';
+            break;
+
+        case 'latest':
+            $data = $model->getLatestList($limit, $offset);
+            $totalMovies = $model->countActiveMovies(); // or latest count
+            $title = 'Latest Movies';
+            break;
+
+        case 'most_viewed':
+            $data = $model->getMostViewedList($limit, $offset);
+            $totalMovies = $model->countActiveMovies(); // or most_viewed count
+            $title = 'Most Watched Movies';
+            break;
+
+        default:
+            return $this->respond([
+                'success' => false,
+                'message' => 'Invalid type parameter.'
+            ], 400);
+    }
+
+    // Format output data
+    $formattedData = [];
+    foreach ($data as $movie) {
+        $formattedData[] = [
+            'mov_id' => $movie['mov_id'],
+            'title' => $movie['title'],
+            'thumbnail' => $movie['thumbnail'],
+            'release_date' => $movie['release_date'],
+            'views' => $movie['views'],
+            'rating' => $movie['rating'],
+            'description' => $movie['description'],
+            'duration' => $movie['duration'],
+        ];
+    }
+
+    $totalPages = ceil($totalMovies / $limit);
+
+    return $this->respond([
+        'success' => true,
+        'type' => $type,
+        'title' => $title,
+        'page' => $page,
+        'total_pages' => $totalPages,
+        'data' => $formattedData
+    ]);
+}
+
  
     public function deleteMovieDetails($mov_id)
     {
@@ -361,25 +424,25 @@ public function movieReaction($mov_id)
     ];
 }
  
-public function getLatestMovies()
-{
-    $pageIndex = (int) $this->request->getGet('pageIndex') ?? 0;
-    $pageSize  = (int) $this->request->getGet('pageSize') ?? 10;
-    $search    = $this->request->getGet('search'); 
-    $offset    = $pageIndex * $pageSize;
+// public function getLatestMovies()
+// {
+//     $pageIndex = (int) $this->request->getGet('pageIndex') ?? 0;
+//     $pageSize  = (int) $this->request->getGet('pageSize') ?? 10;
+//     $search    = $this->request->getGet('search'); 
+//     $offset    = $pageIndex * $pageSize;
 
-    $movieModel = new MovieDetailsModel();
-    $result = $movieModel->getLatestMovies($pageSize, $offset, $search);
+//     $movieModel = new MovieDetailsModel();
+//     $result = $movieModel->getLatestMovies($pageSize, $offset, $search);
 
-    $latest = array_map([$this, 'formatMovie'], $result['movies']);
+//     $latest = array_map([$this, 'formatMovie'], $result['movies']);
 
-    return $this->response->setJSON([
-        'success' => true,
-        'message' => 'success',
-        'data'    => $latest,
-        'total'   => $result['total']
-    ]);
-}
+//     return $this->response->setJSON([
+//         'success' => true,
+//         'message' => 'success',
+//         'data'    => $latest,
+//         'total'   => $result['total']
+//     ]);
+// }
 
 
  

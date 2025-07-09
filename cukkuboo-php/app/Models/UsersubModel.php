@@ -42,10 +42,21 @@ class UsersubModel extends Model
     }
 
     
-    public function getSubscriptionById($id)
+    public function getUserSubscriptionById($userId, $subscriptionId)
     {
-        return $this->find($id);
+        return $this->where('user_subscription_id', $subscriptionId)
+                    ->where('user_id', $userId)
+                    ->whereIn('status', [1, 2, 3])
+                    ->first();
     }
+
+    public function getUserSubscriptions($userId)
+    {
+        return $this->where('user_id', $userId)
+                    ->whereIn('status', [1, 2, 3])
+                    ->findAll();
+    }
+
 
    
     public function DeleteSubscriptionById($status, $id, $modifiedBy = null)
@@ -56,7 +67,13 @@ class UsersubModel extends Model
         'modify_by'  => $modifiedBy
     ]);
 }
-
+public function cancelUserSubscription($userId)
+{
+    return $this->where('user_id', $userId)
+                ->where('status !=', 9)
+                ->set(['status' => 3]) 
+                ->update();
+}
 
 
    

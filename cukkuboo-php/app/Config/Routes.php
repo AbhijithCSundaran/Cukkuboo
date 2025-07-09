@@ -83,6 +83,7 @@ $routes->delete('reels/delete/(:any)', 'Reels::deleteReel/$1');
 $routes->post('usersub/save', 'Usersub::autoSubscribe');
 $routes->get('usersub/details', 'Usersub::getUserSubscriptions');
 $routes->get('usersub/get/(:num)', 'Usersub::getSubscriptionById/$1');
+$routes->get('usersub/get', 'Usersub::getSubscriptionById');
 $routes->delete('usersub/delete/(:num)', 'Usersub::deleteSubscription/$1');
 $routes->delete('usersub/cancelSubscription', 'Usersub::cancelSubscription');
 //Reels like and views

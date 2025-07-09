@@ -4,6 +4,7 @@ namespace App\Controllers;
 use CodeIgniter\RESTful\ResourceController;
 use App\Models\MovieDetailsModel;
 use App\Models\UserModel;
+use App\Models\UsersubModel;
 use App\Models\SubscriptionPlanModel;
 use App\Libraries\Jwt;
 use App\Libraries\AuthService;
@@ -20,6 +21,7 @@ class MovieDetail extends ResourceController
         $this->moviedetail = new MovieDetailsModel();
         $this->subscriptionPlanModel = new SubscriptionPlanModel();
         $this->userModel = new UserModel();
+        $this->usersubModel = new UsersubModel();
         $this->authService = new AuthService();
         $this->db = \Config\Database::connect();
     }
@@ -631,7 +633,9 @@ public function getUserHomeData()
             'message' => true,
             'data' => [
                 'active_user_count'=>$this->userModel->countActiveUsers(),
-                'subscriber_count'=>$this->subscriptionPlanModel->countCurrentMonthSubscribers(),
+                'subscriber_count'=>$this->usersubModel->countCurrentMonthSubscribers(),
+                'total_revenue'=>$this->usersubModel->currentTotalRevenue(),
+                'transaction_lis'=>$this->usersubModel->getTransactions(),
                 'active_movie_count' => $this->moviedetail->countActiveMovies(),
                 'In_active_movie_count' => $this->moviedetail->countInactiveMovies(),
                 'latest_movies' =>$this->moviedetail->latestAddedMovies(),

@@ -13,6 +13,7 @@ class UsersubModel extends Model
         'user_id',
         'subscriptionplan_id',
         'plan_name',
+        'price',
         'start_date',
         'end_date',
         'status',
@@ -74,7 +75,31 @@ public function cancelUserSubscription($userId)
                 ->set(['status' => 3]) 
                 ->update();
 }
-
+public function countCurrentMonthSubscribers()
+    {
+    return $this->where('status', 2) 
+                ->where('MONTH(created_on)', date('m'))
+                ->where('YEAR(created_on)', date('Y'))
+                ->countAllResults();
+    }
+public function currentTotalRevenue()
+{
+    return $this->selectSum('price')
+        ->whereNotIn('status', [3, 9])
+        ->where('MONTH(start_date)', date('m'))
+        ->where('YEAR(start_date)', date('Y'))
+        ->get()
+        ->getRow()
+        ->price ?? 0;
+}
+public function getTransactions()
+{
+    return $this->whereNotIn('status', [3, 9])
+                ->where('MONTH(created_on)', date('m'))
+                ->where('YEAR(created_on)', date('Y'))
+                ->orderBy('created_on', 'DESC')
+                ->findAll();
+}
 
    
 }

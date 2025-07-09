@@ -36,13 +36,7 @@ class SubscriptionPlanModel extends Model
             'modify_on' => date('Y-m-d H:i:s')
         ]);
     }
-    public function countCurrentMonthSubscribers()
-    {
-    return $this->where('status', 1) 
-                ->where('MONTH(created_on)', date('m'))
-                ->where('YEAR(created_on)', date('Y'))
-                ->countAllResults();
-    }
-
+    
+ 
 
 }

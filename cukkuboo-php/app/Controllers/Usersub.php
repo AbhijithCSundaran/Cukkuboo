@@ -41,8 +41,8 @@ class Usersub extends ResourceController
     }
 
     $plan = $this->subscriptionPlanModel->getPlanById($planId);
-    if (!$plan) {
-        return $this->failNotFound('Invalid subscription plan.');
+    if (!$plan || (isset($plan['status']) && $plan['status'] == 9)) {
+        return $this->failNotFound('This subscription plan has been deleted or is not available.');
     }
 
     $planName  = $plan['plan_name'];

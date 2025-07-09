@@ -46,6 +46,7 @@ class Usersub extends ResourceController
     }
 
     $planName  = $plan['plan_name'];
+    $price = (float) ($plan['discount_price'] ?? 0); 
     $startDate = date('Y-m-d');
 
     try {
@@ -65,6 +66,7 @@ class Usersub extends ResourceController
         'user_id'             => $userId,
         'subscriptionplan_id' => $planId,
         'plan_name'           => $planName,
+        'price'               => $price,
         'start_date'          => $startDate,
         'end_date'            => $endDate,
         'status'              => $status,
@@ -192,6 +194,7 @@ public function getUserSubscriptions()
         $builder->groupStart()
                 ->like('user.username', $search)
                 ->orLike('user_subscription.user_id', $search)
+                ->orLike('user_subscription.plan_name', $search)
                 ->orLike('user_subscription.start_date', $search)
                 ->groupEnd();
     }
@@ -268,6 +271,62 @@ public function cancelSubscription()
         ]
     ]);
 }
+    public function countSubscribers()
+    {
+        $authHeader = $this->request->getHeaderLine('Authorization');
+        $authuser = $this->authService->getAuthenticatedUser($authHeader);
+        if (!$authuser) 
+            return $this->failUnauthorized('Invalid or missing token.');
 
+        $userSubModel = new UsersubModel();
+        $count = $this->usersubModel->countCurrentMonthSubscribers();
+        return $this->respond([
+            'success' => true,
+            'message'=>'success',
+            'data' => $count
+        ]);
+    }
+    public function countRevenue()
+    {
+        $authHeader = $this->request->getHeaderLine('Authorization');
+        $authUser = $this->authService->getAuthenticatedUser($authHeader);
+
+        if (!$authUser) {
+            return $this->failUnauthorized('Invalid or missing token.');
+        }
+
+        $totalPrice = $this->usersubModel->currentTotalRevenue();
+
+        return $this->respond([
+        'success' => true,
+        'message' => 'Total subscription price for current month calculated successfully.',
+        'data'    => ['total_price' => $totalPrice]
+    ]);
+    }
+    public function listTransactions()
+{
+    $authHeader = $this->request->getHeaderLine('Authorization');
+    $authUser = $this->authService->getAuthenticatedUser($authHeader);
+
+    if (!$authUser || !isset($authUser['user_id'])) {
+        return $this->failUnauthorized('Invalid or missing token.');
+    }
+    // $userId = $authUser['user_id'];
+    $transactions = $this->usersubModel->getTransactions();
+
+    if (empty($transactions)) {
+        return $this->respond([
+            'success' => false,
+            'message' => 'No transactions found for the current month.',
+            'data'    => []
+        ]);
+    }
+
+    return $this->respond([
+        'success' => true,
+        'message' => 'Transactions fetched successfully.',
+        'data'    => $transactions
+    ]);
+}
 
 }

@@ -361,19 +361,29 @@ public function movieReaction($mov_id)
     ];
 }
  
- public function getLatestMovies()
+public function getLatestMovies()
 {
-    $movieModel = new \App\Models\MovieDetailsModel();
-    $latestRaw = $movieModel->latestMovies();
- 
+    $pageIndex = (int) $this->request->getGet('pageIndex') ?? 0;
+    $pageSize = (int) $this->request->getGet('pageSize') ?? 10;
+    $offset = $pageIndex * $pageSize;
+
+    $movieModel = new MovieDetailsModel();
+    $builder = $movieModel->where('status !=', 9); 
+    $total = $builder->countAllResults(false);
+   
+    $latestRaw = $builder->orderBy('release_date', 'DESC')
+                         ->findAll($pageSize, $offset);
+
     $latest = array_map([$this, 'formatMovie'], $latestRaw);
- 
+
     return $this->response->setJSON([
         'success' => true,
-        'message'=>'success',
-        'data' => $latest
+        'message' => 'success',
+        'data' => $latest,
+        'total' => $total
     ]);
 }
+
  
 public function mostWatchedMovies()
 {
@@ -397,23 +407,38 @@ public function latestMovies()
 {
     $authHeader = $this->request->getHeaderLine('Authorization');
     $user = $this->authService->getAuthenticatedUser($authHeader);
-    if (!$user)
+
+    if (!$user) {
         return $this->failUnauthorized('Invalid or missing token.');
-    $movieModel = new \App\Models\MovieDetailsModel();
-    $latestMovies = $movieModel->latestAddedMovies();
- 
+    }
+
+    $pageIndex = (int) $this->request->getGet('pageIndex') ?? 0;
+    $pageSize = (int) $this->request->getGet('pageSize') ?? 10;
+
+    $offset = $pageIndex * $pageSize;
+
+    $movieModel = new MovieDetailsModel();
+    $result = $movieModel->latestAddedMovies($pageSize, $offset);
+
     return $this->response->setJSON([
         'success' => true,
         'message' => 'Latest movies fetched successfully.',
-        'data' => $latestMovies
+        'data' => $result['movies'],
+        'total' => $result['total']
     ]);
 }
+
+
     public function getMostWatchMovies()
     {
         $authHeader = $this->request->getHeaderLine('Authorization');
         $user = $this->authService->getAuthenticatedUser($authHeader);
         if (!$user)
             return $this->failUnauthorized('Invalid or missing token.');
+        $pageIndex = (int) $this->request->getGet('pageIndex') ?? 0;
+        $pageSize = (int) $this->request->getGet('pageSize') ?? 10;
+
+        $offset = $pageIndex * $pageSize;
         $movieModel = new MovieDetailsModel();
         $mostWatched = $movieModel->getMostWatchMovies();
  

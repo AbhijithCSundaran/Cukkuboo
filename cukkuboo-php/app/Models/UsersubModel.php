@@ -56,7 +56,13 @@ class UsersubModel extends Model
         'modify_by'  => $modifiedBy
     ]);
 }
-
+public function cancelUserSubscription($userId)
+{
+    return $this->where('user_id', $userId)
+                ->where('status !=', 9)
+                ->set(['status' => 3]) 
+                ->update();
+}
 
 
    

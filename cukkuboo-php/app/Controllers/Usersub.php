@@ -230,24 +230,18 @@ public function cancelSubscription()
     }
 
     $userId = $user['user_id'];
-    $this->usersubModel
-        ->where('user_id', $userId)
-        ->where('status !=', 9)
-        ->set(['status' => 1]) 
-        ->update();
-    $this->userModel
-        ->where('user_id', $userId)
-        ->set(['subscription' => 'free'])
-        ->update();
+    $this->usersubModel->cancelUserSubscription($userId);
+    $this->userModel->setUserSubscription($userId);
 
     return $this->respond([
         'success' => true,
         'message' => 'Subscription cancelled successfully.',
         'data' => [
             'user_id' => $userId,
-            'subscription' => 'free'
+            'subscription' => 'cancel'
         ]
     ]);
 }
+
 
 }

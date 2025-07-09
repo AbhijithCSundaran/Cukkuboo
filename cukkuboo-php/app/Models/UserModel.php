@@ -111,5 +111,11 @@ class UserModel extends Model
         return ['status' => 0, 'msg' => 'Could not update the password. Please try again.'];
     }
 }
+    public function setUserSubscription($userId)
+    {
+        return $this->where('user_id', $userId)
+                    ->set(['subscription' => 'free'])
+                    ->update();
+    }
 
 }

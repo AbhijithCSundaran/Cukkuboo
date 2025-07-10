@@ -63,6 +63,7 @@ export class UserListComponent implements OnInit, AfterViewInit {
         if (response.success) {
           this.dataSource.data = response?.data || [];
           this.totalItems = response?.total || 0;
+          
         }
       },
       error: (error) => {

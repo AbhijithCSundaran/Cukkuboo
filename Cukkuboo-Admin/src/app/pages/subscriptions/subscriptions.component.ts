@@ -79,7 +79,7 @@ export class SubscriptionsComponent implements OnInit, AfterViewInit {
               start_date: item.start_date,
               end_date: item.end_date,
               // status: item.status === '1' ? 'active' : 'expired'
-              status: item.status === '1' ? 'active' : item.status === '3' ? 'canceled' : 'expired'
+              status: item.status === '2' ? 'premium' : item.status === '3' ? 'canceled' : 'expired'
 
             }));
 

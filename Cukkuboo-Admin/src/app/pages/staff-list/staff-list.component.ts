@@ -42,7 +42,7 @@ export class StaffListComponent implements OnInit, AfterViewInit {
     private router: Router,
     private staffservice: StaffService,
     private snackBar: MatSnackBar
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.getStaffList();
@@ -52,11 +52,11 @@ export class StaffListComponent implements OnInit, AfterViewInit {
       return dataStr.includes(filter);
     };
   }
-
-  ngAfterViewInit(): void {
-    this.paginator.page.subscribe((event) => {
-      this.pageIndex = event.pageIndex;
-      this.pageSize = event.pageSize;
+ ngAfterViewInit() {
+    // this.dataSource.paginator = this.paginator;
+    this.paginator?.page.subscribe(() => {
+      this.pageIndex = this.paginator.pageIndex;
+      this.pageSize = this.paginator.pageSize;
       this.getStaffList();
     });
   }
@@ -64,11 +64,12 @@ export class StaffListComponent implements OnInit, AfterViewInit {
   getStaffList(): void {
     this.staffservice.getStaffList(this.pageIndex, this.pageSize, this.searchText).subscribe({
       next: (response) => {
+        debugger;
         this.dataSource.data = (response.data || []).map((staff: any) => ({
           ...staff,
           join_date: this.fixDateString(staff.join_date)
         }));
-        this.totalItems = response.totalItems || 0;
+        this.totalItems = response.total || 0;
       },
       error: (err) => {
         console.error('Failed to fetch staff list:', err);
@@ -78,15 +79,24 @@ export class StaffListComponent implements OnInit, AfterViewInit {
   }
 
   fixDateString(date: string): string {
+    if (date == '0000-00-00')
+      return "NA";
     const d = new Date(date);
     const offsetDate = new Date(d.getTime() + Math.abs(d.getTimezoneOffset() * 60000));
-    return offsetDate.toISOString().split('T')[0];
+    return offsetDate.toISOString()?.split('T')[0];
   }
 
   applyGlobalFilter(event: KeyboardEvent): void {
     const input = (event.target as HTMLInputElement).value;
     this.searchText = input.trim().toLowerCase();
     this.pageIndex = 0;
+    this.getStaffList();
+  }
+
+   onPageChange(event: PageEvent): void {
+    debugger;
+    this.pageIndex = event.pageIndex;
+    this.pageSize = event.pageSize;
     this.getStaffList();
   }
 

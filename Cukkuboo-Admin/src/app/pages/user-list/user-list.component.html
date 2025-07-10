@@ -1,13 +1,13 @@
 <div class="content-container">
-    <div class="header-row">
-      <h2>User List</h2>
-      <button mat-raised-button  class="add-button" [routerLink]="['add-user']">
-       + New
-      </button>
-    </div>
-     
-    <!-- Search Bar -->
-  <div class="width-50    search-bar-wrapper">
+  <div class="header-row">
+    <h2>User List</h2>
+    <button mat-raised-button class="add-button" [routerLink]="['add-user']">
+      + New
+    </button>
+  </div>
+
+  <!-- Search Bar -->
+  <div class="width-50 search-bar-wrapper">
     <mat-form-field class="custom-search" appearance="outline">
       <mat-icon matPrefix>search</mat-icon>
       <input
@@ -18,41 +18,41 @@
     </mat-form-field>
   </div>
 
+  <table
+    mat-table
+    [dataSource]="dataSource"
+    class="mat-elevation-z2 custom-table"
+  >
+    <ng-container matColumnDef="slNo">
+      <th mat-header-cell *matHeaderCellDef>Sl. No.</th>
+      <td mat-cell *matCellDef="let row; let i = index">
+        {{ pageIndex * pageSize + i + 1 }}
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="username">
+      <th mat-header-cell *matHeaderCellDef>Name</th>
+      <td mat-cell *matCellDef="let user" class="title">{{ user.username }}</td>
+    </ng-container>
 
-    <table mat-table [dataSource]="dataSource" class="mat-elevation-z2 custom-table">
+    <ng-container matColumnDef="phone">
+      <th mat-header-cell *matHeaderCellDef>Contact</th>
+      <td mat-cell *matCellDef="let user">{{ user.phone }}</td>
+    </ng-container>
 
-      
-        <ng-container matColumnDef="slNo">
-  <th mat-header-cell *matHeaderCellDef> Sl. No. </th>
-<td mat-cell *matCellDef="let row; let i = index">
-  {{ pageIndex * pageSize + i + 1 }}
-</td>
-</ng-container>
-         <ng-container matColumnDef="username">
-  <th mat-header-cell *matHeaderCellDef> Name </th>
-  <td mat-cell *matCellDef="let user" class="title"> {{ user.username }} </td>
-</ng-container>
+    <ng-container matColumnDef="email">
+      <th mat-header-cell *matHeaderCellDef>Email</th>
+      <td mat-cell *matCellDef="let user">{{ user.email }}</td>
+    </ng-container>
 
-<ng-container matColumnDef="phone">
-  <th mat-header-cell *matHeaderCellDef> Contact </th>
-  <td mat-cell *matCellDef="let user"> {{ user.phone }} </td>
-</ng-container>
-
-      
-        <ng-container matColumnDef="email">
-          <th mat-header-cell *matHeaderCellDef> Email </th>
-          <td mat-cell *matCellDef="let user"> {{ user.email }} </td>
-        </ng-container>
-      
-        <!-- <ng-container matColumnDef="country">
+    <!-- <ng-container matColumnDef="country">
           <th mat-header-cell *matHeaderCellDef> Country </th>
           <td mat-cell *matCellDef="let user"> {{ user.country }} </td>
         </ng-container> -->
-      
-        <ng-container matColumnDef="status">
-          <th mat-header-cell *matHeaderCellDef> Status </th>
-          <td mat-cell *matCellDef="let user">
-            <!-- <span
+
+    <ng-container matColumnDef="status">
+      <th mat-header-cell *matHeaderCellDef>Status</th>
+      <td mat-cell *matCellDef="let user">
+        <!-- <span
               [ngClass]="{
                 'badge': true,
                 'badge-enabled': user.status === '1',
@@ -60,67 +60,68 @@
               }"
               
             > -->
-              <span
-              [ngClass]="{
-                'badge': true,
-                 'badge-enabled': user.status == 1,
-    'badge-disabled': user.status != 1
-              }"
-              
-            >
-            {{ user.status == 1 ? 'Active' : 'Inactive' }}
-            </span>
-          </td>
-        </ng-container>
-      
-       
-        <ng-container matColumnDef="subscription">
-          <th mat-header-cell *matHeaderCellDef> Subscription </th>
-          <td mat-cell *matCellDef="let user"> {{ user.subscription }} </td>
-        </ng-container>
-      
-        <ng-container matColumnDef="action">
-          <th mat-header-cell *matHeaderCellDef> Action </th>
-          <td mat-cell *matCellDef="let user">
-            <mat-icon class="icon" [routerLink]="['edit-user',user.user_id]">edit</mat-icon>
-            <mat-icon class="icon" (click)="openDeleteModal(user.user_id, user.username)">delete</mat-icon>
-          </td>
-        </ng-container>
-      
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-      </table>
-      
-        <!-- No Data Found -->
-        <div class="no-data" *ngIf="dataSource.data.length === 0">
-            No Users found.
-        </div>
+        <span
+          [ngClass]="{
+            badge: true,
+            'badge-enabled': user.status == 1,
+            'badge-disabled': user.status != 1
+          }"
+        >
+          {{ user.status == 1 ? "Active" : "Inactive" }}
+        </span>
+      </td>
+    </ng-container>
 
- <div class="pagination-wrapper">
- <mat-paginator
-  class="pagination"
-  [pageSizeOptions]="[10, 20, 50]"
-  [length]="totalItems"
-  [pageIndex]="pageIndex"
-  [pageSize]="pageSize"
-  showFirstLastButtons
-></mat-paginator>
+    <ng-container matColumnDef="subscription">
+      <th mat-header-cell *matHeaderCellDef>Subscription</th>
+      <td mat-cell *matCellDef="let user">{{ user.subscription }}</td>
+    </ng-container>
 
-</div>
-       
-<!-- Delete Confirmation Modal -->
-<div class="modal" [class.show]="confirmDeleteUserId !== null">
-  <div class="modal-content">
-    <p>
-      Are you sure you want to delete
-      <span class="highlight">"{{ confirmDeleteUserName }}"</span>?
-    </p>
-    <div class="modal-actions">
-      <button class="btn-yes" (click)="confirmDelete()">Delete</button>
-      <button class="btn-no" (click)="cancelDelete()">Cancel</button>
+    <ng-container matColumnDef="action">
+      <th mat-header-cell *matHeaderCellDef>Action</th>
+      <td mat-cell *matCellDef="let user">
+        <mat-icon class="icon" [routerLink]="['edit-user', user.user_id]"
+          >edit</mat-icon
+        >
+        <mat-icon
+          class="icon"
+          (click)="openDeleteModal(user.user_id, user.username)"
+          >delete</mat-icon
+        >
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+
+  <!-- No Data Found -->
+  <div class="no-data" *ngIf="dataSource.data.length === 0">
+    No Users found.
+  </div>
+
+  <div class="pagination-wrapper">
+    <mat-paginator
+      class="pagination"
+      [pageSizeOptions]="[10, 20, 50]"
+      [length]="totalItems"
+      [pageIndex]="pageIndex"
+      [pageSize]="pageSize"
+      showFirstLastButtons
+    ></mat-paginator>
+  </div>
+
+  <!-- Delete Confirmation Modal -->
+  <div class="modal" [class.show]="confirmDeleteUserId !== null">
+    <div class="modal-content">
+      <p>
+        Are you sure you want to delete
+        <span class="highlight">"{{ confirmDeleteUserName }}"</span>?
+      </p>
+      <div class="modal-actions">
+        <button class="btn-yes" (click)="confirmDelete()">Delete</button>
+        <button class="btn-no" (click)="cancelDelete()">Cancel</button>
+      </div>
     </div>
   </div>
 </div>
-
-  </div>
-  

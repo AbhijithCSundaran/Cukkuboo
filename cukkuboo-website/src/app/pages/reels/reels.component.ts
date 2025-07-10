@@ -62,7 +62,6 @@ export class ReelsComponent implements OnInit, AfterViewInit, OnDestroy {
   ) {
     this.route.paramMap.subscribe(params => {
       const reelId = this.route.snapshot.queryParamMap.get('re');
-      debugger;
       if (reelId) this.getReelById(String(this.commonService.DecodeId(reelId)));
     });
   }

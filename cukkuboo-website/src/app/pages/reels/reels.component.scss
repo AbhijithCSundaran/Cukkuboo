@@ -141,6 +141,7 @@ body {
       width: 100%;
       height: auto;
       max-height: 40vh;
+      padding-bottom: 10px;
       overflow: scroll;
       color: #fff;
       background-color: rgba(0, 0, 0, 0);
@@ -247,4 +248,6 @@ body {
 
 .reels-icon-logo {
   width: 25%;
+  min-width: 130px;
+  filter: drop-shadow(0px 0px 10px rgba(255, 255, 255, 0.25));
 }

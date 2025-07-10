@@ -147,3 +147,10 @@ textarea {
         padding: 0;
     }
 }
+
+.confirm-message {
+    span,
+    b {
+        color: var(--primary-color) !important;
+    }
+}

@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { MatTableModule, MatTableDataSource } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
-import { MatPaginatorModule, MatPaginator } from '@angular/material/paginator';
+import { MatPaginatorModule, MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
@@ -12,8 +12,6 @@ import { StaffService } from '../../staff.service';
 @Component({
   selector: 'app-staff-list',
   standalone: true,
-  templateUrl: './staff-list.component.html',
-  styleUrls: ['./staff-list.component.scss'],
   imports: [
     CommonModule,
     RouterLink,
@@ -23,7 +21,9 @@ import { StaffService } from '../../staff.service';
     MatInputModule,
     MatFormFieldModule,
     MatSnackBarModule
-  ]
+  ],
+  templateUrl: './staff-list.component.html',
+  styleUrls: ['./staff-list.component.scss']
 })
 export class StaffListComponent implements OnInit, AfterViewInit {
   displayedColumns: string[] = ['slNo', 'username', 'email', 'phone', 'status', 'joiningDate', 'action'];
@@ -42,7 +42,7 @@ export class StaffListComponent implements OnInit, AfterViewInit {
     private router: Router,
     private staffservice: StaffService,
     private snackBar: MatSnackBar
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.getStaffList();
@@ -52,7 +52,8 @@ export class StaffListComponent implements OnInit, AfterViewInit {
       return dataStr.includes(filter);
     };
   }
- ngAfterViewInit() {
+
+  ngAfterViewInit() {
     // this.dataSource.paginator = this.paginator;
     this.paginator?.page.subscribe(() => {
       this.pageIndex = this.paginator.pageIndex;
@@ -79,7 +80,7 @@ export class StaffListComponent implements OnInit, AfterViewInit {
   }
 
   fixDateString(date: string): string {
-    if (date == '0000-00-00')
+    if(date=='0000-00-00')
       return "NA";
     const d = new Date(date);
     const offsetDate = new Date(d.getTime() + Math.abs(d.getTimezoneOffset() * 60000));
@@ -93,7 +94,7 @@ export class StaffListComponent implements OnInit, AfterViewInit {
     this.getStaffList();
   }
 
-   onPageChange(event: PageEvent): void {
+  onPageChange(event: PageEvent): void {
     debugger;
     this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;

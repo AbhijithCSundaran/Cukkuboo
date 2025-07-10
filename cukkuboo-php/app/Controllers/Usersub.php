@@ -41,11 +41,12 @@ class Usersub extends ResourceController
     }
 
     $plan = $this->subscriptionPlanModel->getPlanById($planId);
-    if (!$plan) {
-        return $this->failNotFound('Invalid subscription plan.');
+    if (!$plan || (isset($plan['status']) && $plan['status'] == 9)) {
+        return $this->failNotFound('This subscription plan has been deleted or is not available.');
     }
 
     $planName  = $plan['plan_name'];
+    $price = (float) ($plan['discount_price'] ?? 0); 
     $startDate = date('Y-m-d');
 
     try {
@@ -58,16 +59,17 @@ class Usersub extends ResourceController
     }
 
     
-    $status = 2;
+    $status = 1;
     $planType = 'Premium';
 
     $payload = [
         'user_id'             => $userId,
         'subscriptionplan_id' => $planId,
         'plan_name'           => $planName,
-        'start_date'          => $startDate,
-        'end_date'            => $endDate,
-        'status'              => $status,
+        'price'               => $price,
+        'start_date' => date('d F Y', strtotime($startDate)),
+        'end_date'   => date('d F Y', strtotime($endDate)),
+         'status'              => $status,
         'created_on'          => date('Y-m-d H:i:s'),
         'created_by'          => $userId,
         'modify_on'           => date('Y-m-d H:i:s'),
@@ -88,9 +90,7 @@ class Usersub extends ResourceController
         $payload['user_subscription_id'] = $id;
         $msg = 'Subscription added successfully.';
     }
-    $this->userModel->update($userId, [
-    'subscription' => 'premium'
-    ]);
+    $this->userModel->update($userId, ['subscription' => 'premium']);
    
     $payload['plan_type'] = $planType;
 
@@ -104,106 +104,80 @@ class Usersub extends ResourceController
 
   public function getSubscriptionById($id = null)
 {
-    $authHeader = $this->request->getHeaderLine('Authorization');
-    $authuser = $this->authService->getAuthenticatedUser($authHeader);
+    $authUser = $this->authService->getAuthenticatedUser(
+        $this->request->getHeaderLine('Authorization')
+    );
 
-    if (!$authuser) {
+    if (!$authUser || !isset($authUser['user_id'])) {
         return $this->failUnauthorized('Invalid or missing token.');
     }
 
-    if (!$id) {
-        return $this->failValidationError('Subscription ID is required.');
+    $userId = $authUser['user_id'];
+
+    if ($id !== null) {
+        $subscription = $this->usersubModel->getUserSubscriptionById($userId, $id);
+        if (!$subscription || $subscription['status'] == 9) {
+            return $this->respond([
+                'success' => false,
+                'message' => 'Subscription not found or unauthorized access.',
+                'data'    => []
+            ]);
+        }
+        $subscription['start_date'] = date('d F Y', strtotime($subscription['start_date']));
+        $subscription['end_date'] = date('d F Y', strtotime($subscription['end_date']));
+
+        return $this->respond([
+            'success' => true,
+            'message' => 'Subscription fetched successfully.',
+            'data'    => $subscription
+        ]);
     }
 
-    $userSubModel = new \App\Models\UsersubModel();
+    $subscriptions = $this->usersubModel->getUserSubscriptions($userId);
 
-    $subscription = $userSubModel
-        ->where('user_subscription_id', $id)
-        ->where('status !=', 9)
-        ->first();
-
-    if (!$subscription) {
-        return $this->response->setJSON([
+    if (empty($subscriptions)) {
+        return $this->respond([
             'success' => false,
-            'message' => 'Subscription not found.',
+            'message' => 'No subscriptions found for the user.',
+            'data'    => []
+        ]);
+    }
+    $filteredSubscriptions = [];
+    foreach ($subscriptions as $sub) {
+        if ($sub['status'] != 9) {
+            $sub['start_date'] = date('d F Y', strtotime($sub['start_date']));
+            $sub['end_date'] = date('d F Y', strtotime($sub['end_date']));
+            $filteredSubscriptions[] = $sub;
+        }
+    }
+
+    if (empty($filteredSubscriptions)) {
+        return $this->respond([
+            'success' => false,
+            'message' => 'No active subscriptions found.',
             'data'    => []
         ]);
     }
 
-    $subscription['plan_type'] = ($subscription['status'] == 1) ? 'Free' : 'Premium';
-
-    return $this->response->setJSON([
+    return $this->respond([
         'success' => true,
-        'message' => 'Subscription fetched successfully.',
-        'data'    => $subscription
+        'message' => 'Subscriptions fetched successfully.',
+        'data'    => $filteredSubscriptions
     ]);
 }
 
-// public function getUserSubscriptions()
-// {
-//     $authHeader = $this->request->getHeaderLine('Authorization');
-//     $authUser = $this->authService->getAuthenticatedUser($authHeader);
 
-//     if (!$authUser) {
-//         return $this->failUnauthorized('Invalid or missing token.');
-//     }
-//     $plans = $this->subscriptionPlanModel
-//         ->select('*') 
-//         ->where('status !=', 9)
-//         ->findAll();
+private function mapPlanType($status)
+{
+    return match ((int) $status) {
+        1 => 'Free',
+        2 => 'Premium',
+        3 => 'Cancelled',
+        default => 'Unknown'
+    };
+}
 
-//     if (empty($plans)) {
-//         return $this->respond([
-//             'success' => false,
-//             'message' => 'No active subscription plans found.',
-//         ]);
-//     }
 
-//     foreach ($plans as $plan) {
-//         $targetUserId = $plan['created_by'];
-        
-//         $existing = $this->usersubModel->where([
-//             'user_id' => $targetUserId,
-//             'subscriptionplan_id' => $plan['subscriptionplan_id']
-//         ])->first();
-
-//         if ($existing) {
-//             continue;
-//         }
-
-       
-//         $startDate = new \DateTime($plan['created_on']);
-//         $endDate = (clone $startDate)->modify("+{$plan['period']} days");
-//         $status = (new \DateTime() > $endDate) ? 2 : 1;
-//         $this->usersubModel->insert([
-//             'user_id'             => $targetUserId,                     
-//             'subscriptionplan_id' => $plan['subscriptionplan_id'],
-//             'plan_name'           => $plan['plan_name'],
-//             'start_date'          => $startDate->format('Y-m-d'),
-//             'end_date'            => $endDate->format('Y-m-d'),
-//             'status'              => $status,
-//             'created_on'          => date('Y-m-d H:i:s'),
-//             'created_by'          => $plan['created_by'],               
-//             'modify_on'           => date('Y-m-d H:i:s'),
-//             'modify_by'           => $plan['created_by']                
-//         ]);
-//     }
-
-    
-//     $allSubscriptions = $this->usersubModel
-//     ->select('user_subscription.*, user.username')
-//     ->join('user', 'user.user_id = user_subscription.user_id')
-//     ->where('user_subscription.status !=', 9)
-//     ->findAll();
-
-// return $this->respond([
-//     'success' => true,
-//     'message' => 'User subscriptions synced and listed successfully.',
-//     'data'    => $allSubscriptions
-// ]);
-
-    
-// }
 public function getUserSubscriptions()
 {
     $authHeader = $this->request->getHeaderLine('Authorization');
@@ -216,7 +190,8 @@ public function getUserSubscriptions()
     $pageIndex = (int) $this->request->getGet('pageIndex');
     $pageSize  = (int) $this->request->getGet('pageSize');
     $search    = $this->request->getGet('search');
-
+    $fromDate  = $this->request->getGet('fromDate'); 
+    $toDate    = $this->request->getGet('toDate');
     if ($pageSize <= 0) {
         $pageSize = 10;
     }
@@ -232,8 +207,8 @@ public function getUserSubscriptions()
         $builder->groupStart()
                 ->like('user.username', $search)
                 ->orLike('user_subscription.user_id', $search)
+                ->orLike('user_subscription.plan_name', $search)
                 ->orLike('user_subscription.start_date', $search)
-                ->orLike('user_subscription.end_date', $search)
                 ->groupEnd();
     }
     $total = $builder->countAllResults(false);
@@ -282,7 +257,8 @@ public function deleteSubscription($id = null)
             'data'=>[]
         ]);
     } 
-else {
+    else 
+    {
         return $this->failServerError("Failed to delete subscription with ID $id.");
     }
 }
@@ -296,23 +272,73 @@ public function cancelSubscription()
     }
 
     $userId = $user['user_id'];
-    $this->usersubModel
-        ->where('user_id', $userId)
-        ->where('status !=', 9)
-        ->set(['status' => 1]) 
-        ->update();
-    $this->userModel
-        ->where('user_id', $userId)
-        ->set(['subscription' => 'free'])
-        ->update();
+    $this->usersubModel->cancelUserSubscription($userId);
+    $this->userModel->setUserSubscription($userId);
 
     return $this->respond([
         'success' => true,
         'message' => 'Subscription cancelled successfully.',
         'data' => [
             'user_id' => $userId,
-            'subscription' => 'free'
+            'subscription' => 'cancel'
         ]
+    ]);
+}
+    public function countSubscribers()
+    {
+        $authHeader = $this->request->getHeaderLine('Authorization');
+        $authuser = $this->authService->getAuthenticatedUser($authHeader);
+        if (!$authuser) 
+            return $this->failUnauthorized('Invalid or missing token.');
+
+        $userSubModel = new UsersubModel();
+        $count = $this->usersubModel->countCurrentMonthSubscribers();
+        return $this->respond([
+            'success' => true,
+            'message'=>'success',
+            'data' => $count
+        ]);
+    }
+    public function countRevenue()
+    {
+        $authHeader = $this->request->getHeaderLine('Authorization');
+        $authUser = $this->authService->getAuthenticatedUser($authHeader);
+
+        if (!$authUser) {
+            return $this->failUnauthorized('Invalid or missing token.');
+        }
+
+        $totalPrice = $this->usersubModel->currentTotalRevenue();
+
+        return $this->respond([
+        'success' => true,
+        'message' => 'Total subscription price for current month calculated successfully.',
+        'data'    => ['total_price' => $totalPrice]
+    ]);
+    }
+    public function listTransactions()
+{
+    $authHeader = $this->request->getHeaderLine('Authorization');
+    $authUser = $this->authService->getAuthenticatedUser($authHeader);
+
+    if (!$authUser || !isset($authUser['user_id'])) {
+        return $this->failUnauthorized('Invalid or missing token.');
+    }
+    // $userId = $authUser['user_id'];
+    $transactions = $this->usersubModel->getTransactions();
+
+    if (empty($transactions)) {
+        return $this->respond([
+            'success' => false,
+            'message' => 'No transactions found for the current month.',
+            'data'    => []
+        ]);
+    }
+
+    return $this->respond([
+        'success' => true,
+        'message' => 'Transactions fetched successfully.',
+        'data'    => $transactions
     ]);
 }
 

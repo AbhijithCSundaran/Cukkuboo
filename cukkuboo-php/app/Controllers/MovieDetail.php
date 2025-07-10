@@ -4,6 +4,7 @@ namespace App\Controllers;
 use CodeIgniter\RESTful\ResourceController;
 use App\Models\MovieDetailsModel;
 use App\Models\UserModel;
+use App\Models\UsersubModel;
 use App\Models\SubscriptionPlanModel;
 use App\Libraries\Jwt;
 use App\Libraries\AuthService;
@@ -20,6 +21,7 @@ class MovieDetail extends ResourceController
         $this->moviedetail = new MovieDetailsModel();
         $this->subscriptionPlanModel = new SubscriptionPlanModel();
         $this->userModel = new UserModel();
+        $this->usersubModel = new UsersubModel();
         $this->authService = new AuthService();
         $this->db = \Config\Database::connect();
     }
@@ -111,6 +113,7 @@ public function getAllMovieDetails()
             ->orLike('LOWER(genre)', strtolower($searchWildcard))
             ->orLike('LOWER(cast_details)', strtolower($searchWildcard))
             ->orLike('LOWER(category)', strtolower($searchWildcard))
+            ->orLike('LOWER(access)', strtolower($searchWildcard))
         ->groupEnd();
     }
     if (!is_numeric($pageIndex) || !is_numeric($pageSize) || $pageIndex < 0 || $pageSize <= 0) {
@@ -284,8 +287,72 @@ public function movieReaction($mov_id)
         ]);
     }
 }
- 
- 
+ public function getMoviesList()
+{
+    $type = $this->request->getGet('type');
+    $page = (int) $this->request->getGet('page') ?: 1;
+    $limit = (int) $this->request->getGet('limit') ?: 10;
+    $offset = ($page - 1) * $limit;
+
+    $model = new MovieDetailsModel();
+    $data = [];
+    $totalMovies = 0;
+    $title = '';
+
+    switch ($type) {
+        case 'trending':
+            $data = $model->getTrendingList($limit, $offset);
+            $totalMovies = $model->countActiveMovies(); // or a separate trending count method
+            $title = 'Trending Movies';
+            break;
+
+        case 'latest':
+            $data = $model->getLatestList($limit, $offset);
+            $totalMovies = $model->countActiveMovies(); // or latest count
+            $title = 'Latest Movies';
+            break;
+
+        case 'most_viewed':
+            $data = $model->getMostViewedList($limit, $offset);
+            $totalMovies = $model->countActiveMovies(); // or most_viewed count
+            $title = 'Most Watched Movies';
+            break;
+
+        default:
+            return $this->respond([
+                'success' => false,
+                'message' => 'Invalid type parameter.'
+            ], 400);
+    }
+
+    // Format output data
+    $formattedData = [];
+    foreach ($data as $movie) {
+        $formattedData[] = [
+            'mov_id' => $movie['mov_id'],
+            'title' => $movie['title'],
+            'thumbnail' => $movie['thumbnail'],
+            'banner'=>$movie['banner'],
+            'release_date' => $movie['release_date'],
+            'views' => $movie['views'],
+            'rating' => $movie['rating'],
+            'description' => $movie['description'],
+            'duration' => $movie['duration'],
+        ];
+    }
+
+    $totalPages = ceil($totalMovies / $limit);
+
+    return $this->respond([
+        'success' => true,
+        'type' => $type,
+        'title' => $title,
+        'page' => $page,
+        'total_pages' => $totalPages,
+        'data' => $formattedData
+    ]);
+}
+
  
     public function deleteMovieDetails($mov_id)
     {
@@ -361,19 +428,27 @@ public function movieReaction($mov_id)
     ];
 }
  
- public function getLatestMovies()
-{
-    $movieModel = new \App\Models\MovieDetailsModel();
-    $latestRaw = $movieModel->latestMovies();
- 
-    $latest = array_map([$this, 'formatMovie'], $latestRaw);
- 
-    return $this->response->setJSON([
-        'success' => true,
-        'message'=>'success',
-        'data' => $latest
-    ]);
-}
+// public function getLatestMovies()
+// {
+//     $pageIndex = (int) $this->request->getGet('pageIndex') ?? 0;
+//     $pageSize  = (int) $this->request->getGet('pageSize') ?? 10;
+//     $search    = $this->request->getGet('search'); 
+//     $offset    = $pageIndex * $pageSize;
+
+//     $movieModel = new MovieDetailsModel();
+//     $result = $movieModel->getLatestMovies($pageSize, $offset, $search);
+
+//     $latest = array_map([$this, 'formatMovie'], $result['movies']);
+
+//     return $this->response->setJSON([
+//         'success' => true,
+//         'message' => 'success',
+//         'data'    => $latest,
+//         'total'   => $result['total']
+//     ]);
+// }
+
+
  
 public function mostWatchedMovies()
 {
@@ -397,30 +472,46 @@ public function latestMovies()
 {
     $authHeader = $this->request->getHeaderLine('Authorization');
     $user = $this->authService->getAuthenticatedUser($authHeader);
-    if (!$user)
+
+    if (!$user) {
         return $this->failUnauthorized('Invalid or missing token.');
-    $movieModel = new \App\Models\MovieDetailsModel();
-    $latestMovies = $movieModel->latestAddedMovies();
- 
+    }
+
+    $pageIndex = (int) $this->request->getGet('pageIndex') ?? 0;
+    $pageSize = (int) $this->request->getGet('pageSize') ?? 10;
+    $search    = $this->request->getGet('search');
+    $offset = $pageIndex * $pageSize;
+
+    $movieModel = new MovieDetailsModel();
+    $result = $movieModel->latestAddedMovies($pageSize, $offset, $search);
+
     return $this->response->setJSON([
         'success' => true,
         'message' => 'Latest movies fetched successfully.',
-        'data' => $latestMovies
+        'data' => $result['movies'],
+        'total' => $result['total']
     ]);
 }
+
+
     public function getMostWatchMovies()
     {
         $authHeader = $this->request->getHeaderLine('Authorization');
         $user = $this->authService->getAuthenticatedUser($authHeader);
         if (!$user)
             return $this->failUnauthorized('Invalid or missing token.');
+        $pageIndex = (int) $this->request->getGet('pageIndex') ?? 0;
+        $pageSize = (int) $this->request->getGet('pageSize') ?? 10;
+        $search    = $this->request->getGet('search');
+        $offset = $pageIndex * $pageSize;
+        
         $movieModel = new MovieDetailsModel();
-        $mostWatched = $movieModel->getMostWatchMovies();
+        $result = $movieModel->getMostWatchMovies($pageSize, $offset, $search);
  
         return $this->response->setJSON([
             'success'  => true,
             'message' => 'Most watched movies fetched successfully.',
-            'data' => $mostWatched
+            'data' => $result
         ]);
     }
     public function countActiveMovies()
@@ -543,7 +634,9 @@ public function getUserHomeData()
             'message' => true,
             'data' => [
                 'active_user_count'=>$this->userModel->countActiveUsers(),
-                'subscriber_count'=>$this->subscriptionPlanModel->countCurrentMonthSubscribers(),
+                'subscriber_count'=>$this->usersubModel->countCurrentMonthSubscribers(),
+                'total_revenue'=>$this->usersubModel->currentTotalRevenue(),
+                'transaction_list'=>$this->usersubModel->getTransactions(),
                 'active_movie_count' => $this->moviedetail->countActiveMovies(),
                 'In_active_movie_count' => $this->moviedetail->countInactiveMovies(),
                 'latest_movies' =>$this->moviedetail->latestAddedMovies(),

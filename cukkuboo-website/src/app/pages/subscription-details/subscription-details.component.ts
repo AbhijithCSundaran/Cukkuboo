@@ -21,7 +21,7 @@ export class SubscriptionDetailsComponent implements OnInit {
 
 
   ngOnInit(): void {
-    const subId = 25;
+    const subId = 65;
     this.loadSubscriptionDetails(subId);
   }
 

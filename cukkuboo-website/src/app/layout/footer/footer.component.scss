@@ -40,3 +40,11 @@ footer#gen-footer .gen-footer-style-1 .widget ul.menu li{
   font-size: 18px;
   color: var(--white-color);
 }
+
+#gen-footer .gen-footer-style-1 .widget:first-child {
+    margin-bottom: 20px;
+}
+
+footer#gen-footer[_ngcontent-ng-c3844748969] .gen-footer-top[_ngcontent-ng-c3844748969] {
+    padding: 17px 0 0;
+}

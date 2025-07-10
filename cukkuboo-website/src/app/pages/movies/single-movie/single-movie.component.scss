@@ -7,7 +7,6 @@
   font-size: 23px;
 }
 
-
 .gen-banner-movies.single .gen-movie-info h3 {
   font-size: 45px;
   font-weight: 600;
@@ -16,21 +15,56 @@
   text-transform: uppercase;
 }
 
-
 .gen-btn-container a.playBut {
   display: flex;
-  align-items: center;       
-  gap: 10px;                 
+  align-items: center;
+  gap: 10px;
   text-decoration: none;
   color: white;
 }
-
 
 .gen-btn-container a.playBut svg {
   width: 40px;
   height: 40px;
 }
 
+.gen-more-like .gen-movie-info h3 a {
+  cursor: pointer;
+  text-decoration: none;
+  color: #fff;
+}
+
+.gen-movie-info h3 a {
+  cursor: pointer;
+}
+
+.gen-banner-movies .playBut {
+  cursor: pointer;
+}
+
+.gen-movie-info a:hover {
+  color: red !important;
+}
+
+/* ✅ Responsive Fix for Metadata Pairs */
+.gen-extra-data ul {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.gen-extra-data li.meta-pair {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 8px;
+  font-size: 15px;
+  color: #fff;
+}
+
+.gen-extra-data li.meta-pair strong {
+  white-space: nowrap;
+}
 
 @media (max-width: 767px) {
   .play-movie {
@@ -45,18 +79,13 @@
     width: 32px;
     height: 32px;
   }
-}
-.gen-more-like .gen-movie-info h3 a {
-  cursor: pointer;
-  text-decoration: none; 
-  color: #fff;      
-}
-.gen-movie-info h3 a {
-  cursor: pointer;
-}
-.gen-banner-movies .playBut {
-  cursor: pointer;
-}
-.gen-movie-info a:hover{
-  color: red !important;
+
+  .gen-extra-data li.meta-pair {
+    flex-direction: row;
+    align-items: baseline;
+  }
+
+  .gen-extra-data li.meta-pair span {
+    word-break: break-word;
+  }
 }

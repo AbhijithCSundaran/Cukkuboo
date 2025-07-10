@@ -9,7 +9,6 @@
         </div>
 
         <div class="gen-movie-action d-block d-sm-flex align-items-center mt-4">
-          <!-- Play Movie Button -->
           <div class="gen-btn-container">
             <a class="playBut popup-youtube popup-vimeo popup-gmaps" (click)="playVideo(movieData.video)">
               <svg xmlns="http://www.w3.org/2000/svg" width="60px" height="70px" viewBox="0 0 213.7 213.7">
@@ -22,7 +21,6 @@
             </a>
           </div>
 
-          <!-- Watch Trailer for mobile -->
           <div class="mt-2 mt-sm-0 ms-sm-3 gen-btn-container d-block d-xl-none" (click)="playVideo(movieData.trailer)">
             <a class="gen-button gen-button-outline py-2 px-3">
               <i class="fas fa-play"></i><span class="text">Watch Trailer</span>
@@ -31,7 +29,6 @@
         </div>
       </div>
 
-      <!-- Right-side poster + trailer -->
       <div class="col-xl-4 d-none d-xl-flex">
         <div class="gen-front-image mx-auto">
           <img [src]="imageUrl + movieData.thumbnail" alt="carousel-image" />
@@ -48,7 +45,6 @@
       </div>
     </div>
 
-    <!-- Inline video player -->
     <js-player *ngIf="selectedVideo" class="video_player" (onClose)="selectedVideo = ''"
       [videoSrc]="videoUrl + selectedVideo">
     </js-player>
@@ -68,7 +64,6 @@
         </ul>
       </div>
 
-      <!-- Watch Later + Share -->
       <div class="w-100 d-flex flex-wrap gap-2 my-3">
         <button class="gen-button gen-button-outline py-1 px-3" (click)="toggleWatchLater()">
           <i [class]="movieData.is_in_watch_later ? 'fas fa-clock' : 'far fa-clock'"></i>
@@ -84,9 +79,9 @@
       <div class="gen-after-excerpt">
         <div class="gen-extra-data">
           <ul>
-            <li><span>Cast and crew:</span> <span>{{ movieData.cast_details }}</span></li>
-            <li><span>Duration:</span> <span>{{ movieData.duration }}</span></li>
-            <li><span>Released on:</span> <span>{{ movieData.release_date | date:'dd/MM/yyyy' }}</span></li>
+            <li class="meta-pair"><strong>Cast and crew:</strong><span>{{ movieData.cast_details }}</span></li>
+            <li class="meta-pair"><strong>Duration:</strong><span>{{ movieData.duration }}</span></li>
+            <li class="meta-pair"><strong>Released on:</strong><span>{{ movieData.release_date | date:'dd/MM/yyyy' }}</span></li>
           </ul>
         </div>
 

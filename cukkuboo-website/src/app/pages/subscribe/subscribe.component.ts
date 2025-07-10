@@ -74,7 +74,7 @@ export class SubscribeComponent implements OnInit {
       this.showSubscriptionModal = true;
     }
     else {
-      this.snackBar.open('You are already a subscriber.', '', {
+      this.snackBar.open('You are already subscribed.', '', {
         duration: 3000,
         verticalPosition: 'top',
         horizontalPosition: 'center',

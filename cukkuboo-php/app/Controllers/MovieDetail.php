@@ -635,7 +635,7 @@ public function getUserHomeData()
                 'active_user_count'=>$this->userModel->countActiveUsers(),
                 'subscriber_count'=>$this->usersubModel->countCurrentMonthSubscribers(),
                 'total_revenue'=>$this->usersubModel->currentTotalRevenue(),
-                'transaction_lis'=>$this->usersubModel->getTransactions(),
+                'transaction_list'=>$this->usersubModel->getTransactions(),
                 'active_movie_count' => $this->moviedetail->countActiveMovies(),
                 'In_active_movie_count' => $this->moviedetail->countInactiveMovies(),
                 'latest_movies' =>$this->moviedetail->latestAddedMovies(),

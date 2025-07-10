@@ -45,10 +45,10 @@ class Weblogin extends BaseController
         if (!$user) {
             return $this->failUnauthorized('Invalid or missing token.');
         }
-        $email = $this->request->getPost('cust_Email');
-        $password = md5($this->request->getPost('cust_Password'));
+        $email = $this->request->getPost('email');
+        $password = md5($this->request->getPost('password'));
         if ($email && $password) {
-            $userLog = $this->customerLoginModel->getLoginAccount($email, $password);
+            $userLog = $this->loginModel->getLoginAccount($email, $password);
             if ($userLog) {
                 $this->session->set([
                     'zd_uid' => $userLog->cust_Id,

@@ -178,7 +178,9 @@ public function getUserSubscriptions()
     $pageIndex = (int) $this->request->getGet('pageIndex');
     $pageSize  = (int) $this->request->getGet('pageSize');
     $search    = $this->request->getGet('search');
-
+    $fromDate  = $this->request->getGet('fromDate'); 
+    $toDate    = $this->request->getGet('toDate');
+    
     if ($pageSize <= 0) {
         $pageSize = 10;
     }
@@ -198,19 +200,28 @@ public function getUserSubscriptions()
                 ->orLike('user_subscription.start_date', $search)
                 ->groupEnd();
     }
+     if (!empty($fromDate) && !empty($toDate)) {
+        $builder->where('DATE(user_subscription.created_on) >=', $fromDate)
+                ->where('DATE(user_subscription.created_on) <=', $toDate);
+    } elseif (!empty($fromDate)) {
+        $builder->where('DATE(user_subscription.created_on) >=', $fromDate);
+    } elseif (!empty($toDate)) {
+        $builder->where('DATE(user_subscription.created_on) <=', $toDate);
+    }
+
     $total = $builder->countAllResults(false);
 
     $subscriptions = $builder->orderBy('user_subscription.user_subscription_id', 'DESC')
                              ->findAll($pageSize, $offset);
+
     foreach ($subscriptions as &$sub) {
-    if ($sub['status'] == 1 && $sub['end_date'] < date('Y-m-d')) {
-        $this->usersubModel->update($sub['user_subscription_id'], ['status' => 2]);
-        $sub['status'] = 2;
+        if ($sub['status'] == 1 && $sub['end_date'] < date('Y-m-d')) {
+            $this->usersubModel->update($sub['user_subscription_id'], ['status' => 2]);
+            $sub['status'] = 2;
+        }
+
+        $sub['plan_type'] = ($sub['status'] == 1) ? 'Free' : 'Premium';
     }
-
-    $sub['plan_type'] = ($sub['status'] == 1) ? 'Free' : 'Premium';
-}
-
 
     return $this->response->setJSON([
         'success' => true,
@@ -219,7 +230,6 @@ public function getUserSubscriptions()
         'total'   => $total
     ]);
 }
-
 
 public function deleteSubscription($id = null)
 {

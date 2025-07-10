@@ -25,8 +25,28 @@ export class UserSubscriptionService {
   }
 
 
-  listUserSubscriptions(pageIndex: number = 0, pageSize: number = 10, searchText: string = ''): Observable<any> {
-    const url = `${this.apiUrl}usersub/details?pageIndex=${pageIndex}&pageSize=${pageSize}&search=${searchText}`;
-    return this.http.get(url, { headers: this.headers });
+  // listUserSubscriptions(pageIndex: number = 0, pageSize: number = 10, searchText: string = ''): Observable<any> {
+  //   const url = `${this.apiUrl}usersub/details?pageIndex=${pageIndex}&pageSize=${pageSize}&search=${searchText}`;
+  //   return this.http.get(url, { headers: this.headers });
+  // }
+
+  listUserSubscriptions(
+  pageIndex: number = 0,
+  pageSize: number = 10,
+  searchText: string = '',
+  fromDate: string = '',
+  toDate: string = ''
+): Observable<any> {
+  let url = `${this.apiUrl}usersub/details?pageIndex=${pageIndex}&pageSize=${pageSize}&search=${searchText}`;
+
+  if (fromDate) {
+    url += `&fromDate=${fromDate}`;
   }
+  if (toDate) {
+    url += `&toDate=${toDate}`;
+  }
+
+  return this.http.get(url, { headers: this.headers });
+}
+
 }

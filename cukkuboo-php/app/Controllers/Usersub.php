@@ -28,42 +28,54 @@ class Usersub extends ResourceController
     $data = $this->request->getJSON(true);
     $authHeader = $this->request->getHeaderLine('Authorization');
     $user = $this->authService->getAuthenticatedUser($authHeader);
- 
+
     if (!$user || !isset($user['user_id'])) {
         return $this->failUnauthorized('Unauthorized user.');
     }
- 
+
     $userId = $user['user_id'];
     $planId = $data['subscriptionplan_id'] ?? null;
     $today = date('Y-m-d');
+    $expiredSubscriptions = $this->usersubModel
+        ->where('user_id', $userId)
+        ->where('status', '2') 
+        ->where('end_date <', $today) 
+        ->findAll();
+
+    if (!empty($expiredSubscriptions)) {
+        foreach ($expiredSubscriptions as $expiredSub) {
+            $this->usersubModel->update($expiredSub['user_subscription_id'], ['status' => 9]);
+        }
+        $this->userModel->update($userId, ['subscription' => 'expired']);
+    }
+
     $activeSub = $this->usersubModel
-    ->where('user_id', $userId)
-    ->where('status', '2')  // '2' is your active status
-    ->where('end_date >=', $today)
-    ->first();
+        ->where('user_id', $userId)
+        ->where('status', '2')  
+        ->where('end_date >=', $today)
+        ->first();
 
-if ($activeSub) {
-    return $this->respond([
-        'success' => false,
-        'message' => 'You already have an active subscription. You cannot subscribe to a new plan until it expires.',
-        'data'    => []
-    ]);
-}
+    if ($activeSub) {
+        return $this->respond([
+            'success' => false,
+            'message' => 'You already have an active subscription. You cannot subscribe to a new plan until it expires.',
+            'data'    => []
+        ]);
+    }
 
- 
     if (!$planId) {
         return $this->failValidationErrors('subscriptionplan_id is required.');
     }
- 
+
     $plan = $this->subscriptionPlanModel->getPlanById($planId);
     if (!$plan || (isset($plan['status']) && $plan['status'] == 9)) {
         return $this->failNotFound('This subscription plan has been deleted or is not available.');
     }
- 
+
     $planName = $plan['plan_name'];
     $price = (float) ($plan['discount_price'] ?? 0);
     $startDate = date('Y-m-d');
- 
+
     try {
         $start = new \DateTime($startDate);
         $end = clone $start;
@@ -72,8 +84,8 @@ if ($activeSub) {
     } catch (\Exception $e) {
         return $this->failValidationErrors('Invalid plan period.');
     }
- 
-    $status = 1;
+
+    $status = 2;
     $planType = 'Premium';
     $payload = [
         'user_id'             => $userId,
@@ -88,12 +100,12 @@ if ($activeSub) {
         'modify_on'           => date('Y-m-d H:i:s'),
         'modify_by'           => $userId
     ];
- 
+
     $existing = $this->usersubModel
         ->where('user_id', $userId)
         ->where('subscriptionplan_id', $planId)
         ->first();
- 
+
     if ($existing) {
         $this->usersubModel->update($existing['user_subscription_id'], $payload);
         $payload['user_subscription_id'] = $existing['user_subscription_id'];
@@ -103,17 +115,19 @@ if ($activeSub) {
         $payload['user_subscription_id'] = $id;
         $msg = 'Subscription added successfully.';
     }
+
     $this->userModel->update($userId, ['subscription' => 'premium']);
     $payload['plan_type'] = $planType;
     $payload['start_date'] = date('d F Y', strtotime($payload['start_date']));
     $payload['end_date']   = date('d F Y', strtotime($payload['end_date']));
- 
+
     return $this->respond([
         'success' => true,
         'message' => $msg,
         'data'    => $payload
     ]);
 }
+
  
   public function getSubscriptionById($id = null)
 {
@@ -273,6 +287,7 @@ public function deleteSubscription($id = null)
     $deleted = $this->usersubModel->DeleteSubscriptionById($status, $id, $user['user_id']);
 
     if ($deleted) {
+        $this->userModel->update($user['user_id'], ['subscription' => 'deleted']);
         return $this->respond([
             'success'  => true,
             'message' => "Subscription with ID $id marked as deleted successfully.",

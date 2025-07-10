@@ -6,163 +6,166 @@ require 'public/mailer/PHPMailer.php';
 require 'public/mailer/SMTP.php';
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
- 
+use App\Libraries\AuthService;
+use App\Models\LoginModel;
+
 class Profile extends BaseController
 {
-    public function __construct() {
+	public function __construct() {
 		
 		$this->session = \Config\Services::session();
 		$this->input = \Config\Services::request();
+		$this->authService = new AuthService();
         $this->loginModel = new LoginModel();
-        $this->authService = new AuthService();
-    }
- 
- 
-    public function index()
-    {
- 
-        return view('loginFun');
-       
-    }
- 
-    // public function webReg()
-    // {
-    //     return view('registerFun');
-           
-    // }
- 
-    public function webForgot(){
-        return view('webforgot');
-    }
-    public function customerAuthen()
-    {   
-        $authHeader = $this->request->getHeaderLine('Authorization');
-        $user = $this->authService->getAuthenticatedUser($authHeader);
+	}
+    public function index() {
+        if($this->session->get('us_id')) {
+			$data['user'] = $this->session->get('username');
+			$data['email'] = $this->session->get('email');
+			// $data['utype'] = $this->session->get('us_type');
+			// $data['menu'] = 1;
+			// $data['getTeam'] = $this->AuthModel->getTeamMembers();
+			// $data['desArr'] = array("1"=>'Management',"2"=>"Team Lead","3"=>"Developer/Designer","4"=>"QA","5"=>"Guest","6"=>"Client");
+			// $data['viewArr'] = array("2"=>'Admin Access',"3"=>'Restricted Access',"4"=>"All Access","5"=>"Guest Access","6"=>"Client Access");
+			$template = view('common/header', $data);
+			$template .= view('common/leftmenu');
+			$template .= view('user');
+			$template .= view('common/footer');
+			$template .= view('pagescripts/user');
+			return $template;
+		}
+		else {
+			$data = ['user_id','username','email'];
+			session()->remove($data);
+			return redirect()->to(base_url()); 
+		}
+	}
+	public function resetPasswordFlow()
+{
+    $step = $this->input->getPost('step');
+    $email = $this->input->getPost('email');
 
-        if (!$user) {
-            return $this->failUnauthorized('Invalid or missing token.');
-        }
-        $email = $this->request->getPost('email');
-        $password = md5($this->request->getPost('password'));
-        if ($email && $password) {
-            $userLog = $this->loginModel->getLoginAccount($email, $password);
-            if ($userLog) {
-                $this->session->set([
-                    'id' => $userLog->user_Id,
-                    'name' => $userLog->user_Name,
-                    'role' => 'user',
-                ]);
- 
-                echo json_encode(array(
-                    "status" => 1,
-                    "msg" => null
-                ));
-            } else {
-                echo json_encode([
-                    "status" => 0,
-                    "msg" => "Invalid username or password. Please try again!"
-                ]);
-            }
-        } else {
-            echo json_encode(array(
-                "status" => 0,
-                "msg" => "Login credentials are mandatory"
-            ));
-        }
+    if (!$email) {
+        return $this->response->setJSON([
+            'status' => false,
+            'message' => 'Email is required.'
+        ]);
     }
- 
- 
- 
-    public function webForgotEmailSend(){
-        $forgotCustEmail = $this->request->getPost("forgotCustEmail");
-        if (!$forgotCustEmail) {
-            return $this->response->setJSON([
-                "status" => 0,
-                "msg" => "Enter Your Email Address."
-            ]);
-        }
-        if (!filter_var($forgotCustEmail, FILTER_VALIDATE_EMAIL)) {
-            return $this->response->setJSON([
-                'status' => 0,
-                'msg' => 'Invalid Email Format.'
-            ]);
-        }
-        $emailExist = $this->customerLoginModel->getEmailExist($forgotCustEmail);
-        if (!$emailExist) {
-            return $this->response->setJSON([
-                "status" => 0,
-                "msg" => "Email Doesn't Exist."
-            ]);
-        }
- 
-        $name = $emailExist->cust_Name;
-        $logoUrl = base_url(ASSET_PATH . 'assets/images/logo.jpg');
-        $frgtpswd = base_url('forgotPassword?email=' . urlencode($forgotCustEmail));
- 
-        // Load PHPMailer files
-        require 'vendors/src/Exception.php';
-        require 'vendors/src/PHPMailer.php';
-        require 'vendors/src/SMTP.php';
- 
-        $mail = new \PHPMailer\PHPMailer\PHPMailer(true);
- 
+
+    // Load user by email
+    $user = $this->loginModel->where('email', $email)->first();
+    if (!$user) {
+        return $this->response->setJSON([
+            'status' => false,
+            'message' => 'Email not found.'
+        ]);
+    }
+
+    // STEP 1: Send OTP
+    if ($step === 'send') {
+        $otp = rand(100000, 999999);
+        session()->set('reset_otp_' . $email, $otp);
+        session()->set('otp_expiry_' . $email, time() + 300); // expires in 5 minutes
+
+        // Send email via SMTP
         try {
+            $mail = new \PHPMailer\PHPMailer\PHPMailer(true);
             $mail->isSMTP();
-            $mail->Host       = 'smtp.gmail.com';
+            $mail->Host       = 'aa@online';
             $mail->SMTPAuth   = true;
-            $mail->Username   = 'smartloungework@gmail.com'; // Your Gmail
-            $mail->Password   = 'peetkiqeqbgxaxqs'; // App Password
-            $mail->SMTPSecure = 'tls';
-            $mail->Port       = 587;
- 
-            $mail->setFrom('smartloungework@gmail.com', 'Smart Lounge');
-            $mail->addAddress($forgotCustEmail, $name);
-            $mail->addReplyTo('smartloungework@gmail.com', 'Smart Lounge');
- 
+            $mail->Username   = 'no-reply@online';
+            $mail->Password   = 'JujjmH9WkpL7AgP4TgHe';
+            $mail->SMTPSecure = 'ssl';
+            $mail->Port       = 465;
+
+            $mail->setFrom('no-reply@online', 'Promat');
+            $mail->addAddress($email, $user['username']);
             $mail->isHTML(true);
-            $mail->Subject = 'Password Reset Link - Zakhi Designs';
- 
+            $mail->Subject = "OTP for Password Reset - Promat";
             $mail->Body = "
-                <center>
-                    <img src='{$logoUrl}' alt='Zakhi Designs Logo' style='height: 60px;'>
-                    <h2>Forgot Password</h2>
-                </center><br>
-                <p style='text-align: center; font-size: 16px; margin-top: 20px;'>
-                    <a href='$frgtpswd'>Click Here To Reset The Password.</a>
-                </p>
-                <p style='text-align: center; margin-top: 20px;'>
-                    <a href='https://zakhidesigns.com' style='padding: 10px 20px; background-color: #d81b60; color: white; text-decoration: none; border-radius: 5px;'>Visit Our Website</a>
-                </p>
-                <p style='text-align: center; font-size: 14px; color: #555; margin-top: 30px;'>
-                    For any queries, reach us at <a href='mailto:support@zakhidesigns.com'>support@zakhidesigns.com</a>
-                </p>
+                <p>Hello " . ucwords($user['username']) . ",</p>
+                <p>Your OTP is: <strong>$otp</strong></p>
+                <p>This OTP will expire in 5 minutes.</p>
+                <p>Regards,<br>Promat Team</p>
             ";
- 
-            $mail->AltBody = "Dear $name,\n\nPlease follow the link to reset your password: $frgtpswd\n\n";
- 
             $mail->send();
- 
+
             return $this->response->setJSON([
-                'status' => 1,
-                'msg' => 'A Reset Link Has Been Sent To Your Email Address.'
+                'status' => true,
+                'message' => 'OTP sent to your email.'
             ]);
- 
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return $this->response->setJSON([
-                'status' => 0,
-                'msg' => 'Mail could not be sent. Mailer Error: ' . $mail->ErrorInfo
+                'status' => false,
+                'message' => 'Mail error: ' . $mail->ErrorInfo
             ]);
         }
     }
- 
- 
-    public function logout()
-    {
-        $session = session();
-        $session->remove(['zd_uid', 'zd_uname']);
-        return redirect()->to(base_url('/'));
+
+    // STEP 2: Verify OTP
+    if ($step === 'verify') {
+        $otpInput = $this->input->getPost('otp');
+        $storedOtp = session()->get('reset_otp_' . $email);
+        $otpExpiry = session()->get('otp_expiry_' . $email);
+
+        if (!$storedOtp || !$otpExpiry || time() > $otpExpiry) {
+            return $this->response->setJSON([
+                'status' => false,
+                'message' => 'OTP expired or not found.'
+            ]);
+        }
+
+        if ($otpInput != $storedOtp) {
+            return $this->response->setJSON([
+                'status' => false,
+                'message' => 'Invalid OTP.'
+            ]);
+        }
+
+        return $this->response->setJSON([
+            'status' => true,
+            'message' => 'OTP verified. You may now reset your password.'
+        ]);
     }
- 
- 
+
+    // STEP 3: Reset Password
+    if ($step === 'reset') {
+        $newPassword = $this->input->getPost('new_password');
+
+        if (!$newPassword) {
+            return $this->response->setJSON([
+                'status' => false,
+                'message' => 'New password required.'
+            ]);
+        }
+
+        $hashedPassword = md5($newPassword); // Or use password_hash()
+
+        $this->loginModel->update($user['user_id'], ['password' => $hashedPassword]);
+
+        session()->remove('reset_otp_' . $email);
+        session()->remove('otp_expiry_' . $email);
+
+        return $this->response->setJSON([
+            'status' => true,
+            'message' => 'Password has been reset successfully.'
+        ]);
+    }
+
+    return $this->response->setJSON([
+        'status' => false,
+        'message' => 'Invalid step.'
+    ]);
 }
- 
+
+	public function removeUser() {
+    $userId = $this->input->getPost('userId');
+    $this->AuthModel->delUser($userId);
+    if ($this->session->get('user_id') == $userId) {
+        $this->session->destroy();
+    }
+
+    echo json_encode(1);
+}
+
+}

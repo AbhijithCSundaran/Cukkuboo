@@ -110,9 +110,9 @@ public function getAllMovieDetails()
         // ->groupEnd();
         $builder->groupStart()
             ->like('LOWER(title)', strtolower($searchWildcard))
-            // ->orLike('LOWER(genre)', strtolower($searchWildcard))
-            // ->orLike('LOWER(cast_details)', strtolower($searchWildcard))
-            // ->orLike('LOWER(category)', strtolower($searchWildcard))
+            ->orLike('LOWER(genre)', strtolower($searchWildcard))
+            ->orLike('LOWER(cast_details)', strtolower($searchWildcard))
+            ->orLike('LOWER(category)', strtolower($searchWildcard))
             ->orLike('LOWER(access)', strtolower($searchWildcard))
         ->groupEnd();
     }

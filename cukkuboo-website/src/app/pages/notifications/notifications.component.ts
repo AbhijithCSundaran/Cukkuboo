@@ -2,11 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { NotificationService } from '../../services/notification.service';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-notifications',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule,MatSnackBarModule],
   templateUrl: './notifications.component.html',
   styleUrls: ['./notifications.component.scss']
 })
@@ -125,7 +126,7 @@ export class NotificationsComponent implements OnInit {
             this.selectedNotification = null;
           }
 
-          this.snackBar.open('Successfully removed', '', {
+          this.snackBar.open('Notification removed successfully', '', {
             duration: 3000,
             verticalPosition: 'top',
             horizontalPosition: 'center',
@@ -135,7 +136,7 @@ export class NotificationsComponent implements OnInit {
           this.cancelDelete();
         },
         error: () => {
-          this.snackBar.open('Failed to remove', '', {
+          this.snackBar.open('Failed to remove notification', '', {
             duration: 3000,
             verticalPosition: 'top',
             horizontalPosition: 'center',

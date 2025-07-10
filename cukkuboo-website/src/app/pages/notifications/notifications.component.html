@@ -1,57 +1,64 @@
 <div class="notifications-container">
-  <!-- Left Side -->
-  <div class="notifications-list">
-    <div class="header">
-      <span class="heading">Notifications</span>
-      <button
-        class="mark-toggle"
-        (click)="markAllAsRead()"
-        [disabled]="isMarkingAll || notifications.length === 0"
-      >
-        {{ isMarkingAll ? 'Marking…' : 'Mark All as Read' }}
-      </button>
-    </div>
+  <ng-container *ngIf="notifications.length > 0; else noNotifications">
+    <!-- Left Side -->
+    <div class="notifications-list">
+      <div class="header">
+        <span class="heading">Notifications</span>
+        <button
+          *ngIf="notifications.length > 0"
+          class="mark-toggle"
+          (click)="markAllAsRead()"
+          [disabled]="isMarkingAll"
+        >
+          {{ isMarkingAll ? 'Marking…' : 'Mark All as Read' }}
+        </button>
+      </div>
 
-    <div class="scrollable-list">
-      <div
-        *ngFor="let notification of notifications"
-        class="notification-item"
-        [class.active]="notification.notification_id === selectedNotification?.notification_id"
-        [class.read]="notification.read"
-        (click)="selectNotification(notification)"
-      >
-        <div class="title-wrapper">
-          <div class="title">{{ notification.title }}</div>
-          <span *ngIf="notification.status == 1" class="dot"></span>
-        </div>
-        <div class="date">{{ notification.date | date: 'short' }}</div>
-        <div class="action-buttons">
-          <button
-            class="delete-btn"
-            (click)="openDeleteModal(notification); $event.stopPropagation()"
-            title="Delete"
-          >
-            <i class="fas fa-trash"></i>
-          </button>
+      <div class="scrollable-list">
+        <div *ngFor="let notification of notifications" 
+             class="notification-item"
+             [class.active]="notification.notification_id === selectedNotification?.notification_id"
+             [class.read]="notification.read"
+             (click)="selectNotification(notification)">
+          <div class="title-wrapper">
+            <div class="title">{{ notification.title }}</div>
+            <span *ngIf="notification.status == 1" class="dot"></span>
+          </div>
+          <div class="date">{{ notification.date | date: 'short' }}</div>
+          <div class="action-buttons">
+            <button class="delete-btn"
+                    (click)="openDeleteModal(notification); $event.stopPropagation()"
+                    title="Delete">
+              <i class="fas fa-trash"></i>
+            </button>
+          </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <!-- Right Side -->
-  <div class="notification-detail" *ngIf="selectedNotification">
-    <div class="detail-header">
-      <div class="detail-title">{{ selectedNotification.title }}</div>
+    <!-- Right Side -->
+    <div class="notification-detail" *ngIf="selectedNotification">
+      <div class="detail-header">
+        <div class="detail-title">{{ selectedNotification.title }}</div>
+      </div>
+      <div class="detail-body">
+        <ng-container *ngIf="!isLoadingDetail; else loading">
+          {{ selectedNotification.content }}
+        </ng-container>
+        <ng-template #loading>
+          <div class="loading">Loading...</div>
+        </ng-template>
+      </div>
     </div>
-    <div class="detail-body">
-      <ng-container *ngIf="!isLoadingDetail; else loading">
-        {{ selectedNotification.content }}
-      </ng-container>
-      <ng-template #loading>
-        <div class="loading">Loading...</div>
-      </ng-template>
+  </ng-container>
+
+  <!-- Full Page Empty State -->
+  <ng-template #noNotifications>
+    <div class="empty-full-page">
+      <i class="fas fa-bell-slash empty-icon"></i>
+      <p>No notifications found</p>
     </div>
-  </div>
+  </ng-template>
 
   <!-- Delete Confirmation Modal -->
   <div class="modal" [class.show]="showDeleteModal">

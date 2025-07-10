@@ -8,6 +8,8 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
 import { HttpClientModule } from '@angular/common/http';
 
 interface Subscription {
@@ -28,13 +30,15 @@ interface Subscription {
     MatFormFieldModule,
     MatInputModule,
     MatIconModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
     HttpClientModule
   ],
   templateUrl: './subscriptions.component.html',
   styleUrls: ['./subscriptions.component.scss']
 })
 export class SubscriptionsComponent implements OnInit, AfterViewInit {
-  displayedColumns: string[] = ['slNo', 'user', 'plan', 'startDate', 'endDate', 'status'];
+  displayedColumns: string[] = ['slNo', 'user', 'plan', 'price', 'startDate', 'endDate', 'status'];
   dataSource = new MatTableDataSource<Subscription>([]);
   totalItems = 0;
   searchText: string = '';
@@ -76,6 +80,7 @@ export class SubscriptionsComponent implements OnInit, AfterViewInit {
             const mappedData: Subscription[] = response.data.map((item: any) => ({
               username: item.username,
               plan_name: item.plan_name,
+              price:item.price,
               start_date: item.start_date,
               end_date: item.end_date,
               // status: item.status === '1' ? 'active' : 'expired'

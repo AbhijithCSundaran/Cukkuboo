@@ -48,101 +48,78 @@ export class AddSubscriptionPlanComponent implements OnInit {
       subscriptionplan_id: [''],
       plan_name: ['', Validators.required],
       price: [null, [Validators.required, Validators.min(0), ValidationService.floatValidator]],
-      discount_price: [null, [Validators.min(0), ValidationService.floatValidator]],
-period: [null, [Validators.required, Validators.min(1)]],
+      offer_price: [null, [Validators.min(0), ValidationService.floatValidator]],
+      period: [null, [Validators.required, Validators.min(1)]],
       features: ['', Validators.required]
     });
 
     this.subscriptionPlanId = this.route.snapshot.paramMap.get('id');
     if (this.subscriptionPlanId) {
       this.isEditMode = true;
-this.loadSubscriptionPlanData(Number(this.subscriptionPlanId));
+      this.loadSubscriptionPlanData(Number(this.subscriptionPlanId));
     }
   }
 
-loadSubscriptionPlanData(id: number): void {
-  this.planService.getPlanById(id).subscribe({
-    next: (response) => {
-      console.log('Prefill API response:', response);
+  loadSubscriptionPlanData(id: number): void {
+    this.planService.getPlanById(id).subscribe({
+      next: (response) => {
+        const data = Array.isArray(response?.data) ? response.data[0] : response.data;
+        if (!data) {
+          this.showSnackbar('No plan data found.', 'snackbar-error');
+          return;
+        }
 
-      const data = Array.isArray(response?.data) ? response.data[0] : response.data;
-      if (!data) {
-        this.showSnackbar('No plan data found.', 'snackbar-error');
-        return;
+        this.dataForm.patchValue({
+          subscriptionplan_id: +data.subscriptionplan_id,
+          plan_name: data.plan_name,
+          price: +data.price,
+          offer_price: +data.discount_price, // mapping backend field to new name
+          period: data.period?.toString(),
+          features: data.features
+        });
+      },
+      error: (err) => {
+        console.error('Error fetching plan by ID:', err);
+        this.showSnackbar('Failed to load plan data.', 'snackbar-error');
       }
-
-  this.dataForm.patchValue({
-  subscriptionplan_id: +data.subscriptionplan_id,
-  plan_name: data.plan_name,
-  price: +data.price, // Convert to number
-  discount_price: +data.discount_price, // Convert to number
- period: data.period?.toString(),
-   features: data.features
-});
-
-    },
-    error: (err) => {
-      console.error('Error fetching plan by ID:', err);
-      this.showSnackbar('Failed to load plan data.', 'snackbar-error');
-    }
-  });
-}
-
-  // saveUser(): void {
-  //   if (this.dataForm.invalid) {
-  //     this.dataForm.markAllAsTouched();
-  //     return;
-  //   }
-
-  //   const planData = this.dataForm.value;
-
-  //   // In edit mode, ensure subscriptionplan_id is included
-  //   if (this.isEditMode && this.subscriptionPlanId) {
-  //     planData.subscriptionplan_id = this.subscriptionPlanId;
-  //   }
-
-  //   this.planService.addPlan(planData).subscribe({
-  //     next: () => {
-  //       const msg = this.isEditMode ? 'Plan updated successfully!' : 'Plan saved successfully!';
-  //       this.showSnackbar(msg, 'snackbar-success');
-  //       this.router.navigate(['/subscription-plans']);
-  //     },
-  //     error: (error) => {
-  //       console.error('Error saving plan:', error);
-  //       this.showSnackbar('Failed to save plan. Please try again.', 'snackbar-error');
-  //     }
-  //   });
-  // }
-
+    });
+  }
 
   saveUser(): void {
-  if (this.dataForm.invalid) {
-    this.dataForm.markAllAsTouched();
-    return;
-  }
-
-  const planData = this.dataForm.value;
-
-  if (this.isEditMode && this.subscriptionPlanId) {
-    planData.subscriptionplan_id = this.subscriptionPlanId;
-  }
-
-
-
-  this.planService.addPlan(planData).subscribe({
-    next: (response) => {
-      console.log('Plan saved successfully. API response:', response); 
-
-      const msg = this.isEditMode ? 'Plan updated successfully!' : 'Plan saved successfully!';
-      this.showSnackbar(msg, 'snackbar-success');
-      this.router.navigate(['/subscription-plans']);
-    },
-    error: (error) => {
-      console.error('Error saving plan:', error);
-      this.showSnackbar('Failed to save plan. Please try again.', 'snackbar-error');
+    if (this.dataForm.invalid) {
+      this.dataForm.markAllAsTouched();
+      return;
     }
-  });
-}
+
+    const planData = this.dataForm.value;
+    const originalPrice = parseFloat(planData.price);
+    const offerPrice = parseFloat(planData.offer_price);
+
+    // Validation: Offer price must be strictly less than price
+    if (offerPrice && offerPrice >= originalPrice) {
+      this.showSnackbar('Offer price must be less than the actual price.', 'snackbar-error');
+      return;
+    }
+
+    // Send as discount_price to match backend API
+    planData.discount_price = offerPrice;
+
+    if (this.isEditMode && this.subscriptionPlanId) {
+      planData.subscriptionplan_id = this.subscriptionPlanId;
+    }
+
+    this.planService.addPlan(planData).subscribe({
+      next: () => {
+        const msg = this.isEditMode ? 'Plan updated successfully!' : 'Plan saved successfully!';
+        this.showSnackbar(msg, 'snackbar-success');
+        this.router.navigate(['/subscription-plans']);
+      },
+      error: (error) => {
+        console.error('Error saving plan:', error);
+        this.showSnackbar('Failed to save plan. Please try again.', 'snackbar-error');
+      }
+    });
+  }
 
   showSnackbar(message: string, panelClass: string = 'snackbar-default'): void {
     this.snackBar.open(message, 'Close', {

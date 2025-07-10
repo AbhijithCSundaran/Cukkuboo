@@ -394,7 +394,7 @@ input {
 }
  .text-muted {
   color: #6c757d;
-  font-size: 0.85rem;
+  font-size: 0.75rem;
   font-weight: normal;
 }
 
@@ -622,4 +622,12 @@ input {
     gap: 50px;
   }
 
+}
+
+mat-card[_ngcontent-ng-c3817092942] {
+    padding-top: 17px;
+    padding-bottom: 6px;
+    background-color: white;
+    border: 1px solid black;
+    border-radius: 8px;
 }

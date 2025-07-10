@@ -89,7 +89,7 @@ export class SubscriptionsComponent implements OnInit, AfterViewInit {
             }));
 
             this.dataSource.data = mappedData;
-            this.totalItems = mappedData.length; // Adjust if API supports paginated total
+            this.totalItems = mappedData.length; 
           } else {
             this.dataSource.data = [];
             this.totalItems = 0;

@@ -1,12 +1,9 @@
 <div class="content-container">
-  <!-- <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-    <h2>{{ isEditMode ? 'Edit Subscription Plan' : 'Add Subscription Plan' }}</h2>
-    <button class="back-to-list-button" (click)="goBack()">Back to List</button>
-  </div> -->
   <div class="header-row">
     <h2>{{ isEditMode ? 'Edit Subscription Plan' : 'Add Subscription Plan' }}</h2>
     <button class="back-to-list-button" (click)="goBack()">Back to List</button>
   </div>
+
   <mat-card appearance="outlined">
     <form [formGroup]="dataForm" (ngSubmit)="saveUser()">
       <mat-card-content class="d-flex flex-wrap">
@@ -32,34 +29,28 @@
             </mat-error>
           </mat-form-field>
         </div>
-         
 
-                  <!-- Discounted Price -->
+        <!-- Offer Price -->
         <div class="w-50 px-2 pb-3">
-  <mat-form-field appearance="outline" class="w-100">
-    <mat-label>Discounted Price</mat-label>
-    <input matInput type="number" placeholder="Enter discounted price" formControlName="discount_price">
-    <mat-error>
-      <Validation-Messages [control]="dataForm.controls['discount_price']"></Validation-Messages>
-    </mat-error>
-  </mat-form-field>
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Offer Price</mat-label>
+            <input matInput type="number" placeholder="Enter offer price" formControlName="offer_price">
+            <mat-error>
+              <Validation-Messages [control]="dataForm.controls['offer_price']"></Validation-Messages>
+            </mat-error>
+          </mat-form-field>
         </div>
 
-
         <!-- Period -->
-   
-     <div class="w-50 px-2 pb-3">
-     <mat-form-field appearance="outline" class="w-100">
-     <mat-label>Period (in days)</mat-label>
-    <input matInput type="text" placeholder="Enter period in days" formControlName="period">
-    <mat-error>
-      <Validation-Messages [control]="dataForm.controls['period']"></Validation-Messages>
-    </mat-error>
-  </mat-form-field>
-    </div>
-
-
-            
+        <div class="w-50 px-2 pb-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Period (in days)</mat-label>
+            <input matInput type="text" placeholder="Enter period in days" formControlName="period">
+            <mat-error>
+              <Validation-Messages [control]="dataForm.controls['period']"></Validation-Messages>
+            </mat-error>
+          </mat-form-field>
+        </div>
 
         <!-- Features -->
         <div class="w-50 px-2 pb-3">

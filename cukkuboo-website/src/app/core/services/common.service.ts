@@ -1,6 +1,5 @@
 import { DatePipe } from '@angular/common';
 import { Injectable } from '@angular/core';
-import { PopupNotificationService } from '../../shared/services/popup-notification/popup-notification.service';
 
 @Injectable({
     providedIn: 'root'
@@ -11,7 +10,6 @@ export class CommonService {
     private Pipe = new DatePipe('en-US');
 
     constructor(
-        private popupNotiService: PopupNotificationService,
     ) {
     }
     //#region "functions"
@@ -135,7 +133,7 @@ export class CommonService {
             }
         }
         if (count == 0) {
-            this.popupNotiService.showMessage('Form not valid.', 'warning')
+            alert('Form not valid.')
         }
         return count;
     }
@@ -159,7 +157,7 @@ export class CommonService {
         }
         return obj;
     }
-    
+
     remove_char(Model: any, char = '_', All = true) {
         var model: any = {}
         for (let obj in Model) {
@@ -302,6 +300,14 @@ export class CommonService {
     }
 
 
+    EncodeId(id: number, key = 2996077): string {
+        const xor = id ^ key;
+        return btoa(xor.toString());
+    }
+    DecodeId(encoded: string, key = 2996077): number {
+        const xor = parseInt(atob(encoded), 10);
+        return xor ^ key;
+    }
     Encode(data: any): any {
         data = btoa(data)
         data = data.replace(/K/g, "6Y7YvCoyZVGQlovv");

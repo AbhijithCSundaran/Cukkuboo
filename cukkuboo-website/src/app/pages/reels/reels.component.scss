@@ -94,9 +94,10 @@ body {
       display: flex;
       align-items: center;
       justify-content: center;
+      text-shadow: 0 0 5px #000000;
 
       &:hover {
-      background: rgba(109, 109, 109, 0.5);
+        background: rgba(109, 109, 109, 0.5);
         transform: scale(1.05);
       }
     }
@@ -135,9 +136,21 @@ body {
 
     .reel-text {
       position: absolute;
-      bottom: 20px;
-      left: 16px;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: auto;
+      max-height: 40vh;
+      overflow: scroll;
       color: #fff;
+      background-color: rgba(0, 0, 0, 0);
+      transition: all 0.2s ease;
+      text-shadow: 0 0 5px #000000;
+
+      &.open {
+        background-color: rgba(0, 0, 0, 0.7);
+      }
+
 
       .title {
         font-weight: bold;
@@ -166,6 +179,7 @@ body {
         cursor: pointer;
         width: 40px;
         gap: 4px;
+        text-shadow: 0 0 10px #000000;
 
         i {
           font-size: 22px;
@@ -187,6 +201,12 @@ body {
       .text-danger {
         color: #dc3545 !important;
       }
+    }
+
+    @media (max-width:991px) {
+      height: calc(100vh - 60px);
+      margin-bottom: 60px;
+      overflow: hidden;
     }
   }
 

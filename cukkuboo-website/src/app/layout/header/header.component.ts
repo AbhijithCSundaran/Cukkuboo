@@ -63,8 +63,8 @@ export class HeaderComponent implements OnInit {
 
   goToNotifications(): void {
     // this.closeMenu();
-        this.router.navigate(['/notifications']);
-        this.hasUnreadNotification = false;
+    this.router.navigate(['/notifications']);
+    this.hasUnreadNotification = false;
 
     // this.notificationService.markAllAsRead().subscribe({
     //   next: () => {
@@ -77,7 +77,7 @@ export class HeaderComponent implements OnInit {
     // });
   }
 
- 
+
   openSignOutModal(): void {
     this.showSignOutModal = true;
   }
@@ -93,6 +93,9 @@ export class HeaderComponent implements OnInit {
       next: () => {
         localStorage.clear();
         this.storageService.updateItem('token', '');
+        this.storageService.updateItem('userData', null);
+        this.storageService.updateItem('username', '');
+        this.storageService.updateItem('subscription', '');
         this.snackBar.open('Signed out successfully', '', {
           duration: 3000,
           verticalPosition: 'top',

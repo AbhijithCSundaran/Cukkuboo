@@ -25,10 +25,10 @@
         </button>
 
         <!-- Reel Info -->
-        <div class="reel-text">
+        <div class="reel-text ps-3 pe-5" [class.open]="reel.showDesc" (click)="reel.showDesc=!reel.showDesc">
           <img class="logo reels-icon-logo" src="assets/images/logo.png" alt="streamlab-image" />
-          <div class="title">{{ reel.title }}</div>
-          <div class="decp">{{ reel.description }}</div>
+          <div class="title">{{reel.showDesc?reel.title:( reel.title | truncate: 30) }}</div>
+          <div class="decp">{{ reel.showDesc?reel.description:((reel.description | truncate: 40)+'more') }}</div>
         </div>
 
         <!-- Icons: Like, Mute, Share -->
@@ -42,7 +42,7 @@
             <i class="fas" [ngClass]="mutedStates[i] ? 'fa-volume-mute' : 'fa-volume-up'"></i>
           </div>
 
-          <div class="icon-block" (click)="onShare(i)">
+          <div class="icon-block" (click)="copyUrlToClipboard(reel)">
             <i class="fas fa-share"></i>
           </div>
         </div>

@@ -59,7 +59,7 @@ class Usersub extends ResourceController
     }
 
     
-    $status = 2;
+    $status = 1;
     $planType = 'Premium';
 
     $payload = [
@@ -67,9 +67,9 @@ class Usersub extends ResourceController
         'subscriptionplan_id' => $planId,
         'plan_name'           => $planName,
         'price'               => $price,
-        'start_date'          => $startDate,
-        'end_date'            => $endDate,
-        'status'              => $status,
+        'start_date' => date('d F Y', strtotime($startDate)),
+        'end_date'   => date('d F Y', strtotime($endDate)),
+         'status'              => $status,
         'created_on'          => date('Y-m-d H:i:s'),
         'created_by'          => $userId,
         'modify_on'           => date('Y-m-d H:i:s'),
@@ -116,16 +116,15 @@ class Usersub extends ResourceController
 
     if ($id !== null) {
         $subscription = $this->usersubModel->getUserSubscriptionById($userId, $id);
-
-        if (!$subscription) {
+        if (!$subscription || $subscription['status'] == 9) {
             return $this->respond([
                 'success' => false,
                 'message' => 'Subscription not found or unauthorized access.',
                 'data'    => []
             ]);
         }
-
-        $subscription['plan_type'] = $this->mapPlanType($subscription['status']);
+        $subscription['start_date'] = date('d F Y', strtotime($subscription['start_date']));
+        $subscription['end_date'] = date('d F Y', strtotime($subscription['end_date']));
 
         return $this->respond([
             'success' => true,
@@ -143,17 +142,30 @@ class Usersub extends ResourceController
             'data'    => []
         ]);
     }
+    $filteredSubscriptions = [];
+    foreach ($subscriptions as $sub) {
+        if ($sub['status'] != 9) {
+            $sub['start_date'] = date('d F Y', strtotime($sub['start_date']));
+            $sub['end_date'] = date('d F Y', strtotime($sub['end_date']));
+            $filteredSubscriptions[] = $sub;
+        }
+    }
 
-    foreach ($subscriptions as &$sub) {
-        $sub['plan_type'] = $this->mapPlanType($sub['status']);
+    if (empty($filteredSubscriptions)) {
+        return $this->respond([
+            'success' => false,
+            'message' => 'No active subscriptions found.',
+            'data'    => []
+        ]);
     }
 
     return $this->respond([
         'success' => true,
         'message' => 'Subscriptions fetched successfully.',
-        'data'    => $subscriptions
+        'data'    => $filteredSubscriptions
     ]);
 }
+
 
 private function mapPlanType($status)
 {
@@ -180,7 +192,6 @@ public function getUserSubscriptions()
     $search    = $this->request->getGet('search');
     $fromDate  = $this->request->getGet('fromDate'); 
     $toDate    = $this->request->getGet('toDate');
-    
     if ($pageSize <= 0) {
         $pageSize = 10;
     }
@@ -200,28 +211,19 @@ public function getUserSubscriptions()
                 ->orLike('user_subscription.start_date', $search)
                 ->groupEnd();
     }
-     if (!empty($fromDate) && !empty($toDate)) {
-        $builder->where('DATE(user_subscription.created_on) >=', $fromDate)
-                ->where('DATE(user_subscription.created_on) <=', $toDate);
-    } elseif (!empty($fromDate)) {
-        $builder->where('DATE(user_subscription.created_on) >=', $fromDate);
-    } elseif (!empty($toDate)) {
-        $builder->where('DATE(user_subscription.created_on) <=', $toDate);
-    }
-
     $total = $builder->countAllResults(false);
 
     $subscriptions = $builder->orderBy('user_subscription.user_subscription_id', 'DESC')
                              ->findAll($pageSize, $offset);
-
     foreach ($subscriptions as &$sub) {
-        if ($sub['status'] == 1 && $sub['end_date'] < date('Y-m-d')) {
-            $this->usersubModel->update($sub['user_subscription_id'], ['status' => 2]);
-            $sub['status'] = 2;
-        }
-
-        $sub['plan_type'] = ($sub['status'] == 1) ? 'Free' : 'Premium';
+    if ($sub['status'] == 1 && $sub['end_date'] < date('Y-m-d')) {
+        $this->usersubModel->update($sub['user_subscription_id'], ['status' => 2]);
+        $sub['status'] = 2;
     }
+
+    $sub['plan_type'] = ($sub['status'] == 1) ? 'Free' : 'Premium';
+}
+
 
     return $this->response->setJSON([
         'success' => true,
@@ -230,6 +232,7 @@ public function getUserSubscriptions()
         'total'   => $total
     ]);
 }
+
 
 public function deleteSubscription($id = null)
 {

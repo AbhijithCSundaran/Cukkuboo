@@ -26,7 +26,7 @@ import { UserService } from '../../services/user.service';
 })
 export class UserListComponent implements OnInit, AfterViewInit {
   displayedColumns: string[] = [
-    'slNo', 'username', 'phone', 'email', 'country', 'status', 'subscription', 'action'
+    'slNo', 'username', 'phone', 'email', 'status', 'subscription', 'action'
   ];
   dataSource = new MatTableDataSource<any>([]);
   confirmDeleteUserId: number | null = null;

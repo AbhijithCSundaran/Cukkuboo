@@ -25,6 +25,7 @@
             </div>
 
             <!-- Sidebar (Mobile) -->
+            <div class="mobile-sidebar-overlay d-lg-none" [class.open]="menuOpen" (click)="closeMenu()"></div>
             <div class="mobile-sidebar d-lg-none" [class.open]="menuOpen">
               <div id="gen-menu-contain" class="gen-menu-contain w-100">
                 <ng-container *ngIf="isSignedIn">

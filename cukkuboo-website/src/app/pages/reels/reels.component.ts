@@ -51,7 +51,7 @@ export class ReelsComponent implements OnInit, AfterViewInit, OnDestroy {
   private videoUrl = environment.apiUrl + 'uploads/videos/';
   private imageUrl = environment.apiUrl + 'uploads/images/';
 
-  constructor(private movieService: MovieService, private router: Router) {}
+  constructor(private movieService: MovieService, private router: Router) { }
 
   ngOnInit(): void {
     document.body.classList.add('reels-page');
@@ -71,8 +71,8 @@ export class ReelsComponent implements OnInit, AfterViewInit, OnDestroy {
             id: Number(data.reels_id),
             video: this.videoUrl + (data.video || ''),
             image: this.imageUrl + (data.thumbnail || 'default-thumb.jpg'),
-            title: this.capitalizeFirst(data.title),
-            description: this.capitalizeFirst(data.description),
+            title: this.capitalizeFirst(data.title+'BAbkjs fiesw ef wifusdfgrgfsd vduif dsf'),
+            description: this.capitalizeFirst(data.description+' bauybs wfuew f hufasc scya sauybdac sasy sacsaay csacasyscas,. abyudas duas xasudyac asdsd.'),
             likes: Number(data.likes) || 0,
             views: Number(data.views) || 0,
             is_liked_by_user: data.is_liked_by_user === true || data.is_liked_by_user === 1
@@ -141,7 +141,7 @@ export class ReelsComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onShare(index: number): void {
-   
+
   }
 
   onHover(index: number): void {
@@ -165,6 +165,8 @@ export class ReelsComponent implements OnInit, AfterViewInit, OnDestroy {
           const video = entry.target as HTMLVideoElement;
           const index = Array.from(this.videos).findIndex((v) => v.nativeElement === video);
 
+          if (!video)
+            return;
           if (entry.isIntersecting) {
             video.play();
             this.videoStates[index] = true;

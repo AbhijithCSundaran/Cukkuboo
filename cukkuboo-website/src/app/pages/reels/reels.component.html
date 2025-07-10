@@ -1,35 +1,26 @@
-<div class="reel-wrapper">
+<div class="reel-wrapper position-relative">
   <!-- Back Button with Logo -->
-  <div class="back-logo-container">
-    <button class="back-btn" (click)="navigateHome()" aria-label="Back to Home">
-      <svg viewBox="0 0 24 24">
-        <path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" />
-      </svg>
-    </button>
-  </div>
+  <!-- <div class="back-logo-container"> -->
+  <!-- </div> -->
 
   <!-- Reel List -->
-  <div class="reel-scroll" #reelScroll>
+  <div class="reel-scroll hide_scrollbar" #reelScroll>
     <div *ngFor="let reel of reels; let i = index" class="reel-container">
       <div class="reel-inner" (mouseenter)="onHover(i)" (mouseleave)="onLeave(i)">
-        <video
-          #videoEl
-          [src]="reel.video"
-          [poster]="reel.image"
-          [muted]="mutedStates[i]"
-          autoplay
-          loop
-          playsinline
-          (click)="togglePlayPause(i)"
-        ></video>
+        <video #videoEl [src]="reel.video" [poster]="reel.image" [muted]="mutedStates[i]" autoplay loop playsinline
+          (click)="togglePlayPause(i)"></video>
 
+        <button class="back-btn" (click)="navigateHome()" aria-label="Back to Home">
+          <span class="material-icons"> chevron_left</span>
+        </button>
         <!-- Fullscreen Button -->
         <button class="fullscreen-btn" (click)="toggleFullscreen($event)">
           <i class="fas" [ngClass]="isFullscreen ? 'fa-compress' : 'fa-expand'"></i>
         </button>
 
         <!-- Play/Pause Button -->
-        <button class="play-pause-btn" *ngIf="hoveredIndex === i" (click)="togglePlayPause(i); $event.stopPropagation()">
+        <button class="play-pause-btn" *ngIf="hoveredIndex === i"
+          (click)="togglePlayPause(i); $event.stopPropagation()">
           <i [ngClass]="videoStates[i] ? 'fas fa-pause' : 'fas fa-play'"></i>
         </button>
 
@@ -63,12 +54,16 @@
   </div>
 
   <!-- Navigation Arrows -->
-  <div class="nav-arrows">
+  <div class="nav-arrows d-none d-lg-flex">
     <button class="arrow up" (click)="scrollToPrev()">
-      <svg viewBox="0 0 24 24"><path d="M12 8L6 14H18L12 8Z" fill="currentColor" /></svg>
+      <svg viewBox="0 0 24 24">
+        <path d="M12 8L6 14H18L12 8Z" fill="currentColor" />
+      </svg>
     </button>
     <button class="arrow down" (click)="scrollToNext()">
-      <svg viewBox="0 0 24 24"><path d="M12 16L18 10H6L12 16Z" fill="currentColor" /></svg>
+      <svg viewBox="0 0 24 24">
+        <path d="M12 16L18 10H6L12 16Z" fill="currentColor" />
+      </svg>
     </button>
   </div>
 </div>

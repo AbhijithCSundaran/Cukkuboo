@@ -14,51 +14,39 @@ body {
   background: #000;
   overflow: hidden;
 
-  .back-logo-container {
-    position: absolute;
-    top: 10%;
-    left: 20px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    z-index: 30;
+  // .back-btn {
+  //   background: transparent;
+  //   border: 2px solid rgb(255, 255, 255);
+  //   border-radius: 40px;
+  //   width: 40px;
+  //   height: 40px;
+  //   display: flex;
+  //   align-items: center;
+  //   justify-content: center;
+  //   color: white;
+  //   cursor: pointer;
+  //   transition: all 0.3s ease;
+  //   backdrop-filter: blur(6px);
+  //   position: absolute;
+  //   top: 20px;
+  //   left: 20px;
+  //   z-index: 10;
 
-    .reel-logo {
-      height: 60px;
-      width: auto;
-      object-fit: contain;
-    }
-  }
+  //   &:hover {
+  //     background: rgba(255, 255, 255, 0.2);
+  //     transform: scale(1.05);
+  //   }
 
-  .back-btn {
-    background: rgba(255, 255, 255, 0.08);
-    border: 2px solid rgba(255, 255, 255, 0.4);
-    border-radius: 50%;
-    width: 48px;
-    height: 48px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    backdrop-filter: blur(6px);
+  //   &:active {
+  //     transform: scale(0.95);
+  //   }
 
-    svg {
-      width: 24px;
-      height: 24px;
-    }
+  //   @media(max-width:991px) {
+  //     width: 27px;
+  //     height: 27px;
+  //   }
 
-    &:hover {
-      background: rgba(255, 255, 255, 0.2);
-      border-color: rgba(255, 255, 255, 0.8);
-      transform: scale(1.05);
-    }
-
-    &:active {
-      transform: scale(0.95);
-    }
-  }
+  // }
 
   .reel-scroll {
     height: 100%;
@@ -75,39 +63,56 @@ body {
   }
 
   .reel-inner {
-    width: 360px;
+    min-width: 360px;
+    width: 100%;
+    max-width: 540px;
     height: 100vh;
     background-color: #000;
     position: relative;
     border-radius: 12px;
     overflow: hidden;
+    display: flex;
 
     video {
       width: 100%;
-      height: 100%;
+      height: auto;
       object-fit: cover;
       cursor: pointer;
+      margin: auto;
     }
 
+    .back-btn,
     .fullscreen-btn,
     .play-pause-btn {
       position: absolute;
-      background: rgba(0, 0, 0, 0.6);
+      background: rgba(109, 109, 109, 0.2);
       border: none;
       border-radius: 50%;
       color: white;
       z-index: 10;
       cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      &:hover {
+      background: rgba(109, 109, 109, 0.5);
+        transform: scale(1.05);
+      }
     }
 
-    .fullscreen-btn {
+    .back-btn {
       top: 16px;
       left: 16px;
       width: 40px;
       height: 40px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    }
+
+    .fullscreen-btn {
+      top: 16px;
+      right: 16px;
+      width: 40px;
+      height: 40px;
 
       i {
         font-size: 18px;
@@ -120,9 +125,7 @@ body {
       transform: translate(-50%, -50%);
       width: 64px;
       height: 64px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+
       font-size: 32px;
 
       i {

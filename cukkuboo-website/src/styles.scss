@@ -71,8 +71,16 @@ textarea {
     }
 
     &.hide_scrollbar {
+        overflow: auto;
+        /* or scroll, if you want to enforce scroll always */
+        scrollbar-width: none;
+        /* Firefox */
+        -ms-overflow-style: none;
+
+        /* IE and Edge */
         &::-webkit-scrollbar {
             width: 0px;
+            display: none;
         }
     }
 
@@ -84,21 +92,25 @@ textarea {
 //     background: linear-gradient(0deg, var(--dark-color) 0%, rgba(var(--primarydark-color), 0.5) 30%, rgba(var(--primarydark-color), 0.5) 70%, var(--dark-color) 100%);
 // }
 
+.text-justify {
+    text-align: justify;
+}
+
 .video_player {
     position: absolute;
     width: 100%;
     height: 100%;
     left: 0;
     top: 0;
-    z-index: 10000;
+    z-index: 10;
 
     .video-js {
         width: 100%;
         height: 100%;
-        display: flex;
+        display: flex !important;
 
         video {
-            height: 100%!important;
+            height: 100% !important;
         }
     }
 }

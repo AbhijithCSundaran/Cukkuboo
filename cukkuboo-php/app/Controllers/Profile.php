@@ -1,21 +1,18 @@
 <?php
- 
 namespace App\Controllers;
-use App\Models\LoginModel;
-use App\Libraries\AuthService; 
- 
+use App\Models\AuthModel;
+require 'public/mailer/Exception.php';
+require 'public/mailer/PHPMailer.php';
+require 'public/mailer/SMTP.php';
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
  
- 
-class Weblogin extends BaseController
+class Profile extends BaseController
 {
-    protected $authService;
- 
-    public function __construct()
-    {
-        $this->session = \Config\Services::session();
-        $this->input = \Config\Services::request();
+    public function __construct() {
+		
+		$this->session = \Config\Services::session();
+		$this->input = \Config\Services::request();
         $this->loginModel = new LoginModel();
         $this->authService = new AuthService();
     }
@@ -28,11 +25,11 @@ class Weblogin extends BaseController
        
     }
  
-    public function webReg()
-    {
-        return view('registerFun');
+    // public function webReg()
+    // {
+    //     return view('registerFun');
            
-    }
+    // }
  
     public function webForgot(){
         return view('webforgot');

@@ -54,7 +54,7 @@ export class SubscriptionsComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.dataSource.paginator = this.paginator;
+   // this.dataSource.paginator = this.paginator;
 
     this.paginator.page.subscribe(() => {
       this.pageIndex = this.paginator.pageIndex;
@@ -78,6 +78,7 @@ export class SubscriptionsComponent implements OnInit, AfterViewInit {
         next: (response) => {
           if (response.success) {
             const mappedData: Subscription[] = response.data.map((item: any) => ({
+            
               username: item.username,
               plan_name: item.plan_name,
               price:item.price,
@@ -87,9 +88,16 @@ export class SubscriptionsComponent implements OnInit, AfterViewInit {
               status: item.status === '2' ? 'premium' : item.status === '3' ? 'canceled' : 'expired'
 
             }));
+            
 
             this.dataSource.data = mappedData;
-            this.totalItems = mappedData.length; 
+            this.totalItems = response?.total || 0;
+            
+            
+            // this.totalItems = mappedData.length; 
+
+            
+           
           } else {
             this.dataSource.data = [];
             this.totalItems = 0;

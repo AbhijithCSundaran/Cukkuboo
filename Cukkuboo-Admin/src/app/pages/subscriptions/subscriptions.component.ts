@@ -44,6 +44,8 @@ export class SubscriptionsComponent implements OnInit, AfterViewInit {
   searchText: string = '';
   pageIndex = 0;
   pageSize = 10;
+  fromDate: Date | null = null;
+  toDate: Date | null = null;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
@@ -54,7 +56,7 @@ export class SubscriptionsComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-   // this.dataSource.paginator = this.paginator;
+    // this.dataSource.paginator = this.paginator;
 
     this.paginator.page.subscribe(() => {
       this.pageIndex = this.paginator.pageIndex;
@@ -71,43 +73,61 @@ export class SubscriptionsComponent implements OnInit, AfterViewInit {
     this.fetchSubscriptions(this.pageIndex, this.pageSize, this.searchText);
   }
 
-  fetchSubscriptions(pageIndex: number, pageSize: number, searchText: string): void {
-    this.userSubscriptionService
-      .listUserSubscriptions(pageIndex, pageSize, searchText)
-      .subscribe({
-        next: (response) => {
-          if (response.success) {
-            const mappedData: Subscription[] = response.data.map((item: any) => ({
-            
-              username: item.username,
-              plan_name: item.plan_name,
-              price:item.price,
-              start_date: item.start_date,
-              end_date: item.end_date,
-              // status: item.status === '1' ? 'active' : 'expired'
-              status: item.status === '2' ? 'premium' : item.status === '3' ? 'canceled' : 'expired'
+ fetchSubscriptions(pageIndex: number, pageSize: number, searchText: string): void {
+  const from = this.fromDate ? this.formatDate(this.fromDate) : '';
+  const to = this.toDate ? this.formatDate(this.toDate) : '';
 
-            }));
-            
+  this.userSubscriptionService
+    .listUserSubscriptions(pageIndex, pageSize, searchText, from, to)
+    .subscribe({
+      next: (response) => {
+        if (response.success) {
+          const mappedData: Subscription[] = response.data.map((item: any) => ({
+            username: item.username,
+            plan_name: item.plan_name,
+            price: item.price,
+            start_date: item.start_date,
+            end_date: item.end_date,
+            status: item.status === '2' ? 'premium' : item.status === '3' ? 'canceled' : 'expired'
+          }));
 
-            this.dataSource.data = mappedData;
-            this.totalItems = response?.total || 0;
-            
-            
-            // this.totalItems = mappedData.length; 
-
-            
-           
-          } else {
-            this.dataSource.data = [];
-            this.totalItems = 0;
-          }
-        },
-        error: (error) => {
-          console.error('Failed to fetch subscriptions:', error);
+          this.dataSource.data = mappedData;
+          this.totalItems = response?.total || 0;
+        } else {
           this.dataSource.data = [];
           this.totalItems = 0;
         }
-      });
+      },
+      error: (error) => {
+        console.error('Failed to fetch subscriptions:', error);
+        this.dataSource.data = [];
+        this.totalItems = 0;
+      }
+    });
+}
+
+formatDate(date: Date): string {
+  const d = new Date(date);
+  const year = d.getFullYear();
+  const month = (`0${d.getMonth() + 1}`).slice(-2);
+  const day = (`0${d.getDate()}`).slice(-2);
+  return `${year}-${month}-${day}`;
+}
+
+  onFromDateChange(event: any) {
+    this.fromDate = event.value;
+    this.applyDateFilter();
+  }
+
+  onToDateChange(event: any) {
+    this.toDate = event.value;
+    this.applyDateFilter();
+  }
+
+  applyDateFilter() {
+this.pageIndex = 0;
+  this.paginator.pageIndex = 0;
+  this.fetchSubscriptions(this.pageIndex, this.pageSize, this.searchText);
+
   }
 }

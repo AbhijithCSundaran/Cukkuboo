@@ -64,7 +64,7 @@ public function getlist()
 
     $isFullList = ($pageSize === null || $pageSize == -1);
 
-    $watchLaterModel = new \App\Models\WatchLaterModel();
+    $watchLaterModel = new watchLaterModel();
 
     if ($isFullList) {
         $result = $watchLaterModel->getAllList($search);

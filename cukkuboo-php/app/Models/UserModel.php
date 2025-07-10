@@ -112,10 +112,27 @@ class UserModel extends Model
     }
 }
     public function setUserSubscription($userId)
-    {
-        return $this->where('user_id', $userId)
-                    ->set(['subscription' => 'free'])
-                    ->update();
-    }
+{
+    return $this->where('user_id', $userId)
+                ->set([
+                    'subscription' => 'cancel',
+                    'updated_at'  => date('Y-m-d H:i:s')
+                ])
+                ->update();
+}
+
+    public function markExpiredUserSubscriptions($userId)
+{
+    $today = date('Y-m-d');
+    return $this->where('user_id', $userId)
+                ->where('end_date <', $today)
+                ->where('subscription !=', 'expired')
+                ->set([
+                    'subscription' => 'expired',
+                    'updated_at'  => date('Y-m-d H:i:s')
+                ])
+                ->update();
+}
+
 
 }

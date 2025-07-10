@@ -45,7 +45,7 @@ class SavehistoryModel extends Model
     if (!empty($search)) {
         $builder->like('movies_details.title', $search);
     }
-
+    $builder->orderBy('watch_history.watch_history_id', 'DESC');
     return $builder;
 }
 

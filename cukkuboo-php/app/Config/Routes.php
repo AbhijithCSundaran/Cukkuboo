@@ -91,6 +91,9 @@ $routes->get('usersub/get/(:num)', 'Usersub::getSubscriptionById/$1');
 $routes->get('usersub/get', 'Usersub::getSubscriptionById');
 $routes->delete('usersub/delete/(:num)', 'Usersub::deleteSubscription/$1');
 $routes->delete('usersub/cancelSubscription', 'Usersub::cancelSubscription');
+$routes->get('usersub/active', 'Usersub::getActiveSubscription');
+$routes->get('usersub/history', 'Usersub::getExpiredSubscriptions');
+
 //Reels like and views
 
 $routes->post('reellike/like', 'ReelLike::reelLike');

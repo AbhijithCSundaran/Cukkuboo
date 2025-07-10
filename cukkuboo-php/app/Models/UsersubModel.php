@@ -94,12 +94,15 @@ public function currentTotalRevenue()
 }
 public function getTransactions()
 {
-    return $this->whereNotIn('status', [3, 9])
-                ->where('MONTH(created_on)', date('m'))
-                ->where('YEAR(created_on)', date('Y'))
-                ->orderBy('created_on', 'DESC')
+    return $this->select('user_subscription.*, user.username')
+                ->join('user', 'user.user_id = user_subscription.user_id', 'left')
+                ->whereNotIn('user_subscription.status', [3, 9])
+                ->where('MONTH(user_subscription.created_on)', date('m'))
+                ->where('YEAR(user_subscription.created_on)', date('Y'))
+                ->orderBy('user_subscription.created_on', 'DESC')
                 ->findAll();
 }
+
 
    
 }

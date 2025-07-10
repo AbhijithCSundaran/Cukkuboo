@@ -24,7 +24,7 @@ export class PlanService {
   constructor(private http: HttpClient) {}
 
   listPlans(pageIndex: number = 0, pageSize: number = 10, searchText: string = ''): Observable<any> {
-    return this.http.get(`${this.apiUrl}subscriptionplan/list?pageIndex=${pageIndex}&pageSize=${pageSize}&searchText=${searchText}`, {
+    return this.http.get(`${this.apiUrl}subscriptionplan/list?pageIndex=${pageIndex}&pageSize=${pageSize}&search=${searchText}`, {
       headers: this.headers
     });
   }

@@ -30,11 +30,12 @@ export class UserService {
     return this.http.post(this.apiUrl + 'user/register', body, { headers: this.headers });
   }
 
+
   list(pageIndex: number = 0, pageSize: number = 10, searchText: string = ''): Observable<any> {
-     
-    return this.http.get(`${this.apiUrl}user/list?pageIndex=${pageIndex}&pageSize=${pageSize}searchText=${searchText}`,
-      { headers: this.headers });
-  }
+  return this.http.get(`${this.apiUrl}user/list?pageIndex=${pageIndex}&pageSize=${pageSize}&search=${searchText}`, {
+    headers: this.headers
+  });
+}
 
   // for edit prefill
   getUserById(id: number): Observable<any> {

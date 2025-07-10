@@ -26,7 +26,7 @@ export class ReelsService {
 
    listReels(pageIndex: number = 0, pageSize: number = 10, searchText: string = ''): Observable<any> {
     // const body = model;
-    return this.http.get(this.apiUrl + 'reels/details?pageIndex=' + pageIndex + '&pageSize=' + pageSize + '&searchText=' + searchText,
+    return this.http.get(this.apiUrl + 'reels/details?pageIndex=' + pageIndex + '&pageSize=' + pageSize + '&search=' + searchText,
       { headers: this.headers });
   }
   addReels(model: any): Observable<any> {

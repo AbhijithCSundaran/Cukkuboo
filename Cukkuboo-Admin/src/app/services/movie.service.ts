@@ -19,13 +19,13 @@ export class MovieService {
     });
   }
   constructor(private http: HttpClient) { }
+  
+listmovies(pageIndex: number = 0, pageSize: number = 10, searchText: string = ''): Observable<any> {
+  return this.http.get(this.apiUrl + 'movie/moviedetails?pageIndex=' + pageIndex + '&pageSize=' + pageSize + '&search=' + searchText, {
+    headers: this.headers
+  });
+}
 
-
-  listmovies(pageIndex: number = 0, pageSize: number = 10, searchText: string = ''): Observable<any> {
-    // const body = model;
-    return this.http.get(this.apiUrl + 'movie/moviedetails?pageIndex=' + pageIndex + '&pageSize=' + pageSize + '&searchText=' + searchText,
-      { headers: this.headers });
-  }
   addmovies(model: any): Observable<any> {
     const body = model;
     return this.http.post(this.apiUrl + 'movie/store', body, { headers: this.headers });
@@ -44,14 +44,20 @@ export class MovieService {
     return this.http.delete(`${this.apiUrl}movie/delete/${id}`, { headers: this.headers });
   }
 
-  getMostWatchedMovies(): Observable<any> {
-    return this.http.get(`${this.apiUrl}movies/mostwatchmovie`, {
-      headers: this.headers
-    });
-  }
+//   getMostWatchedMovies(): Observable<any> {
+//     return this.http.get(`${this.apiUrl}movies/mostwatchmovie`, {
+//       headers: this.headers
+//     });
+//   }
 
-getLatestMovies(): Observable<any> {
-  return this.http.get(`${this.apiUrl}movies/latestmovies`, {
+// getLatestMovies(): Observable<any> {
+//   return this.http.get(`${this.apiUrl}movies/latestmovies`, {
+//     headers: this.headers
+//   });
+// }
+
+getDashboardData(): Observable<any> {
+  return this.http.get(`${this.apiUrl}movies/dashboard`, {
     headers: this.headers
   });
 }

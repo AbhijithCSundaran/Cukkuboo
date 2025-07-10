@@ -306,6 +306,7 @@ public function getUserList()
         $userQuery->groupStart()
                   ->like('username', $search)         
                   ->orLike('email', $search)
+                  ->orLike('subscription', $search)
                   ->orLike('phone', $search)
                   ->orLike('country', $search)
                  ->groupEnd();

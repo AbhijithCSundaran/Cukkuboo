@@ -69,28 +69,20 @@ class Notification extends ResourceController
     $pageIndex = (int) $this->request->getGet('pageIndex');
     $pageSize  = (int) $this->request->getGet('pageSize');
     $search    = $this->request->getGet('search');
+
     if ($pageSize <= 0) {
         $pageSize = 10;
     }
 
     $offset = $pageIndex * $pageSize;
-    $builder = $this->notificationModel->where('status !=', 9);
-    if (!empty($search)) {
-        $builder->groupStart()
-            ->like('title', $search)
-            ->orLike('content', $search)
-            ->groupEnd();
-    }
-    $total = $builder->countAllResults(false);
-
-    $notifications = $builder->orderBy('created_on', 'DESC')->findAll($pageSize, $offset);
-                            
+    $notificationsModel = new notificationModel();
+    $data = $notificationsModel->getUserNotifications($pageSize, $offset, $search);
 
     return $this->respond([
-        'success'   => true,
-        'message'   => 'Notifications fetched successfully.',
-        'data'      => $notifications,
-        'total'     => $total
+        'success' => true,
+        'message' => 'Notifications fetched successfully.',
+        'data'    => $data['notifications'],
+        'total'   => $data['total']
     ]);
 }
 

@@ -51,8 +51,8 @@ class Weblogin extends BaseController
             $userLog = $this->loginModel->getLoginAccount($email, $password);
             if ($userLog) {
                 $this->session->set([
-                    'zd_uid' => $userLog->cust_Id,
-                    'zd_uname' => $userLog->cust_Name,
+                    'id' => $userLog->user_Id,
+                    'name' => $userLog->user_Name,
                     'role' => 'user',
                 ]);
  

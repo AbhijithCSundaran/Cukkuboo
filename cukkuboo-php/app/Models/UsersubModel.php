@@ -57,9 +57,6 @@ class UsersubModel extends Model
                     ->whereIn('status', [1, 2, 3])
                     ->findAll();
     }
-
-
-   
     public function DeleteSubscriptionById($status, $id, $modifiedBy = null)
 {
     return $this->update($id, [
@@ -100,7 +97,7 @@ public function getTransactions()
                 ->where('MONTH(user_subscription.created_on)', date('m'))
                 ->where('YEAR(user_subscription.created_on)', date('Y'))
                 ->orderBy('user_subscription.created_on', 'DESC')
-                ->findAll();
+                ->findAll(10, 0);
 }
 
 

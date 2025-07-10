@@ -423,7 +423,7 @@ public function getExpiredSubscriptions()
     }
 
     $userId = $user['user_id'];
-
+    $this->userModel->markExpiredUserSubscriptions($userId);
     // All subscriptions with status 9 (expired/deleted)
     $expiredSubs = $this->usersubModel
         ->where('user_id', $userId)

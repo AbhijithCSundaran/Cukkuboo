@@ -57,7 +57,7 @@ class WatchLaterModel extends Model
 
     public function getAllList($search = '')
     {
-        // $db = \Config\Database::connect();
+        
         $builder = $this->db->table('watch_later wl')
             ->select('wl.*, m.title, m.thumbnail, m.banner')
             ->join('movies_details m', 'm.mov_id = wl.mov_id', 'left')

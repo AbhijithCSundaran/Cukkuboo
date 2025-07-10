@@ -53,7 +53,7 @@ export class AddUserComponent implements OnInit {
       phone: ['', [Validators.pattern(/^\d{0,15}$/), Validators.maxLength(15)]],
       email: ['', [Validators.email]],
       country: ['', [Validators.pattern(/^[a-zA-Z\s]*$/)]],
-      dob: ['', Validators.required],
+      date_of_birth: ['', Validators.required],
       status: ['1', Validators.required],
       subscription: ['free', Validators.required]
     });
@@ -81,7 +81,7 @@ export class AddUserComponent implements OnInit {
             phone: data.phone,
             email: data.email,
             country: data.country,
-            dob: data.dob ? new Date(data.dob) : '',
+            date_of_birth: data.date_of_birth,
             status: data.status,
             subscription: data.subscription
           });

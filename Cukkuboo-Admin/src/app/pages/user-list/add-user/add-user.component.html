@@ -43,12 +43,12 @@
       </div>
 
       <!-- Country -->
-      <div class="w-50 px-2 pb-3">
+      <!-- <div class="w-50 px-2 pb-3">
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Country</mat-label>
           <input matInput formControlName="country" placeholder="Enter country" (input)="onCountryInput($event)" />
         </mat-form-field>
-      </div>
+      </div> -->
 
       <!-- Date of Birth -->
       <div class="w-50 px-2 pb-3">
@@ -57,7 +57,7 @@
           <input
             matInput
             [matDatepicker]="dobPicker"
-            formControlName="dob"
+            formControlName="date_of_birth"
             [max]="today"
             placeholder="Choose DOB"
             (click)="dobPicker.open()"

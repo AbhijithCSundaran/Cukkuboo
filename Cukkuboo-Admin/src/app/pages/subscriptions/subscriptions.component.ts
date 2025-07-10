@@ -43,7 +43,7 @@ export class SubscriptionsComponent implements OnInit, AfterViewInit {
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  constructor(private userSubscriptionService: UserSubscriptionService) {}
+  constructor(private userSubscriptionService: UserSubscriptionService) { }
 
   ngOnInit(): void {
     this.fetchSubscriptions(this.pageIndex, this.pageSize, this.searchText);
@@ -74,7 +74,7 @@ export class SubscriptionsComponent implements OnInit, AfterViewInit {
         next: (response) => {
           if (response.success) {
             const mappedData: Subscription[] = response.data.map((item: any) => ({
-               username: item.username,
+              username: item.username,
               plan_name: item.plan_name,
               start_date: item.start_date,
               end_date: item.end_date,

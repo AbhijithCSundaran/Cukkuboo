@@ -5,6 +5,8 @@ import { RouterModule } from '@angular/router';
 import { PlanService } from '../../services/plan.service';
 import { SubscriptionService } from '../../services/subscription.service';
 import { StorageService } from '../../core/services/TempStorage/storageService';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmationDialogComponent } from '../../core/components/confirmation-dialog/confirmation-dialog.component';
 
 @Component({
   selector: 'app-subscribe',
@@ -33,7 +35,8 @@ export class SubscribeComponent implements OnInit {
     private planService: PlanService,
     private storageService: StorageService,
     private subscriptionService: SubscriptionService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private dialog: MatDialog,
   ) { }
 
   ngOnInit(): void {
@@ -66,31 +69,41 @@ export class SubscribeComponent implements OnInit {
     });
   }
 
-  subscribeToPlan(plan: any): void {
-    if (this.UserData?.subscription == 'free') {
 
-      this.selectedPlan = plan;
-      this.acknowledged = false;
-      this.showSubscriptionModal = true;
-    }
-    else {
-      this.snackBar.open('You are already subscribed.', '', {
+
+  askToSubscribe(plan: any) {
+    if (this.UserData?.subscription == 'premium') {
+      this.snackBar.open('You are already subscribed to a plan.', '', {
         duration: 3000,
         verticalPosition: 'top',
         horizontalPosition: 'center',
         panelClass: ['snackbar-warn']
       });
+      return;
     }
+    else if (!this.acknowledged) {
+      this.snackBar.open('Please read and acknowledge our Privacy Policy & Terms of Use.', '', {
+        duration: 3000,
+        verticalPosition: 'top',
+        horizontalPosition: 'center',
+        panelClass: ['snackbar-warn']
+      });
+      return;
+    }
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      data: {
+        message: `<p>Are you sure to Subscribe <span>"${plan?.plan_name}"</span> plan?</p>`
+      },
+    });
+    dialogRef.afterClosed().subscribe((result: any) => {
+      if (result) {
+        this.confirmSubscription(plan);
+      }
+    })
   }
 
-  closeSubscriptionModal(): void {
-    this.showSubscriptionModal = false;
-    this.selectedPlan = null;
-    this.acknowledged = false;
-  }
-
-  confirmSubscription(): void {
-    if (!this.selectedPlan?.subscriptionplan_id) {
+  confirmSubscription(plan: any): void {
+    if (!plan?.subscriptionplan_id) {
       this.snackBar.open('Invalid plan selected', '', {
         duration: 3000,
         verticalPosition: 'top',
@@ -101,18 +114,18 @@ export class SubscribeComponent implements OnInit {
     }
 
     const model = {
-      subscriptionplan_id: this.selectedPlan.subscriptionplan_id
+      subscriptionplan_id: plan.subscriptionplan_id
     };
 
     this.subscriptionService.saveSubscription(model).subscribe({
       next: (res) => {
-        if(res.success){
+        if (res.success) {
           this.UserData.subscription = 'premium';
-           this.storageService.updateItem('userData',this.UserData);
+          this.storageService.updateItem('userData', this.UserData);
           this.showSubscriptionModal = false;
           this.selectedPlan = null;
           this.acknowledged = false;
-  
+
           this.snackBar.open(
             res?.success ? 'Subscription successful!' : res?.messages?.error || 'Subscription failed.',
             '',

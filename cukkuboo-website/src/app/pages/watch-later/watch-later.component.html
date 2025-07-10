@@ -24,7 +24,7 @@
 <!-- Clear All Button -->
 <section class="search-section pb-2">
   <div class="col-12 d-flex justify-content-end mr-2 mt-0 mb-4">
-    <button *ngIf="watchLaterList.length" class="btn btn-danger btn-sm me-3" (click)="openClearAllModal()">
+    <button *ngIf="watchLaterList.length" class="btn btn-danger btn-sm me-3" (click)="askToClearAll()">
       Clear All
     </button>
   </div>
@@ -49,7 +49,7 @@
                 <h3 class="mb-0">
                   <a>{{ item.title }}</a>
                 </h3>
-                <button class="btn btn-sm btn-outline-light" (click)="openDeleteModal(item, i)">
+                <button class="btn btn-sm btn-outline-light" (click)="askToRemoveItem(item, i)">
                   <i class="fas fa-trash-alt"></i>
                 </button>
               </div>
@@ -92,28 +92,3 @@
     }
   </div>
 </section>
-
-<!-- Delete Confirmation Modal -->
-<div class="modal" [class.show]="showDeleteModal">
-  <div class="modal-content">
-    <p>
-      Are you sure you want to remove
-      <span class="highlight">"{{ itemToDelete?.title }}"</span> from Watch Later?
-    </p>
-    <div class="modal-actions">
-      <button class="btn-yes" (click)="confirmDelete()">Delete</button>
-      <button class="btn-no" (click)="cancelDelete()">Cancel</button>
-    </div>
-  </div>
-</div>
-
-<!-- Clear All Confirmation Modal -->
-<div class="modal" [class.show]="showClearAllModal">
-  <div class="modal-content">
-    <p>Are you sure you want to <span class="highlight">clear all</span> items from Watch Later?</p>
-    <div class="modal-actions">
-      <button class="btn-yes" (click)="confirmClearAll()">Clear</button>
-      <button class="btn-no" (click)="cancelClearAll()">Cancel</button>
-    </div>
-  </div>
-</div>

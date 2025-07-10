@@ -4,6 +4,8 @@ import { RouterModule } from '@angular/router';
 import { MovieService } from '../../services/movie.service';
 import { environment } from '../../../environments/environment';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmationDialogComponent } from '../../core/components/confirmation-dialog/confirmation-dialog.component';
 
 @Component({
   selector: 'app-watch-later',
@@ -22,15 +24,11 @@ export class WatchLaterComponent implements OnInit {
   totalItems: number = 0;
   isLoading: boolean = false;
 
-  showDeleteModal: boolean = false;
-  showClearAllModal: boolean = false;
-  itemToDelete: any = null;
-  itemToDeleteIndex: number = -1;
-
   constructor(
+    private dialog: MatDialog,
     private snackBar: MatSnackBar,
     private movieService: MovieService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.loadWatchLaterList();
@@ -63,25 +61,23 @@ export class WatchLaterComponent implements OnInit {
     }
   }
 
-  openDeleteModal(item: any, index: number): void {
-    this.itemToDelete = item;
-    this.itemToDeleteIndex = index;
-    this.showDeleteModal = true;
+
+  askToRemoveItem(item: any, index: number) {
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      data: {
+        message: `<p>Are you sure you want to remove <span>"${item?.title}"</span> from Watch Later?</p>`
+      },
+    });
+    dialogRef.afterClosed().subscribe((result: any) => {
+      if (result) {
+        this.confirmDelete(item, index);
+      }
+    })
   }
 
-  cancelDelete(): void {
-    this.itemToDelete = null;
-    this.itemToDeleteIndex = -1;
-    this.showDeleteModal = false;
-  }
-
-  confirmDelete(): void {
-    const id = this.itemToDelete?.watch_later_id;
-    const index = this.itemToDeleteIndex;
-
-    if (!id || index < 0) return;
-
-    this.movieService.deleteWatchLater(id).subscribe({
+  confirmDelete(item: any, index: number): void {
+    if (!item || index < 0) return;
+    this.movieService.deleteWatchLater(item.watch_later_id).subscribe({
       next: (res) => {
         if (res?.success) {
           this.watchLaterList.splice(index, 1);
@@ -100,7 +96,6 @@ export class WatchLaterComponent implements OnInit {
             panelClass: ['snackbar-danger']
           });
         }
-        this.cancelDelete();
       },
       error: () => {
         this.snackBar.open('Something went wrong', '', {
@@ -109,17 +104,19 @@ export class WatchLaterComponent implements OnInit {
           horizontalPosition: 'center',
           panelClass: ['snackbar-danger']
         });
-        this.cancelDelete();
       }
     });
   }
 
-  openClearAllModal(): void {
-    this.showClearAllModal = true;
-  }
-
-  cancelClearAll(): void {
-    this.showClearAllModal = false;
+  askToClearAll() {
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      data: { message: `<p>Are you sure you want to <span>clear all</span> Watch Later?</p>` },
+    });
+    dialogRef.afterClosed().subscribe((result: any) => {
+      if (result) {
+        this.confirmClearAll();
+      }
+    })
   }
 
   confirmClearAll(): void {
@@ -142,7 +139,6 @@ export class WatchLaterComponent implements OnInit {
             panelClass: ['snackbar-danger']
           });
         }
-        this.cancelClearAll();
       },
       error: (err) => {
         console.error('Clear Watch Later error:', err);
@@ -152,7 +148,6 @@ export class WatchLaterComponent implements OnInit {
           horizontalPosition: 'center',
           panelClass: ['snackbar-danger']
         });
-        this.cancelClearAll();
       }
     });
   }

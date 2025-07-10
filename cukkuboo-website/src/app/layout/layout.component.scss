@@ -5,11 +5,11 @@
     overflow-y: auto;
     padding-top: 90px;
 
-    @media (max-width:991px) {
+    @media (max-width: 991px) {
         padding-top: 75px;
     }
 
-    router-outlet +*{
-        min-height: 100vh;
+    .router-container {
+        min-height: calc(100vh - 90px);
     }
 }

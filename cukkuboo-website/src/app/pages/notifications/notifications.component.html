@@ -15,7 +15,7 @@
       </div>
 
       <div class="scrollable-list">
-        <div *ngFor="let notification of notifications" 
+        <div *ngFor="let notification of notifications;let i=index" 
              class="notification-item"
              [class.active]="notification.notification_id === selectedNotification?.notification_id"
              [class.read]="notification.read"
@@ -26,9 +26,7 @@
           </div>
           <div class="date">{{ notification.date | date: 'short' }}</div>
           <div class="action-buttons">
-            <button class="delete-btn"
-                    (click)="openDeleteModal(notification); $event.stopPropagation()"
-                    title="Delete">
+            <button class="delete-btn"(click)="askToRemoveItem(notification,i);" title="Delete">
               <i class="fas fa-trash"></i>
             </button>
           </div>
@@ -59,18 +57,4 @@
       <p>No notifications found</p>
     </div>
   </ng-template>
-
-  <!-- Delete Confirmation Modal -->
-  <div class="modal" [class.show]="showDeleteModal">
-    <div class="modal-content">
-      <p>
-        Are you sure you want to delete
-        <span class="highlight">"{{ notificationToDelete?.title }}"</span>?
-      </p>
-      <div class="modal-actions">
-        <button class="btn-yes" (click)="confirmDelete()">Delete</button>
-        <button class="btn-no" (click)="cancelDelete()">Cancel</button>
-      </div>
-    </div>
-  </div>
 </div>

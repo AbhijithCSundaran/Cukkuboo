@@ -46,20 +46,10 @@
             </ul>
 
             <div class="mt-auto text-end">
-                <button class="btn btn-outline-danger btn-sm" (click)="cancelsubscriptionModal()">
+                <button class="btn btn-outline-danger btn-sm" (click)="askToConfirm()">
                     <i class="fa-solid fa-ban me-1"></i> Cancel Subscription
                 </button>
             </div>
-        </div>
-    </div>
-</div>
-<!--  Cancel subscription Modal -->
-<div class="modal" [class.show]="showSubscriptionModal">
-    <div class="modal-content">
-        <p>Are you sure you want to cancel <span class="highlight"> this Subscription</span>?</p>
-        <div class="modal-actions">
-            <button class="btn-yes" (click)="confirmYes()">Yes</button>
-            <button class="btn-no" (click)="cancel()">No</button>
         </div>
     </div>
 </div>

@@ -3,11 +3,13 @@ import { CommonModule } from '@angular/common';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { NotificationService } from '../../services/notification.service';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmationDialogComponent } from '../../core/components/confirmation-dialog/confirmation-dialog.component';
 
 @Component({
   selector: 'app-notifications',
   standalone: true,
-  imports: [CommonModule,MatSnackBarModule],
+  imports: [CommonModule, MatSnackBarModule],
   templateUrl: './notifications.component.html',
   styleUrls: ['./notifications.component.scss']
 })
@@ -21,14 +23,11 @@ export class NotificationsComponent implements OnInit {
   isLoadingDetail = false;
   isMarkingAll = false;
 
-  // Modal
-  showDeleteModal = false;
-  notificationToDelete: any = null;
-
   constructor(
     private notificationService: NotificationService,
-    private snackBar: MatSnackBar
-  ) {}
+    private snackBar: MatSnackBar,
+    private dialog: MatDialog,
+  ) { }
 
   ngOnInit() {
     this.loadNotifications();
@@ -98,42 +97,31 @@ export class NotificationsComponent implements OnInit {
     });
   }
 
-  openDeleteModal(notification: any) {
-    this.notificationToDelete = notification;
-    this.showDeleteModal = true;
+  askToRemoveItem(item: any, index: number) {
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      data: {
+        message: `<p>Are you sure you want to delete <span>"${item?.title}"</span>?</p>`
+      },
+    });
+    dialogRef.afterClosed().subscribe((result: any) => {
+      if (result) {
+        this.confirmDelete(item, index);
+      }
+    })
   }
 
-  cancelDelete() {
-    this.notificationToDelete = null;
-    this.showDeleteModal = false;
-  }
-
-  confirmDelete() {
-    const notification = this.notificationToDelete;
-    if (!notification) return;
-
+  confirmDelete(item: any, index: number) {
+    if (!item) return;
     this.notificationService
-      .deleteNotification(notification.notification_id)
-      .subscribe({
+      .deleteNotification(item.notification_id).subscribe({
         next: () => {
-          this.notifications = this.notifications.filter(
-            (n) => n.notification_id !== notification.notification_id
-          );
-          if (
-            this.selectedNotification?.notification_id ===
-            notification.notification_id
-          ) {
-            this.selectedNotification = null;
-          }
-
+          this.notifications.splice(index, 1);
           this.snackBar.open('Notification removed successfully', '', {
             duration: 3000,
             verticalPosition: 'top',
             horizontalPosition: 'center',
             panelClass: ['snackbar-success']
           });
-
-          this.cancelDelete();
         },
         error: () => {
           this.snackBar.open('Failed to remove notification', '', {
@@ -143,7 +131,6 @@ export class NotificationsComponent implements OnInit {
             panelClass: ['snackbar-danger']
           });
 
-          this.cancelDelete();
         }
       });
   }

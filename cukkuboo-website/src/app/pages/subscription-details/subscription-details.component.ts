@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { StorageService } from '../../core/services/TempStorage/storageService';
 import { UserService } from '../../services/user/user.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmationDialogComponent } from '../../core/components/confirmation-dialog/confirmation-dialog.component';
 
 @Component({
   selector: 'app-subscription-details',
@@ -14,9 +16,10 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class SubscriptionDetailsComponent implements OnInit {
   subscriptionData: any;
-  showSubscriptionModal: boolean = false;
-  constructor(private userService: UserService, private storageService: StorageService,
+  constructor(private userService: UserService,
+    private storageService: StorageService,
     private snackBar: MatSnackBar,
+    private dialog: MatDialog,
   ) { }
 
 
@@ -38,22 +41,25 @@ export class SubscriptionDetailsComponent implements OnInit {
     });
   }
 
-
-  cancelsubscriptionModal(): void {
-
-    this.showSubscriptionModal = true;
+  askToConfirm() {
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      data: {
+        message: `<p>Are you sure you want to cancel <span> Subscription</span>?</p>`
+      },
+    });
+    dialogRef.afterClosed().subscribe((result: any) => {
+      if (result) {
+        this.cancelSubscription();
+      }
+    })
   }
-  cancel(): void {
-    this.showSubscriptionModal = false;
-  }
-  confirmYes(): void {
 
+  cancelSubscription(): void {
     this.userService.cancelSubscriptionPlan().subscribe({
       next: (res: any) => {
         if (res.success) {
           console.log('Subscription cancelled successfully.');
           this.subscriptionData.status = '1';
-          this.showSubscriptionModal = false;
           this.snackBar.open('Subscription cancelled successfully.', '', {
             duration: 3000,
             verticalPosition: 'top',
@@ -68,7 +74,6 @@ export class SubscriptionDetailsComponent implements OnInit {
           verticalPosition: 'top',
           panelClass: ['snackbar-error']
         });
-        this.showSubscriptionModal = false;
       }
     });
 

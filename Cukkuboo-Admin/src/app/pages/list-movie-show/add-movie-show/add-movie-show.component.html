@@ -63,7 +63,21 @@
           </mat-form-field>
         </div>
 
-<div class="width-50 px-2 pb-3">
+    <!-- Release Date -->
+        <div class="width-50 px-2 pb-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Release Date</mat-label>
+            <input matInput [matDatepicker]="picker" formControlName="release_date" placeholder="Choose a date"
+              (click)="picker.open()" readonly />
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+            <mat-error>
+              <Validation-Messages [control]="movieForm.controls['release_date']"></Validation-Messages>
+            </mat-error>
+          </mat-form-field>
+        </div>
+         <!-- Genre-->
+<!-- <div class="width-50 px-2 pb-3">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Genre</mat-label>
             <mat-select formControlName="genre">
@@ -75,7 +89,7 @@
               <Validation-Messages [control]="movieForm.controls['genre']"></Validation-Messages>
             </mat-error>
           </mat-form-field>
-        </div>
+        </div> -->
 
         <!-- Description -->
         <div class="width-50 px-2 pb-3">
@@ -100,7 +114,7 @@
         </div>
 
         <!-- Category -->
-        <div class="width-50 px-2 pb-3">
+        <!-- <div class="width-50 px-2 pb-3">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Category</mat-label>
             <mat-select formControlName="category">
@@ -111,21 +125,9 @@
               <Validation-Messages [control]="movieForm.controls['category']"></Validation-Messages>
             </mat-error>
           </mat-form-field>
-        </div>
+        </div> -->
 
-        <!-- Release Date -->
-        <div class="width-50 px-2 pb-3">
-          <mat-form-field appearance="outline" class="w-100">
-            <mat-label>Release Date</mat-label>
-            <input matInput [matDatepicker]="picker" formControlName="release_date" placeholder="Choose a date"
-              (click)="picker.open()" readonly />
-            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-            <mat-datepicker #picker></mat-datepicker>
-            <mat-error>
-              <Validation-Messages [control]="movieForm.controls['release_date']"></Validation-Messages>
-            </mat-error>
-          </mat-form-field>
-        </div>
+    
 
         <!-- Rating -->
         <div class="width-50 px-2 pb-3">

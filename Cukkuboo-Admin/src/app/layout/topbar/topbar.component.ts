@@ -55,7 +55,7 @@ export class TopbarComponent implements OnInit {
     this.userService.logout().subscribe({
       next: (response) => {
         console.log('Logout API success:', response);
-        localStorage.removeItem('jwt');
+        localStorage.clear();
         this.showLogoutConfirm = false;
         this.router.navigate(['/login']);
         this.showSnackbar('Logged out successfully', 'Close', 3000, 'snackbar-success');

@@ -532,7 +532,7 @@ submitMovie() {
 
   this.movieService.addmovies(model).subscribe({
     next: (response) => {
-      console.log('Movie save response:', response); // ✅ Backend received duration?
+      console.log('Movie save response:', response); 
       this.showSnackbar('Movie saved successfully!', 'snackbar-success');
       this.router.navigate(['/list-movie-show']);
     },

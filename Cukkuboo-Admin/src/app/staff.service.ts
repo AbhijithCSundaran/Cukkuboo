@@ -31,7 +31,7 @@ register(model: any): Observable<any> {
   }
   // Get list of staff
  getStaffList(pageIndex: number = 0, pageSize: number = 10, searchText: string = ''): Observable<any> {
-  return this.http.get(`${this.apiUrl}staff/list?pageIndex=${pageIndex}&pageSize=${pageSize}&searchText=${encodeURIComponent(searchText)}`, {
+  return this.http.get(`${this.apiUrl}staff/list?pageIndex=${pageIndex}&pageSize=${pageSize}&search=${encodeURIComponent(searchText)}`, {
     headers: this.headers
   });
 }

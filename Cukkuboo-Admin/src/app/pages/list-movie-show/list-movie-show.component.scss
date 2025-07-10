@@ -141,12 +141,10 @@
     padding: 3px 6px;
   }
 
-  th.mat-column-slNo,
-  td.mat-column-slNo,
-  th.mat-column-genre,
-  td.mat-column-genre,
-  th.mat-column-category,
-  td.mat-column-category {
+   th.mat-column-status,
+  td.mat-column-status,
+  th.mat-column-access,
+  td.mat-column-access {
     display: none !important;
   }
 

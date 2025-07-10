@@ -46,8 +46,8 @@ onResize(event: any) {
       subItems: [
         {name:'List Movie/Show ',path:'/list-movie-show'},
      
-        { name: 'Categories', path: '/categories' },
-        { name: 'Genres', path: '/genres' },
+        // { name: 'Categories', path: '/categories' },
+        // { name: 'Genres', path: '/genres' },
         { name: 'Reels', path: '/reels' }
         
 

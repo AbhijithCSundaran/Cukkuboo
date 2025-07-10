@@ -23,13 +23,34 @@ class NotificationModel extends Model
         'modify_on',
     ];
  
-    public function getUserNotifications($userId)
+    public function getUserNotifications($limit, $offset, $search = null)
     {
-        return $this->where('user_id', $userId)
-                    ->where('status !=', 9)
-                    ->orderBy('created_on', 'DESC')
-                    ->findAll();
+        $builder = $this->db->table($this->table);
+        $builder->select('notification.*, user.username');
+        $builder->join('user', 'user.user_id = notification.user_id', 'left');
+        $builder->where('notification.status !=', 9);
+
+        if (!empty($search)) {
+            $builder->groupStart()
+                    ->like('notification.title', $search)
+                    ->orLike('notification.content', $search)
+                    ->orLike('user.username', $search)
+                    ->groupEnd();
+        }
+
+        $total = $builder->countAllResults(false);
+
+        $notifications = $builder->orderBy('notification.created_on', 'DESC')
+                                 ->limit($limit, $offset)
+                                 ->get()
+                                 ->getResultArray();
+
+        return [
+            'notifications' => $notifications,
+            'total'         => $total
+        ];
     }
+    
    public function getByUserId($userId)
     {
         return $this->where('user_id', $userId)

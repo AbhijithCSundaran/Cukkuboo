@@ -64,40 +64,24 @@ public function getlist()
 
     $isFullList = ($pageSize === null || $pageSize == -1);
 
-    if (!$isFullList) {
+    $watchLaterModel = new \App\Models\WatchLaterModel();
+
+    if ($isFullList) {
+        $result = $watchLaterModel->getAllList($search);
+    } else {
         $pageSize = (int) $pageSize;
         if ($pageSize <= 0) {
             $pageSize = 10;
         }
-        $offset = $pageIndex * $pageSize;
+
+        $result = $watchLaterModel->getPaginatedList($pageIndex, $pageSize, $search);
     }
-
-    $db = \Config\Database::connect();
-    $builder = $db->table('watch_later wl')
-        ->select('wl.*, m.title, m.thumbnail,m.banner')
-        ->join('movies_details m', 'm.mov_id = wl.mov_id', 'left')
-        ->where('wl.status !=', 9);  
-
-    if (!empty($search)) {
-        $builder->like('m.title', $search);
-    }
-    $totalBuilder = clone $builder;
-    $total = $totalBuilder->countAllResults(false);
-
-    if (!$isFullList) {
-        $builder->limit($pageSize, $offset);
-    }
-
-    $data = $builder
-        ->orderBy('wl.watch_later_id', 'DESC')
-        ->get()
-        ->getResult();
 
     return $this->respond([
         'success' => true,
         'message' => 'Watch Later list fetched successfully.',
-        'total' => $total,
-        'data' => $data
+        'total'   => $result['total'],
+        'data'    => $result['data']
     ]);
 }
 

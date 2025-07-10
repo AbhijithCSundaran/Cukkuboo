@@ -161,12 +161,7 @@ public function getMovieById($id)
  
    
     if (!$user) {
- 
-          if (isset($getmoviesdetails['access']) && $getmoviesdetails['access'] == 1) {
-           
-        } else {
-            $getmoviesdetails['video'] = null;
-        }
+         $getmoviesdetails['video'] = null;
     } else {
         $user_id = $user['user_id'];
  

@@ -200,6 +200,19 @@ public function getUserSubscriptions()
     }
 
     $offset = $pageIndex * $pageSize;
+    if (!empty($fromDate) && !$this->isValidDate($fromDate)) {
+    return $this->failValidationErrors('Enter a valid fromDate (YYYY-MM-DD).');
+    }
+
+    if (!empty($toDate) && !$this->isValidDate($toDate)) {
+        return $this->failValidationErrors('Enter a valid toDate (YYYY-MM-DD).');
+    }
+
+    if (!empty($fromDate) && !empty($toDate)) {
+        if ($fromDate > $toDate) {
+            return $this->failValidationErrors('fromDate cannot be later than toDate.');
+        }
+    }
 
     $userSubModel = new UsersubModel();
     $builder = $userSubModel->select('user_subscription.*, user.username')
@@ -213,6 +226,12 @@ public function getUserSubscriptions()
                 ->orLike('user_subscription.plan_name', $search)
                 ->orLike('user_subscription.start_date', $search)
                 ->groupEnd();
+    }
+     if (!empty($fromDate)) {
+        $builder->where('user_subscription.created_on >=', $fromDate . ' 00:00:00');
+    }
+    if (!empty($toDate)) {
+        $builder->where('user_subscription.created_on <=', $toDate . ' 23:59:59');
     }
     $total = $builder->countAllResults(false);
 
@@ -437,6 +456,10 @@ public function getExpiredSubscriptions()
         'data'    => $formatted
     ]);
 }
-
+private function isValidDate($date, $format = 'Y-m-d')
+    {
+        $d = \DateTime::createFromFormat($format, $date);
+        return $d && $d->format($format) === $date;
+    }
 
 }

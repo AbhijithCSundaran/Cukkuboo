@@ -28,59 +28,72 @@ class Usersub extends ResourceController
     $data = $this->request->getJSON(true);
     $authHeader = $this->request->getHeaderLine('Authorization');
     $user = $this->authService->getAuthenticatedUser($authHeader);
-
+ 
     if (!$user || !isset($user['user_id'])) {
         return $this->failUnauthorized('Unauthorized user.');
     }
-
+ 
     $userId = $user['user_id'];
     $planId = $data['subscriptionplan_id'] ?? null;
+    $today = date('Y-m-d');
+    $activeSub = $this->usersubModel
+    ->where('user_id', $userId)
+    ->where('status', '2')  // '2' is your active status
+    ->where('end_date >=', $today)
+    ->first();
 
+if ($activeSub) {
+    return $this->respond([
+        'success' => false,
+        'message' => 'You already have an active subscription. You cannot subscribe to a new plan until it expires.',
+        'data'    => []
+    ]);
+}
+
+ 
     if (!$planId) {
         return $this->failValidationErrors('subscriptionplan_id is required.');
     }
-
+ 
     $plan = $this->subscriptionPlanModel->getPlanById($planId);
     if (!$plan || (isset($plan['status']) && $plan['status'] == 9)) {
         return $this->failNotFound('This subscription plan has been deleted or is not available.');
     }
-
-    $planName  = $plan['plan_name'];
-    $price = (float) ($plan['discount_price'] ?? 0); 
+ 
+    $planName = $plan['plan_name'];
+    $price = (float) ($plan['discount_price'] ?? 0);
     $startDate = date('Y-m-d');
-
+ 
     try {
         $start = new \DateTime($startDate);
         $end = clone $start;
-        $end = $end->add(new \DateInterval("P{$plan['period']}D"));
+        $end->add(new \DateInterval("P{$plan['period']}D"));
         $endDate = $end->format('Y-m-d');
     } catch (\Exception $e) {
         return $this->failValidationErrors('Invalid plan period.');
     }
-
-    
+ 
     $status = 1;
     $planType = 'Premium';
-
     $payload = [
         'user_id'             => $userId,
         'subscriptionplan_id' => $planId,
         'plan_name'           => $planName,
         'price'               => $price,
-        'start_date' => date('d F Y', strtotime($startDate)),
-        'end_date'   => date('d F Y', strtotime($endDate)),
-         'status'              => $status,
+        'start_date'          => $startDate,
+        'end_date'            => $endDate,
+        'status'              => $status,
         'created_on'          => date('Y-m-d H:i:s'),
         'created_by'          => $userId,
         'modify_on'           => date('Y-m-d H:i:s'),
         'modify_by'           => $userId
     ];
-
+ 
     $existing = $this->usersubModel
         ->where('user_id', $userId)
         ->where('subscriptionplan_id', $planId)
         ->first();
-
+ 
     if ($existing) {
         $this->usersubModel->update($existing['user_subscription_id'], $payload);
         $payload['user_subscription_id'] = $existing['user_subscription_id'];
@@ -91,17 +104,17 @@ class Usersub extends ResourceController
         $msg = 'Subscription added successfully.';
     }
     $this->userModel->update($userId, ['subscription' => 'premium']);
-   
     $payload['plan_type'] = $planType;
-
+    $payload['start_date'] = date('d F Y', strtotime($payload['start_date']));
+    $payload['end_date']   = date('d F Y', strtotime($payload['end_date']));
+ 
     return $this->respond([
         'success' => true,
         'message' => $msg,
         'data'    => $payload
     ]);
 }
-
-
+ 
   public function getSubscriptionById($id = null)
 {
     $authUser = $this->authService->getAuthenticatedUser(
@@ -166,16 +179,6 @@ class Usersub extends ResourceController
     ]);
 }
 
-
-private function mapPlanType($status)
-{
-    return match ((int) $status) {
-        1 => 'Free',
-        2 => 'Premium',
-        3 => 'Cancelled',
-        default => 'Unknown'
-    };
-}
 
 
 public function getUserSubscriptions()
@@ -341,5 +344,99 @@ public function cancelSubscription()
         'data'    => $transactions
     ]);
 }
+
+   public function getActiveSubscription()
+{
+    $authHeader = $this->request->getHeaderLine('Authorization');
+    $user = $this->authService->getAuthenticatedUser($authHeader);
+
+    if (!$user || !isset($user['user_id'])) {
+        return $this->failUnauthorized('Invalid or missing token.');
+    }
+
+    $userId = $user['user_id'];
+    $today = date('Y-m-d');
+
+    $activeSubs = $this->usersubModel
+        ->where('user_id', $userId)
+        ->where('status', '2')  // Active
+        ->where('end_date >=', $today)
+        ->first();
+
+    if (!$activeSubs) {
+        return $this->respond([
+            'success' => false,
+            'message' => 'No active subscription found.',
+            'data'    => []
+        ]);
+    }
+
+    $endDate = new \DateTime($activeSubs['end_date']);
+    $todayDate = new \DateTime($today);
+    $daysRemaining = $todayDate->diff($endDate)->format('%a');
+
+    $formatted = [
+        'subscription_id' => $activeSubs['user_subscription_id'],
+        'plan_name'       => $activeSubs['plan_name'],
+        'price'           => $activeSubs['price'],
+        'start_date'      => $activeSubs['start_date'],
+        'end_date'        => $activeSubs['end_date'],
+        'status'          => 'active',
+        'purchased_on'    => $activeSubs['created_on'],
+        'days_remaining'  => (int)$daysRemaining
+    ];
+
+    return $this->respond([
+        'success' => true,
+        'message' => 'Active subscription fetched successfully.',
+        'data' => $formatted
+    ]);
+}
+
+
+public function getExpiredSubscriptions()
+{
+    $authHeader = $this->request->getHeaderLine('Authorization');
+    $user = $this->authService->getAuthenticatedUser($authHeader);
+
+    if (!$user || !isset($user['user_id'])) {
+        return $this->failUnauthorized('Invalid or missing token.');
+    }
+
+    $userId = $user['user_id'];
+
+    // All subscriptions with status 9 (expired/deleted)
+    $expiredSubs = $this->usersubModel
+        ->where('user_id', $userId)
+        ->where('status', '9')
+        ->findAll();
+
+    if (empty($expiredSubs)) {
+        return $this->respond([
+            'success' => false,
+            'message' => 'No expired subscriptions found.',
+            'data'    => []
+        ]);
+    }
+
+    $formatted = array_map(function ($sub) {
+        return [
+            'subscription_id' => $sub['user_subscription_id'],
+            'plan_name'       => $sub['plan_name'],
+            'price'           => $sub['price'],
+            'start_date'      => $sub['start_date'],
+            'end_date'        => $sub['end_date'],
+            'status'          => 'expired',
+            'purchased_on'    => $sub['created_on']
+        ];
+    }, $expiredSubs);
+
+    return $this->respond([
+        'success' => true,
+        'message' => 'Expired subscriptions fetched successfully.',
+        'data'    => $formatted
+    ]);
+}
+
 
 }

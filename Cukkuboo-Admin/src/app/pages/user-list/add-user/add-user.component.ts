@@ -81,7 +81,7 @@ export class AddUserComponent implements OnInit {
             phone: data.phone,
             email: data.email,
             country: data.country,
-            date_of_birth: data.date_of_birth,
+            date_of_birth: new Date(data.date_of_birth), // convert to Date object
             status: data.status,
             subscription: data.subscription
           });
@@ -111,6 +111,11 @@ export class AddUserComponent implements OnInit {
   saveUser(): void {
     if (this.userForm.valid) {
       const model = this.userForm.value;
+
+      // 🔒 Fix timezone issue with DOB
+      const dob: Date = model.date_of_birth;
+      model.date_of_birth = this.formatDate(dob); // format to yyyy-mm-dd string
+
       this.userService.register(model).subscribe({
         next: (response) => {
           if (response.success) {
@@ -142,18 +147,18 @@ export class AddUserComponent implements OnInit {
     }
   }
 
+  formatDate(date: Date): string {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+
   onNumberInput(event: any): void {
     const input = event.target;
     const filteredValue = input.value.replace(/[^0-9]/g, '').slice(0, 15);
     input.value = filteredValue;
     this.userForm.get('phone')?.setValue(filteredValue, { emitEvent: false });
-  }
-
-  onCountryInput(event: any): void {
-    const input = event.target;
-    const filteredValue = input.value.replace(/[^a-zA-Z\s]/g, '');
-    input.value = filteredValue;
-    this.userForm.get('country')?.setValue(filteredValue, { emitEvent: false });
   }
 
   goBack(): void {

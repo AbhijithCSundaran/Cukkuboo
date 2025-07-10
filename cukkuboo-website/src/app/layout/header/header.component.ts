@@ -7,6 +7,8 @@ import { Subject, takeUntil } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { UserService } from '../../services/user/user.service';
 import { NotificationService } from '../../services/notification.service';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmationDialogComponent } from '../../core/components/confirmation-dialog/confirmation-dialog.component';
 
 @Component({
   selector: 'app-header',
@@ -23,8 +25,6 @@ export class HeaderComponent implements OnInit {
 
   notifications: any[] = [];
   hasUnreadNotification: boolean = true;
-
-  showSignOutModal: boolean = false;
 
   private _menuOpen = false;
   get menuOpen(): boolean {
@@ -43,7 +43,8 @@ export class HeaderComponent implements OnInit {
     private snackBar: MatSnackBar,
     private userService: UserService,
     private notificationService: NotificationService,
-    private router: Router
+    private router: Router,
+    private dialog: MatDialog,
   ) {
     this.storageService.onUpdateItem
       .pipe(takeUntil(this._unsubscribeAll))
@@ -63,8 +64,8 @@ export class HeaderComponent implements OnInit {
 
   goToNotifications(): void {
     // this.closeMenu();
-        this.router.navigate(['/notifications']);
-        this.hasUnreadNotification = false;
+    this.router.navigate(['/notifications']);
+    this.hasUnreadNotification = false;
 
     // this.notificationService.markAllAsRead().subscribe({
     //   next: () => {
@@ -77,22 +78,26 @@ export class HeaderComponent implements OnInit {
     // });
   }
 
- 
-  openSignOutModal(): void {
-    this.showSignOutModal = true;
-  }
 
-  cancelSignOut(): void {
-    this.showSignOutModal = false;
-  }
 
+  askToSignout() {
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      data: { message: `Are you sure you want to <b>sign out</b>?` },
+    });
+    dialogRef.afterClosed().subscribe((result: any) => {
+      if (result) {
+        this.confirmSignOut();
+      }
+    })
+  }
   confirmSignOut(): void {
-    this.showSignOutModal = false;
-
     this.userService.logout().subscribe({
       next: () => {
         localStorage.clear();
         this.storageService.updateItem('token', '');
+        this.storageService.updateItem('userData', null);
+        this.storageService.updateItem('username', '');
+        this.storageService.updateItem('subscription', '');
         this.snackBar.open('Signed out successfully', '', {
           duration: 3000,
           verticalPosition: 'top',

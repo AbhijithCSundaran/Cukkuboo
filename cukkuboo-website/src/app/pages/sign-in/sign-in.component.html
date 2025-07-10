@@ -1,5 +1,6 @@
-<section class="position-relative pb-0">
-  <div class="gen-login-page-background" style="background-image: url('assets/images/background/movie_banner.jpg')"></div>
+<section class="position-relative pb-0 sign_wrpr" [class.popup]="modalData">
+  <div class="gen-login-page-background" style="background-image: url('assets/images/background/movie_banner.jpg')">
+  </div>
 
   <div class="container">
     <div class="row">
@@ -11,7 +12,7 @@
               <img src="assets/images/logo-collapsed.png" alt="Logo" style="max-width: 60px;" />
             </div>
 
-            <h4 class="text-start">Sign In</h4>
+            <h4 class="text-start">Sign In{{modalData?' To Continue':''}}</h4>
 
             <!-- Email Field -->
             <mat-form-field appearance="outline" class="w-100">

@@ -1,5 +1,5 @@
 import { Component, HostListener } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { NavigationCancel, NavigationEnd, NavigationError, NavigationStart, Router, RouterOutlet } from '@angular/router';
 import { StorageService } from './core/services/TempStorage/storageService';
 import devtools from 'devtools-detect';
 import { CommonModule } from '@angular/common';
@@ -16,13 +16,32 @@ export class AppComponent {
   title = 'cukkuboo-website';
   isProd: boolean = environment.production;
   devToolIsOpen: boolean = false;
+  showloader: boolean = true;
+  isInitial: boolean = true;
   constructor(
     private storageService: StorageService,
     private userService: UserService,
+    private router: Router,
   ) {
+
+
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationStart) {
+        this.showloader = true;
+      } else if (
+        event instanceof NavigationEnd ||
+        event instanceof NavigationCancel ||
+        event instanceof NavigationError
+      ) {
+        setTimeout(() => {
+          this.showloader = false;
+          this.isInitial = false;
+        }, this.isInitial ? 1000 : 500);
+      }
+    });
     const token = localStorage.getItem('t_k');
     const name = localStorage.getItem('u_n');
-    if (token){
+    if (token) {
       this.storageService.updateItem('token', token);
       this.loadUserData();
     }

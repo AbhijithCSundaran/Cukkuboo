@@ -9,15 +9,23 @@ import {
   OnDestroy
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MovieService } from '../../services/movie.service';
 import { environment } from '../../../environments/environment';
 import { InfiniteScrollDirective } from '../../core/directives/infinite-scroll/infinite-scroll.directive';
+import { TruncatePipe } from '../../core/pipes/truncate-pipe';
+import { StorageService } from '../../core/services/TempStorage/storageService';
+import { MatDialog } from '@angular/material/dialog';
+import { SignInComponent } from '../sign-in/sign-in.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { CommonService } from '../../core/services/common.service';
 
 @Component({
   selector: 'app-reels',
   standalone: true,
-  imports: [CommonModule, InfiniteScrollDirective],
+  imports: [CommonModule, InfiniteScrollDirective,
+    TruncatePipe
+  ],
   templateUrl: './reels.component.html',
   styleUrls: ['./reels.component.scss']
 })
@@ -25,17 +33,9 @@ export class ReelsComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChildren('videoEl') videos!: QueryList<ElementRef<HTMLVideoElement>>;
   @ViewChild('reelScroll') reelScroll!: ElementRef<HTMLDivElement>;
 
-  reels: {
-    id: number;
-    video: string;
-    image: string;
-    title: string;
-    description: string;
-    likes: number;
-    views: number;
-    is_liked_by_user: boolean;
-  }[] = [];
+  reels: any[] = [];
 
+  userData: any;
   videoStates: boolean[] = [];
   mutedStates: boolean[] = [];
   hoveredIndex: number | null = null;
@@ -51,18 +51,97 @@ export class ReelsComponent implements OnInit, AfterViewInit, OnDestroy {
   private videoUrl = environment.apiUrl + 'uploads/videos/';
   private imageUrl = environment.apiUrl + 'uploads/images/';
 
-  constructor(private movieService: MovieService, private router: Router) {}
+  constructor(
+    private storageService: StorageService,
+    private movieService: MovieService,
+    private commonService: CommonService,
+    private router: Router,
+    private route: ActivatedRoute,
+    private dialog: MatDialog,
+    private snackBar: MatSnackBar,
+  ) {
+    this.route.paramMap.subscribe(params => {
+      const reelId = this.route.snapshot.queryParamMap.get('re');
+      if (reelId) this.getReelById(String(this.commonService.DecodeId(reelId)));
+    });
+  }
 
   ngOnInit(): void {
     document.body.classList.add('reels-page');
     this.loadReels();
+    this.userData = this.storageService.getItem('userData');
   }
 
+
+  ngAfterViewInit(): void {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const video = entry.target as HTMLVideoElement;
+          const index = Array.from(this.videos).findIndex((v) => v.nativeElement === video);
+
+          if (!video)
+            return;
+          if (entry.isIntersecting) {
+            video.play();
+            this.videoStates[index] = true;
+            document.querySelector('.site-header')?.classList.add('hidden-header');
+
+            if (index !== this.currentIndex) {
+              const prevMuted = this.mutedStates[this.currentIndex];
+              this.mutedStates[index] = prevMuted;
+              video.muted = prevMuted;
+              this.currentIndex = index;
+            }
+          } else {
+            video.pause();
+            this.videoStates[index] = false;
+            document.querySelector('.site-header')?.classList.remove('hidden-header');
+          }
+        });
+      },
+      { threshold: 0.6 }
+    );
+
+    this.videos.changes.subscribe(() => {
+      this.videos.forEach((videoRef) => observer.observe(videoRef.nativeElement));
+    });
+
+    setTimeout(() => {
+      this.videos.forEach((videoRef) => observer.observe(videoRef.nativeElement));
+    });
+
+    window.addEventListener('keydown', this.handleKeydown);
+  }
   onScroll(): void {
     this.pageIndex++;
     this.loadReels(this.pageIndex, this.pageSize, this.searchText);
   }
 
+  getReelById(id: string): void {
+    this.movieService.getReelById(id).subscribe({
+      next: (res) => {
+        if (res?.success) {
+          const newReel = [{
+            id: Number(res.data.reels_id),
+            video: this.videoUrl + (res.data.video || ''),
+            image: this.imageUrl + (res.data.thumbnail || 'default-thumb.jpg'),
+            title: this.capitalizeFirst(res.data.title),
+            description: this.capitalizeFirst(res.data.description),
+            likes: Number(res.data.likes) || 0,
+            views: Number(res.data.views) || 0,
+            is_liked_by_user: res.data.is_liked_by_user === true || res.data.is_liked_by_user === 1
+          }];
+
+          if (newReel) {
+            this.reels = [...this.reels, ...newReel];
+            this.videoStates.push(...new Array(newReel.length).fill(true));
+            this.mutedStates.push(...new Array(newReel.length).fill(true));
+          }
+        }
+      },
+    })
+  }
   loadReels(pageIndex: number = 0, pageSize: number = 10, search: string = ''): void {
     this.movieService.getReelsData(pageIndex, pageSize, search).subscribe({
       next: (res) => {
@@ -94,7 +173,26 @@ export class ReelsComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
+  openLoginModal() {
+    const dialogRef = this.dialog.open(SignInComponent, {
+      data: 'reel',
+      width: 'auto', height: 'auto',
+      panelClass: 'signin-modal'
+    });
+    dialogRef.afterClosed().subscribe((result: any) => {
+      if (result) {
+        this.userData = this.storageService.getItem('userData');
+      }
+      this.dialog.closeAll();
+    });
+  }
+
   toggleLike(reel: any): void {
+    this.userData = this.storageService.getItem('userData');
+    if (!this.userData) {
+      this.openLoginModal();
+      return;
+    }
     const alreadyLiked = reel.is_liked_by_user;
     const model = {
       reels_id: reel.id,
@@ -141,7 +239,7 @@ export class ReelsComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onShare(index: number): void {
-   
+
   }
 
   onHover(index: number): void {
@@ -158,49 +256,6 @@ export class ReelsComponent implements OnInit, AfterViewInit, OnDestroy {
     return text ? text.charAt(0).toUpperCase() + text.slice(1) : '';
   }
 
-  ngAfterViewInit(): void {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          const video = entry.target as HTMLVideoElement;
-          const index = Array.from(this.videos).findIndex((v) => v.nativeElement === video);
-
-          if (entry.isIntersecting) {
-            video.play();
-            this.videoStates[index] = true;
-            document.querySelector('.site-header')?.classList.add('hidden-header');
-
-            if (index !== this.currentIndex) {
-              const prevMuted = this.mutedStates[this.currentIndex];
-              this.mutedStates[index] = prevMuted;
-              video.muted = prevMuted;
-              this.currentIndex = index;
-            }
-          } else {
-            video.pause();
-            this.videoStates[index] = false;
-            document.querySelector('.site-header')?.classList.remove('hidden-header');
-          }
-        });
-      },
-      { threshold: 0.6 }
-    );
-
-    this.videos.changes.subscribe(() => {
-      this.videos.forEach((videoRef) => observer.observe(videoRef.nativeElement));
-    });
-
-    setTimeout(() => {
-      this.videos.forEach((videoRef) => observer.observe(videoRef.nativeElement));
-    });
-
-    window.addEventListener('keydown', this.handleKeydown);
-  }
-
-  ngOnDestroy(): void {
-    document.body.classList.remove('reels-page');
-    window.removeEventListener('keydown', this.handleKeydown);
-  }
 
   handleKeydown = (e: KeyboardEvent) => {
     if (e.key === 'ArrowDown') this.scrollToNext();
@@ -249,5 +304,30 @@ export class ReelsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   navigateHome(): void {
     this.router.navigate(['/']);
+  }
+
+  copyUrlToClipboard(reel: any): void {
+    if (document.hasFocus()) {
+      const url = window.location.href.split('?')[0] + '?re=' + this.commonService.EncodeId(reel.id);
+      navigator.clipboard.writeText(url).then(() => {
+        this.snackBar.open('Copied! Reel is ready to share.', '', {
+          duration: 3000,
+          verticalPosition: 'top',
+          horizontalPosition: 'center',
+          panelClass: ['snackbar-success']
+        });
+        // Optionally show a toast or snackbar
+      }).catch(err => {
+        console.error('Clipboard write failed:', err);
+      });
+    } else {
+      console.warn('Clipboard copy blocked: document not focused.');
+      alert('Please tap the screen and try again.');
+    }
+  }
+
+  ngOnDestroy(): void {
+    document.body.classList.remove('reels-page');
+    window.removeEventListener('keydown', this.handleKeydown);
   }
 }

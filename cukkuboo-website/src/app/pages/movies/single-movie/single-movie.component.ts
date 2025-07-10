@@ -8,6 +8,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { InfiniteScrollDirective } from '../../../core/directives/infinite-scroll/infinite-scroll.directive';
 import { JsPlayerComponent } from '../../_common/js-player/js-player.component';
 import { RouterLink } from '@angular/router';
+import { StorageService } from '../../../core/services/TempStorage/storageService';
+import { SignInComponent } from '../../sign-in/sign-in.component';
 
 @Component({
   selector: 'app-single-movie',
@@ -36,6 +38,7 @@ export class SingleMovieComponent implements OnInit {
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
     private movieService: MovieService,
+    private storageService: StorageService,
     private router: Router
   ) {
     this.route.paramMap.subscribe(params => {
@@ -78,13 +81,17 @@ export class SingleMovieComponent implements OnInit {
   }
 
   playVideo(video: string): void {
-    this.selectedVideo = video;
-
+    const userData = this.storageService.getItem('userData')
+    if (!userData) {
+      this.openLoginModal();
+      return;
+    }
     if (!video) {
       this.showSnackbar('Access this movie by subscribing to our platform', 'error');
       this.router.navigate(['/subscribe']);
       return;
     }
+    this.selectedVideo = video;
 
     if (video === this.movieData.video) {
       const model = { mov_id: this.movieData.mov_id };
@@ -93,6 +100,18 @@ export class SingleMovieComponent implements OnInit {
         error: (err) => console.error('Error saving watch history:', err)
       });
     }
+  }
+  openLoginModal() {
+    const dialogRef = this.dialog.open(SignInComponent, {
+      data: 'movie',
+      width: 'auto', height: 'auto',
+      panelClass: 'signin-modal'
+    });
+    dialogRef.afterClosed().subscribe((result: any) => {
+      if (result) {
+      }
+      this.dialog.closeAll();
+    });
   }
 
   toggleWatchLater(): void {

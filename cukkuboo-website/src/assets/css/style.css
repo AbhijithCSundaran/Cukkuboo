@@ -380,7 +380,7 @@ section,
 
 .gen-section-padding-2 {
     /* padding: 90px 0px 60px 0px; */
-        padding: 30px 0px 30px 0px;
+    padding: 30px 0px 30px 0px;
 }
 
 .gen-section-padding-3 {
@@ -5212,6 +5212,12 @@ Banner
     background-repeat: no-repeat !important;
 }
 
+@media (max-width: 991px) {
+    .gen-banner-movies .item {
+        height: calc(100vh - 150px);
+    }
+}
+
 /* .gen-banner-movies.single .item {
     height: calc(90vh - 90px);
 } */
@@ -6311,4 +6317,5 @@ Icon-Box
         height: auto;
     }
 }
+
 /*===========================================================================================================*/

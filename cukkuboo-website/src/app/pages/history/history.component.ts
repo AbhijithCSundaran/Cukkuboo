@@ -4,15 +4,8 @@ import { RouterModule } from '@angular/router';
 import { MovieService } from '../../services/movie.service';
 import { environment } from '../../../environments/environment';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-
-interface HistoryItem {
-  save_history_id: number;
-  mov_id: string;
-  title: string;
-  description: string;
-  thumbnail: string;
-  completed_at: string;
-}
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmationDialogComponent } from '../../core/components/confirmation-dialog/confirmation-dialog.component';
 
 @Component({
   selector: 'app-history',
@@ -22,21 +15,18 @@ interface HistoryItem {
   styleUrls: ['./history.component.scss']
 })
 export class HistoryComponent implements OnInit {
-  historyList: HistoryItem[] = [];
+  historyList: any[] = [];
   imageUrl: string = environment.apiUrl + 'uploads/images/';
   pageIndex: number = 0;
   pageSize: number = 8;
   totalItems: number = 0;
 
-  showDeleteModal: boolean = false;
-  showClearAllModal: boolean = false;
-  itemToDelete: HistoryItem | null = null;
-  itemToDeleteIndex: number = -1;
 
   constructor(
     private movieService: MovieService,
-    private snackBar: MatSnackBar
-  ) {}
+    private snackBar: MatSnackBar,
+    private dialog: MatDialog,
+  ) { }
 
   ngOnInit(): void {
     this.fetchHistory();
@@ -47,7 +37,7 @@ export class HistoryComponent implements OnInit {
       next: (res) => {
         if (res?.success && Array.isArray(res.data)) {
           this.historyList = res.data.map((item: any) => ({
-            save_history_id: item.save_history_id,
+            watch_history_id: item.watch_history_id,
             mov_id: item.mov_id,
             title: item.title,
             description: item.description,
@@ -68,25 +58,26 @@ export class HistoryComponent implements OnInit {
     });
   }
 
-  openDeleteModal(item: HistoryItem, index: number): void {
-    this.itemToDelete = item;
-    this.itemToDeleteIndex = index;
-    this.showDeleteModal = true;
+  askToRemoveItem(item: any, index: number) {
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      data: {
+        message: `<p>Are you sure you want to remove <span>"${item?.title}"</span> from history?</p>`
+      },
+    });
+    dialogRef.afterClosed().subscribe((result: any) => {
+      if (result) {
+        this.confirmDelete(item, index);
+      }
+    })
   }
 
-  cancelDelete(): void {
-    this.itemToDelete = null;
-    this.itemToDeleteIndex = -1;
-    this.showDeleteModal = false;
-  }
-
-  confirmDelete(): void {
-    if (!this.itemToDelete) return;
-
-    this.movieService.deleteHistoryItem(this.itemToDelete.save_history_id).subscribe({
+  confirmDelete(item: any, index: number): void {
+    if (!item) return;
+    debugger;
+    this.movieService.deleteHistoryItem(item.watch_history_id).subscribe({
       next: (res) => {
         if (res?.success) {
-          this.historyList.splice(this.itemToDeleteIndex, 1);
+          this.historyList.splice(index, 1);
           this.totalItems--;
           this.snackBar.open('Item deleted from history', '', {
             duration: 3000,
@@ -99,29 +90,30 @@ export class HistoryComponent implements OnInit {
             duration: 3000,
             verticalPosition: 'top',
             horizontalPosition: 'center',
-            panelClass: ['snackbar-danger']
+            panelClass: ['snackbar-error']
           });
         }
-        this.cancelDelete();
       },
       error: () => {
         this.snackBar.open('Error deleting item', '', {
           duration: 3000,
           verticalPosition: 'top',
           horizontalPosition: 'center',
-          panelClass: ['snackbar-danger']
+          panelClass: ['snackbar-error']
         });
-        this.cancelDelete();
       }
     });
   }
 
-  openClearAllModal(): void {
-    this.showClearAllModal = true;
-  }
-
-  cancelClearAll(): void {
-    this.showClearAllModal = false;
+  askToClearAll() {
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      data: { message: `<p>Are you sure you want to <span>clear all</span> history items?</p>` },
+    });
+    dialogRef.afterClosed().subscribe((result: any) => {
+      if (result) {
+        this.confirmClearAll();
+      }
+    })
   }
 
   confirmClearAll(): void {
@@ -144,7 +136,6 @@ export class HistoryComponent implements OnInit {
             panelClass: ['snackbar-danger']
           });
         }
-        this.cancelClearAll();
       },
       error: () => {
         this.snackBar.open('Something went wrong', '', {
@@ -153,7 +144,6 @@ export class HistoryComponent implements OnInit {
           horizontalPosition: 'center',
           panelClass: ['snackbar-danger']
         });
-        this.cancelClearAll();
       }
     });
   }

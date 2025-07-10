@@ -4,13 +4,15 @@
     padding: 10px 25px;
     min-height: 150px;
     min-width: 200px;
-    color: #d5d5d5;
+    color: var(--white-color);
   }
 
   h2,
   h5 {
     text-align: center;
   }
+
+
 
   button {
     min-width: 80px;
@@ -23,5 +25,23 @@
     &:hover {
       color: #86a7ff;
     }
+  }
+
+  .btn-yes {
+    background-color: var(--primary-color);
+    color: var(--white-color);
+    padding: 8px 16px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+  }
+
+  .btn-no {
+    background-color: transparent;
+    color: var(--white-color);
+    border: 1px solid var(--white-color);
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
   }
 }

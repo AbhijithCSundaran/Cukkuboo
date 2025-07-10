@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Inject, Optional } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
@@ -12,6 +12,7 @@ import { ValidationMessagesComponent } from '../../core/components/validation-me
 import { CommonModule } from '@angular/common';
 import { StorageService } from '../../core/services/TempStorage/storageService';
 import { UserService } from '../../services/user/user.service';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-sign-in',
@@ -26,7 +27,7 @@ import { UserService } from '../../services/user/user.service';
     MatCheckboxModule,
     MatButtonModule,
     MatIconModule,
-    MatSnackBarModule,RouterLink,
+    MatSnackBarModule, RouterLink,
     ValidationMessagesComponent
   ]
 })
@@ -40,7 +41,9 @@ export class SignInComponent {
     private snackBar: MatSnackBar,
     private userService: UserService,
     private storageService: StorageService,
-    private router: Router
+    private router: Router,
+    @Optional() @Inject(MAT_DIALOG_DATA) public modalData: any,
+    @Optional() @Inject(MatDialogRef<SignInComponent>) public dialogRef: any
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -68,12 +71,10 @@ export class SignInComponent {
               this.storageService.updateItem('username', response.data?.username || 'User');
               this.storageService.updateItem('token', response.data?.jwt_token || 'token');
               this.storageService.updateItem('subscription', response.data?.subscription || 'free');
-              // this.snackBar.open('Login successful', '', {
-              //   duration: 3000,
-              //   verticalPosition: 'top',
-              //   panelClass: ['snackbar-success']
-              // });
-              this.router.navigate(['/home']);
+              if (this.modalData)
+                this.dialogRef.close(response)
+              else
+                this.router.navigate(['/home']);
             } else {
               this.snackBar.open('Not a customer', '', {
                 duration: 3000,
@@ -88,6 +89,7 @@ export class SignInComponent {
               panelClass: ['snackbar-error']
             });
           }
+
         },
         error: (error) => {
           console.error(error);

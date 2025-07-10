@@ -8,7 +8,7 @@ import { HeaderComponent } from './header/header.component';
 @Component({
   selector: 'app-layout',
   imports: [RouterOutlet, CommonModule,
-    HeaderComponent, FooterComponent, ],
+    HeaderComponent, FooterComponent,],
   templateUrl: './layout.component.html',
   styleUrl: './layout.component.scss'
 })
@@ -16,9 +16,11 @@ export class LayoutComponent {
 
   isSidebarCollapsed = false;
   showSidebar = false;
+  showloader = true;
+  isInitial: boolean = true;
 
-
-  constructor(private eRef: ElementRef) { }
+  constructor(private eRef: ElementRef) {
+  }
 
   onSidebarToggled(collapsed: boolean) {
     this.isSidebarCollapsed = collapsed;

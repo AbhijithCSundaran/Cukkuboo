@@ -29,7 +29,7 @@ import { MatInputModule } from '@angular/material/input';
   ]
 })
 export class ListMovieShowComponent implements OnInit {
-  displayedColumns: string[] = ['slNo', 'title', 'access', 'status', 'action'];
+  displayedColumns: string[] = ['slNo', 'title', 'access', 'likes', 'views', 'status', 'action'];
   dataSource = new MatTableDataSource<any>([]);
   confirmDeleteMovie: any = null;
 

@@ -1,5 +1,5 @@
 @if(HomeData){
-<section class="pt-0 pb-0">
+<section class="pt-0 pb-2 pb-md-4">
    <div class="container-fluid px-0">
       <div class="d-flex no-gutters">
          <div class="position-relative col-12 gen-banner-movies banner-style-2">
@@ -91,12 +91,12 @@
 </section>
 
 <ng-container *ngFor="let list of listSections">
-   <section class="gen-section-padding-2">
+   <section class="gen-section-padding-2 py-2 py-md-4">
       <div class="container">
-         <div class="d-flex justify-content-between">
+         <div class="d-flex justify-content-between align-items-end">
             <h4 class="gen-heading-title">{{ list.heading }}</h4>
-            <a [routerLink]="['/movies']" class="gen-button gen-button-flat d-none d-md-flex">
-               <span class="text">View more</span>
+            <a (click)="gotoMovies(list)" class="gen-button gen-button-flat view_more">
+               <span class="text">View all</span>
             </a>
          </div>
          <div class="row mt-3">

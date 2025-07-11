@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { StorageService } from '../../core/services/TempStorage/storageService';
-import { Subject, takeUntil } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { UserService } from '../../services/user/user.service';
 import { NotificationService } from '../../services/notification.service';
@@ -21,10 +20,10 @@ export class HeaderComponent implements OnInit {
   username: string = '';
   isSignedIn: boolean = false;
   showUserDropdown: boolean = false;
-  subscription: string = '';
+  userData: any = null;
 
   notifications: any[] = [];
-  hasUnreadNotification: boolean = true;
+  hasUnreadNotification: boolean = false;
 
   private _menuOpen = false;
   get menuOpen(): boolean {
@@ -35,7 +34,6 @@ export class HeaderComponent implements OnInit {
     document.body.classList.toggle('sidebar-open', value);
   }
 
-  private _unsubscribeAll: Subject<void> = new Subject<void>();
 
   constructor(
     private storageService: StorageService,
@@ -46,9 +44,9 @@ export class HeaderComponent implements OnInit {
     private router: Router,
     private dialog: MatDialog,
   ) {
-    this.storageService.onUpdateItem
-      .pipe(takeUntil(this._unsubscribeAll))
-      .subscribe(() => this.checkAuthAndLoadNotifications());
+    this.storageService.onUpdateItem.subscribe(() => {
+      this.checkAuthAndLoadNotifications();
+    });
   }
 
   ngOnInit(): void {
@@ -58,8 +56,10 @@ export class HeaderComponent implements OnInit {
   checkAuthAndLoadNotifications(): void {
     const token = this.storageService.getItem('token');
     this.username = this.storageService.getItem('username');
-    this.subscription = (this.storageService.getItem('subscription') || '').toLowerCase();
+    this.userData = this.storageService.getItem('userData')
     this.isSignedIn = !!token;
+    if (this.userData?.unread_notifications || this.userData?.notifications)
+      this.hasUnreadNotification
   }
 
   goToNotifications(): void {

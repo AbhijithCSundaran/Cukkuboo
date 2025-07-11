@@ -11,10 +11,6 @@
   cursor: pointer;
 }
 
-.user-icon {
-  border: 2px solid white;
-  border-radius: 30px;
-}
 
 .user-title {
   text-transform: capitalize;
@@ -175,8 +171,10 @@ body.sidebar-open {
 }
 
 .user-icon {
-  padding: 13px;
-  font-size: 20px;
+  padding: 15px;
+  font-size: 14px;
+  border: 2px solid white;
+  border-radius: 30px;
 }
 
 .myaccount {
@@ -234,23 +232,6 @@ body.sidebar-open {
   justify-content: space-around;
 }
 
-.btn-yes {
-  background-color: red;
-  color: white;
-  padding: 8px 16px;
-  border-radius: 6px;
-  border: none;
-  cursor: pointer;
-}
-
-.btn-no {
-  background-color: transparent;
-  color: white;
-  border: 1px solid white;
-  padding: 8px 16px;
-  border-radius: 6px;
-  cursor: pointer;
-}
 
 .gen-button:hover .gen-button-text {
   color: white !important;

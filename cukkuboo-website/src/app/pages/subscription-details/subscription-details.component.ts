@@ -5,11 +5,13 @@ import { UserService } from '../../services/user/user.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmationDialogComponent } from '../../core/components/confirmation-dialog/confirmation-dialog.component';
+import { Router } from '@angular/router';
+import { ContentLoaderComponent } from '../../core/components/content-loader/content-loader.component';
 
 @Component({
   selector: 'app-subscription-details',
   imports: [
-    CommonModule,
+    CommonModule,ContentLoaderComponent
   ],
   templateUrl: './subscription-details.component.html',
   styleUrl: './subscription-details.component.scss'
@@ -20,12 +22,17 @@ export class SubscriptionDetailsComponent implements OnInit {
     private storageService: StorageService,
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
+    private router: Router,
   ) { }
 
 
   ngOnInit(): void {
-    const subId = 65;
-    this.loadSubscriptionDetails(subId);
+    debugger;
+    const data = this.storageService.getItem('userData');
+    if (data?.subscriptionplan_id)
+      this.loadSubscriptionDetails(data.subscriptionplan_id);
+    else
+      this.router.navigate(['/']);
   }
 
   loadSubscriptionDetails(subId: number): void {

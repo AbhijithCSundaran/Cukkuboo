@@ -30,68 +30,35 @@ export class UserService {
   }
 
   register(model: any): Observable<any> {
-    const body = model; 
+    const body = model;
     return this.http.post(this.apiUrl + 'user/register', body, { headers: this.headers });
   }
-  
-
-getProfile(): Observable<any> {
-  return this.http.get(`${this.apiUrl}user/profile`, {
-    headers: this.headers
-  });
-}
-
-logout(): Observable<any> {
-  return this.http.post(`${this.apiUrl}login/logout`, {}, { headers: this.headers });
-}
-
-changePassword(formData: FormData): Observable<any> {
-  return this.http.post(`${this.apiUrl}user/change-password`, formData, {
-    headers: {
-      Authorization: `Bearer ${this.token || ''}`
-    }
-    
-  });
-}
-
-deleteAccount(password: string, userId: number) {
-  return this.http.post(
-    `${this.apiUrl}user/delete/${userId}`,
-    { password }, 
-    {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${this.token || ''}`
-      }
-    }
-  );
-}
-
-getSubscriptionPlanByuserId(subId: number){
- return this.http.get(
-    `${this.apiUrl}usersub/get/${subId}`,
-{
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${this.token || ''}`
-      }
-    }
-  );
-}
-
-cancelSubscriptionPlan() {
-  return this.http.delete(
-    `${this.apiUrl}usersub/cancelSubscription`,
-    {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${this.token || ''}`
-      }
-    }
-  );
-}
 
 
+  getProfile(): Observable<any> {
+    return this.http.get(`${this.apiUrl}user/profile`, { headers: this.headers });
+  }
 
+  logout(): Observable<any> {
+    return this.http.post(`${this.apiUrl}login/logout`, {}, { headers: this.headers });
+  }
+
+  changePassword(model: any): Observable<any> {
+    const body = model;
+    return this.http.post(`${this.apiUrl}user/change-password`, body, { headers: this.headers });
+  }
+
+  deleteAccount(password: string, userId: number) {
+    const body = { password: password };
+    return this.http.post(`${this.apiUrl}user/delete/${userId}`, body, { headers: this.headers });
+  }
+
+  getSubscriptionPlanByuserId(subId: number) {
+    return this.http.get(`${this.apiUrl}usersub/get/${subId}`, { headers: this.headers });
+  }
+
+  cancelSubscriptionPlan() {
+    return this.http.delete(`${this.apiUrl}usersub/cancelSubscription`, { headers: this.headers });
+  }
 
 }

@@ -1,7 +1,7 @@
 <!-- @if(!devToolIsOpen){ -->
-<router-outlet />
+<router-outlet *ngIf="userLoaded" />
 
-<div *ngIf="showloader" class="fullscreen-loader" id="loader">
+<div *ngIf="showloader||!userLoaded" class="fullscreen-loader" id="loader">
     <div class="spinner d-flex">
         <img src="assets/images/logo-collapsed.png" alt="Logo" class="m-auto" style="max-width: 40px;" />
     </div>

@@ -19,7 +19,7 @@ class Profile extends BaseController
         $this->loginModel = new LoginModel();
 	}
     public function index() {
-        if($this->session->get('us_id')) {
+        if($this->session->get('user_id')) {
 			$data['user'] = $this->session->get('username');
 			$data['email'] = $this->session->get('email');
 			// $data['utype'] = $this->session->get('us_type');
@@ -47,17 +47,17 @@ class Profile extends BaseController
 
     if (!$email) {
         return $this->response->setJSON([
-            'status' => false,
+            'success' => false,
             'message' => 'Email is required.'
         ]);
     }
 
-    // Load user by email
+    // Check if user exists by email
     $user = $this->loginModel->where('email', $email)->first();
     if (!$user) {
         return $this->response->setJSON([
-            'status' => false,
-            'message' => 'Email not found.'
+            'success' => false,
+            'message' => 'Enter valid data.'
         ]);
     }
 
@@ -69,16 +69,15 @@ class Profile extends BaseController
 
         // Send email via SMTP
         try {
-            $mail = new \PHPMailer\PHPMailer\PHPMailer(true);
+            $mail = new PHPMailer(true);
             $mail->isSMTP();
-            $mail->Host       = 'aa@online';
-            $mail->SMTPAuth   = true;
-            $mail->Username   = 'no-reply@online';
-            $mail->Password   = 'JujjmH9WkpL7AgP4TgHe';
-            $mail->SMTPSecure = 'ssl';
-            $mail->Port       = 465;
-
-            $mail->setFrom('no-reply@online', 'Promat');
+            $mail->Host       = 'mail.smartlounge.online';
+		    $mail->SMTPAuth   = true;
+			$mail->Username   = 'no-reply@smartlounge.online';
+			$mail->Password   = 'JujjmH9WkpL7AgP4TgHe';
+			$mail->SMTPSecure = 'ssl';
+			$mail->Port       = 465;
+			$mail->setFrom('no-reply@smartlounge.online', 'Promat');
             $mail->addAddress($email, $user['username']);
             $mail->isHTML(true);
             $mail->Subject = "OTP for Password Reset - Promat";
@@ -91,12 +90,12 @@ class Profile extends BaseController
             $mail->send();
 
             return $this->response->setJSON([
-                'status' => true,
+                'success' => true,
                 'message' => 'OTP sent to your email.'
             ]);
         } catch (\Exception $e) {
             return $this->response->setJSON([
-                'status' => false,
+                'success' => false,
                 'message' => 'Mail error: ' . $mail->ErrorInfo
             ]);
         }
@@ -110,20 +109,20 @@ class Profile extends BaseController
 
         if (!$storedOtp || !$otpExpiry || time() > $otpExpiry) {
             return $this->response->setJSON([
-                'status' => false,
-                'message' => 'OTP expired or not found.'
+                'success' => false,
+                'message' => 'OTP expired or not found. Please request a new OTP.'
             ]);
         }
 
         if ($otpInput != $storedOtp) {
             return $this->response->setJSON([
-                'status' => false,
-                'message' => 'Invalid OTP.'
+                'success' => false,
+                'message' => 'Invalid OTP. Please enter the correct OTP.'
             ]);
         }
 
         return $this->response->setJSON([
-            'status' => true,
+            'success' => true,
             'message' => 'OTP verified. You may now reset your password.'
         ]);
     }
@@ -131,15 +130,27 @@ class Profile extends BaseController
     // STEP 3: Reset Password
     if ($step === 'reset') {
         $newPassword = $this->input->getPost('new_password');
+        $otpInput = $this->input->getPost('otp');
+
+        $storedOtp = session()->get('reset_otp_' . $email);
+        $otpExpiry = session()->get('otp_expiry_' . $email);
+
+        if (!$storedOtp || !$otpExpiry || time() > $otpExpiry || $otpInput != $storedOtp) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'Invalid OTP or session expired. Please try again.'
+            ]);
+        }
 
         if (!$newPassword) {
             return $this->response->setJSON([
-                'status' => false,
+                'success' => false,
                 'message' => 'New password required.'
             ]);
         }
 
-        $hashedPassword = md5($newPassword); // Or use password_hash()
+        // Secure hashing
+        $hashedPassword = password_hash($newPassword, PASSWORD_BCRYPT);
 
         $this->loginModel->update($user['user_id'], ['password' => $hashedPassword]);
 
@@ -147,17 +158,17 @@ class Profile extends BaseController
         session()->remove('otp_expiry_' . $email);
 
         return $this->response->setJSON([
-            'status' => true,
+            'success' => true,
             'message' => 'Password has been reset successfully.'
         ]);
     }
 
+    // Default: invalid step
     return $this->response->setJSON([
-        'status' => false,
+        'success' => false,
         'message' => 'Invalid step.'
     ]);
 }
-
 	public function removeUser() {
     $userId = $this->input->getPost('userId');
     $this->AuthModel->delUser($userId);

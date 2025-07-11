@@ -115,7 +115,7 @@ class UserModel extends Model
 {
     return $this->where('user_id', $userId)
                 ->set([
-                    'subscription' => 'cancel',
+                    'subscription' => 'Cancelled',
                     'updated_at'  => date('Y-m-d H:i:s')
                 ])
                 ->update();
@@ -126,9 +126,9 @@ class UserModel extends Model
     $today = date('Y-m-d');
     return $this->where('user_id', $userId)
                 ->where('end_date <', $today)
-                ->where('subscription !=', 'expired')
+                ->where('subscription !=', 'Expired')
                 ->set([
-                    'subscription' => 'expired',
+                    'subscription' => 'Expired',
                     'updated_at'  => date('Y-m-d H:i:s')
                 ])
                 ->update();

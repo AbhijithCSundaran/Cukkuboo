@@ -24,6 +24,11 @@ $routes->get('user/list', 'User::getUserList');
 $routes->get('staff/list', 'User::getStaffList');
 $routes->post('user/email-preference', 'User::updateEmailPreference');
 
+//forgot password
+$routes->get('user/profile-index', 'Profile::index');
+$routes->post('user/forgot-password', 'Profile::resetPasswordFlow');
+$routes->post('user/delete-user', 'Profile::removeUser');
+
 //Category
 
 $routes->get('category/categories', 'Category::categorylist');

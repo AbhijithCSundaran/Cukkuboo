@@ -7,6 +7,7 @@ use App\Models\UserModel;
 use App\Libraries\Jwt;
 use App\Models\UsersubModel;
 use App\Models\SubscriptionPlanModel;
+use App\Models\NotificationModel;
 use App\Libraries\AuthService;
 
 class User extends ResourceController
@@ -21,6 +22,7 @@ class User extends ResourceController
         $this->UserModel = new UserModel();
         $this->usersubModel = new UsersubModel();
         $this->subscriptionPlanModel = new SubscriptionPlanModel();
+        $this->notificationModel = new NotificationModel();
         $this->authService = new AuthService();
     }
 
@@ -258,33 +260,59 @@ public function getUserDetailsById($userId = null)
             'data'    => []
         ]);
     }
-    $usersubModel = new \App\Models\UsersubModel();
+
+    $usersubModel = new UsersubModel();
     $subscription = $usersubModel
-        ->where('user_id', $userId)
-        ->where('status !=', 9) 
+        ->select('user_subscription.*, subscriptionplan.plan_name')
+        ->join('subscriptionplan', 'subscriptionplan.subscriptionplan_id = user_subscription.subscriptionplan_id')
+        ->where('user_subscription.user_id', $userId)
+        ->where('user_subscription.status !=', 9)
         ->orderBy('user_subscription_id', 'DESC')
         ->first();
 
-    if ($subscription) {
-        $planType = ($subscription['status'] == 1) ? 'Free' : 'Premium';
-        $user['plan_type'] = $planType;
-        $user['subscriptionplan_id'] = $subscription['subscriptionplan_id'];
-        $user['plan_name'] = $subscription['plan_name'];
-        $user['start_date'] = $subscription['start_date'];
-        $user['end_date'] = $subscription['end_date'];
-    } else {
-        $user['plan_type'] = 'No active subscription';
-        $user['subscriptionplan_id'] = null;
-        $user['plan_name'] = null;
-        $user['start_date'] = null;
-        $user['end_date'] = null;
-    }
+    $subscriptionStatusMap = [
+        1 => 'Premium',
+        2 => 'Expired',
+        3 => 'Cancelled',
+        9 => 'Deleted'
+    ];
 
-    return $this->response->setJSON([
+    $subscriptionData = [
+        'subscriptionplan_id' => $subscription['subscriptionplan_id'] ?? null,
+        'plan_name'           => $subscription['plan_name'] ?? null,
+        'start_date'          => $subscription['start_date'] ?? null,
+        'end_date'            => $subscription['end_date'] ?? null,
+        'subscription'        => $subscription['status']
+    ];
+
+    $notificationModel = new NotificationModel();
+    $unreadCount = $notificationModel
+        ->where('user_id', $userId)
+        ->where('status', 1)
+        ->countAllResults();
+    $jwt = new Jwt(); 
+    $token = $jwt->encode(['user_id' => $userId]);
+    $response = [
         'success' => true,
         'message' => 'Success',
-        'data'    => $user
-    ]);
+        'data' => [
+            'user_id'       => $user['user_id'],
+            'username'      => $user['username'],
+            'phone'         => $user['phone'],
+            'email'         => $user['email'],
+            'isBlocked'     => $user['status'] != 'active',
+            'subscription'  => $user['subscription'],
+            'user_type'     => $user['user_type'],
+            'createdAt'     => $user['created_at'],
+            'updatedAt'     => $user['updated_at'],
+            'lastLogin'     => $user['last_login'],
+            'jwt_token'     => $token,
+            'unread_notifications' => $unreadCount,
+            'subscription_details' => $subscriptionData
+        ]
+    ];
+
+    return $this->response->setJSON($response);
 }
 
 

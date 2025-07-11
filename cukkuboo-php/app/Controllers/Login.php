@@ -6,7 +6,10 @@ use App\Models\LoginModel;
 use App\Libraries\Jwt;
 use App\Libraries\AuthService;
 use App\Config\Email;
-
+use App\Models\UsersubModel;
+use App\Models\UserModel;
+use App\Models\SubscriptionPlanModel;
+use App\Models\NotificationModel;
 class Login extends BaseController
 {
     protected $loginModel;
@@ -14,6 +17,10 @@ class Login extends BaseController
     public function __construct()
     {
         $this->loginModel = new LoginModel();
+        $this->usersubModel = new UsersubModel();
+        $this->subscriptionPlanModel = new SubscriptionPlanModel();
+        $this->userModel = new UserModel();
+        $this->notificationModel = new NotificationModel();
     }
 
     public function loginFun()
@@ -52,6 +59,53 @@ class Login extends BaseController
         'jwt_token' => $token,
         'last_login' => $now,
     ];
+    $usersubModel = new UsersubModel();
+    $notificationModel = new NotificationModel();
+
+    $subscription = $usersubModel
+        ->select('user_subscription.*, subscriptionplan.plan_name') 
+        ->join('subscriptionplan', 'subscriptionplan.subscriptionplan_id = user_subscription.subscriptionplan_id')
+        ->where('user_id', $user['user_id'])
+        ->where('user_subscription.status !=', 9)
+        ->orderBy('user_subscription_id', 'DESC')
+        ->first();
+
+    $subscriptionData = [];
+
+    if ($subscription) {
+    $subscriptionStatus = [
+        1 => 'Premium',
+        2 => 'Expired',
+        3 => 'Cancelled',
+        9 => 'Deleted'
+    ];
+
+    $subscriptionData = [
+        'subscriptionplan_id' => $subscription['subscriptionplan_id'],
+        'plan_name'           => $subscription['plan_name'],
+        'start_date'          => $subscription['start_date'],
+        'end_date'            => $subscription['end_date'],
+        'subscription'        => $subscription['status']
+    ];
+    $unreadCount = $notificationModel
+    ->where('user_id', $user['user_id'])
+    ->where('status', 1)
+    ->countAllResults();
+
+}
+
+
+
+    else {
+        $subscriptionData = [
+            'subscriptionplan_id' => null,
+            'plan_name' => null,
+            'start_date' => null,
+            'end_date' => null,
+            'subscription'=> $subscription['status']
+        ];
+    }
+
     // Login Type 1: No fcm_token → just return existing token, no update
     if (empty($data['fcm_token'])) {
     $this->loginModel->update($user['user_id'], $updateData);
@@ -70,7 +124,9 @@ class Login extends BaseController
             'createdAt' => $user['created_at'],
             'updatedAt' => $user['updated_at'],
             'lastLogin' => $now,
-            'jwt_token' => $token
+            'jwt_token' => $token,
+            'unread_notifications' => $unreadCount,
+            'subscription_details' => $subscriptionData
             ]
         ]);
     }
@@ -96,7 +152,9 @@ class Login extends BaseController
             'updatedAt' => $user['updated_at'],
             'lastLogin' => $now,
             'jwt_token' => $token,
-            'fcm_token' => $data['fcm_token']
+            'fcm_token' => $data['fcm_token'],
+            'unread_notifications' => $unreadCount,
+            'subscription_details' => $subscriptionData
         ]
     ]);
 }

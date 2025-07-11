@@ -1,7 +1,7 @@
 :host {
   >div {
     height: 100%;
-    padding: 10px 25px;
+    padding: 20px 25px;
     min-height: 150px;
     min-width: 200px;
     color: var(--white-color);
@@ -27,21 +27,4 @@
     }
   }
 
-  .btn-yes {
-    background-color: var(--primary-color);
-    color: var(--white-color);
-    padding: 8px 16px;
-    border-radius: 6px;
-    border: none;
-    cursor: pointer;
-  }
-
-  .btn-no {
-    background-color: transparent;
-    color: var(--white-color);
-    border: 1px solid var(--white-color);
-    padding: 8px 16px;
-    border-radius: 6px;
-    cursor: pointer;
-  }
 }

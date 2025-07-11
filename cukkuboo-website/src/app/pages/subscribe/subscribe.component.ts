@@ -2,11 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { RouterModule } from '@angular/router';
-import { PlanService } from '../../services/plan.service';
 import { SubscriptionService } from '../../services/subscription.service';
 import { StorageService } from '../../core/services/TempStorage/storageService';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmationDialogComponent } from '../../core/components/confirmation-dialog/confirmation-dialog.component';
+import { ConfirmPlanComponent } from './confirm-plan/confirm-plan.component';
 
 @Component({
   selector: 'app-subscribe',
@@ -32,7 +32,7 @@ export class SubscribeComponent implements OnInit {
   acknowledged: boolean = false;
 
   constructor(
-    private planService: PlanService,
+    // private planService: PlanService,
     private storageService: StorageService,
     private subscriptionService: SubscriptionService,
     private snackBar: MatSnackBar,
@@ -47,7 +47,7 @@ export class SubscribeComponent implements OnInit {
   }
 
   loadPlans(): void {
-    this.planService.listPlans(this.pageIndex, this.pageSize, this.searchText).subscribe({
+    this.subscriptionService.listPlans(this.pageIndex, this.pageSize, this.searchText).subscribe({
       next: (res) => {
         if (res?.success) {
           if (res.data.length) {
@@ -81,19 +81,17 @@ export class SubscribeComponent implements OnInit {
       });
       return;
     }
-    else if (!this.acknowledged) {
-      this.snackBar.open('Please read and acknowledge our Privacy Policy & Terms of Use.', '', {
-        duration: 3000,
-        verticalPosition: 'top',
-        horizontalPosition: 'center',
-        panelClass: ['snackbar-warn']
-      });
-      return;
-    }
-    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
-      data: {
-        message: `<p>Are you sure to Subscribe <span>"${plan?.plan_name}"</span> plan?</p>`
-      },
+    // else if (!this.acknowledged) {
+    //   this.snackBar.open('Please read and acknowledge our Privacy Policy & Terms of Use.', '', {
+    //     duration: 3000,
+    //     verticalPosition: 'top',
+    //     horizontalPosition: 'center',
+    //     panelClass: ['snackbar-warn']
+    //   });
+    //   return;
+    // }
+    const dialogRef = this.dialog.open(ConfirmPlanComponent, {
+      data: { plan: plan },
     });
     dialogRef.afterClosed().subscribe((result: any) => {
       if (result) {

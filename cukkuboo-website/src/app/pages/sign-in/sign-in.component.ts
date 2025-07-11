@@ -70,7 +70,7 @@ export class SignInComponent {
               this.storageService.updateItem('userData', response.data);
               this.storageService.updateItem('username', response.data?.username || 'User');
               this.storageService.updateItem('token', response.data?.jwt_token || 'token');
-              this.storageService.updateItem('subscription', response.data?.subscription || 'free');
+              this.storageService.updateItem('subscription', response.data?.plan_type || 'Free');
               if (this.modalData)
                 this.dialogRef.close(response)
               else

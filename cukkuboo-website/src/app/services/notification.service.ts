@@ -9,7 +9,7 @@ import { environment } from '../../environments/environment';
 export class NotificationService {
   private apiUrl = environment.apiUrl;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   get token() {
     return localStorage.getItem('t_k') || sessionStorage.getItem('token');
@@ -22,43 +22,34 @@ export class NotificationService {
     });
   }
 
- 
+
   saveNotification(data: any): Observable<any> {
     return this.http.post(this.apiUrl + 'notification/save', data, {
       headers: this.headers
     });
   }
 
-getNotifications(pageIndex: number = 0, pageSize: number = 20, searchText: string = ''): Observable<any> {
-  const params = {
-    pageIndex: pageIndex.toString(),
-    pageSize: pageSize.toString(),
-    search: searchText
-  };
-  return this.http.get(this.apiUrl + 'notification/get', {
-    headers: this.headers,
-    params
-  });
-}
+  getNotifications(pageIndex: number = 0, pageSize: number = 20, searchText: string = ''): Observable<any> {
+    const params = {
+      pageIndex: pageIndex.toString(),
+      pageSize: pageSize.toString(),
+      search: searchText
+    };
+    return this.http.get(this.apiUrl + 'notification/get', { headers: this.headers, params });
+  }
 
 
-  
+
   getNotificationById(id: number): Observable<any> {
-    return this.http.get(this.apiUrl + 'notification/get/' + id, {
-      headers: this.headers
-    });
+    return this.http.get(this.apiUrl + 'notification/get/' + id, { headers: this.headers });
   }
 
   deleteNotification(id: number): Observable<any> {
-    return this.http.delete(`${this.apiUrl}notification/delete/${id}`, {
-      headers: this.headers
-    });
-}
+    return this.http.delete(`${this.apiUrl}notification/delete/${id}`, { headers: this.headers });
+  }
 
- 
+
   markAllAsRead(): Observable<any> {
-    return this.http.post(this.apiUrl + 'notification/markall', {}, {
-      headers: this.headers
-    });
+    return this.http.post(this.apiUrl + 'notification/markall', {}, { headers: this.headers });
   }
 }

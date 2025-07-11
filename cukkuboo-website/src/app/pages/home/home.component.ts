@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { CarouselModule, OwlOptions } from 'ngx-owl-carousel-o';
 import { MovieService } from '../../services/movie.service';
 import { environment } from '../../../environments/environment';
@@ -24,7 +24,10 @@ export class HomeComponent implements OnInit {
   imageUrl = environment.apiUrl + 'uploads/images/';
 
   selectedItem: any;
-  constructor(private movieService: MovieService) { }
+  constructor(
+    private movieService: MovieService,
+    private router: Router,
+  ) { }
 
   ngOnInit(): void {
     this.movieService.getHomeData().subscribe({
@@ -76,5 +79,9 @@ export class HomeComponent implements OnInit {
   onCloseTrailer(event: any) {
     this.selectedItem = null;
     this.customOptions1.autoplay = true;
+  }
+  gotoMovies(item: any) {
+    const type = item.heading.replace(/movies?/i, '').replace(/watched/i, 'viewed').trim().toLowerCase().replace(/\s+/g, '_')
+    this.router.navigate(['/movies'], { queryParams: { typ: type } });
   }
 }

@@ -26,9 +26,16 @@ export class MovieService {
   //     { headers: this.headers });
   // }
 
-  listMovies(pageIndex: number = 0, pageSize: number = 20, searchText: string = ''): Observable<any> {
-    const params = { pageIndex: pageIndex.toString(), pageSize: pageSize.toString(), search: searchText };
-    return this.http.get(this.apiUrl + 'movie/moviedetails', { headers: this.headers, params });
+  listMovies(pageIndex: number = 0, pageSize: number = 20, searchText: string = '', type: string = ''): Observable<any> {
+    if (!type) {
+      const params = { pageIndex: pageIndex.toString(), pageSize: pageSize.toString(), search: searchText };
+      return this.http.get(this.apiUrl + 'movie/moviedetails', { headers: this.headers, params });
+    }
+    else {
+      const params = { type: type, page: pageIndex, limit: pageSize, search: searchText };
+      return this.http.get(this.apiUrl + 'movies/list', { headers: this.headers, params });
+    }
+
   }
 
   getrelatedMovies(id: number, pageIndex: number = 0, pageSize: number = 20): Observable<any> {

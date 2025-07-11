@@ -5,16 +5,16 @@
             <div class="col-lg-12">
                 <nav aria-label="breadcrumb">
                     <div class="gen-breadcrumb-title">
-                        <h1>Movies</h1>
+                        <h1 class="text-uppercase">{{movieType?movieType:''}} Movies</h1>
                     </div>
-                    <div class="gen-breadcrumb-container">
+                    <!-- <div class="gen-breadcrumb-container">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item">
                                 <a href="index.html"><i class="fas fa-home mr-2"></i>Home</a>
                             </li>
                             <li class="breadcrumb-item active">Movie</li>
                         </ol>
-                    </div>
+                    </div> -->
                 </nav>
             </div>
         </div>
@@ -24,11 +24,11 @@
 
 <!-- Section-1 Start -->
 <section class="search-section pb-2">
-    <div class="col-12 d-flex justify-content-end mr-2" *ngIf="showSearch">
+    <div class="col-12 d-flex justify-content-end mr-2">
         <div class="col-12 col-sm-6 col-lg-4 pe-2 mb-1 search">
             <mat-form-field appearance="outline" class="w-100">
                 <mat-icon matPrefix>search</mat-icon>
-                <input #searchInput matInput type="text" placeholder="Search for the Movies" autofocus="true"
+                <input #searchInput matInput type="text" placeholder="Search for the Movies" autofocus="false"
                     [(ngModel)]="searchText" (ngModelChange)="onSearchChange()" />
             </mat-form-field>
         </div>

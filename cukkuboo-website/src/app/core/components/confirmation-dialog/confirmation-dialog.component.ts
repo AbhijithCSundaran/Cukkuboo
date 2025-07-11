@@ -13,20 +13,20 @@ export class ConfirmationDialogComponent {
   dontShowAgain: boolean = false;
   constructor(
     public dialogRef: MatDialogRef<ConfirmationDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { heading: string, message: string, askToHide: boolean, model: any },
+    @Inject(MAT_DIALOG_DATA) public data: { heading: string, message: string, askToHide: boolean, model: any, cancelText: string, confirmText: string },
   ) {
 
   }
 
   // Close the dialog with true (meaning confirm navigation)
   confirm(): void {
-    const result = this.data.askToHide ? { dontShowAgain: this.dontShowAgain, confirm: true } : true;
-    this.dialogRef.close(result);
+    // const result = this.data.askToHide ? { dontShowAgain: this.dontShowAgain, confirm: true } : true;
+    this.dialogRef.close(true);
   }
 
   // Close the dialog with false (meaning cancel navigation)
   cancel(): void {
-    const result = this.data.askToHide ? { dontShowAgain: this.dontShowAgain, confirm: false } : false;
-    this.dialogRef.close(result);
+    // const result = this.data.askToHide ? { dontShowAgain: this.dontShowAgain, confirm: false } : false;
+    this.dialogRef.close(false);
   }
 }

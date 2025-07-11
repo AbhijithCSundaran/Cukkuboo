@@ -106,7 +106,7 @@ h6 {
     font-family: var(--title-fonts);
     color: var(--white-color);
     font-style: normal;
-    text-transform: capitalize;
+    /* text-transform: capitalize; */
     font-weight: 600;
     margin: 0;
     letter-spacing: 0.02em;
@@ -406,18 +406,12 @@ Container
 ===========================================*/
 
 .container {
-    max-width: 1710px;
+    max-width: 96%;
 }
 
 @media (max-width: 1699px) {
     .container {
         max-width: 95%;
-    }
-}
-
-@media (max-width: 1199px) {
-    .container {
-        max-width: 960px;
     }
 }
 
@@ -2158,6 +2152,8 @@ Breadcrum
 @media (max-width: 1023px) {
     .gen-breadcrumb {
         text-align: center;
+        padding: 50px 0;
+
     }
 
     .gen-breadcrumb .gen-breadcrumb-title h1 {
@@ -2175,6 +2171,11 @@ Breadcrum
 }
 
 @media (max-width: 767px) {
+    .gen-breadcrumb {
+        padding: 30px 0;
+
+    }
+
     .gen-breadcrumb .gen-breadcrumb-title h1 {
         font-size: 34px;
         line-height: 42px;
@@ -2676,7 +2677,7 @@ header#gen-header.gen-header-default .gen-menu-search-block {
 
 .gen-account-holder {
     position: relative;
-    margin-right: 30px;
+    /* margin-right: 30px; */
     /* line-height: 90px; */
 }
 
@@ -4365,7 +4366,7 @@ Carousel Movies
 
 /*===== Carousel Movies 2 =====*/
 .gen-carousel-movies-style-2 {
-    margin-bottom: 30px;
+    /* margin-bottom: 30px; */
     display: inline-block;
     width: 100%;
 }
@@ -5533,7 +5534,7 @@ Banner 2
 .gen-movie-contain-style-2 .gen-movie-info h3 {
     font-size: 62px;
     line-height: 70px;
-    text-transform: uppercase;
+    /* text-transform: uppercase; */
 }
 
 .gen-movie-contain-style-2 .gen-movie-meta-holder ul.gen-meta-after-title {

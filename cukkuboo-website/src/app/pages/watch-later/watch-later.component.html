@@ -71,11 +71,8 @@
           <li class="page-item" [class.disabled]="pageIndex === 0">
             <button class="page-link" (click)="onPageChange(pageIndex - 1)">Previous</button>
           </li>
-          <li
-            class="page-item"
-            *ngFor="let page of [].constructor(Math.ceil(totalItems / pageSize)); let i = index"
-            [class.active]="i === pageIndex"
-          >
+          <li class="page-item" *ngFor="let page of [].constructor(Math.ceil(totalItems / pageSize)); let i = index"
+            [class.active]="i === pageIndex">
             <button class="page-link" (click)="onPageChange(i)">{{ i + 1 }}</button>
           </li>
           <li class="page-item" [class.disabled]="pageIndex + 1 >= Math.ceil(totalItems / pageSize)">

@@ -81,7 +81,7 @@
         <span [ngClass]="{
           'badge': true,
           'badge-enabled': sub.status === 'premium',
-          'badge-disabled': sub.status === '',
+          'badge-disabled': sub.status === 'expired',
           'badge-canceled': sub.status === 'canceled'
         }">
           {{ sub.status }}

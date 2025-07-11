@@ -23,7 +23,7 @@ class Usersub extends ResourceController
         $this->userModel = new UserModel();
     }
 
- public function autoSubscribe()
+ public function createSubscribe()
 {
     $data = $this->request->getJSON(true);
     $authHeader = $this->request->getHeaderLine('Authorization');
@@ -442,7 +442,6 @@ public function getExpiredSubscriptions()
     }
 
     $userId = $user['user_id'];
-    // All subscriptions with status 9 (expired/deleted)
     $expiredSubs = $this->usersubModel
         ->where('user_id', $userId)
         ->where('status', '2')

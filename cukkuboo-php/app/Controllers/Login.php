@@ -98,24 +98,20 @@ class Login extends BaseController
         'end_date'            => $subscription['end_date'],
         'subscription'        => $subscription['status']
     ];
-    $unreadCount = $notificationModel
-    ->where('user_id', $user['user_id'])
-    ->where('status', 1)
-    ->countAllResults();
-
 }
-
-
-
     else {
         $subscriptionData = [
             'subscriptionplan_id' => null,
             'plan_name' => null,
             'start_date' => null,
             'end_date' => null,
-            'subscription'=> $subscription['status']
+            'subscription' => 0
         ];
     }
+    $unreadCount = $notificationModel
+    ->where('user_id', $user['user_id'])
+    ->where('status', 1)
+    ->countAllResults();
 
     // Login Type 1: No fcm_token → just return existing token, no update
     if (empty($data['fcm_token'])) {
@@ -136,7 +132,7 @@ class Login extends BaseController
             'updatedAt' => $user['updated_at'],
             'lastLogin' => $now,
             'jwt_token' => $token,
-            'unread_notifications' => $unreadCount,
+            'notifications' => $unreadCount,
             'subscription_details' => $subscriptionData
             ]
         ]);

@@ -121,18 +121,5 @@ class UserModel extends Model
                 ->update();
 }
 
-    public function markExpiredUserSubscriptions($userId)
-{
-    $today = date('Y-m-d');
-    return $this->where('user_id', $userId)
-                ->where('end_date <', $today)
-                ->where('subscription !=', 'Expired')
-                ->set([
-                    'subscription' => 'Expired',
-                    'updated_at'  => date('Y-m-d H:i:s')
-                ])
-                ->update();
-}
-
-
+    
 }

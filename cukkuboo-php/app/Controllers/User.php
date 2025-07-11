@@ -260,7 +260,18 @@ public function getUserDetailsById($userId = null)
             'data'    => []
         ]);
     }
+    $usersubModel = new UsersubModel();
+    $today = date('Y-m-d');
+    $expired = $usersubModel
+        ->where('user_id', $userId)
+        ->where('status', 1) 
+        ->where('end_date <', $today)
+        ->findAll();
 
+    foreach ($expired as $sub) {
+        $usersubModel->update($sub['user_subscription_id'], ['status' => 2]);
+        $this->UserModel->update($userId, ['subscription' => 'Expired']);
+    }
     $usersubModel = new UsersubModel();
     $subscription = $usersubModel
         ->select('user_subscription.*, subscriptionplan.plan_name')
@@ -278,6 +289,7 @@ public function getUserDetailsById($userId = null)
     ];
 
     $subscriptionData = [
+        'user_subscription_id'=> $subscription['user_subscription_id'] ?? null,
         'subscriptionplan_id' => $subscription['subscriptionplan_id'] ?? null,
         'plan_name'           => $subscription['plan_name'] ?? null,
         'start_date'          => $subscription['start_date'] ?? null,
@@ -307,7 +319,7 @@ public function getUserDetailsById($userId = null)
             'updatedAt'     => $user['updated_at'],
             'lastLogin'     => $user['last_login'],
             'jwt_token'     => $token,
-            'unread_notifications' => $unreadCount,
+            'notifications' => $unreadCount,
             'subscription_details' => $subscriptionData
         ]
     ];
@@ -434,7 +446,7 @@ public function updateEmailPreference()
         return $this->failValidationErrors('Invalid input. user_id must be valid, and status must be 1 (enable) or 2 (disable).');
     }
 
-    $userModel = new \App\Models\UserModel();
+    $userModel = new UserModel();
     $user = $userModel->find($userId);
 
     if (!$user) {

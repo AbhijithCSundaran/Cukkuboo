@@ -199,6 +199,11 @@ th.mat-column-slNo,
     width: 75px;
     justify-content: center;
   }
+
+
+  .hide-mobile{
+    display: none;
+  }
 }
 
 @media (max-width: 320px) {

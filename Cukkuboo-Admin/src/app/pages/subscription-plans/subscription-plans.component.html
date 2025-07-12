@@ -51,9 +51,11 @@
 
 
     <ng-container matColumnDef="features">
-      <th mat-header-cell *matHeaderCellDef> Features </th>
-      <td mat-cell *matCellDef="let plan"> {{ plan.features }} </td>
-    </ng-container>
+  <th mat-header-cell *matHeaderCellDef> Features </th>
+  <td mat-cell *matCellDef="let plan">
+    <div class="justified-text">{{ plan.features }}</div>
+  </td>
+</ng-container>
 
     <ng-container matColumnDef="action">
       <th mat-header-cell *matHeaderCellDef> Action </th>

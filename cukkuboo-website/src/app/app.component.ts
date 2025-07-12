@@ -17,6 +17,7 @@ export class AppComponent {
   isProd: boolean = environment.production;
   devToolIsOpen: boolean = false;
   showloader: boolean = true;
+  userLoaded: boolean = true;
   isInitial: boolean = true;
   constructor(
     private storageService: StorageService,
@@ -42,6 +43,7 @@ export class AppComponent {
     const token = localStorage.getItem('t_k');
     const name = localStorage.getItem('u_n');
     if (token) {
+      this.userLoaded = false;
       this.storageService.updateItem('token', token);
       this.loadUserData();
     }
@@ -107,9 +109,11 @@ export class AppComponent {
           const data = response.data;
           this.storageService.updateItem('userData', data);
         }
+        this.userLoaded = true;
       },
 
       error: (err) => {
+        this.userLoaded = true;
         console.error('Error fetching profile', err);
       }
     });

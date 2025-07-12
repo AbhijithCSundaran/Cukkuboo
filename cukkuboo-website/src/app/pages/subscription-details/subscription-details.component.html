@@ -1,4 +1,5 @@
-<div class="container my-5" style="max-width: 900px;" *ngIf="subscriptionData">
+@if(subscriptionData){
+<div class="container my-5" style="max-width: 900px;">
     <h3 class="mb-4">Your Subscription Plan</h3>
 
     <div class="card shadow-lg border-0 mb-4">
@@ -53,3 +54,6 @@
         </div>
     </div>
 </div>
+}@else {
+<content-loader></content-loader>
+}

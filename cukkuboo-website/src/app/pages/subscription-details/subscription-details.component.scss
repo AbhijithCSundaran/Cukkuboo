@@ -43,23 +43,6 @@ color: white;
   justify-content: space-around;
 }
 
-.btn-yes {
-  background-color: red;
-  color: white;
-  padding: 8px 16px;
-  border-radius: 6px;
-  border: none;
-  cursor: pointer;
-}
-
-.btn-no {
-  background-color: transparent;
-  color: white;
-  border: 1px solid white;
-  padding: 8px 16px;
-  border-radius: 6px;
-  cursor: pointer;
-}
 .gen-button:hover .gen-button-text {
   color: white !important;
 }

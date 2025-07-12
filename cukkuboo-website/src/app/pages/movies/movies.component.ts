@@ -33,6 +33,7 @@ export class MoviesComponent implements OnInit {
   searchTimeout: any;
   stopInfiniteScroll: boolean = false;
   showSearch: boolean = false;
+  movieType: '' | 'latest' | 'trending' | 'most_viewed' = '';
 
   constructor(
     private route: ActivatedRoute,
@@ -40,6 +41,7 @@ export class MoviesComponent implements OnInit {
   ) {
     this.route.queryParams.subscribe(params => {
       this.showSearch = !!params['search'];
+      this.movieType = params['typ'] ? params['typ'] : '';
       this.searchText = ''
       setTimeout(() => {
         if (this.showSearch) {
@@ -52,13 +54,16 @@ export class MoviesComponent implements OnInit {
   ngOnInit(): void {
     this.loadMovies(this.pageIndex, this.pageSize, this.searchText);
   }
+  // isValidMovieType(value: any) {
+  //   return ['', 'latest', 'trending', 'most_viewed'].includes(value);
+  // }
   onScroll(event: any) {
     this.pageIndex++;
     this.loadMovies(this.pageIndex, this.pageSize, this.searchText);
   }
 
   loadMovies(pageIndex: number = 0, pageSize: number = 20, search: string = '') {
-    this.movieService.listMovies(pageIndex, pageSize, search).subscribe({
+    this.movieService.listMovies(pageIndex, pageSize, search, this.movieType).subscribe({
       next: (res) => {
         if (res?.success) {
           if (res.data.length)

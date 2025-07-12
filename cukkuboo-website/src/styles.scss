@@ -149,8 +149,37 @@ textarea {
 }
 
 .confirm-message {
+
     span,
     b {
         color: var(--primary-color) !important;
+    }
+}
+
+.btn-yes {
+    background-color: var(--primary-color);
+    color: var(--white-color);
+    padding: 8px 16px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    min-width: 100px;
+
+    &:hover {
+        background-color: #7d2725;
+    }
+}
+
+.btn-no {
+    background-color: transparent;
+    color: var(--white-color);
+    border: 1px solid var(--white-color);
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    min-width: 100px;
+
+    &:hover {
+        background-color: #e53935;
     }
 }

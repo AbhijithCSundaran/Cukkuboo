@@ -61,7 +61,17 @@ class Login extends BaseController
     ];
     $usersubModel = new UsersubModel();
     $notificationModel = new NotificationModel();
+    $today = date('Y-m-d');
+    $expired = $usersubModel
+        ->where('user_id', $user['user_id'])
+        ->where('status', 1)
+        ->where('end_date <', $today)
+        ->findAll();
 
+    foreach ($expired as $sub) {
+        $usersubModel->update($sub['user_subscription_id'], ['status' => 2]);
+        $this->UserModel->update($userId, ['subscription' => 'Expired']);
+    }
     $subscription = $usersubModel
         ->select('user_subscription.*, subscriptionplan.plan_name') 
         ->join('subscriptionplan', 'subscriptionplan.subscriptionplan_id = user_subscription.subscriptionplan_id')
@@ -81,30 +91,27 @@ class Login extends BaseController
     ];
 
     $subscriptionData = [
+        'user_subscription_id'=> $subscription['user_subscription_id'] ?? null,
         'subscriptionplan_id' => $subscription['subscriptionplan_id'],
         'plan_name'           => $subscription['plan_name'],
         'start_date'          => $subscription['start_date'],
         'end_date'            => $subscription['end_date'],
         'subscription'        => $subscription['status']
     ];
-    $unreadCount = $notificationModel
-    ->where('user_id', $user['user_id'])
-    ->where('status', 1)
-    ->countAllResults();
-
 }
-
-
-
     else {
         $subscriptionData = [
             'subscriptionplan_id' => null,
             'plan_name' => null,
             'start_date' => null,
             'end_date' => null,
-            'subscription'=> $subscription['status']
+            'subscription' => 0
         ];
     }
+    $unreadCount = $notificationModel
+    ->where('user_id', $user['user_id'])
+    ->where('status', 1)
+    ->countAllResults();
 
     // Login Type 1: No fcm_token → just return existing token, no update
     if (empty($data['fcm_token'])) {
@@ -125,7 +132,7 @@ class Login extends BaseController
             'updatedAt' => $user['updated_at'],
             'lastLogin' => $now,
             'jwt_token' => $token,
-            'unread_notifications' => $unreadCount,
+            'notifications' => $unreadCount,
             'subscription_details' => $subscriptionData
             ]
         ]);
@@ -153,7 +160,7 @@ class Login extends BaseController
             'lastLogin' => $now,
             'jwt_token' => $token,
             'fcm_token' => $data['fcm_token'],
-            'unread_notifications' => $unreadCount,
+            'notifications' => $unreadCount,
             'subscription_details' => $subscriptionData
         ]
     ]);

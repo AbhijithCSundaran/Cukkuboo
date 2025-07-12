@@ -3,11 +3,13 @@
   <div *ngIf="data.message" mat-dialog-content class="mt-1 confirm-message" [innerHTML]="data.message"></div>
 
   <div mat-dialog-actions class="w-100 d-flex position-relative mt-4 justify-content-center gap-2">
-    <button class="btn rounded res-button btn-no mx-1 px-3" (click)="cancel()"> No </button>
-    <button class="btn rounded res-button btn-yes mx-1 px-3" (click)="confirm()"> Yes </button>
+    <button class="btn rounded res-button btn-no mx-1 px-3" (click)="cancel()"> {{data.cancelText?data.cancelText:'No'}}
+    </button>
+    <button class="btn rounded res-button btn-yes mx-1 px-3" (click)="confirm()">
+      {{data.confirmText?data.confirmText:'Yes'}} </button>
   </div>
-  <div class="w-100 d-flex position-relative justify-content-center mt-3" *ngIf="data.askToHide">
+  <!-- <div class="w-100 d-flex position-relative justify-content-center mt-3" *ngIf="data.askToHide">
     <input type="checkbox" name="dontShowAgain" id="dontShowAgain" [(ngModel)]="dontShowAgain">
     <label for="dontShowAgain" class="ms-1">Don't show again!</label>
-  </div>
+  </div> -->
 </div>

@@ -93,37 +93,37 @@ export class SignInComponent {
         },
         error: (error) => {
           console.error(error);
-          const response: any = {
-            "success": true,
-            "message": "Login successful (type 1)",
-            "data": {
-              "user_id": "161",
-              "username": "Bruce Wayne",
-              "phone": "+917854123625",
-              "email": "wayne@gmail.com",
-              "isBlocked": true,
-              "subscription": "Premium",
-              "user_type": "Customer",
-              "createdAt": "2025-07-12 10:22:46",
-              "updatedAt": "2025-07-12 08:22:46",
-              "lastLogin": "2025-07-12 09:49:04",
-              "jwt_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3NTIzMTM3NDQsImV4cCI6MTc1MjMxNzM0NCwiZGF0YSI6eyJ1c2VyX2lkIjoiMTYxIn19.nqlLV796_LCvR-6m7_09O0fWGPGOgG3BnMDwyUr-X40",
-              "notifications": 1,
-              "subscription_details": {
-                "user_subscription_id": "73",
-                "subscriptionplan_id": "124",
-                "plan_name": "demo 2",
-                "start_date": "2025-07-12",
-                "end_date": "2025-07-22",
-                "subscription": "1"
-              }
-            }
-          }
-          localStorage.setItem('t_k', response.data?.jwt_token);
-          this.storageService.updateItem('userData', response.data);
-          this.storageService.updateItem('username', response.data?.username || 'User');
-          this.storageService.updateItem('token', response.data?.jwt_token || 'token');
-          this.storageService.updateItem('subscription', SubscriptionStatus[Number(response.data?.subscription_details?.subscription) || 0]);
+          // const response: any = {
+          //   "success": true,
+          //   "message": "Login successful (type 1)",
+          //   "data": {
+          //     "user_id": "161",
+          //     "username": "Bruce Wayne",
+          //     "phone": "+917854123625",
+          //     "email": "wayne@gmail.com",
+          //     "isBlocked": true,
+          //     "subscription": "Premium",
+          //     "user_type": "Customer",
+          //     "createdAt": "2025-07-12 10:22:46",
+          //     "updatedAt": "2025-07-12 08:22:46",
+          //     "lastLogin": "2025-07-12 09:49:04",
+          //     "jwt_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3NTIzMTM3NDQsImV4cCI6MTc1MjMxNzM0NCwiZGF0YSI6eyJ1c2VyX2lkIjoiMTYxIn19.nqlLV796_LCvR-6m7_09O0fWGPGOgG3BnMDwyUr-X40",
+          //     "notifications": 1,
+          //     "subscription_details": {
+          //       "user_subscription_id": "73",
+          //       "subscriptionplan_id": "124",
+          //       "plan_name": "demo 2",
+          //       "start_date": "2025-07-12",
+          //       "end_date": "2025-07-22",
+          //       "subscription": "1"
+          //     }
+          //   }
+          // }
+          // localStorage.setItem('t_k', response.data?.jwt_token);
+          // this.storageService.updateItem('userData', response.data);
+          // this.storageService.updateItem('username', response.data?.username || 'User');
+          // this.storageService.updateItem('token', response.data?.jwt_token || 'token');
+          // this.storageService.updateItem('subscription', SubscriptionStatus[Number(response.data?.subscription_details?.subscription) || 0]);
         }
       });
     } else {

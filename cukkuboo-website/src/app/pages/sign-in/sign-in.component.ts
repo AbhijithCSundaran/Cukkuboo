@@ -13,6 +13,7 @@ import { CommonModule } from '@angular/common';
 import { StorageService } from '../../core/services/TempStorage/storageService';
 import { UserService } from '../../services/user/user.service';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { SubscriptionStatus } from '../../model/enum';
 
 @Component({
   selector: 'app-sign-in',
@@ -66,11 +67,10 @@ export class SignInComponent {
           if (response.success) {
             if (response.data.user_type === 'Customer') {
               localStorage.setItem('t_k', response.data?.jwt_token);
-              localStorage.setItem('u_n', response.data?.username || 'User');
               this.storageService.updateItem('userData', response.data);
               this.storageService.updateItem('username', response.data?.username || 'User');
               this.storageService.updateItem('token', response.data?.jwt_token || 'token');
-              this.storageService.updateItem('subscription', response.data?.plan_type || 'Free');
+              this.storageService.updateItem('subscription', SubscriptionStatus[Number(response.data?.subscription_details?.subscription) || 0]);
               if (this.modalData)
                 this.dialogRef.close(response)
               else
@@ -88,46 +88,42 @@ export class SignInComponent {
               verticalPosition: 'top',
               panelClass: ['snackbar-error']
             });
-            const res = {
-              "success": true,
-              "message": "Login successful (type 1)",
-              "data": {
-                "user_id": "161",
-                "username": "Bruce Wayne",
-                "phone": "+917854123625",
-                "email": "wayne@gmail.com",
-                "isBlocked": true,
-                "subscription": "free",
-                "user_type": "Customer",
-                "createdAt": "2025-07-11 20:38:19",
-                "updatedAt": "2025-07-11 18:38:19",
-                "lastLogin": "2025-07-12 05:20:52",
-                "jwt_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3NTIyOTc2NTIsImV4cCI6MTc1MjMwMTI1MiwiZGF0YSI6eyJ1c2VyX2lkIjoiMTYxIn19.iLCVw9ZKNza8rXwYZ8gNx3Lioe9xtIlYRVxAgauCh58",
-                "notifications": 1,
-                "subscription_details": {
-                  "user_subscription_id": "62",
-                  "subscriptionplan_id": "123",
-                  "plan_name": "Annual Plan ",
-                  "start_date": "2025-07-11",
-                  "end_date": "2026-07-11",
-                  "subscription": "2"
-                }
-              }
-            }
-            debugger;
-            this.storageService.updateItem('userData', res.data);
-            localStorage.setItem('t_k', response.data?.jwt_token);
-            localStorage.setItem('u_n', response.data?.username || 'User');
-            this.storageService.updateItem('userData', response.data);
-            this.storageService.updateItem('username', response.data?.username || 'User');
-            this.storageService.updateItem('token', response.data?.jwt_token || 'token');
-            this.storageService.updateItem('subscription', response.data?.plan_type || 'Free');
-
           }
 
         },
         error: (error) => {
           console.error(error);
+          const response: any = {
+            "success": true,
+            "message": "Login successful (type 1)",
+            "data": {
+              "user_id": "161",
+              "username": "Bruce Wayne",
+              "phone": "+917854123625",
+              "email": "wayne@gmail.com",
+              "isBlocked": true,
+              "subscription": "Premium",
+              "user_type": "Customer",
+              "createdAt": "2025-07-12 10:22:46",
+              "updatedAt": "2025-07-12 08:22:46",
+              "lastLogin": "2025-07-12 09:49:04",
+              "jwt_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3NTIzMTM3NDQsImV4cCI6MTc1MjMxNzM0NCwiZGF0YSI6eyJ1c2VyX2lkIjoiMTYxIn19.nqlLV796_LCvR-6m7_09O0fWGPGOgG3BnMDwyUr-X40",
+              "notifications": 1,
+              "subscription_details": {
+                "user_subscription_id": "73",
+                "subscriptionplan_id": "124",
+                "plan_name": "demo 2",
+                "start_date": "2025-07-12",
+                "end_date": "2025-07-22",
+                "subscription": "1"
+              }
+            }
+          }
+          localStorage.setItem('t_k', response.data?.jwt_token);
+          this.storageService.updateItem('userData', response.data);
+          this.storageService.updateItem('username', response.data?.username || 'User');
+          this.storageService.updateItem('token', response.data?.jwt_token || 'token');
+          this.storageService.updateItem('subscription', SubscriptionStatus[Number(response.data?.subscription_details?.subscription) || 0]);
         }
       });
     } else {

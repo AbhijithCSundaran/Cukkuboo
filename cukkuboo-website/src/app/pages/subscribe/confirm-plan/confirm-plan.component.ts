@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, Inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { RouterModule } from '@angular/router';
 
 @Component({
@@ -16,11 +17,21 @@ export class ConfirmPlanComponent {
   constructor(
     public dialogRef: MatDialogRef<ConfirmPlanComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
+    private snackBar: MatSnackBar,
   ) {
 
   }
   confirm(): void {
-    this.dialogRef.close(true);
+    if (!this.acknowledged) {
+      this.snackBar.open('Please read and acknowledge our Privacy Policy & Terms of Use.', '', {
+        duration: 3000,
+        verticalPosition: 'top',
+        horizontalPosition: 'center',
+        panelClass: ['snackbar-warn']
+      });
+    }
+    else
+      this.dialogRef.close(true);
   }
 
   cancel(): void {

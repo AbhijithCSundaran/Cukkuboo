@@ -17,6 +17,7 @@
 <div class="container mt-2">
   <h5 class="p-1">Choose a plan for becoming PRIME member</h5>
   <div class="row justify-content-center mt-3">
+    @if(plans.length){
     <div class="col-md-4 p-3" *ngFor="let plan of plans">
       <div class="card plan-card">
         <div class="card-header d-flex justify-content-between align-items-center">
@@ -34,5 +35,9 @@
         </div>
       </div>
     </div>
+    <div *ngIf="!stopInfiniteScroll" infiniteScroll (scrolled)="onScroll($event)" style="height: 1px"></div>
+    }@else {
+        <p class="px-3">No Plans available for you now!</p>
+    }
   </div>
 </div>

@@ -62,7 +62,8 @@
                   <li class="menu-item" routerLinkActive="active">
                     <a routerLink="/reels">Reels</a>
                   </li>
-                  <li class="menu-item" routerLinkActive="active" *ngIf="userData?.subscription === 'premium'">
+                  <li class="menu-item" routerLinkActive="active"
+                    *ngIf="userData?.subscription_details?.subscription == 1">
                     <a routerLink="/subscription-details"> My Subscription</a>
                   </li>
 
@@ -148,7 +149,7 @@
                 <div class="gen-account-menu" [class.gen-form-show]="showUserDropdown">
                   <ul class="col-12">
                     <li><a routerLink="/profile"><i class="fa fa-user"></i> Profile</a></li>
-                    <li *ngIf="userData?.subscription === 'premium'">
+                    <li *ngIf="userData?.subscription_details?.subscription==1">
                       <a routerLink="/subscription-details">
                         <i class="fa-solid fa-star"></i> My Subscription
                       </a>

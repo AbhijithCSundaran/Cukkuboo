@@ -16,6 +16,7 @@ interface Notification {
   status: 'read' | 'unread';
   user_id: string;
   created_on: string;
+  expanded?: boolean; // Used for "Read More/Less"
 }
 
 @Component({
@@ -75,7 +76,8 @@ export class NotificationsComponent implements OnInit, AfterViewInit {
             content: item.content,
             status: item.status === '1' ? 'read' : 'unread',
             user_id: item.user_id,
-            created_on: item.created_on
+            created_on: item.created_on,
+            expanded: false
           }));
 
           this.dataSource.data = mappedData;
@@ -91,5 +93,9 @@ export class NotificationsComponent implements OnInit, AfterViewInit {
         this.totalItems = 0;
       }
     });
+  }
+
+  toggleContent(row: Notification): void {
+    row.expanded = !row.expanded;
   }
 }

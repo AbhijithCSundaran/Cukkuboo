@@ -12,6 +12,7 @@ import { ValidationMessagesComponent } from '../../core/components/validation-me
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { Router } from '@angular/router';
+import { SubscriptionStatus } from '../../model/enum';
 @Component({
   selector: 'app-profile',
   imports: [
@@ -68,7 +69,7 @@ export class ProfileComponent implements OnInit {
       this.showProfileInfo = true; // default to profile
     }
 
-     this.profileForm = this.fb.group({
+    this.profileForm = this.fb.group({
       username: ['', [Validators.required]],
       email: ['', [Validators.required, ValidationService.emailValidator]],
       phone: ['', [Validators.required,
@@ -105,7 +106,7 @@ export class ProfileComponent implements OnInit {
         username: data.username,
         email: data.email,
         phone: data.phone,
-        subscription: data.subscription,
+        subscription: SubscriptionStatus[Number(data?.subscription_details?.subscription) || 0],
         country_code: data.country_code || '+91',
 
       });

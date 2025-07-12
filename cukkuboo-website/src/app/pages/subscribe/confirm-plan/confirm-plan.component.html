@@ -36,8 +36,10 @@
 <div class="d-flex flex-column justify-content-center align-items-center">
     <h2 mat-dialog-title class="mb-1">Subscribe Now!</h2>
     <h6 class="col-12 mt-2">
-        To enjoy <b class="mx-1 text-primary-clr">{{ data?.plan?.period }} days</b>  of access for just
-        <span class="fw-bold"> 
+        To enjoy 
+        <b class="mx-1 text-primary-clr">{{ data?.plan?.period }} day{{data?.plan?.period>1?'s':''}}</b> 
+        of access for just
+        <span class="fw-bold">
             ₹{{ data?.plan?.discount_price?data?.plan?.discount_price:data?.plan?.price}},
         </span>
         Subscribe to plan "<b>{{data?.plan?.plan_name}}</b>" now!
@@ -46,7 +48,7 @@
     <h6 class="col-12 mt-2 d-flex justify-content-between " *ngIf="data?.plan?.discount_price">
         <span>Save <b class="text-primary-clr">₹{{data.plan.price - data.plan.discount_price}} </b></span>
         <span>
-            Only 
+            Only
             <span class="fw-bold me-1 text-primary-clr"> <b>₹{{ data.plan?.discount_price}}</b></span>
             (₹<span class="text-decoration-line-through">{{data?.plan?.price}}</span>)!
         </span>

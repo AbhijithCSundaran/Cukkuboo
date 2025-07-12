@@ -27,13 +27,6 @@ export class SubscribeComponent implements OnInit {
   stopInfiniteScroll = false;
   UserData: any;
 
-  // Modal controls
-  showSubscriptionModal = false;
-  selectedPlan: any = null;
-
-  // Checkbox acknowledgment
-  acknowledged: boolean = false;
-
   constructor(
     // private planService: PlanService,
     private storageService: StorageService,
@@ -255,15 +248,6 @@ export class SubscribeComponent implements OnInit {
       });
       return;
     }
-    // else if (!this.acknowledged) {
-    //   this.snackBar.open('Please read and acknowledge our Privacy Policy & Terms of Use.', '', {
-    //     duration: 3000,
-    //     verticalPosition: 'top',
-    //     horizontalPosition: 'center',
-    //     panelClass: ['snackbar-warn']
-    //   });
-    //   return;
-    // }
     const dialogRef = this.dialog.open(ConfirmPlanComponent, {
       data: {
         plan: plan,
@@ -294,28 +278,19 @@ export class SubscribeComponent implements OnInit {
     this.subscriptionService.saveSubscription(model).subscribe({
       next: (res) => {
         if (res.success) {
-          this.UserData.subscription = 'premium';
+          this.UserData.subscription = 'Premium';
+          res.data.subscription = res.data?.status | 1;
+          this.UserData.subscription_details = res.data;
           this.storageService.updateItem('userData', this.UserData);
-          this.showSubscriptionModal = false;
-          this.selectedPlan = null;
-          this.acknowledged = false;
-
-          this.snackBar.open(
-            res?.success ? 'Subscription activated successfully.' : res?.messages?.error || 'Subscription failed.',
-            '',
-            {
-              duration: 3000,
-              verticalPosition: 'top',
-              horizontalPosition: 'center',
-              panelClass: [res?.success ? 'snackbar-success' : 'snackbar-error']
-            }
-          );
         }
+        this.snackBar.open(res?.success ? 'Subscription activated successfully.' : res?.messages?.error || 'Subscription failed.', '',
+          {
+            duration: 3000, verticalPosition: 'top', horizontalPosition: 'center',
+            panelClass: [res?.success ? 'snackbar-success' : 'snackbar-error']
+          }
+        );
       },
       error: (err) => {
-        this.showSubscriptionModal = false;
-        this.selectedPlan = null;
-        this.acknowledged = false;
 
         this.snackBar.open(err?.error?.messages?.error || 'Something went wrong. Try again.', '', {
           duration: 3000,

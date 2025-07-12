@@ -10,6 +10,7 @@ import { JsPlayerComponent } from '../../_common/js-player/js-player.component';
 import { RouterLink } from '@angular/router';
 import { StorageService } from '../../../core/services/TempStorage/storageService';
 import { SignInComponent } from '../../sign-in/sign-in.component';
+import { ConfirmationDialogComponent } from '../../../core/components/confirmation-dialog/confirmation-dialog.component';
 
 @Component({
   selector: 'app-single-movie',
@@ -121,9 +122,9 @@ export class SingleMovieComponent implements OnInit {
       this.openLoginModal();
       return;
     }
-    if (!video) {
-      this.showSnackbar('Access this movie by subscribing to our platform', 'error');
-      this.router.navigate(['/subscribe']);
+    if (!video || (this.movieData.access != 1 && userData.subscription_details?.subscription != 1)) {
+      // this.showSnackbar('Access this movie by subscribing to our platform', 'error');
+      this.askGotoSubscription();
       return;
     }
     this.selectedVideo = video;
@@ -135,6 +136,18 @@ export class SingleMovieComponent implements OnInit {
         error: (err) => console.error('Error saving watch history:', err)
       });
     }
+  }
+  askGotoSubscription() {
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      data: {
+        message: `<p>Access this movie by subscribing to our platform,  Do you want to go to <span>Subscriptions</span> page now?</p>`
+      },
+    });
+    dialogRef.afterClosed().subscribe((result: any) => {
+      if (result) {
+        this.router.navigate(['/subscribe']);
+      }
+    })
   }
   openLoginModal() {
     const dialogRef = this.dialog.open(SignInComponent, {

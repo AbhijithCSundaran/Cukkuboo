@@ -11,7 +11,7 @@ import { ContentLoaderComponent } from '../../core/components/content-loader/con
 @Component({
   selector: 'app-subscription-details',
   imports: [
-    CommonModule,ContentLoaderComponent
+    CommonModule, ContentLoaderComponent
   ],
   templateUrl: './subscription-details.component.html',
   styleUrl: './subscription-details.component.scss'
@@ -27,10 +27,9 @@ export class SubscriptionDetailsComponent implements OnInit {
 
 
   ngOnInit(): void {
-    debugger;
     const data = this.storageService.getItem('userData');
-    if (data?.subscriptionplan_id)
-      this.loadSubscriptionDetails(data.subscriptionplan_id);
+    if (data?.subscription_details?.user_subscription_id)
+      this.loadSubscriptionDetails(data?.subscription_details?.user_subscription_id);
     else
       this.router.navigate(['/']);
   }
@@ -65,8 +64,10 @@ export class SubscriptionDetailsComponent implements OnInit {
     this.userService.cancelSubscriptionPlan().subscribe({
       next: (res: any) => {
         if (res.success) {
-          console.log('Subscription cancelled successfully.');
-          this.subscriptionData.status = '1';
+          this.subscriptionData = null;
+          const userData = this.storageService.getItem('userData');
+          userData.subscription_details.subscription = 3;
+          this.storageService.updateItem('userData', userData);
           this.snackBar.open('Subscription cancelled successfully.', '', {
             duration: 3000,
             verticalPosition: 'top',

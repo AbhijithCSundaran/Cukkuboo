@@ -43,7 +43,7 @@
 
                 <ul id="gen-main-menu" class="navbar-nav">
                   <ng-container *ngIf="isSignedIn">
-                    <li class="menu-item ml-3">
+                    <li class="menu-item ml-3" *ngIf="userData?.subscription_details?.subscription!=1">
                       <a routerLink="/subscribe" class="gen-button py-0 text-center subscribe-btn">
                         <div class="gen-button-block">
                           <span class="gen-button-line-left"></span>
@@ -71,7 +71,7 @@
                     <li class="nav-item">
                       <a routerLink="/signin" class="nav-link">Sign In</a>
                     </li>
-                    <li class="menu-item ml-3">
+                    <li class="menu-item ml-3" *ngIf="userData?.subscription_details?.subscription!=1">
                       <a routerLink="/subscribe" class="gen-button py-0 text-center subscribe-btn">
                         <div class="gen-button-block">
                           <span class="gen-button-line-left"></span>
@@ -125,7 +125,7 @@
                     <li class="menu-item ml-3">
                       <a routerLink="/signin">Sign In</a>
                     </li>
-                    <li class="menu-item ml-3">
+                    <li class="menu-item ml-3" *ngIf="userData?.subscription_details?.subscription!=1">
                       <a routerLink="/subscribe" class="gen-button">
                         <div class="gen-button-block">
                           <span class="gen-button-line-left"></span>
@@ -167,7 +167,7 @@
                 <span class="notification-dot" *ngIf="hasUnreadNotification"></span>
               </div>
 
-              <div class="gen-btn-container ml-3">
+              <div class="gen-btn-container ml-3" *ngIf="userData?.subscription_details?.subscription!=1">
                 <a routerLink="/subscribe" class="gen-button">
                   <div class="gen-button-block">
                     <span class="gen-button-line-left"></span>

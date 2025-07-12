@@ -125,22 +125,23 @@ textarea {
         justify-content: center;
         align-items: center;
         overflow: hidden;
+        background: #221f1f;
+        flex: 1 1 auto;
 
         img {
-            // height: 100%;
-            // max-width: none;
-            // max-height: 540px;
             min-width: 100%;
             min-height: 100%;
             max-width: none;
-            max-height: 540px;
+            max-height: 325px;
+            object-fit: cover;
+            object-position: center;
         }
 
     }
 
-    .gen-info-contain {
-        flex: 1 1 auto;
-    }
+    // .gen-info-contain {
+    //     flex: 1 1 auto;
+    // }
 
     ul {
         list-style: none;

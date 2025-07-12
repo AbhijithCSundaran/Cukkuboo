@@ -4,74 +4,93 @@
     <h2>{{StaffId ? 'Edit Staff' : 'Add Staff'}}</h2>
     <button class="back-to-list-button" (click)="goBack()">Back to List</button>
   </div>
+  <div [formGroup]="staffForm">
+    <mat-card appearance="outlined" class="form-card">
+      <mat-card-content class="d-flex flex-wrap">
 
-  <mat-card appearance="outlined" class="form-card">
-    <mat-card-content [formGroup]="staffForm" class="d-flex flex-wrap">
+        <!-- Name -->
+        <div class="w-50 px-2 pb-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Name</mat-label>
+            <input matInput formControlName="username" placeholder="Add name" required>
+          </mat-form-field>
+        </div>
 
-      <!-- Name -->
-      <div class="w-50 px-2 pb-3">
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Name</mat-label>
-          <input matInput formControlName="username" placeholder="Add name" required>
-        </mat-form-field>
-      </div>
+        <!-- Contact -->
+        <!-- <div class="w-50 px-2 pb-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Contact</mat-label>
+            <input matInput formControlName="phone" placeholder="Add contact number" maxlength="15"
+              (input)="onNumberInput($event)">
+          </mat-form-field>
+        </div> -->
 
-      <!-- Contact -->
-      <div class="w-50 px-2 pb-3">
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Contact</mat-label>
-          <input matInput formControlName="phone" placeholder="Add contact number" maxlength="15" (input)="onNumberInput($event)">
-        </mat-form-field>
-      </div>
+        <div class="w-50 px-2 pb-3 d-flex">
+          <mat-form-field appearance="outline" class="me-2" style="width: 25%;">
+            <mat-label>Code</mat-label>
+            <mat-select formControlName="countryCode">
+              <mat-option *ngFor="let country of countryCodes" [value]="country.dial_code">
+                ({{ country.dial_code }})
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
 
-      <!-- Email -->
-      <div class="w-50 px-2 pb-3">
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Email</mat-label>
-          <input matInput formControlName="email" type="email" placeholder="Add email">
-        </mat-form-field>
-      </div>
+          <mat-form-field appearance="outline" style="width: 75%;">
+            <mat-label>Conatct</mat-label>
+            <input matInput formControlName="phone" maxlength="15" placeholder="Add contact number"
+              (input)="onNumberInput($event)" />
+          </mat-form-field>
+        </div>
 
-      <!-- Password -->
-      <div class="w-50 px-2 pb-3">
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Password</mat-label>
-          <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password" placeholder="Enter password">
-          <button type="button" mat-icon-button matSuffix class="eye-toggle-btn"
-                  (click)="togglePasswordVisibility()"
-                  [attr.aria-label]="'Toggle password visibility'"
-                  [attr.aria-pressed]="!hidePassword">
-            <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
-          </button>
-        </mat-form-field>
-      </div>
+        <!-- Email -->
+        <div class="w-50 px-2 pb-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Email</mat-label>
+            <input matInput formControlName="email" type="email" placeholder="Add email">
+          </mat-form-field>
+        </div>
 
-      <!-- Status -->
-      <div class="w-50 px-2 pb-3">
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Status</mat-label>
-          <mat-select formControlName="status">
-            <mat-option value="1">Active</mat-option>
-            <mat-option value="2">Inactive</mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
+        <!-- Password -->
+        <div class="w-50 px-2 pb-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Password</mat-label>
+            <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password"
+              placeholder="Enter password">
+            <button type="button" mat-icon-button matSuffix class="eye-toggle-btn" (click)="togglePasswordVisibility()"
+              [attr.aria-label]="'Toggle password visibility'" [attr.aria-pressed]="!hidePassword">
+              <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+            </button>
+          </mat-form-field>
+        </div>
 
-      <!-- Join Date -->
-      <div class="w-50 px-2 pb-3">
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Join Date</mat-label>
-          <input matInput [matDatepicker]="picker" formControlName="join_date" placeholder="Choose a date" (click)="picker.open()" readonly>
-          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-          <mat-datepicker #picker></mat-datepicker>
-        </mat-form-field>
-      </div>
+        <!-- Status -->
+        <div class="w-50 px-2 pb-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Status</mat-label>
+            <mat-select formControlName="status">
+              <mat-option value="1">Active</mat-option>
+              <mat-option value="2">Inactive</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
 
-      <!-- Save Button -->
-      <div class="save">
-        <button class="save-button" mat-raised-button color="primary" (click)="saveStaff()">Save</button>
-      </div>
+        <!-- Join Date -->
+        <div class="w-50 px-2 pb-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Join Date</mat-label>
+            <input matInput [matDatepicker]="picker" formControlName="join_date" placeholder="Choose a date"
+              (click)="picker.open()" readonly>
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+        </div>
 
-    </mat-card-content>
-  </mat-card>
+        <!-- Save Button -->
+        <div class="save">
+          <button class="save-button" mat-raised-button color="primary" (click)="saveStaff()">Save</button>
+        </div>
+
+      </mat-card-content>
+    </mat-card>
+  </div>
 </div>

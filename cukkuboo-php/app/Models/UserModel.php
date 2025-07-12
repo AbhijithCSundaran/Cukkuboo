@@ -115,24 +115,11 @@ class UserModel extends Model
 {
     return $this->where('user_id', $userId)
                 ->set([
-                    'subscription' => 'cancel',
+                    'subscription' => 'Cancelled',
                     'updated_at'  => date('Y-m-d H:i:s')
                 ])
                 ->update();
 }
 
-    public function markExpiredUserSubscriptions($userId)
-{
-    $today = date('Y-m-d');
-    return $this->where('user_id', $userId)
-                ->where('end_date <', $today)
-                ->where('subscription !=', 'expired')
-                ->set([
-                    'subscription' => 'expired',
-                    'updated_at'  => date('Y-m-d H:i:s')
-                ])
-                ->update();
-}
-
-
+    
 }

@@ -23,7 +23,7 @@ class Usersub extends ResourceController
         $this->userModel = new UserModel();
     }
 
- public function autoSubscribe()
+ public function createSubscribe()
 {
     $data = $this->request->getJSON(true);
     $authHeader = $this->request->getHeaderLine('Authorization');
@@ -36,22 +36,22 @@ class Usersub extends ResourceController
     $userId = $user['user_id'];
     $planId = $data['subscriptionplan_id'] ?? null;
     $today = date('Y-m-d');
-    $expiredSubscriptions = $this->usersubModel
-        ->where('user_id', $userId)
-        ->where('status', '2') 
-        ->where('end_date <', $today) 
-        ->findAll();
+    // $expiredSubscriptions = $this->usersubModel
+    //     ->where('user_id', $userId)
+    //     ->where('status', '1') 
+    //     ->where('end_date <', $today) 
+    //     ->findAll();
 
-    if (!empty($expiredSubscriptions)) {
-        foreach ($expiredSubscriptions as $expiredSub) {
-            $this->usersubModel->update($expiredSub['user_subscription_id'], ['status' => 9]);
-        }
-        $this->userModel->update($userId, ['subscription' => 'expired']);
-    }
+    // if (!empty($expiredSubscriptions)) {
+    //     foreach ($expiredSubscriptions as $expiredSub) {
+    //         $this->usersubModel->update($expiredSub['user_subscription_id'], ['status' => 9]);
+    //     }
+    //     $this->userModel->update($userId, ['subscription' => 'expired']);
+    // }
 
     $activeSub = $this->usersubModel
         ->where('user_id', $userId)
-        ->where('status', '2')  
+        ->where('status', '1')  
         ->where('end_date >=', $today)
         ->first();
 
@@ -85,7 +85,7 @@ class Usersub extends ResourceController
         return $this->failValidationErrors('Invalid plan period.');
     }
 
-    $status = 2;
+    $status = 1;
     $planType = 'Premium';
     $payload = [
         'user_id'             => $userId,
@@ -100,11 +100,15 @@ class Usersub extends ResourceController
         'modify_on'           => date('Y-m-d H:i:s'),
         'modify_by'           => $userId
     ];
-
-    $existing = $this->usersubModel
-        ->where('user_id', $userId)
-        ->where('subscriptionplan_id', $planId)
-        ->first();
+    
+    $data = $this->request->getJSON(true); 
+    if (isset($data['user_subscription_id'])) {
+        $existing = $this->usersubModel
+            ->where('user_subscription_id', $data['user_subscription_id'])
+            ->first();
+    } else {
+        $existing = null; 
+    }
 
     if ($existing) {
         $this->usersubModel->update($existing['user_subscription_id'], $payload);
@@ -116,8 +120,7 @@ class Usersub extends ResourceController
         $msg = 'Subscription added successfully.';
     }
 
-    $this->userModel->update($userId, ['subscription' => 'premium']);
-    $payload['plan_type'] = $planType;
+    $this->userModel->update($userId, ['subscription' => 'Premium']);
     $payload['start_date'] = date('d F Y', strtotime($payload['start_date']));
     $payload['end_date']   = date('d F Y', strtotime($payload['end_date']));
 
@@ -257,7 +260,8 @@ public function getUserSubscriptions()
         $sub['status'] = 2;
     }
 
-    $sub['plan_type'] = ($sub['status'] == 1) ? 'Free' : 'Premium';
+    $sub['plan_type'] = ($sub['status'] == 1) ? 'Premium' : (($sub['status'] == 2) ? 'Expired' : (($sub['status'] == 3) ? 'Cancelled' : 'Unknown'));
+
 }
 
 
@@ -317,7 +321,7 @@ public function cancelSubscription()
         'message' => 'Subscription cancelled successfully.',
         'data' => [
             'user_id' => $userId,
-            'subscription' => 'cancel'
+            'subscription' => 'Cancelled'
         ]
     ]);
 }
@@ -393,7 +397,7 @@ public function cancelSubscription()
 
     $activeSubs = $this->usersubModel
         ->where('user_id', $userId)
-        ->where('status', '2')  // Active
+        ->where('status', '1')  // Active
         ->where('end_date >=', $today)
         ->first();
 
@@ -438,11 +442,9 @@ public function getExpiredSubscriptions()
     }
 
     $userId = $user['user_id'];
-    $this->userModel->markExpiredUserSubscriptions($userId);
-    // All subscriptions with status 9 (expired/deleted)
     $expiredSubs = $this->usersubModel
         ->where('user_id', $userId)
-        ->where('status', '9')
+        ->where('status', '2')
         ->findAll();
 
     if (empty($expiredSubs)) {
@@ -471,10 +473,29 @@ public function getExpiredSubscriptions()
         'data'    => $formatted
     ]);
 }
-private function isValidDate($date, $format = 'Y-m-d')
+    private function isValidDate($date, $format = 'Y-m-d')
     {
         $d = \DateTime::createFromFormat($format, $date);
         return $d && $d->format($format) === $date;
     }
+    public function expireSubscriptions()
+{
+    $today = date('Y-m-d');
+    $expired = $this->usersubModel
+        ->where('status', 1) 
+        ->where('end_date <', $today)
+        ->findAll();
+
+    foreach ($expired as $sub) {
+        $this->usersubModel->update($sub['user_subscription_id'], ['status' => 2]);
+        $this->userModel->update($sub['user_id'], ['subscription' => 'expired']);
+    }
+
+    return $this->respond([
+        'success' => true,
+        'message' => 'Expired subscriptions updated.',
+        'expired_count' => count($expired)
+    ]);
+}
 
 }

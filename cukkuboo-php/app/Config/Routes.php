@@ -24,6 +24,11 @@ $routes->get('user/list', 'User::getUserList');
 $routes->get('staff/list', 'User::getStaffList');
 $routes->post('user/email-preference', 'User::updateEmailPreference');
 
+//forgot password
+$routes->get('user/profile-index', 'Profile::index');
+$routes->post('user/forgot-password', 'Profile::resetPasswordFlow');
+$routes->post('user/delete-user', 'Profile::removeUser');
+
 //Category
 
 $routes->get('category/categories', 'Category::categorylist');
@@ -85,7 +90,7 @@ $routes->get('reels/get/(:any)', 'Reels::getReelById/$1');
 $routes->delete('reels/delete/(:any)', 'Reels::deleteReel/$1');
 
 //User subscription
-$routes->post('usersub/save', 'Usersub::autoSubscribe');
+$routes->post('usersub/save', 'Usersub::createSubscribe');
 $routes->get('usersub/details', 'Usersub::getUserSubscriptions');
 $routes->get('usersub/get/(:num)', 'Usersub::getSubscriptionById/$1');
 $routes->get('usersub/get', 'Usersub::getSubscriptionById');

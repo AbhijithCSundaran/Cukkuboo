@@ -23,7 +23,7 @@ class Notification extends ResourceController
         if(!$user){ 
             return $this->failUnauthorized('Invalid or missing token.');
         }
-        $notificationModel = new \App\Models\NotificationModel();
+        $notificationModel = new NotificationModel();
         $data = $this->request->getJSON(true);
         $notificationId = $data['notification_id'] ?? null;
 
@@ -47,7 +47,7 @@ class Notification extends ResourceController
         } else {
             $notificationData['created_by'] = $user['user_id'];
             $notificationData['created_on'] = date('Y-m-d H:i:s');
-
+            $notificationData['status'] = 1;
             $id = $this->notificationModel->insert($notificationData);
             return $this->respond([
                 'success' => true,

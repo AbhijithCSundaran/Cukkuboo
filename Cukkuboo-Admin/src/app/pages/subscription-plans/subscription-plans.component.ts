@@ -58,7 +58,7 @@ export class SubscriptionPlansComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.dataSource.paginator = this.paginator;
+   // this.dataSource.paginator = this.paginator;
 
     this.paginator.page.subscribe(() => {
       this.pageIndex = this.paginator.pageIndex;

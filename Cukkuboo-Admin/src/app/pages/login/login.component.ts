@@ -87,7 +87,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
 
           if (response.success) {
             // console.log(response)
-            if (response.data.user_type == 'admin') {
+            if (response.data.user_type == 'admin' || response.data.user_type == 'staff') {
               localStorage.setItem('token', response.data?.jwt_token);
               this.snackBar.open('Login successful', '', {
                 duration: 3000,

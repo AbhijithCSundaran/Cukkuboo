@@ -125,7 +125,7 @@ export class SubscribeComponent implements OnInit {
           this.acknowledged = false;
 
           this.snackBar.open(
-            res?.success ? 'Subscription successful!' : res?.messages?.error || 'Subscription failed.',
+            res?.success ? 'Subscription activated successfully.' : res?.messages?.error || 'Subscription failed.',
             '',
             {
               duration: 3000,

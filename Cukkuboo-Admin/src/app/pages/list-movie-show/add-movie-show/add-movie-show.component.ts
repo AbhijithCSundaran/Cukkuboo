@@ -523,12 +523,17 @@ getVideoDuration(file: File): void {
 submitMovie() {
   if (this.movieForm.invalid) {
     this.movieForm.markAllAsTouched();
+    this.snackBar.open('Please fill all required fields.', '', {
+      duration: 3000,
+      verticalPosition: 'top',
+      panelClass: ['snackbar-error']
+    });
     return;
   }
 
   const model = this.movieForm.value;
 
-  console.log('Payload to backend:', model); // ✅ Ensure duration is included here
+
 
   this.movieService.addmovies(model).subscribe({
     next: (response) => {

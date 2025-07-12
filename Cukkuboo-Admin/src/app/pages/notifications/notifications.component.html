@@ -39,7 +39,7 @@
 <ng-container matColumnDef="content">
   <th mat-header-cell *matHeaderCellDef> Content </th>
   <td mat-cell *matCellDef="let row">
-    <div>
+    <div class="justified-text">
       <span *ngIf="!row.expanded">{{ row.content | slice:0:100 }}<span *ngIf="row.content.length > 100">...</span></span>
       <span *ngIf="row.expanded">{{ row.content }}</span>
     </div>

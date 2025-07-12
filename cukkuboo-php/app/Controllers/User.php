@@ -294,7 +294,7 @@ public function getUserDetailsById($userId = null)
         'plan_name'           => $subscription['plan_name'] ?? null,
         'start_date'          => $subscription['start_date'] ?? null,
         'end_date'            => $subscription['end_date'] ?? null,
-        'subscription'        => $subscription['status']
+        'subscription' => $subscription['status'] ?? 0,
     ];
 
     $notificationModel = new NotificationModel();

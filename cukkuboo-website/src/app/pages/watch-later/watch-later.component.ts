@@ -93,7 +93,7 @@ export class WatchLaterComponent implements OnInit {
             duration: 3000,
             verticalPosition: 'top',
             horizontalPosition: 'center',
-            panelClass: ['snackbar-danger']
+            panelClass: ['snackbar-error']
           });
         }
       },
@@ -102,7 +102,7 @@ export class WatchLaterComponent implements OnInit {
           duration: 3000,
           verticalPosition: 'top',
           horizontalPosition: 'center',
-          panelClass: ['snackbar-danger']
+          panelClass: ['snackbar-error']
         });
       }
     });
@@ -136,7 +136,7 @@ export class WatchLaterComponent implements OnInit {
             duration: 3000,
             verticalPosition: 'top',
             horizontalPosition: 'center',
-            panelClass: ['snackbar-danger']
+            panelClass: ['snackbar-error']
           });
         }
       },
@@ -146,7 +146,7 @@ export class WatchLaterComponent implements OnInit {
           duration: 3000,
           verticalPosition: 'top',
           horizontalPosition: 'center',
-          panelClass: ['snackbar-danger']
+          panelClass: ['snackbar-error']
         });
       }
     });

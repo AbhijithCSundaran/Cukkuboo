@@ -34,25 +34,34 @@
 
 
 <div class="d-flex flex-column justify-content-center align-items-center">
-    <h2 mat-dialog-title>Plan Details</h2>
-    <div *ngIf="data.message" mat-dialog-content class="mt-1 confirm-message">Subscribe to {{ data?.plan?.plan_name }}
-    </div>
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <span class="text-white">{{ data?.plan?.period }} Days</span>
-        <span>
-            <span class="text-white text-decoration-line-through me-2">
-                ₹{{ data?.plan?.price }}
-            </span>
-            <span class="fw-bold text-white">₹{{ data?.plan?.discount_price }}</span>
+    <h2 mat-dialog-title class="mb-1">Subscribe Now!</h2>
+    <h6 class="col-12 mt-2">
+        To enjoy 
+        <b class="mx-1 text-primary-clr">{{ data?.plan?.period }} day{{data?.plan?.period>1?'s':''}}</b> 
+        of access for just
+        <span class="fw-bold">
+            ₹{{ data?.plan?.discount_price?data?.plan?.discount_price:data?.plan?.price}},
         </span>
-    </div>
-    <div class="fa-checkbox-row single" (click)="acknowledged = !acknowledged">
-        <i [ngClass]="acknowledged ? 'fa-solid fa-square-check' : 'fa-regular fa-square'"></i>
+        Subscribe to plan "<b>{{data?.plan?.plan_name}}</b>" now!
+    </h6>
+
+    <h6 class="col-12 mt-2 d-flex justify-content-between " *ngIf="data?.plan?.discount_price">
+        <span>Save <b class="text-primary-clr">₹{{data.plan.price - data.plan.discount_price}} </b></span>
+        <span>
+            Only
+            <span class="fw-bold me-1 text-primary-clr"> <b>₹{{ data.plan?.discount_price}}</b></span>
+            (₹<span class="text-decoration-line-through">{{data?.plan?.price}}</span>)!
+        </span>
+    </h6>
+    <div class="fa-checkbox-row single d-flex mt-4" (click)="acknowledged = !acknowledged">
+        <i class="pt-2" [ngClass]="acknowledged ? 'fa-solid fa-square-check' : 'fa-regular fa-square'"></i>
         <span class="checkbox-label ms-2">
             By proceeding, I acknowledge that I have read and agree to the
-            <a href="/terms-of-use" target="_blank" rel="noopener noreferrer" (click)="$event.stopPropagation()">Terms of Use</a>
+            <a href="/terms-of-use" target="_blank" rel="noopener noreferrer" (click)="$event.stopPropagation()">Terms
+                of Use</a>
             and
-            <a href="/privacy-policy" target="_blank" rel="noopener noreferrer" (click)="$event.stopPropagation()">Privacy Policy</a>,
+            <a href="/privacy-policy" target="_blank" rel="noopener noreferrer"
+                (click)="$event.stopPropagation()">Privacy Policy</a>,
             and I confirm that I am 18 years of age or older.
         </span>
     </div>

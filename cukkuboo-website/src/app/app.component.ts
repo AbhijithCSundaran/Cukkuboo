@@ -5,6 +5,7 @@ import devtools from 'devtools-detect';
 import { CommonModule } from '@angular/common';
 import { environment } from '../environments/environment';
 import { UserService } from './services/user/user.service';
+import { SubscriptionStatus } from './model/enum';
 
 @Component({
   selector: 'app-root',
@@ -106,8 +107,10 @@ export class AppComponent {
     this.userService.getProfile().subscribe({
       next: (response) => {
         if (response.success) {
-          const data = response.data;
-          this.storageService.updateItem('userData', data);
+          this.storageService.updateItem('userData', response.data);
+          this.storageService.updateItem('username', response.data?.username || 'User');
+          this.storageService.updateItem('token', response.data?.jwt_token || 'token');
+          this.storageService.updateItem('subscription', SubscriptionStatus[Number(response.data?.subscription_details?.subscription) || 0]);
         }
         this.userLoaded = true;
       },
@@ -142,6 +145,9 @@ export class AppComponent {
           }
         }
         this.storageService.updateItem('userData', response.data);
+        this.storageService.updateItem('username', response.data?.username || 'User');
+        this.storageService.updateItem('token', response.data?.jwt_token || 'token');
+        this.storageService.updateItem('subscription', SubscriptionStatus[Number(response.data?.subscription_details?.subscription) || 0]);
 
         console.error('Error fetching profile', err);
       }

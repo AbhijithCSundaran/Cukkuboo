@@ -49,14 +49,14 @@ export class NotificationsComponent implements OnInit, AfterViewInit {
     this.fetchNotifications(this.pageIndex, this.pageSize, this.searchText);
   }
 
-  ngAfterViewInit(): void {
-    this.dataSource.paginator = this.paginator;
-    this.paginator.page.subscribe(() => {
-      this.pageIndex = this.paginator.pageIndex;
-      this.pageSize = this.paginator.pageSize;
-      this.fetchNotifications(this.pageIndex, this.pageSize, this.searchText);
-    });
-  }
+ngAfterViewInit(): void {
+  this.paginator.page.subscribe(() => {
+    this.pageIndex = this.paginator.pageIndex;
+    this.pageSize = this.paginator.pageSize;
+    this.fetchNotifications(this.pageIndex, this.pageSize, this.searchText);
+  });
+}
+
 
   applyGlobalFilter(event: KeyboardEvent): void {
     const value = (event.target as HTMLInputElement).value;

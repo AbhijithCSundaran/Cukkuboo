@@ -229,7 +229,7 @@ export class AddUserComponent implements OnInit {
       });
     } else {
       this.userForm.markAllAsTouched();
-      this.snackBar.open('Please correct the form errors.', '', {
+      this.snackBar.open('Please fill all required fields.', '', {
         duration: 3000,
         verticalPosition: 'top',
         panelClass: ['snackbar-error']

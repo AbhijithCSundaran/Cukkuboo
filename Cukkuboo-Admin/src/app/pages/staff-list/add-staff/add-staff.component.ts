@@ -215,7 +215,7 @@ export class AddStaffComponent {
       });
     } else {
       this.staffForm.markAllAsTouched();
-      this.snackBar.open('Please correct the form errors.', '', {
+      this.snackBar.open('Please fill all required fields.', '', {
         duration: 3000,
         verticalPosition: 'top',
         panelClass: ['snackbar-error']

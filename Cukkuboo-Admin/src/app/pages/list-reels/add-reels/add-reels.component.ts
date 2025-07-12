@@ -299,30 +299,43 @@ export class AddReelsComponent implements OnInit {
     }
   }
 
-  saveReel(): void {
-    if (this.reelForm.invalid || !this.reelForm.value['video']) {
-      this.reelForm.markAllAsTouched();
-      console.warn('Form is invalid or video file not selected');
-      return;
-    }
-
-    const model = this.reelForm.value;
-    this.uploadInProgress = true;
-
-    this.reelsService.addReels(model).subscribe({
-      next: (response) => {
-        this.uploadInProgress = false;
-        this.uploadProgress = 100;
-        this.showSnackbar('Reel saved successfully!', 'snackbar-success');
-        this.router.navigate(['/reels']);
-      },
-      error: (err) => {
-        this.uploadInProgress = false;
-        this.uploadError = 'Upload failed. Please try again.';
-        this.showSnackbar('Failed to save reel. Please try again.', 'snackbar-error');
-      }
+ saveReel(): void {
+  if (this.reelForm.invalid || !this.reelForm.value['video']) {
+    this.reelForm.markAllAsTouched();
+    this.snackBar.open('Please fill all required fields.', '', {
+      duration: 3000,
+      verticalPosition: 'top',
+      panelClass: ['snackbar-error']
     });
+    return;
   }
+
+  const model = this.reelForm.value;
+  this.uploadInProgress = true;
+
+  this.reelsService.addReels(model).subscribe({
+    next: (response) => {
+      this.uploadInProgress = false;
+      this.uploadProgress = 100;
+      this.snackBar.open('Reel saved successfully!', '', {
+        duration: 3000,
+        verticalPosition: 'top',
+        panelClass: ['snackbar-success']
+      });
+      this.router.navigate(['/reels']);
+    },
+    error: (err) => {
+      this.uploadInProgress = false;
+      this.uploadError = 'Upload failed. Please try again.';
+      this.snackBar.open('Failed to save reel. Please try again.', '', {
+        duration: 3000,
+        verticalPosition: 'top',
+        panelClass: ['snackbar-error']
+      });
+    }
+  });
+}
+
 
   goBack(): void {
     history.back();

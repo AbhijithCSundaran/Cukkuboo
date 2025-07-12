@@ -85,11 +85,16 @@ export class AddSubscriptionPlanComponent implements OnInit {
     });
   }
 
-  saveUser(): void {
-    if (this.dataForm.invalid) {
-      this.dataForm.markAllAsTouched();
-      return;
-    }
+ saveUser(): void {
+  if (this.dataForm.invalid) {
+    this.dataForm.markAllAsTouched();
+    this.snackBar.open('Please fill all required fields.', '', {
+      duration: 3000,
+      verticalPosition: 'top',
+      panelClass: ['snackbar-error']
+    });
+    return;
+  }
 
     const planData = this.dataForm.value;
     const originalPrice = parseFloat(planData.price);

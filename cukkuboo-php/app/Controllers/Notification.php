@@ -210,7 +210,7 @@ class Notification extends ResourceController
     $total = $builder->countAllResults(false);
 
     $notifications = $builder
-        ->orderBy('notification_id', 'DESC')
+        ->orderBy('created_on', 'DESC')
         ->limit($pageSize, $offset)
         ->findAll();
 

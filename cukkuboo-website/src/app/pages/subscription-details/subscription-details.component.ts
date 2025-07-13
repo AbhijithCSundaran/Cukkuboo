@@ -7,6 +7,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ConfirmationDialogComponent } from '../../core/components/confirmation-dialog/confirmation-dialog.component';
 import { Router } from '@angular/router';
 import { ContentLoaderComponent } from '../../core/components/content-loader/content-loader.component';
+import { SubscriptionService } from '../../services/subscription.service';
 
 @Component({
   selector: 'app-subscription-details',
@@ -18,7 +19,10 @@ import { ContentLoaderComponent } from '../../core/components/content-loader/con
 })
 export class SubscriptionDetailsComponent implements OnInit {
   subscriptionData: any;
-  constructor(private userService: UserService,
+  subscriptionHistory: any[] = [];
+  isLonding: boolean = true;
+  constructor(
+    private subscriptionService: SubscriptionService,
     private storageService: StorageService,
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
@@ -29,17 +33,32 @@ export class SubscriptionDetailsComponent implements OnInit {
   ngOnInit(): void {
     const data = this.storageService.getItem('userData');
     if (data?.subscription_details?.user_subscription_id)
-      this.loadSubscriptionDetails(data?.subscription_details?.user_subscription_id);
+      this.getActiveSubscription();
+    // this.loadSubscriptionDetails(data?.subscription_details?.user_subscription_id);
     else
       this.router.navigate(['/']);
   }
 
-  loadSubscriptionDetails(subId: number): void {
-    this.userService.getSubscriptionPlanByuserId(subId).subscribe({
+  getActiveSubscription(): void {
+    this.subscriptionService.getActiveSubscription().subscribe({
       next: (res: any) => {
         if (res.success) {
           this.subscriptionData = res.data;
         }
+        this.getSubscriptionHistory();
+      },
+      error: (err) => {
+        console.error('Error fetching subscription:', err);
+      }
+    });
+  }
+  getSubscriptionHistory(): void {
+    this.subscriptionService.getSubscriptionHistory().subscribe({
+      next: (res: any) => {
+        if (res.success) {
+          this.subscriptionHistory = res.data;
+        }
+        this.isLonding = false;
       },
       error: (err) => {
         console.error('Error fetching subscription:', err);
@@ -61,7 +80,7 @@ export class SubscriptionDetailsComponent implements OnInit {
   }
 
   cancelSubscription(): void {
-    this.userService.cancelSubscriptionPlan().subscribe({
+    this.subscriptionService.cancelSubscription().subscribe({
       next: (res: any) => {
         if (res.success) {
           this.subscriptionData = null;

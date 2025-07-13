@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { Component, Inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
@@ -18,8 +18,8 @@ export class ConfirmPlanComponent {
     public dialogRef: MatDialogRef<ConfirmPlanComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private snackBar: MatSnackBar,
+    private location: Location
   ) {
-
   }
   confirm(): void {
     if (!this.acknowledged) {
@@ -32,6 +32,12 @@ export class ConfirmPlanComponent {
     }
     else
       this.dialogRef.close(true);
+  }
+
+  getLink(route: string): string {
+    const fullUrl = window.location.href
+    const target = fullUrl.replace('subscribe', route);
+    return target;
   }
 
   cancel(): void {

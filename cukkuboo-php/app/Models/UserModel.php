@@ -55,9 +55,13 @@ class UserModel extends Model
     }
     
     public function getUserById($userId)
-    {
-        return $this->find($userId);
-    }
+{
+    return $this->select('*') 
+                ->where('user_id', $userId)
+                ->first();
+}
+
+
 
     public function findUserByToken($token)
     {

@@ -59,11 +59,7 @@ export class MovieService {
   }
 
   getHistory(pageIndex: number = 0, pageSize: number = 10, searchText: string = ''): Observable<any> {
-    const params = {
-      page: pageIndex.toString(),
-      size: pageSize.toString(),
-      search: searchText
-    };
+    const params = { page: pageIndex.toString(), size: pageSize.toString(), search: searchText };
     return this.http.get(this.apiUrl + 'savehistory/user', { headers: this.headers, params });
   }
 

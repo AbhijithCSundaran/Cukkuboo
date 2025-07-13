@@ -36,14 +36,7 @@ export class HistoryComponent implements OnInit {
     this.movieService.getHistory(this.pageIndex, this.pageSize).subscribe({
       next: (res) => {
         if (res?.success && Array.isArray(res.data)) {
-          this.historyList = res.data.map((item: any) => ({
-            watch_history_id: item.watch_history_id,
-            mov_id: item.mov_id,
-            title: item.title,
-            description: item.description,
-            thumbnail: this.imageUrl + item.thumbnail,
-            completed_at: item.completed_at
-          }));
+          this.historyList = res.data;
           this.totalItems = res.total || 0;
         } else {
           this.historyList = [];
@@ -73,7 +66,6 @@ export class HistoryComponent implements OnInit {
 
   confirmDelete(item: any, index: number): void {
     if (!item) return;
-    debugger;
     this.movieService.deleteHistoryItem(item.watch_history_id).subscribe({
       next: (res) => {
         if (res?.success) {

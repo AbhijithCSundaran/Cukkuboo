@@ -36,18 +36,18 @@ class Usersub extends ResourceController
     $userId = $user['user_id'];
     $planId = $data['subscriptionplan_id'] ?? null;
     $today = date('Y-m-d');
-    // $expiredSubscriptions = $this->usersubModel
-    //     ->where('user_id', $userId)
-    //     ->where('status', '1') 
-    //     ->where('end_date <', $today) 
-    //     ->findAll();
+    $expiredSubscriptions = $this->usersubModel
+        ->where('user_id', $userId)
+        ->where('status', '1') 
+        ->where('end_date <', $today) 
+        ->findAll();
 
-    // if (!empty($expiredSubscriptions)) {
-    //     foreach ($expiredSubscriptions as $expiredSub) {
-    //         $this->usersubModel->update($expiredSub['user_subscription_id'], ['status' => 9]);
-    //     }
-    //     $this->userModel->update($userId, ['subscription' => 'expired']);
-    // }
+    if (!empty($expiredSubscriptions)) {
+        foreach ($expiredSubscriptions as $expiredSub) {
+            $this->usersubModel->update($expiredSub['user_subscription_id'], ['status' => 2]);
+        }
+        $this->userModel->update($userId, ['subscription' => 'expired']);
+    }
 
     $activeSub = $this->usersubModel
         ->where('user_id', $userId)

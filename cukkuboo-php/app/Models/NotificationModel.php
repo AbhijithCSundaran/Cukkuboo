@@ -50,6 +50,32 @@ class NotificationModel extends Model
             'total'         => $total
         ];
     }
+    public function getUserNotificationsbyToken($userId, $pageIndex = 0, $pageSize = 10, $search = '')
+{
+    $offset = $pageIndex * $pageSize;
+
+    $builder = $this->where('user_id', $userId)
+                    ->where('status !=', 9);
+
+    if (!empty($search)) {
+        $builder->groupStart()
+                ->like('title', $search)
+                ->orLike('content', $search)
+                ->groupEnd();
+    }
+
+    $total = $builder->countAllResults(false);
+
+    $data = $builder->orderBy('created_on', 'DESC')
+                    ->limit($pageSize, $offset)
+                    ->findAll();
+
+    return [
+        'total' => $total,
+        'data' => $data
+    ];
+}
+
     
    public function getByUserId($userId)
     {

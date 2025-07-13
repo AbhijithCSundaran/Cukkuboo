@@ -1,6 +1,6 @@
-.active-plan-body{
-background:#202020;
-color: white;
+.active-plan-body {
+  background: #202020;
+  color: white;
 }
 
 .modal {
@@ -45,4 +45,9 @@ color: white;
 
 .gen-button:hover .gen-button-text {
   color: white !important;
+}
+
+h6 a {
+  color: var(--primary-color);
+  text-decoration: none;
 }

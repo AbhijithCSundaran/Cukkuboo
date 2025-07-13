@@ -24,12 +24,6 @@ export class SubscriptionService {
     });
   }
 
-  // Save user subscription
-  saveSubscription(model: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}usersub/save`, model, {
-      headers: this.headers
-    });
-  }
   listPlans(pageIndex: number = 0, pageSize: number = 10, search: string = ''): Observable<any> {
     const params = { pageIndex: pageIndex, pageSize: pageSize, search: search };
     return this.http.get(`${this.apiUrl}subscriptionplan/list`, { headers: this.headers, params });
@@ -38,6 +32,27 @@ export class SubscriptionService {
     // });
   }
 
+
+  // Save user subscription
+  saveSubscription(model: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}usersub/save`, model, {
+      headers: this.headers
+    });
+  }
+  getSubscriptionById(subId: number) {
+    return this.http.get(`${this.apiUrl}usersub/get/${subId}`, { headers: this.headers });
+  }
+
+  cancelSubscription() {
+    return this.http.delete(`${this.apiUrl}usersub/cancelSubscription`, { headers: this.headers });
+  }
+  getActiveSubscription() {
+    return this.http.get(`${this.apiUrl}usersub/active`, { headers: this.headers });
+  }
+  getSubscriptionHistory(pageIndex: number = 0, pageSize: number = 10,) {
+    const params = { pageIndex: pageIndex, pageSize: pageSize };
+    return this.http.get(`${this.apiUrl}usersub/history`, { headers: this.headers, params });
+  }
 
 
 }

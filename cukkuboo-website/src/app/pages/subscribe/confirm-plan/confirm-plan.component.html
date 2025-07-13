@@ -36,8 +36,8 @@
 <div class="d-flex flex-column justify-content-center align-items-center">
     <h2 mat-dialog-title class="mb-1">Subscribe Now!</h2>
     <h6 class="col-12 mt-2">
-        To enjoy 
-        <b class="mx-1 text-primary-clr">{{ data?.plan?.period }} day{{data?.plan?.period>1?'s':''}}</b> 
+        To enjoy
+        <b class="mx-1 text-primary-clr">{{ data?.plan?.period }} day{{data?.plan?.period>1?'s':''}}</b>
         of access for just
         <span class="fw-bold">
             ₹{{ data?.plan?.discount_price?data?.plan?.discount_price:data?.plan?.price}},
@@ -57,17 +57,17 @@
         <i class="pt-2" [ngClass]="acknowledged ? 'fa-solid fa-square-check' : 'fa-regular fa-square'"></i>
         <span class="checkbox-label ms-2">
             By proceeding, I acknowledge that I have read and agree to the
-            <a href="/terms-of-use" target="_blank" rel="noopener noreferrer" (click)="$event.stopPropagation()">Terms
-                of Use</a>
+            <a [href]="getLink('terms-of-use')" target="_blank" rel="noopener noreferrer" (click)="$event.stopPropagation()">Terms of
+                Use</a>
             and
-            <a href="/privacy-policy" target="_blank" rel="noopener noreferrer"
+            <a [href]="getLink('privacy-policy')" target="_blank" rel="noopener noreferrer" (click)="$event.stopPropagation()"
                 (click)="$event.stopPropagation()">Privacy Policy</a>,
             and I confirm that I am 18 years of age or older.
         </span>
     </div>
 
     <div mat-dialog-actions class="w-100 d-flex position-relative mt-4 justify-content-center gap-2">
-        <button class="btn rounded res-button btn-no mx-1 px-3" (click)="cancel()"> cancel </button>
+        <button class="btn rounded res-button btn-no mx-1 px-3" (click)="cancel()"> Cancel </button>
         <button class="btn rounded res-button btn-yes mx-1 px-3" (click)="confirm()"> Proceed </button>
     </div>
 

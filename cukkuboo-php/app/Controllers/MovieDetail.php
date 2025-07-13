@@ -228,12 +228,14 @@ public function movieReaction($mov_id)
     $authHeader = $this->request->getHeaderLine('Authorization');
     $user = $this->authService->getAuthenticatedUser($authHeader);
     if (!$user) return $this->failUnauthorized('Invalid or missing token.');
- 
+
     $user_id = $user['user_id'];
-    $status = $this->request->getJSON(true)['status']; // 1 for like, 2 for dislike
- 
+
+    $data = $this->request->getJSON(true);
+    $status = $data['status'] ?? null;
+
     if (!in_array($status, [1, 2])) {
-        return $this->failValidationError('Invalid status value. Use 1 for like, 2 for dislike.');
+        return $this->failValidationError('Missing or invalid "status". Use 1 for like, 2 for dislike.');
     }
  
     $existing = $this->db->table('movie_reactions')

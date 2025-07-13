@@ -14,7 +14,7 @@
         <div class="card bg-dark text-white border-0 shadow-sm h-100">
           <!-- Thumbnail -->
           <div class="position-relative">
-            <img [src]="item.thumbnail" class="card-img-top" alt="{{ item.title }}"
+            <img [src]="imageUrl+item.thumbnail" class="card-img-top" alt="{{ item.title }}"
               style="height: 150px; object-fit: cover;" />
             <div class="position-absolute bottom-0 start-0 w-100 px-2 py-1 bg-black bg-opacity-75 text-white small">
               Watched on: <strong>{{ item.created_on | date: 'shortDate' }}</strong>

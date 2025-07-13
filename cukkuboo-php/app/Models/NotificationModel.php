@@ -27,7 +27,8 @@ class NotificationModel extends Model
     {
         $builder = $this->db->table($this->table);
         $builder->select('notification.*, user.username');
-        $builder->join('user', 'user.user_id = notification.user_id', 'left');
+         $builder->join('user', 'user.user_id = notification.created_by', 'left');
+
         $builder->where('notification.status !=', 9);
 
         if (!empty($search)) {

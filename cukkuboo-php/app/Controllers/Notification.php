@@ -192,35 +192,16 @@ class Notification extends ResourceController
     $pageIndex = (int) $this->request->getGet('pageIndex') ?? 0;
     $pageSize  = (int) $this->request->getGet('pageSize') ?? 10;
     $search    = trim($this->request->getGet('search') ?? '');
-    $offset    = $pageIndex * $pageSize;
-
-    // Query builder
-    $builder = $this->notificationModel
-        ->where('user_id', $userId)
-        ->where('status !=', 9);
-
-    if (!empty($search)) {
-        $builder->groupStart()
-                ->like('title', $search)
-                ->orLike('content', $search)
-                ->groupEnd();
-    }
-
-
-    $total = $builder->countAllResults(false);
-
-    $notifications = $builder
-        ->orderBy('created_on', 'DESC')
-        ->limit($pageSize, $offset)
-        ->findAll();
+    $result = $this->notificationModel->getUserNotificationsbyToken($userId, $pageIndex, $pageSize, $search);
 
     return $this->respond([
         'success' => true,
         'message' => 'Notifications fetched successfully.',
-        'total' => $total,
-        'data' => $notifications
+        'total' => $result['total'],
+        'data' => $result['data']
     ]);
 }
+
 
 
 public function getNotificationById($notificationId = null)

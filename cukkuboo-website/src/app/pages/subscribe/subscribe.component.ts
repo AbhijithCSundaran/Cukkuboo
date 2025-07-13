@@ -1,13 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { SubscriptionService } from '../../services/subscription.service';
 import { StorageService } from '../../core/services/TempStorage/storageService';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmationDialogComponent } from '../../core/components/confirmation-dialog/confirmation-dialog.component';
 import { ConfirmPlanComponent } from './confirm-plan/confirm-plan.component';
 import { InfiniteScrollDirective } from '../../core/directives/infinite-scroll/infinite-scroll.directive';
+import { SignInComponent } from '../sign-in/sign-in.component';
 
 @Component({
   selector: 'app-subscribe',
@@ -33,6 +34,7 @@ export class SubscribeComponent implements OnInit {
     private subscriptionService: SubscriptionService,
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
+    private router: Router,
   ) { }
 
   ngOnInit(): void {
@@ -229,9 +231,24 @@ export class SubscribeComponent implements OnInit {
     });
   }
 
-
+  openLoginModal() {
+    const dialogRef = this.dialog.open(SignInComponent, {
+      data: 'subscribe',
+      width: 'auto', height: 'auto',
+      panelClass: 'signin-modal'
+    });
+    dialogRef.afterClosed().subscribe((result: any) => {
+      if (result) {
+      }
+      this.dialog.closeAll();
+    });
+  }
 
   askToSubscribe(plan: any) {
+    if (!this.UserData) {
+      this.openLoginModal();
+      return;
+    }
     if (this.UserData?.subscription_details?.subscription == 1) {
       this.snackBar.open('You are already subscribed to a plan.', '', {
         duration: 3000,
@@ -275,6 +292,7 @@ export class SubscribeComponent implements OnInit {
           res.data.subscription = res.data?.status | 1;
           this.UserData.subscription_details = res.data;
           this.storageService.updateItem('userData', this.UserData);
+          this.router.navigate(['/profile'])
         }
         this.snackBar.open(res?.success ? 'Subscription activated successfully.' : res?.messages?.error || 'Subscription failed.', '',
           {
@@ -284,7 +302,6 @@ export class SubscribeComponent implements OnInit {
         );
       },
       error: (err) => {
-
         this.snackBar.open(err?.error?.messages?.error || 'Something went wrong. Try again.', '', {
           duration: 3000,
           verticalPosition: 'top',

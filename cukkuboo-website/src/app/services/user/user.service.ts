@@ -53,12 +53,4 @@ export class UserService {
     return this.http.post(`${this.apiUrl}user/delete/${userId}`, body, { headers: this.headers });
   }
 
-  getSubscriptionPlanByuserId(subId: number) {
-    return this.http.get(`${this.apiUrl}usersub/get/${subId}`, { headers: this.headers });
-  }
-
-  cancelSubscriptionPlan() {
-    return this.http.delete(`${this.apiUrl}usersub/cancelSubscription`, { headers: this.headers });
-  }
-
 }

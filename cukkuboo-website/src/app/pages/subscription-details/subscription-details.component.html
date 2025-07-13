@@ -1,5 +1,5 @@
 @if(subscriptionData){
-<div class="container my-5" style="max-width: 900px;">
+<div class="container mt-2 col-12 col-md-9">
     <h3 class="mb-4">Your Subscription Plan</h3>
 
     <div class="card shadow-lg border-0 mb-4">
@@ -17,17 +17,22 @@
             </div>
 
             <div class="row mb-4">
-                <div class="col-md-4">
+                <div class="col-6 col-sm-4">
                     <p class="mb-1">Valid From</p>
-                    <p class="fw-semibold">{{ subscriptionData.start_date | date }}</p>
+                    <p class="fw-semibold mb-2">{{ subscriptionData.start_date | date }}</p>
                 </div>
-                <div class="col-md-4">
-                    <p class="mb-1">Plan Type</p>
-                    <p class="fw-semibold">{{ subscriptionData.plan_type }}</p>
-                </div>
-                <div class="col-md-4">
+                <div class="col-6 col-sm-4">
                     <p class="mb-1">Valid Until</p>
-                    <p class="fw-semibold">{{ subscriptionData.end_date | date }}</p>
+                    <p class="fw-semibold mb-2">{{ subscriptionData.end_date | date }}</p>
+                </div>
+                <div class="col-12 col-sm-4">
+                    <p class="mb-1">Expires In</p>
+                    <!-- @if(subscriptionData.days_remaining>1){ -->
+                    <p class="fw-semibold mb-2">{{ subscriptionData.days_remaining }}
+                        day{{subscriptionData.days_remaining>1?'s':''}}</p>
+                    <!-- }@else {
+                       <p class="fw-semibold mb-2">Today</p> 
+                    } -->
                 </div>
             </div>
 
@@ -54,6 +59,39 @@
         </div>
     </div>
 </div>
-}@else {
+}
+@if(subscriptionHistory.length){
+<div class="container mt-2 col-12 col-md-9">
+    <h3 class="mb-4">Subscriptions History</h3>
+    @for (subscription of subscriptionHistory; track subscription.id) {
+    <div class="card shadow-lg mb-4 card-body active-plan-body rounded-2 border-1">
+        <div class="row col-12">
+            <div class="col-6 col-md-3 text-center">
+                <p class="mb-1">Plan</p>
+                <p class="fw-semibold mb-2">{{ subscription.plan_name }}</p>
+            </div>
+            <div class="col-6 col-md-3 text-center">
+                <p class="mb-1">Status</p>
+                <p class="fw-semibold mb-2">{{ subscription.status }}</p>
+            </div>
+            <div class="col-6 col-md-3 text-center">
+                <p class="mb-1">Start Date</p>
+                <p class="fw-semibold mb-2">{{ subscription.start_date | date }}</p>
+            </div>
+            <div class="col-6 col-md-3 text-center">
+                <p class="mb-1">Expiry Date</p>
+                <p class="fw-semibold mb-2">{{ subscription.end_date | date }}</p>
+            </div>
+        </div>
+    </div>
+    }
+</div>
+}
+@if(!subscriptionData && !subscriptionHistory.length){
+<div class="col-12 p-5 text-center">
+    <h6>You have no subscription! <a routerLink="/subscribe"> Subscribe now</a></h6>
+</div>
+}
+@if(isLonding) {
 <content-loader></content-loader>
 }

@@ -25,22 +25,23 @@
           </mat-form-field>
         </div> -->
 
-        <div class="w-50 px-2 pb-3 d-flex">
-          <mat-form-field appearance="outline" class="me-2" style="width: 25%;">
-            <mat-label>Code</mat-label>
-            <mat-select formControlName="countryCode">
-              <mat-option *ngFor="let country of countryCodes" [value]="country.dial_code">
-                ({{ country.dial_code }})
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
+      <div class="w-50 px-2 pb-3 d-flex">
+  <mat-form-field appearance="outline" class="me-2 country-code-field">
+    <mat-label>Code</mat-label>
+    <mat-select formControlName="countryCode">
+      <mat-option *ngFor="let country of countryCodes" [value]="country.dial_code">
+        ({{ country.dial_code }})
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
 
-          <mat-form-field appearance="outline" style="width: 75%;">
-            <mat-label>Conatct</mat-label>
-            <input matInput formControlName="phone" maxlength="15" placeholder="Add contact number"
-              (input)="onNumberInput($event)" />
-          </mat-form-field>
-        </div>
+  <mat-form-field appearance="outline" class="phone-number-field">
+    <mat-label>Contact</mat-label>
+    <input matInput formControlName="phone" maxlength="15" placeholder="Add contact number"
+      (input)="onNumberInput($event)" />
+  </mat-form-field>
+</div>
+
 
         <!-- Email -->
         <div class="w-50 px-2 pb-3">

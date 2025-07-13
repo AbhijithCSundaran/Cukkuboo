@@ -70,7 +70,7 @@ onResize(event: any) {
         { name: 'Staff List', path: '/staff-list' },
       ],
     },
-    { name: 'Reports & Analytics', icon: 'fa-chart-bar', path: '/reports' },
+    // { name: 'Reports & Analytics', icon: 'fa-chart-bar', path: '/reports' },
     { name: 'Notifications', icon: 'fa-bell', path: '/notifications' },
     { name: 'Settings', icon: 'fa-sliders-h', subItems: [
       { name: 'Subscription Plans', path: '/subscription-plans' },

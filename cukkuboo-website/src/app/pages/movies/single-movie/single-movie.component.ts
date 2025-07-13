@@ -70,7 +70,11 @@ export class SingleMovieComponent implements OnInit {
           this.pageIndex = 0;
           this.stopInfiniteScroll = false;
           this.suggetionList = [];
-          this.getrelatedMovies();
+          const userData = this.storageService.getItem('userData')
+          if (userData)
+            this.getrelatedMovies();
+          else
+            this.stopInfiniteScroll = true;
         } else {
           this.showSnackbar('Failed to load movie.', 'error');
         }
@@ -116,26 +120,30 @@ export class SingleMovieComponent implements OnInit {
     });
   }
 
-  playVideo(video: string): void {
-    const userData = this.storageService.getItem('userData')
-    if (!userData) {
-      this.openLoginModal();
-      return;
-    }
-    if (!video || (this.movieData.access != 1 && userData.subscription_details?.subscription != 1)) {
-      // this.showSnackbar('Access this movie by subscribing to our platform', 'error');
-      this.askGotoSubscription();
-      return;
+  playVideo(video: string, isTraler: boolean = false): void {
+    if (!isTraler) {
+      const userData = this.storageService.getItem('userData')
+      if (!userData) {
+        this.openLoginModal();
+        return;
+      }
+      if (!video || (this.movieData.access != 1 && userData.subscription_details?.subscription != 1)) {
+        // this.showSnackbar('Access this movie by subscribing to our platform', 'error');
+        this.askGotoSubscription();
+        return;
+      }
     }
     this.selectedVideo = video;
-
-    if (video === this.movieData.video) {
+    if (video === this.movieData.video && !this.movieData.is_in_watch_history) {
       const model = { mov_id: this.movieData.mov_id };
-      this.movieService.saveHistory(model).subscribe({
-        next: () => console.log('Watch history saved.'),
-        error: (err) => console.error('Error saving watch history:', err)
-      });
+      this.addToWatchHistory(model);
     }
+  }
+  addToWatchHistory(model: any) {
+    this.movieService.saveHistory(model).subscribe({
+      next: () => console.log('Watch history saved.'),
+      error: (err) => console.error('Error saving watch history:', err)
+    });
   }
   askGotoSubscription() {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
@@ -163,11 +171,16 @@ export class SingleMovieComponent implements OnInit {
   }
 
   toggleWatchLater(): void {
-    if (this.movieData.is_in_watch_later) {
-      this.removeFromWatchLater();
-    } else {
-      this.addToWatchLater();
+    const userData = this.storageService.getItem('userData');
+    if (!userData) {
+      this.openLoginModal();
+      return;
     }
+    if (this.movieData.watch_later_id)
+      this.removeFromWatchLater();
+    else
+      this.addToWatchLater();
+
   }
 
   addToWatchLater(): void {
@@ -176,7 +189,10 @@ export class SingleMovieComponent implements OnInit {
     this.movieService.saveWatchlater(model).subscribe({
       next: (res) => {
         if (res?.success) {
-          this.movieData.is_in_watch_later = true;
+          if (res.data?.watch_later_id)
+            this.movieData.watch_later_id = res.data?.watch_later_id;
+          else
+            this.router.navigate(['/watch-later'])
           this.showSnackbar('Added to Watch Later!', 'success');
         } else {
           this.showSnackbar(res?.message || 'Failed to add.', 'error');
@@ -189,12 +205,12 @@ export class SingleMovieComponent implements OnInit {
   }
 
   removeFromWatchLater(): void {
-    if (!this.movieData?.mov_id) return;
+    if (!this.movieData?.watch_later_id) return;
 
-    this.movieService.deleteWatchLater(this.movieData.mov_id).subscribe({
+    this.movieService.deleteWatchLater(this.movieData.watch_later_id).subscribe({
       next: (res) => {
         if (res?.success) {
-          this.movieData.is_in_watch_later = false;
+          this.movieData.watch_later_id = 0;
           this.showSnackbar('Removed from Watch Later!', 'success');
         } else {
           this.showSnackbar(res?.message || 'Failed to remove.', 'error');
@@ -208,6 +224,25 @@ export class SingleMovieComponent implements OnInit {
 
   shareMovie(): void {
 
+  }
+  copyUrlToClipboard(): void {
+    if (document.hasFocus()) {
+      const url = window.location.href.split('?')[0];
+      navigator.clipboard.writeText(url).then(() => {
+        this.snackBar.open('Copied! Movie is ready to share.', '', {
+          duration: 3000,
+          verticalPosition: 'top',
+          horizontalPosition: 'center',
+          panelClass: ['snackbar-success']
+        });
+        // Optionally show a toast or snackbar
+      }).catch(err => {
+        console.error('Clipboard write failed:', err);
+      });
+    } else {
+      console.warn('Clipboard copy blocked: document not focused.');
+      alert('Please tap the screen and try again.');
+    }
   }
 
   onScroll(): void {

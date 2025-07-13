@@ -66,7 +66,7 @@ export class HistoryComponent implements OnInit {
 
   confirmDelete(item: any, index: number): void {
     if (!item) return;
-    this.movieService.deleteHistoryItem(item.save_history_id).subscribe({
+    this.movieService.deleteHistoryItem(item.watch_history_id).subscribe({
       next: (res) => {
         if (res?.success) {
           this.historyList.splice(index, 1);

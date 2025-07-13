@@ -14,40 +14,6 @@ body {
   background: #000;
   overflow: hidden;
 
-  // .back-btn {
-  //   background: transparent;
-  //   border: 2px solid rgb(255, 255, 255);
-  //   border-radius: 40px;
-  //   width: 40px;
-  //   height: 40px;
-  //   display: flex;
-  //   align-items: center;
-  //   justify-content: center;
-  //   color: white;
-  //   cursor: pointer;
-  //   transition: all 0.3s ease;
-  //   backdrop-filter: blur(6px);
-  //   position: absolute;
-  //   top: 20px;
-  //   left: 20px;
-  //   z-index: 10;
-
-  //   &:hover {
-  //     background: rgba(255, 255, 255, 0.2);
-  //     transform: scale(1.05);
-  //   }
-
-  //   &:active {
-  //     transform: scale(0.95);
-  //   }
-
-  //   @media(max-width:991px) {
-  //     width: 27px;
-  //     height: 27px;
-  //   }
-
-  // }
-
   .reel-scroll {
     height: 100%;
     overflow-y: auto;
@@ -95,10 +61,19 @@ body {
       align-items: center;
       justify-content: center;
       text-shadow: 0 0 5px #000000;
+      transform-origin: center center;
 
       &:hover {
         background: rgba(109, 109, 109, 0.5);
-        transform: scale(1.05);
+      }
+
+      i {
+        transition: transform 0.2s ease;
+        transform-origin: center center;
+      }
+
+      &:hover i {
+        transform: scale(1.2);
       }
     }
 
@@ -126,7 +101,6 @@ body {
       transform: translate(-50%, -50%);
       width: 64px;
       height: 64px;
-
       font-size: 32px;
 
       i {
@@ -151,7 +125,6 @@ body {
       &.open {
         background-color: rgba(0, 0, 0, 0.7);
       }
-
 
       .title {
         font-weight: bold;
@@ -204,7 +177,7 @@ body {
       }
     }
 
-    @media (max-width:991px) {
+    @media (max-width: 991px) {
       height: calc(100vh - 60px);
       margin-bottom: 60px;
       overflow: hidden;

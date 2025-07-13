@@ -105,7 +105,11 @@
 
         <div *ngIf="!stopInfiniteScroll" infiniteScroll (scrolled)="onScroll($event)" style="height: 1px"></div>
         }@else{
-        <p class="px-3">No Videos found</p>
+        <div class="no-movies-container text-center">
+  <i class="fas fa-video-slash no-movies-icon"></i>
+  <p class="no-movies-text">No movies found</p>
+</div>
+
         }
     </div>
 </section>

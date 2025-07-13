@@ -107,7 +107,7 @@ export class HistoryComponent implements OnInit {
 
   askToClearAll() {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
-      data: { message: `<p>Are you sure you want to <span>clear all</span> history items?</p>` },
+      data: { message: `<p>Are you sure you want to <span>clear all</span> items from Watch History?</p>` },
     });
     dialogRef.afterClosed().subscribe((result: any) => {
       if (result) {

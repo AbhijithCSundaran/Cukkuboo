@@ -110,7 +110,7 @@ export class WatchLaterComponent implements OnInit {
 
   askToClearAll() {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
-      data: { message: `<p>Are you sure you want to <span>clear all</span> Watch Later?</p>` },
+      data: { message: `<p>Are you sure you want to <span>clear all</span>  items from Watch Later?</p>` },
     });
     dialogRef.afterClosed().subscribe((result: any) => {
       if (result) {

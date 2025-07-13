@@ -206,6 +206,11 @@
     width: 75px;
     justify-content: center;
   }
+
+       th.mat-column-access,
+  td.mat-column-access {
+    display: none !important;
+  }
 }
 
 @media (max-width: 320px) {

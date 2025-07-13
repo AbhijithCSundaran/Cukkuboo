@@ -25,21 +25,34 @@
               </li>
 
               <!-- Mobile Number -->
-              <li class="pms-field mb-0 mb-sm-1 mb-md-3">
-                <mat-form-field appearance="outline" class="w-100">
-                  <mat-label>Mobile Number</mat-label>
-                  <input
-                    matInput
-                    formControlName="phone"
-                    placeholder="Enter mobile number"
-                    maxlength="15"
-                    (input)="onNumberInput($event)"
-                  />
-                  <mat-error *ngIf="signUpForm.controls['phone'].touched && signUpForm.controls['phone'].invalid">
-                    <Validation-Messages [control]="signUpForm.controls['phone']"></Validation-Messages>
-                  </mat-error>
-                </mat-form-field>
-              </li>
+           
+<li class="pms-field mb-0 mb-sm-1 mb-md-3">
+  <div class="d-flex">
+    <mat-form-field appearance="outline" class="me-2" style="width: 35%;">
+      <mat-label>Code</mat-label>
+      <mat-select formControlName="countryCode">
+        <mat-option *ngFor="let country of countryCodes" [value]="country.dial_code">
+          ({{ country.dial_code }})
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" style="width: 65%;">
+      <mat-label>Mobile Number</mat-label>
+      <input
+        matInput
+        formControlName="phone"
+        maxlength="15"
+        placeholder="Enter mobile number"
+        (input)="onNumberInput($event)"
+      />
+      <mat-error *ngIf="signUpForm.controls['phone'].touched && signUpForm.controls['phone'].invalid">
+        <Validation-Messages [control]="signUpForm.controls['phone']"></Validation-Messages>
+      </mat-error>
+    </mat-form-field>
+  </div>
+</li>
+
 
               <!-- Email -->
               <li class="pms-field mb-0 mb-sm-1 mb-md-3">

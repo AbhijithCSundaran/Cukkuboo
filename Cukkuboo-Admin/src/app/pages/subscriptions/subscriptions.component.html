@@ -9,7 +9,7 @@
 
   <div class="width-50 search-bar-wrapper">
     <!--start Date-->
-    <mat-form-field class="date-picker mr-3 pr-2" appearance="outline">
+    <mat-form-field class="date-picker mr-3 pr-2 hide-mobile" appearance="outline">
       <mat-label>From Date</mat-label>
       <input matInput [matDatepicker]="fromPicker" (dateChange)="onFromDateChange($event)">
       <mat-datepicker-toggle matSuffix [for]="fromPicker"></mat-datepicker-toggle>
@@ -17,7 +17,7 @@
     </mat-form-field>
 
     <!-- To Date -->
-    <mat-form-field class="date-picker mr-3 pr-2" appearance="outline">
+    <mat-form-field class="date-picker mr-3 pr-2  hide-mobile" appearance="outline">
       <mat-label>To Date</mat-label>
       <input matInput [matDatepicker]="toPicker" (dateChange)="onToDateChange($event)">
       <mat-datepicker-toggle matSuffix [for]="toPicker"></mat-datepicker-toggle>

@@ -53,40 +53,38 @@
   <div class="transactions-card">
     <mat-card class="transactions-card-inner">
       <h2>Recent Transactions</h2>
-      <div class="table-responsive">
-        <table class="transaction-table">
-          <thead>
-            <tr>
-              <th>User ID</th>
-              <th>Plan</th>
-              <th>Price</th>
-              <th>Start</th>
-              <th>End</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngIf="recentTransactions.length === 0">
-              <td colspan="6" class="text-center">No recent transactions found.</td>
-            </tr>
-            <tr *ngFor="let txn of recentTransactions">
-              <td>{{ txn.user_id }}</td>
-              <td>{{ txn.plan_name }}</td>
-              <td>₹{{ txn.price }}</td>
-              <td>{{ txn.start_date | date:'MMM d, y'}}</td>
-              <td>{{ txn.end_date | date:'MMM d, y' }}</td>
-              <td>
-                <span class="badge" [ngClass]="{
-                    'badge-enabled': txn.status === '1' || txn.status === 1,
-                    'badge-disabled': txn.status === '2' || txn.status === 2
-                  }">
-                  {{ txn.status == 1 ? 'Active' : 'Inactive' }}
-                </span>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+      <table class="transaction-table">
+        <thead>
+          <tr>
+            <th>User ID</th>
+            <th>Plan</th>
+            <th>Price</th>
+            <th class="hide-mobile">Start</th>
+            <th class="hide-mobile">End</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngIf="recentTransactions.length === 0">
+            <td colspan="6" class="text-center">No recent transactions found.</td>
+          </tr>
+          <tr *ngFor="let txn of recentTransactions">
+            <td>{{ txn.user_id }}</td>
+            <td>{{ txn.plan_name }}</td>
+            <td>₹{{ txn.price }}</td>
+            <td class="hide-mobile">{{ txn.start_date | date:'MMM d, y' }}</td>
+            <td class="hide-mobile">{{ txn.end_date | date:'MMM d, y' }}</td>
+            <td>
+              <span class="badge" [ngClass]="{
+                'badge-enabled': txn.status === '1' || txn.status === 1,
+                'badge-disabled': txn.status === '2' || txn.status === 2
+              }">
+                {{ txn.status == 1 ? 'Active' : 'Inactive' }}
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </mat-card>
   </div>
 

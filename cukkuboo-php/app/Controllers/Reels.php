@@ -157,16 +157,15 @@ class Reels extends ResourceController
     }
 
     $total = $builder->countAllResults(false);
-
-    $reels = $builder->findAll();
+    $reels = $builder->orderBy('created_on', 'DESC') 
+                     ->findAll($pageSize, $offset);
     shuffle($reels);
-    $reels = array_slice($reels, $offset, $pageSize);
 
-    if($user){
+    if ($user) {
         $user_id = $user['user_id'];
-     foreach ($reels as &$reel) {
-        $reel['is_liked_by_user'] = $this->reelsModel->isLikedByUser($reel['reels_id'], $user_id);
-     }
+        foreach ($reels as &$reel) {
+            $reel['is_liked_by_user'] = $this->reelsModel->isLikedByUser($reel['reels_id'], $user_id);
+        }
     }
 
     return $this->response->setJSON([

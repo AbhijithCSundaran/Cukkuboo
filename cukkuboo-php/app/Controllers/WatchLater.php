@@ -18,37 +18,50 @@ class WatchLater extends ResourceController
     }
 
     public function add()
-    {
-        $authHeader = $this->request->getHeaderLine('Authorization');
-        $user = $this->authService->getAuthenticatedUser($authHeader);
-        if (!$user) 
+{
+    $authHeader = $this->request->getHeaderLine('Authorization');
+    $user = $this->authService->getAuthenticatedUser($authHeader);
+    if (!$user) 
             return $this->failUnauthorized('Invalid or missing token.');
-        if (!$user || !isset($user['user_id'])) {
-            return $this->respond([
-                'success' => false,
-                'message' => 'Unauthorized user.',
-                'data'=>[]
-            ]);
-        }
-
-        $data = $this->request->getJSON(true);
-        $movId = $data['mov_id'] ?? null;
-
-        if (!$movId) {
-            return $this->respond([
-                'success' => false,
-                'message' => 'Movie ID is required.'
-            ]);
-        }
-
-        $added = $this->watchLaterModel->addToWatchLater($user['user_id'], $movId);
-
+    if (!$user || !isset($user['user_id'])) {
         return $this->respond([
-            'success' => $added ? true : false,
-            'message' => $added ? 'Movie added to Watch Later.' : 'Movie already in Watch Later.',
-            'data'=>$data
+            'success' => false,
+            'message' => 'Unauthorized user.',
+            'data' => []
         ]);
     }
+
+    $data = $this->request->getJSON(true);
+    $movId = $data['mov_id'] ?? null;
+
+    if (!$movId) {
+        return $this->respond([
+            'success' => false,
+            'message' => 'Movie ID is required.',
+            'data' => []
+        ]);
+    }
+
+    $insertId = $this->watchLaterModel->addToWatchLater($user['user_id'], $movId);
+
+    if (!$insertId) {
+        return $this->respond([
+            'success' => false,
+            'message' => 'Movie already in Watch Later.',
+            'data' => []
+        ]);
+    }
+
+    return $this->respond([
+        'success' => true,
+        'message' => 'Movie added to Watch Later.',
+        'data' => [
+            'watch_later_id' => $insertId,
+            'mov_id' => $movId
+        ]
+    ]);
+}
+
 public function getlist()
 {
     $authHeader = $this->request->getHeaderLine('Authorization');

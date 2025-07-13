@@ -185,13 +185,21 @@ public function getMovieById($id)
     $isLiked = false;
     $isDisliked = false;
 
-    if ($reaction) {
-        if ($reaction->status == 1) {
-            $isLiked = true;
-        } elseif ($reaction->status == 2) {
-            $isDisliked = true;
-        }
+    // if ($reaction) {
+    //     if ($reaction->status == 1) {
+    //         $isLiked = true;
+    //     } elseif ($reaction->status == 2) {
+    //         $isDisliked = true;
+    //     }
+    // }
+    if ($reaction && isset($reaction->status)) {
+    if ($reaction->status == 1) {
+        $isLiked = true;
+    } elseif ($reaction->status == 2) {
+        $isDisliked = true;
     }
+}
+
 
     // Add flags to movie array
     $getmoviesdetails['is_liked_by_user'] = $isLiked;         

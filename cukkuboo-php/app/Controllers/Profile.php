@@ -51,8 +51,6 @@ class Profile extends BaseController
             'message' => 'Email is required.'
         ]);
     }
-
-    // Check if user exists by email
     $user = $this->loginModel->where('email', $email)->first();
     if (!$user) {
         return $this->response->setJSON([
@@ -60,12 +58,10 @@ class Profile extends BaseController
             'message' => 'Enter valid data.'
         ]);
     }
-
-    // STEP 1: Send OTP
     if ($step === 'send') {
         $otp = rand(100000, 999999);
         session()->set('reset_otp_' . $email, $otp);
-        session()->set('otp_expiry_' . $email, time() + 300); // expires in 5 minutes
+        session()->set('otp_expiry_' . $email, time() + 300); 
 
         // Send email via SMTP
         try {
@@ -100,8 +96,6 @@ class Profile extends BaseController
             ]);
         }
     }
-
-    // STEP 2: Verify OTP
     if ($step === 'verify') {
         $otpInput = $this->input->getPost('otp');
         $storedOtp = session()->get('reset_otp_' . $email);
@@ -126,8 +120,6 @@ class Profile extends BaseController
             'message' => 'OTP verified. You may now reset your password.'
         ]);
     }
-
-    // STEP 3: Reset Password
     if ($step === 'reset') {
         $newPassword = $this->input->getPost('new_password');
         $otpInput = $this->input->getPost('otp');
@@ -149,7 +141,7 @@ class Profile extends BaseController
             ]);
         }
 
-        // Secure hashing
+        
         $hashedPassword = password_hash($newPassword, PASSWORD_BCRYPT);
 
         $this->loginModel->update($user['user_id'], ['password' => $hashedPassword]);
@@ -163,7 +155,6 @@ class Profile extends BaseController
         ]);
     }
 
-    // Default: invalid step
     return $this->response->setJSON([
         'success' => false,
         'message' => 'Invalid step.'

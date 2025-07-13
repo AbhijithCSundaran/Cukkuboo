@@ -124,6 +124,9 @@ class UserModel extends Model
                 ])
                 ->update();
 }
-
+public function updateSubscriptionStatus($userId, $status)
+{
+    return $this->update($userId, ['subscription' => $status]);
+}
     
 }

@@ -97,7 +97,7 @@ if ($existingUser) {
                 'status'              => $user['status'],
                 'join_date'           => $user['join_date'],
                 'date_of_birth'       => $user['date_of_birth'], 
-                'subscription_status' => $user['subscription'],
+                'subscription' => $user['subscription'],
                 'user_type'           => $user['user_type'],
                 'created_at'          => $user['created_at'],
                 'created_by'          => $user['created_by'],
@@ -142,9 +142,9 @@ if ($existingUser) {
                     'password'            => $user['password'],
                     'phone'               => $user['phone'],
                     'status'              => $user['status'],
-                    'join_date'           =>$user['join_date'],
-                    'date_of_birth' => $user['date_of_birth'], 
-                    'subscription_status' => $user['subscription'],
+                    'join_date'           => $user['join_date'],
+                    'date_of_birth'       => $user['date_of_birth'], 
+                    'subscription' => $user['subscription'],
                     'user_type'           => $user['user_type'],
                     'created_at'          => $user['created_at'],
                     'created_by'          => $created_by,
@@ -159,10 +159,26 @@ if ($existingUser) {
                 $userData['updated_at'] = date('Y-m-d H:i:s');
                 $userData['updated_by'] = $authenticatedUser['user_id'];
                 $this->UserModel->updateUser($user_id, $userData);
+                $user = $this->UserModel->find($user_id);
                 return $this->response->setJSON([
                     'success' => true,
                     'message' => 'User updated successfully.',
-                    'data' => $userData
+                    'data' => [
+                        'user_id'             => $user['user_id'],
+                        'username'            => $user['username'],
+                        'email'               => $user['email'],
+                        'password'            => $user['password'],
+                        'phone'               => $user['phone'],
+                        'status'              => $user['status'],
+                        'join_date'           => $user['join_date'],
+                        'date_of_birth'       => $user['date_of_birth'], 
+                        'subscription'        => $user['subscription'],
+                        'user_type'           => $user['user_type'],
+                        'created_at'          => $user['created_at'],
+                        'created_by'          => $user['created_by'],
+                        'updated_at'          => $user['updated_at'],
+                        'updated_by'          => $user['updated_by']
+                    ]
                 ]);
             }
             else{

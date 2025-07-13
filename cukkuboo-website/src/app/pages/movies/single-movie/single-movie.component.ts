@@ -348,4 +348,34 @@ export class SingleMovieComponent implements OnInit {
       }
     });
   }
+
+ 
+toggleMovieReaction(): void {
+  if (!this.movieData || !this.movieData.mov_id) return;
+
+  const movieId = this.movieData.mov_id;
+  const isCurrentlyLiked = this.movieData.is_liked_by_user;
+  const newStatus = isCurrentlyLiked ? 2 : 1;
+
+  this.movieService.movieReaction(movieId, newStatus).subscribe({
+    next: () => {
+      // Step 1: Toggle like status
+      this.movieData.is_liked_by_user = !isCurrentlyLiked;
+
+      // ✅ Step 2: Force string to number conversion
+      const currentLikes = parseInt(this.movieData.likes, 10) || 0;
+
+      // ✅ Step 3: Update like count correctly
+      this.movieData.likes = isCurrentlyLiked
+        ? Math.max(0, currentLikes - 1)
+        : currentLikes + 1;
+    },
+    error: (err) => {
+      console.error('Error updating like status:', err);
+    }
+  });
+}
+
+
+
 }

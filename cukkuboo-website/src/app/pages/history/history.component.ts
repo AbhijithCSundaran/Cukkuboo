@@ -6,11 +6,12 @@ import { environment } from '../../../environments/environment';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmationDialogComponent } from '../../core/components/confirmation-dialog/confirmation-dialog.component';
+import { InfiniteScrollDirective } from '../../core/directives/infinite-scroll/infinite-scroll.directive';
 
 @Component({
   selector: 'app-history',
   standalone: true,
-  imports: [CommonModule, RouterModule, MatSnackBarModule],
+  imports: [CommonModule, RouterModule, MatSnackBarModule, InfiniteScrollDirective],
   templateUrl: './history.component.html',
   styleUrls: ['./history.component.scss']
 })
@@ -20,7 +21,8 @@ export class HistoryComponent implements OnInit {
   pageIndex: number = 0;
   pageSize: number = 8;
   totalItems: number = 0;
-
+  stopInfiniteScroll: boolean = false;
+  isLoading: boolean = false;
 
   constructor(
     private movieService: MovieService,
@@ -33,22 +35,38 @@ export class HistoryComponent implements OnInit {
   }
 
   fetchHistory(): void {
+    this.isLoading = true;
     this.movieService.getHistory(this.pageIndex, this.pageSize).subscribe({
       next: (res) => {
+        this.isLoading = false;
         if (res?.success && Array.isArray(res.data)) {
-          this.historyList = res.data;
-          this.totalItems = res.total || 0;
+          if (this.pageIndex === 0) {
+            this.historyList = res.data;
+          } else {
+            this.historyList = [...this.historyList, ...res.data];
+          }
+
+          this.totalItems = res.total || this.historyList.length;
+          if (!res.data.length || this.historyList.length >= this.totalItems) {
+            this.stopInfiniteScroll = true;
+          }
         } else {
-          this.historyList = [];
-          this.totalItems = 0;
+          this.stopInfiniteScroll = true;
         }
       },
       error: (err) => {
         console.error('History fetch error:', err);
-        this.historyList = [];
-        this.totalItems = 0;
+        this.isLoading = false;
+        this.stopInfiniteScroll = true;
       }
     });
+  }
+
+  onScroll(): void {
+    if (!this.stopInfiniteScroll && !this.isLoading) {
+      this.pageIndex++;
+      this.fetchHistory();
+    }
   }
 
   askToRemoveItem(item: any, index: number) {
@@ -71,7 +89,7 @@ export class HistoryComponent implements OnInit {
         if (res?.success) {
           this.historyList.splice(index, 1);
           this.totalItems--;
-          this.snackBar.open('Item deleted from history', '', {
+          this.snackBar.open('Item removed from Watch History successfully', '', {
             duration: 3000,
             verticalPosition: 'top',
             horizontalPosition: 'center',
@@ -113,7 +131,9 @@ export class HistoryComponent implements OnInit {
       next: (res) => {
         if (res?.success && res?.data?.cleared) {
           this.historyList = [];
+          this.pageIndex = 0;
           this.totalItems = 0;
+          this.stopInfiniteScroll = false;
           this.snackBar.open(res.message || 'All history cleared.', '', {
             duration: 3000,
             verticalPosition: 'top',
@@ -138,21 +158,5 @@ export class HistoryComponent implements OnInit {
         });
       }
     });
-  }
-
-  nextPage(): void {
-    if ((this.pageIndex + 1) * this.pageSize >= this.totalItems) return;
-    this.pageIndex++;
-    this.fetchHistory();
-  }
-
-  prevPage(): void {
-    if (this.pageIndex === 0) return;
-    this.pageIndex--;
-    this.fetchHistory();
-  }
-
-  totalPages(): number {
-    return Math.ceil(this.totalItems / this.pageSize);
   }
 }

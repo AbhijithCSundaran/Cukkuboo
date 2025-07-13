@@ -232,60 +232,58 @@ public function movieReaction($mov_id)
     $user_id = $user['user_id'];
 
     $data = $this->request->getJSON(true);
-    $status = $data['status'] ?? null;
 
-    if (!in_array($status, [1, 2])) {
-        return $this->failValidationError('Missing or invalid "status". Use 1 for like, 2 for dislike.');
+    if (!is_array($data) || !isset($data['status']) || !in_array($data['status'], [1, 2])) {
+        return $this->fail('Missing or invalid "status". Use 1 for like, 2 for dislike.', 422);
     }
- 
+
+    $status = $data['status'];
+
     $existing = $this->db->table('movie_reactions')
         ->where('user_id', $user_id)
         ->where('mov_id', $mov_id)
         ->get()
         ->getRow();
- 
+
     $movieTable = $this->db->table('movies_details');
     $reactionField = $status == 1 ? 'likes' : 'dislikes';
     $oppositeField = $status == 1 ? 'dislikes' : 'likes';
- 
+
     if ($existing) {
         if ($existing->status == $status) {
-            // Remove existing reaction
             $this->db->table('movie_reactions')->delete(['reaction_id' => $existing->reaction_id]);
- 
+
             $movieTable->set($reactionField, "$reactionField - 1", false)
                 ->where('mov_id', $mov_id)->update();
- 
+
             return $this->respond([
                 'success' => true,
                 'message' => ucfirst($reactionField) . ' removed.',
             ]);
         } else {
-            // Switch reaction
             $this->db->table('movie_reactions')
                 ->where('reaction_id', $existing->reaction_id)
                 ->update(['status' => $status]);
- 
+
             $movieTable->set($reactionField, "$reactionField + 1", false)
                 ->set($oppositeField, "$oppositeField - 1", false)
                 ->where('mov_id', $mov_id)->update();
- 
+
             return $this->respond([
                 'success' => true,
                 'message' => ucfirst($reactionField) . ' updated.',
             ]);
         }
     } else {
-        // New reaction
         $this->db->table('movie_reactions')->insert([
             'user_id' => $user_id,
             'mov_id' => $mov_id,
             'status' => $status,
         ]);
- 
+
         $movieTable->set($reactionField, "$reactionField + 1", false)
             ->where('mov_id', $mov_id)->update();
- 
+
         return $this->respond([
             'success' => true,
             'message' => ucfirst($reactionField) . ' added.',

@@ -189,8 +189,10 @@ export class SingleMovieComponent implements OnInit {
     this.movieService.saveWatchlater(model).subscribe({
       next: (res) => {
         if (res?.success) {
-          this.router.navigate(['/watch-later'])
-          this.movieData.watch_later_id = res.data?.watch_later_id;
+          if (res.data?.watch_later_id)
+            this.movieData.watch_later_id = res.data?.watch_later_id;
+          else
+            this.router.navigate(['/watch-later'])
           this.showSnackbar('Added to Watch Later!', 'success');
         } else {
           this.showSnackbar(res?.message || 'Failed to add.', 'error');

@@ -105,7 +105,7 @@ public function getAllMovieDetails()
         $builder->groupStart()
             ->like('LOWER(title)', $searchWildcard)
             // ->orLike('LOWER(genre)', $searchWildcard)
-            ->orLike('LOWER(cast_details)', $searchWildcard)
+            ->orLike('LOWER(cast_details)', $searchWildcard);
             // ->orLike('LOWER(category)', $searchWildcard);
         if ($accessValue !== null) {
             $builder->orWhere('access', $accessValue);

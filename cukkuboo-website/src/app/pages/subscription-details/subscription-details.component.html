@@ -1,6 +1,6 @@
 @if(subscriptionData){
 <div class="container mt-2 col-12 col-md-9">
-    <h3 class="mb-4">Your Subscription Plan</h3>
+    <h3 class="mb-4 fs-3 fs-md-4 fs-sm-5">Your Subscription Plan</h3>
 
     <div class="card shadow-lg border-0 mb-4">
         <div class="card-body active-plan-body">
@@ -8,7 +8,7 @@
                 <div class="d-flex align-items-center">
                     <i class="fa-solid fa-star text-warning fs-3 me-3"></i>
                     <div>
-                        <h5 class="mb-0 fw-bold">{{ subscriptionData.plan_name }}</h5>
+                        <h5 class="mb-0 fw-bold fs-5 fs-sm-6">{{ subscriptionData.plan_name }}</h5>
                         <small class="text-danger">
                             <!-- {{ subscriptionData.status == '1' ? 'Active Subscription' : 'Inactive Subscription' }} -->
                         </small>
@@ -27,28 +27,24 @@
                 </div>
                 <div class="col-12 col-sm-4">
                     <p class="mb-1">Expires In</p>
-                    <!-- @if(subscriptionData.days_remaining>1){ -->
-                    <p class="fw-semibold mb-2">{{ subscriptionData.days_remaining }}
-                        day{{subscriptionData.days_remaining>1?'s':''}}</p>
-                    <!-- }@else {
-                       <p class="fw-semibold mb-2">Today</p> 
-                    } -->
+                    <p class="fw-semibold mb-2">
+                        {{ subscriptionData.days_remaining }} day{{subscriptionData.days_remaining > 1 ? 's' : ''}}
+                    </p>
                 </div>
             </div>
 
-            <h6 class="text-uppercase">About This Plan</h6>
+            <h6 class="text-uppercase fs-6 fs-sm-6">About This Plan</h6>
             <p>
                 The {{ subscriptionData.plan_name }} Plan gives you access to our content library. Enjoy streaming
                 anytime, anywhere.
             </p>
 
-            <h6 class="text-uppercase mt-4">Plan Benefits</h6>
+            <h6 class="text-uppercase mt-4 fs-6 fs-sm-6">Plan Benefits</h6>
             <ul class="list-unstyled">
                 <li class="mb-2"><i class="fa-solid fa-circle-check text-danger me-2"></i> Ad-free entertainment</li>
                 <li class="mb-2"><i class="fa-solid fa-circle-check text-danger me-2"></i> Watch on any device</li>
                 <li class="mb-2"><i class="fa-solid fa-circle-check text-danger me-2"></i> Full HD available</li>
-                <li class="mb-2"><i class="fa-solid fa-circle-check text-danger me-2"></i> Unlimited movies and shows
-                </li>
+                <li class="mb-2"><i class="fa-solid fa-circle-check text-danger me-2"></i> Unlimited movies and shows</li>
             </ul>
 
             <div class="mt-auto text-end">
@@ -60,9 +56,10 @@
     </div>
 </div>
 }
+
 @if(subscriptionHistory.length){
 <div class="container mt-2 col-12 col-md-9">
-    <h3 class="mb-4">Subscriptions History</h3>
+    <h3 class="mb-4 fs-3 fs-md-4 fs-sm-5">Subscriptions History</h3>
     @for (subscription of subscriptionHistory; track subscription.id) {
     <div class="card shadow-lg mb-4 card-body active-plan-body rounded-2 border-1">
         <div class="row col-12">
@@ -87,11 +84,14 @@
     }
 </div>
 }
-@if(!subscriptionData && !subscriptionHistory.length){
+
+@if(!subscriptionData && !subscriptionHistory.length && !isLonding){
 <div class="col-12 p-5 text-center">
-    <h6>You have no subscription! <a routerLink="/subscribe"> Subscribe now</a></h6>
+    <h6 class="fs-6 fs-sm-6">You have no subscription!</h6>
+    <button class="btn btn-danger mt-2" (click)="goToSubscribe()">Subscribe Now</button>
 </div>
 }
+
 @if(isLonding) {
 <content-loader></content-loader>
 }

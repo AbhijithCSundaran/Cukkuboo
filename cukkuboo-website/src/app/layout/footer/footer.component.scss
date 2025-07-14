@@ -48,7 +48,14 @@ footer#gen-footer .gen-footer-style-1 .widget ul.menu li{
 footer#gen-footer[_ngcontent-ng-c3844748969] .gen-footer-top[_ngcontent-ng-c3844748969] {
     padding: 17px 0 0;
 }
-ul.menu,
-ul.menu li {
-  list-style: none !important;
+// ul.menu,
+// ul.menu li {
+//   list-style: none !important;
+// }
+.menu li{
+  list-style: none;
+  padding-left: 0;
+}
+#back-to-top {
+  cursor: pointer;
 }

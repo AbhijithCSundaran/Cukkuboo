@@ -3264,7 +3264,7 @@ footer#gen-footer .widget ul.menu li a,
 footer#gen-footer .gen-widget-menu .gen-service li a {
     position: relative;
     border: none;
-    padding: 5px 0 5px 15px;
+    padding: 5px 0;
     display: inline-block;
     width: 100%;
 }
@@ -3274,7 +3274,7 @@ footer#gen-footer .gen-widget-menu .gen-service li a:hover {
     color: var(--primary-color);
 }
 
-footer#gen-footer .widget ul.menu li a:before {
+/* footer#gen-footer .widget ul.menu li a:before {
     content: "";
     position: absolute;
     top: 0;
@@ -3288,7 +3288,7 @@ footer#gen-footer .widget ul.menu li a:before {
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
     border-radius: 5px;
-}
+} */
 
 footer#gen-footer .wp-calendar-nav .wp-calendar-nav-prev,
 footer#gen-footer .wp-calendar-nav .wp-calendar-nav-next {

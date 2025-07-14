@@ -15,9 +15,10 @@ import { HttpClientModule } from '@angular/common/http';
 interface Subscription {
   username: string;
   plan_name: string;
+  price: string;
   start_date: string;
   end_date: string;
-  status: 'active' | 'expired';
+  status: string; // will be '1', '2', or '3'
 }
 
 @Component({
@@ -56,8 +57,6 @@ export class SubscriptionsComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    // this.dataSource.paginator = this.paginator;
-
     this.paginator.page.subscribe(() => {
       this.pageIndex = this.paginator.pageIndex;
       this.pageSize = this.paginator.pageSize;
@@ -73,46 +72,46 @@ export class SubscriptionsComponent implements OnInit, AfterViewInit {
     this.fetchSubscriptions(this.pageIndex, this.pageSize, this.searchText);
   }
 
- fetchSubscriptions(pageIndex: number, pageSize: number, searchText: string): void {
-  const from = this.fromDate ? this.formatDate(this.fromDate) : '';
-  const to = this.toDate ? this.formatDate(this.toDate) : '';
+  fetchSubscriptions(pageIndex: number, pageSize: number, searchText: string): void {
+    const from = this.fromDate ? this.formatDate(this.fromDate) : '';
+    const to = this.toDate ? this.formatDate(this.toDate) : '';
 
-  this.userSubscriptionService
-    .listUserSubscriptions(pageIndex, pageSize, searchText, from, to)
-    .subscribe({
-      next: (response) => {
-        if (response.success) {
-          const mappedData: Subscription[] = response.data.map((item: any) => ({
-            username: item.username,
-            plan_name: item.plan_name,
-            price: item.price,
-            start_date: item.start_date,
-            end_date: item.end_date,
-            status: item.status === '2' ? 'premium' : item.status === '3' ? 'canceled' : 'expired'
-          }));
+    this.userSubscriptionService
+      .listUserSubscriptions(pageIndex, pageSize, searchText, from, to)
+      .subscribe({
+        next: (response) => {
+          if (response.success) {
+            const mappedData: Subscription[] = response.data.map((item: any) => ({
+              username: item.username,
+              plan_name: item.plan_name,
+              price: item.price,
+              start_date: item.start_date,
+              end_date: item.end_date,
+              status: item.status // keep raw status value: '1', '2', '3'
+            }));
 
-          this.dataSource.data = mappedData;
-          this.totalItems = response?.total || 0;
-        } else {
+            this.dataSource.data = mappedData;
+            this.totalItems = response?.total || 0;
+          } else {
+            this.dataSource.data = [];
+            this.totalItems = 0;
+          }
+        },
+        error: (error) => {
+          console.error('Failed to fetch subscriptions:', error);
           this.dataSource.data = [];
           this.totalItems = 0;
         }
-      },
-      error: (error) => {
-        console.error('Failed to fetch subscriptions:', error);
-        this.dataSource.data = [];
-        this.totalItems = 0;
-      }
-    });
-}
+      });
+  }
 
-formatDate(date: Date): string {
-  const d = new Date(date);
-  const year = d.getFullYear();
-  const month = (`0${d.getMonth() + 1}`).slice(-2);
-  const day = (`0${d.getDate()}`).slice(-2);
-  return `${year}-${month}-${day}`;
-}
+  formatDate(date: Date): string {
+    const d = new Date(date);
+    const year = d.getFullYear();
+    const month = (`0${d.getMonth() + 1}`).slice(-2);
+    const day = (`0${d.getDate()}`).slice(-2);
+    return `${year}-${month}-${day}`;
+  }
 
   onFromDateChange(event: any) {
     this.fromDate = event.value;
@@ -125,9 +124,8 @@ formatDate(date: Date): string {
   }
 
   applyDateFilter() {
-this.pageIndex = 0;
-  this.paginator.pageIndex = 0;
-  this.fetchSubscriptions(this.pageIndex, this.pageSize, this.searchText);
-
+    this.pageIndex = 0;
+    this.paginator.pageIndex = 0;
+    this.fetchSubscriptions(this.pageIndex, this.pageSize, this.searchText);
   }
 }

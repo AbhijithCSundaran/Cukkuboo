@@ -29,7 +29,7 @@ export class MovieService {
   listMovies(pageIndex: number = 0, pageSize: number = 20, searchText: string = '', type: string = ''): Observable<any> {
     // if (!type) {
     const params = { pageIndex: pageIndex.toString(), pageSize: pageSize.toString(), search: searchText, type: type, };
-    return this.http.get(this.apiUrl + 'movie/moviedetails', { headers: this.headers, params });
+    return this.http.get(this.apiUrl + 'movies/list', { headers: this.headers, params });
     // }
     // else {
     //   const params = { type: type, page: pageIndex, limit: pageSize, search: searchText };

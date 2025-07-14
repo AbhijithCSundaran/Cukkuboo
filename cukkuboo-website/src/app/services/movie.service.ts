@@ -27,14 +27,14 @@ export class MovieService {
   // }
 
   listMovies(pageIndex: number = 0, pageSize: number = 20, searchText: string = '', type: string = ''): Observable<any> {
-    if (!type) {
-      const params = { pageIndex: pageIndex.toString(), pageSize: pageSize.toString(), search: searchText };
-      return this.http.get(this.apiUrl + 'movie/moviedetails', { headers: this.headers, params });
-    }
-    else {
-      const params = { type: type, page: pageIndex, limit: pageSize, search: searchText };
-      return this.http.get(this.apiUrl + 'movies/list', { headers: this.headers, params });
-    }
+    // if (!type) {
+    const params = { pageIndex: pageIndex.toString(), pageSize: pageSize.toString(), search: searchText, type: type, };
+    return this.http.get(this.apiUrl + 'movie/moviedetails', { headers: this.headers, params });
+    // }
+    // else {
+    //   const params = { type: type, page: pageIndex, limit: pageSize, search: searchText };
+    //   return this.http.get(this.apiUrl + 'movies/list', { headers: this.headers, params });
+    // }
 
   }
 
@@ -124,12 +124,12 @@ export class MovieService {
     return this.http.post(`${this.apiUrl}movie/movieReaction/${movieId}`, { status }, {
       headers: this.headers
     });
-}
+  }
 
-viewVideo(model: any): Observable<any> {
-  return this.http.post(this.apiUrl + 'video/videoview', model, {
-    headers: this.headers
-  });
-}
+  viewVideo(model: any): Observable<any> {
+    return this.http.post(this.apiUrl + 'video/videoview', model, {
+      headers: this.headers
+    });
+  }
 
 }

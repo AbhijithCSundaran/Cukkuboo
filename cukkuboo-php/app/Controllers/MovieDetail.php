@@ -98,8 +98,7 @@ public function getAllMovieDetails()
         $searchWildcard = '%' . str_replace(' ', '%', $search) . '%';
         $accessMap = [
             'free' => 1,
-            'standard' => 2,
-            'premium' => 3
+            'premium' => 2
         ];
         $accessValue = $accessMap[$search] ?? null;
 
@@ -288,16 +287,23 @@ public function movieReaction($mov_id)
  public function getMoviesList()
 {
     $type = $this->request->getGet('type');
-    $pageIndex = (int) $this->request->getGet('pageIndex') ?? 0;
-    $pageSize  = (int) $this->request->getGet('pageSize') ?? 10;
-    $search    = strtolower(trim($this->request->getGet('search')));
+    $pageIndex = $this->request->getGet('pageIndex');
+    $pageSize = $this->request->getGet('pageSize');
+    $search = $this->request->getGet('search');
+
+    // Validate and sanitize pagination params
+    $pageIndex = is_numeric($pageIndex) && $pageIndex >= 0 ? (int)$pageIndex : 0;
+    $pageSize = is_numeric($pageSize) && $pageSize > 0 ? (int)$pageSize : 10;
+
     $offset = $pageIndex * $pageSize;
 
     $builder = $this->db->table('movies_details')->where('status !=', 9);
 
     // Optional search
     if (!empty($search)) {
+        $search = strtolower(trim($search));
         $searchWildcard = '%' . str_replace(' ', '%', $search) . '%';
+
         $accessMap = [
             'free' => 1,
             'standard' => 2,
@@ -310,9 +316,11 @@ public function movieReaction($mov_id)
             ->orLike('LOWER(genre)', $searchWildcard)
             ->orLike('LOWER(cast_details)', $searchWildcard)
             ->orLike('LOWER(category)', $searchWildcard);
+
         if ($accessValue !== null) {
             $builder->orWhere('access', $accessValue);
         }
+
         $builder->groupEnd();
     }
 
@@ -344,7 +352,7 @@ public function movieReaction($mov_id)
     $countBuilder = clone $builder;
     $total = $countBuilder->countAllResults(false);
 
-    // Paginated results
+    // Get paginated results
     $movies = $builder->get($pageSize, $offset)->getResultArray();
 
     // Format output
@@ -362,7 +370,8 @@ public function movieReaction($mov_id)
         ];
     }, $movies);
 
-    $totalPages = ceil($total / $pageSize);
+    // Calculate total pages safely
+    $totalPages = ($pageSize > 0) ? ceil($total / $pageSize) : 0;
 
     return $this->respond([
         'success' => true,

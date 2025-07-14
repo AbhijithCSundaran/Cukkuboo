@@ -89,6 +89,9 @@ export class InterceptorService implements HttpInterceptor {
         // window.location.reload();
         window.location.reload();
       }
+      else {
+        this.router.navigate(['/signin']);
+      }
       this.dialog.closeAll();
     });
   }

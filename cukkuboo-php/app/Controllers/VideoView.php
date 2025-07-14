@@ -30,12 +30,13 @@ class VideoView extends ResourceController
         }
 
         $data = $this->request->getJSON(true);
-        $userId  = $data['user_id'] ?? null;
+        $userId  = $user['user_id']; 
         $movieId = $data['mov_id'] ?? null;
         $status  = $data['status'] ?? null;
 
-        if (!$userId || !$movieId || !isset($status)) {
-            return $this->failValidationError('Missing required fields.');
+        if (!$movieId || !isset($status)) {
+           return $this->failValidationErrors(['message' => 'Missing required fields.']);
+
         }
 
         if ($userId != $user['user_id']) {
@@ -43,7 +44,8 @@ class VideoView extends ResourceController
         }
 
         if ($status != 1) {
-            return $this->failValidationError('Invalid status value for view');
+            return $this->fail(['message' => 'Invalid status value for view'], 422);
+
         }
 
         $existing = $this->videoviewModel->getUserVideoView($userId, $movieId);

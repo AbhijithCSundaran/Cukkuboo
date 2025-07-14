@@ -165,6 +165,7 @@ export class SingleMovieComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe((result: any) => {
       if (result) {
+        this.getMovie(this.movieData.mov_id, true)
       }
       this.dialog.closeAll();
     });

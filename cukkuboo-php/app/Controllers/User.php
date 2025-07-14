@@ -517,20 +517,25 @@ public function updateEmailPreference()
         ]);
     }
     public function changePassword()
-    {
+{
     $authHeader = $this->request->getHeaderLine('Authorization');
     $authuser = $this->authService->getAuthenticatedUser($authHeader);
-        if(!$authuser) {
-            return $this->failUnauthorized('Invalid or missing token.');
-        }
+
+    if (!$authuser) {
+        return $this->failUnauthorized('Invalid or missing token.');
+    }
+
     $userId = $authuser['user_id'] ?? null;
     if (!$userId) {
         return $this->response->setJSON(['status' => 0, 'msg' => 'User not logged in.']);
     }
 
-    $oldPassword     = $this->request->getPost('oldPassword');
-    $newPassword     = $this->request->getPost('newPassword');
-    $confirmPassword = $this->request->getPost('confirmPassword');
+    // Get raw JSON body
+    $json = $this->request->getJSON(true); // `true` = return as array
+
+    $oldPassword     = $json['oldPassword'] ?? null;
+    $newPassword     = $json['newPassword'] ?? null;
+    $confirmPassword = $json['confirmPassword'] ?? null;
 
     if (empty($oldPassword) || empty($newPassword) || empty($confirmPassword)) {
         return $this->response->setJSON(['status' => 0, 'msg' => 'All fields are required.']);
@@ -556,7 +561,8 @@ public function updateEmailPreference()
     }
 
     return $this->response->setJSON(['status' => 0, 'msg' => 'Failed to update password.']);
-    }
+}
+
     public function deleteUserById($user_id)
 {
     $authHeader = $this->request->getHeaderLine('Authorization');

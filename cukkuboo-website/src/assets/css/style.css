@@ -611,10 +611,17 @@ input[type="button"],
     color: var(--primary-color);
 }
 
-.gen-button.gen-button-outline:hover {
+/* .gen-button.gen-button-outline:hover {
     color: var(--blue-color);
     border: 1px solid var(--blue-color);
-}
+} */
+
+/* @media (max-width: 1023px) {
+    .gen-button.gen-button-outline:hover {
+        color: initial;
+        border: initial;
+    }
+} */
 
 /*================================================
 Single Tv Show

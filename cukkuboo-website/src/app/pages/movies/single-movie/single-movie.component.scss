@@ -12,7 +12,6 @@
   font-weight: 600;
   line-height: 1.2;
   color: #fff;
-  // text-transform: uppercase;
 }
 
 .gen-btn-container a.playBut {
@@ -46,7 +45,6 @@
   color: red !important;
 }
 
-/* ✅ Responsive Fix for Metadata Pairs */
 .gen-extra-data ul {
   padding: 0;
   margin: 0;
@@ -66,6 +64,58 @@
   white-space: nowrap;
 }
 
+/* Like / Dislike / Bookmark Buttons */
+.reaction-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 6px 14px;
+  font-size: 15px;
+  height: 40px;
+  background: transparent;
+  border: 1px solid var(--primary-color);
+  color: var(--primary-color);
+  white-space: nowrap;
+  transition: all 0.3s ease;
+}
+
+.reaction-button i {
+  font-size: 16px;
+}
+
+/* Bookmark Specific Styling */
+.bookmark-button {
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  justify-content: center;
+}
+
+/* Center the icon in the button */
+.bookmark-button i {
+  font-size: 18px;
+  margin: 0 auto;
+}
+
+/* Hide the label by default for small screens */
+.bookmark-button .label {
+  display: none;
+}
+
+/* On larger screens, expand button and show label */
+@media (min-width: 768px) {
+  .bookmark-button {
+    width: auto;
+    padding: 6px 14px;
+  }
+
+  .bookmark-button .label {
+    display: inline;
+  }
+}
+
+/* Small device tweaks */
 @media (max-width: 767px) {
   .play-movie {
     font-size: 18px;
@@ -87,5 +137,12 @@
 
   .gen-extra-data li.meta-pair span {
     word-break: break-word;
+  }
+
+  .reaction-button {
+    font-size: 14px;
+    height: 38px;
+    padding: 5px 10px;
+    min-width: auto;
   }
 }

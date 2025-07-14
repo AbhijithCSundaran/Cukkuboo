@@ -310,27 +310,24 @@ export class ProfileComponent implements OnInit {
         return;
       }
 
-      // Build FormData to send to backend
-      const formData = new FormData();
-      formData.append('oldPassword', currentPassword.trim());
-      formData.append('newPassword', newPassword.trim());
-      formData.append('confirmPassword', confirmPassword.trim());
+      const model = {
+        oldPassword: currentPassword.trim(),
+        newPassword: newPassword.trim(),
+        confirmPassword: confirmPassword.trim()
+      };
 
-      this.userService.changePassword(formData).subscribe({
+      this.userService.changePassword(model).subscribe({
         next: (res) => {
-          if (res.status === 1) {
+          if (res.success === 'true') {
             this.snackBar.open(res.msg, '', {
               duration: 3000,
               verticalPosition: 'top',
               panelClass: ['snackbar-success']
             });
-
             this.showProfileInfo = true;
             this.showChangePassword = false;
             localStorage.setItem('activeTab', 'profile');
-
             this.changePasswordForm.reset();
-
           } else {
             this.snackBar.open(res.msg, '', {
               duration: 3000,
@@ -347,6 +344,7 @@ export class ProfileComponent implements OnInit {
           });
         }
       });
+
     } else {
       this.snackBar.open('Please fill all required fields.', '', {
         duration: 3000,

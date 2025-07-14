@@ -92,12 +92,10 @@ class UserModel extends Model
         return ['status' => 0, 'msg' => 'User not found.'];
     }
 
-    
     if (!password_verify($oldPassword, $user['password'])) {
         return ['status' => 0, 'msg' => 'Old password does not match.'];
     }
 
-   
     if (password_verify($newPassword, $user['password'])) {
         return ['status' => 0, 'msg' => 'Please use a new password different from the old one.'];
     }
@@ -105,8 +103,8 @@ class UserModel extends Model
     $hashedPassword = password_hash($newPassword, PASSWORD_BCRYPT);
 
     $data = [
-        'password'    => $hashedPassword,
-        'updated_at'  => date('Y-m-d H:i:s')
+        'password'   => $hashedPassword,
+        'updated_at' => date('Y-m-d H:i:s'),
     ];
 
     if ($this->update($userId, $data)) {
@@ -115,6 +113,7 @@ class UserModel extends Model
         return ['status' => 0, 'msg' => 'Could not update the password. Please try again.'];
     }
 }
+
     public function setUserSubscription($userId)
 {
     return $this->where('user_id', $userId)

@@ -35,8 +35,7 @@ class VideoView extends ResourceController
         $status  = $data['status'] ?? null;
 
         if (!$movieId || !isset($status)) {
-           return $this->failValidationErrors(['message' => 'Missing required fields.']);
-
+        return $this->fail('Missing required fields.', 422);
         }
 
         if ($userId != $user['user_id']) {

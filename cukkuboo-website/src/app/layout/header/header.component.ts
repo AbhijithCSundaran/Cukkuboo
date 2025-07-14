@@ -50,6 +50,7 @@ export class HeaderComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    debugger;
     this.checkAuthAndLoadNotifications();
   }
 
@@ -58,8 +59,8 @@ export class HeaderComponent implements OnInit {
     this.username = this.storageService.getItem('username');
     this.userData = this.storageService.getItem('userData')
     this.isSignedIn = !!token;
-    if (this.userData?.unread_notifications || this.userData?.notifications)
-      this.hasUnreadNotification
+    if (this.userData?.notifications)
+      this.hasUnreadNotification = true;
   }
 
   goToNotifications(): void {

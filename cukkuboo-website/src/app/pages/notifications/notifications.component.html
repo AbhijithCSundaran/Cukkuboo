@@ -4,29 +4,23 @@
     <div class="notifications-list">
       <div class="header">
         <span class="heading">Notifications</span>
-        <button
-          *ngIf="notifications.length > 0"
-          class="mark-toggle"
-          (click)="markAllAsRead()"
-          [disabled]="isMarkingAll"
-        >
+        <button *ngIf="notifications.length > 0" class="mark-toggle" (click)="markAllAsRead()"
+          [disabled]="isMarkingAll">
           {{ isMarkingAll ? 'Marking…' : 'Mark All as Read' }}
         </button>
       </div>
 
       <div class="scrollable-list">
-        <div *ngFor="let notification of notifications;let i=index" 
-             class="notification-item"
-             [class.active]="notification.notification_id === selectedNotification?.notification_id"
-             [class.read]="notification.read"
-             (click)="selectNotification(notification)">
+        <div *ngFor="let notification of notifications;let i=index" class="notification-item position-relative"
+          [class.active]="notification.notification_id === selectedNotification?.notification_id"
+          [class.unread]="notification.status == 1" (click)="selectNotification(notification)">
           <div class="title-wrapper">
             <div class="title">{{ notification.title }}</div>
-            <span *ngIf="notification.status == 1" class="dot"></span>
+            <!-- <span *ngIf="notification.status == 1" class="dot"></span> -->
           </div>
           <div class="date">{{ notification.date | date: 'short' }}</div>
           <div class="action-buttons">
-            <button class="delete-btn"(click)="askToRemoveItem(notification,i);" title="Delete">
+            <button class="delete-btn" (click)="askToRemoveItem(notification,i);" title="Delete">
               <i class="fas fa-trash"></i>
             </button>
           </div>

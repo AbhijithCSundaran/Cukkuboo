@@ -50,18 +50,23 @@
 
       .notification-item {
         padding: 1rem;
-        border-bottom: 1px solid #222;
+        border-bottom: 1px solid var(--black-color);
+        border-right: 4px solid transparent;
         cursor: pointer;
-        transition: background 0.2s;
+        color: var(--secondary-color);
+        background-color: transparent;
+        overflow: hidden;
+        transition: all 0.2s;
 
-        &.read {
-          background-color: #1a1a1a;
-          color: #aaa;
+        &.unread {
+          border-bottom: 1px solid var(--grey-color);
+          background-color: var(--black-color);
+          color: var(--primary-color);
+          text-shadow: 0 0 5px var(--primary-color);
         }
 
         &.active {
-          background-color: #222;
-          border-left: 4px solid red;
+          border-right: 4px solid var(--primary-color);
         }
 
         .title-wrapper {
@@ -92,8 +97,14 @@
 
         .action-buttons {
           display: flex;
+          justify-content: end;
           gap: 0.5rem;
-          margin-top: 0.5rem;
+          position: absolute;
+          top: 0;
+          right: 0;
+          transform: translateY(-100%);
+          opacity: 0;
+          transform: all 0.2s ease;
 
           button {
             font-size: 0.75rem;
@@ -106,18 +117,22 @@
           .delete-btn {
             background-color: transparent;
             color: white;
-            border: 1px solid white;
+            transform: all 0.2s ease;
 
             &:hover {
-              background-color: red;
-              color: black;
-              border-color: red;
+              color: var(--primary-color);
             }
           }
         }
 
         &:hover {
           background-color: #222;
+
+          .action-buttons {
+            transform: translateY(0);
+            opacity: 1;
+
+          }
         }
       }
     }

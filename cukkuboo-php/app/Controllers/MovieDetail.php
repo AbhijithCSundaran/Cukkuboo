@@ -88,66 +88,61 @@ class MovieDetail extends ResourceController
  
 public function getAllMovieDetails()
 {
-    // $authHeader = $this->request->getHeaderLine('Authorization');
-    // $user = $this->authService->getAuthenticatedUser($authHeader);
-    // if (!$user)
-    //     return $this->failUnauthorized('Invalid or missing token.');
- 
     $pageIndex = $this->request->getGet('pageIndex');
     $pageSize  = $this->request->getGet('pageSize');
-    $search    = $this->request->getGet('search');
- 
-    $builder = $this->moviedetail->where('status !=', 9);
- 
+    $search    = strtolower(trim($this->request->getGet('search'))); 
+
+    $builder = $this->moviedetail->builder(); 
+    $builder->where('status !=', 9); 
     if (!empty($search)) {
-        $search = preg_replace('/\s+/', ' ', $search);
         $searchWildcard = '%' . str_replace(' ', '%', $search) . '%';
-        // $builder->groupStart()
-        //     ->like('title', $search)
-        //     ->orLike('genre', $search)
-        //     ->orLike('cast_details', $search)
-        //     ->orLike('category', $search)
-        // ->groupEnd();
+        $accessMap = [
+            'free' => 1,
+            'standard' => 2,
+            'premium' => 3
+        ];
+        $accessValue = $accessMap[$search] ?? null;
+
         $builder->groupStart()
-            ->like('LOWER(title)', strtolower($searchWildcard))
-            ->orLike('LOWER(genre)', strtolower($searchWildcard))
-            ->orLike('LOWER(cast_details)', strtolower($searchWildcard))
-            ->orLike('LOWER(category)', strtolower($searchWildcard))
-            ->orLike('LOWER(access)', strtolower($searchWildcard))
-        ->groupEnd();
+            ->like('LOWER(title)', $searchWildcard)
+            ->orLike('LOWER(genre)', $searchWildcard)
+            ->orLike('LOWER(cast_details)', $searchWildcard)
+            ->orLike('LOWER(category)', $searchWildcard);
+        if ($accessValue !== null) {
+            $builder->orWhere('access', $accessValue);
+        }
+
+        $builder->groupEnd();
     }
     if (!is_numeric($pageIndex) || !is_numeric($pageSize) || $pageIndex < 0 || $pageSize <= 0) {
-        $movies = $builder
-            ->orderBy('mov_id', 'DESC')
-            ->findAll();
- 
+        $movies = $builder->orderBy('mov_id', 'DESC')->get()->getResult();
+
         return $this->response->setJSON([
             'success' => true,
             'message' => 'All movies fetched successfully.',
-            'data' => $movies,
-            'total' => count($movies)
+            'data'    => $movies,
+            'total'   => count($movies)
         ]);
     }
- 
-    $pageIndex = (int) $pageIndex;
-    $pageSize  = (int) $pageSize;
+    $pageIndex = (int)$pageIndex;
+    $pageSize  = (int)$pageSize;
     $offset    = $pageIndex * $pageSize;
- 
     $countBuilder = clone $builder;
     $total = $countBuilder->countAllResults(false);
- 
+
     $movies = $builder
         ->orderBy('mov_id', 'DESC')
-        ->findAll($pageSize, $offset);
- 
+        ->get($pageSize, $offset)
+        ->getResult();
+
     return $this->response->setJSON([
         'success' => true,
         'message' => 'Paginated movies fetched successfully.',
-        'data' => $movies,
-        'total' => $total
+        'data'    => $movies,
+        'total'   => $total
     ]);
 }
- 
+
 public function getMovieById($id)
 {
     $authHeader = $this->request->getHeaderLine('Authorization');

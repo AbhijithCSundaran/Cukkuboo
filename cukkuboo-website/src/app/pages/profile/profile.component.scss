@@ -13,6 +13,7 @@
     text-transform: capitalize;
     background: #e50916;
     max-width: 240px;
+    color: white;
 }
 
 input.form-control:focus {
@@ -35,7 +36,7 @@ input.form-control:focus {
 }
 
 .country-code {
-    max-width: 95px;
+    max-width: 120px;
     background: #221f1f;
     color: white;
     border: none;
@@ -83,6 +84,7 @@ select.form-select {
 .update-btn:disabled {
   background-color: #e50916;
   cursor: not-allowed;
+  border: none;
 }
 
 .field-space{

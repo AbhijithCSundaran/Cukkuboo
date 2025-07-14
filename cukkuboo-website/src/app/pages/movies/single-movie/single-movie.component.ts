@@ -152,7 +152,10 @@ export class SingleMovieComponent implements OnInit {
       width: 'auto', height: 'auto',
       panelClass: 'signin-modal'
     });
-    dialogRef.afterClosed().subscribe(() => {
+    dialogRef.afterClosed().subscribe((result: any) => {
+      if (result) {
+        this.getMovie(this.movieData.mov_id, true)
+      }
       this.dialog.closeAll();
     });
   }

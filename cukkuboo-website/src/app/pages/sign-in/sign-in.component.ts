@@ -62,8 +62,6 @@ export class SignInComponent {
       const model = this.loginForm.value;
       this.userService.login(model).subscribe({
         next: (response) => {
-          console.log('response from login:', response);
-
           if (response.success) {
             if (response.data.user_type === 'Customer') {
               localStorage.setItem('t_k', response.data?.jwt_token);

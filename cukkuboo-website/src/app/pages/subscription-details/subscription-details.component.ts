@@ -34,9 +34,6 @@ export class SubscriptionDetailsComponent implements OnInit {
     const data = this.storageService.getItem('userData');
     if (data?.subscription_details?.user_subscription_id)
       this.getActiveSubscription();
-    // this.loadSubscriptionDetails(data?.subscription_details?.user_subscription_id);
-    else
-      this.router.navigate(['/']);
   }
 
   getActiveSubscription(): void {

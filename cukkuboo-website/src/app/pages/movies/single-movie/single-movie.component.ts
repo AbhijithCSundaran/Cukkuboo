@@ -81,41 +81,6 @@ export class SingleMovieComponent implements OnInit {
       },
       error: (error) => {
         console.error(error);
-        // const res = {
-        //   "success": true,
-        //   "message": "Movie details fetched successfully.",
-        //   "data": {
-        //     "mov_id": "52",
-        //     "video": null,
-        //     "title": "Man of Steel",
-        //     "genre": "0",
-        //     "description": "\"Man of Steel\" is a 2013 American superhero film based on the DC Comics character Superman. It serves as a reboot of the Superman film series, focusing on Superman's origin story and his early days as a hero. The film explores his journey from being an alien child sent to Earth to embracing his destiny and becoming the symbol of hope for humanity. ",
-        //     "cast_details": "Henry Cavill",
-        //     "category": "0",
-        //     "release_date": "2025-07-07",
-        //     "age_rating": "2",
-        //     "access": "1",
-        //     "status": "1",
-        //     "thumbnail": "1752260815_79b1c31132cf029b9189.jpg",
-        //     "trailer": "1752260819_ce43588ba496d736bf08.mp4",
-        //     "banner": "1752260973_d886892d16ef38dd3614.jpg",
-        //     "duration": "0m 19s",
-        //     "rating": "5",
-        //     "likes": "0",
-        //     "dislikes": "0",
-        //     "views": "0",
-        //     "created_by": null,
-        //     "created_on": "2025-07-11 19:10:58",
-        //     "modify_by": null,
-        //     "modify_on": "2025-07-11 19:10:58"
-        //   }
-        // }
-        // this.movieData = res.data;
-        // if (autoplay) this.playVideo(this.movieData.video);
-        // this.pageIndex = 0;
-        // this.stopInfiniteScroll = false;
-        // this.suggetionList = [];
-        // this.getrelatedMovies();
       }
     });
   }
@@ -350,32 +315,32 @@ export class SingleMovieComponent implements OnInit {
     });
   }
 
- 
-toggleMovieReaction(): void {
-  if (!this.movieData || !this.movieData.mov_id) return;
 
-  const movieId = this.movieData.mov_id;
-  const isCurrentlyLiked = this.movieData.is_liked_by_user;
-  const newStatus = isCurrentlyLiked ? 2 : 1;
+  toggleMovieReaction(): void {
+    if (!this.movieData || !this.movieData.mov_id) return;
 
-  this.movieService.movieReaction(movieId, newStatus).subscribe({
-    next: () => {
-      // Step 1: Toggle like status
-      this.movieData.is_liked_by_user = !isCurrentlyLiked;
+    const movieId = this.movieData.mov_id;
+    const isCurrentlyLiked = this.movieData.is_liked_by_user;
+    const newStatus = isCurrentlyLiked ? 2 : 1;
 
-      // ✅ Step 2: Force string to number conversion
-      const currentLikes = parseInt(this.movieData.likes, 10) || 0;
+    this.movieService.movieReaction(movieId, newStatus).subscribe({
+      next: () => {
+        // Step 1: Toggle like status
+        this.movieData.is_liked_by_user = !isCurrentlyLiked;
 
-      // ✅ Step 3: Update like count correctly
-      this.movieData.likes = isCurrentlyLiked
-        ? Math.max(0, currentLikes - 1)
-        : currentLikes + 1;
-    },
-    error: (err) => {
-      console.error('Error updating like status:', err);
-    }
-  });
-}
+        // ✅ Step 2: Force string to number conversion
+        const currentLikes = parseInt(this.movieData.likes, 10) || 0;
+
+        // ✅ Step 3: Update like count correctly
+        this.movieData.likes = isCurrentlyLiked
+          ? Math.max(0, currentLikes - 1)
+          : currentLikes + 1;
+      },
+      error: (err) => {
+        console.error('Error updating like status:', err);
+      }
+    });
+  }
 
 
 

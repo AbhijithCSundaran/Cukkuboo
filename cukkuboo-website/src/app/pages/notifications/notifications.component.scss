@@ -22,6 +22,10 @@
       border-bottom: 1px solid #222;
       color: white;
 
+      .heading {
+        font-size: 1.2rem;
+      }
+
       .mark-toggle {
         background: transparent;
         border: 1px solid white;
@@ -131,7 +135,6 @@
           .action-buttons {
             transform: translateY(0);
             opacity: 1;
-
           }
         }
       }
@@ -255,6 +258,41 @@
             background-color: #e53935;
             color: white;
           }
+        }
+      }
+    }
+  }
+}
+
+/* Move button under heading on ≤ 991px */
+@media (max-width: 991px) {
+  .notifications-container {
+    .notifications-list {
+      .header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+
+        .mark-toggle {
+          align-self: stretch;
+        }
+      }
+    }
+  }
+}
+
+/* Make heading and button even smaller on ≤ 575px */
+@media (max-width: 575px) {
+  .notifications-container {
+    .notifications-list {
+      .header {
+        .heading {
+          font-size: 0.7rem;
+        }
+
+        .mark-toggle {
+          font-size: 0.40rem;
+          padding: 0.2rem 0.4rem;
         }
       }
     }

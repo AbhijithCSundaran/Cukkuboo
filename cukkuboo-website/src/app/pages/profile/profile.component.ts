@@ -13,6 +13,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { Router } from '@angular/router';
 import { SubscriptionStatus } from '../../model/enum';
+import { MatSelectModule } from '@angular/material/select';
+import { MatOptionModule } from '@angular/material/core';
+
 @Component({
   selector: 'app-profile',
   imports: [
@@ -22,7 +25,9 @@ import { SubscriptionStatus } from '../../model/enum';
     MatIconModule,
     ValidationMessagesComponent,
     MatFormFieldModule,
-    MatInputModule
+    MatInputModule,
+    MatSelectModule,
+    MatOptionModule
   ],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss'
@@ -144,7 +149,9 @@ export class ProfileComponent implements OnInit {
     this.profileForm = this.fb.group({
       username: ['', [Validators.required]],
       email: ['', [Validators.required, ValidationService.emailValidator]],
+      // countryCode: ['', Validators.required],
       phone: ['', [Validators.required,
+
       Validators.pattern('^[0-9]{1,15}$')
       ]],
       subscription: [''],
@@ -174,17 +181,17 @@ export class ProfileComponent implements OnInit {
     const data = this.storageService.getItem('userData');
     if (data) {
       this.userId = data.user_id;
-        // Find matching country code from the full number
-    let countryCode = '+91'; // default
-    let phoneNumber = data.phone || '';
+      // Find matching country code from the full number
+      let countryCode = '+91'; // default
+      let phoneNumber = data.phone || '';
 
-    for (const country of this.countryCodes) {
-      if (data.phone?.startsWith(country.dial_code)) {
-        countryCode = country.dial_code;
-        phoneNumber = data.phone.replace(country.dial_code, '');
-        break;
+      for (const country of this.countryCodes) {
+        if (data.phone?.startsWith(country.dial_code)) {
+          countryCode = country.dial_code;
+          phoneNumber = data.phone.replace(country.dial_code, '');
+          break;
+        }
       }
-    }
       this.profileForm.patchValue({
         username: data.username,
         email: data.email,
@@ -223,9 +230,11 @@ export class ProfileComponent implements OnInit {
   //update Profile
   onSubmit(): void {
     if (this.profileForm.valid) {
+      const formValue = this.profileForm.value;
       const updatedData = {
         ...this.profileForm.value,
-        user_id: this.userId
+        user_id: this.userId,
+        phone: formValue.country_code + formValue.phone
       };
 
       this.userService.register(updatedData).subscribe({

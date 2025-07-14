@@ -70,14 +70,23 @@
                         <!-- Contact -->
                         <div class="form-group row align-items-center mb-3">
                             <label class="col-sm-3 col-form-label">Contact:</label>
-                            <div class="col-sm-9 position-relative d-flex flex-column">
+                            <div class="col-sm-9  d-flex flex-column">
                                 <!-- Country code select -->
                                 <div class="d-flex mb-1">
                                     <select class="form-select me-2 country-code" formControlName="country_code">
                                         <option *ngFor="let country of countryCodes" [value]="country.dial_code">
-                                             ({{ country.dial_code }})
+                                            ({{ country.dial_code }})
                                         </option>
                                     </select>
+                                    <!-- <mat-form-field appearance="outline" class="me-2 country-code-field">
+                                        <mat-select formControlName="country_code">
+                                            <mat-option *ngFor="let country of countryCodes"
+                                                [value]="country.dial_code">
+                                                ({{ country.dial_code }})
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field> -->
+
                                     <!-- Phone number input -->
                                     <input class="form-control" type="text" formControlName="phone" maxlength="15"
                                         placeholder="Enter phone number" (keypress)="allowOnlyDigits($event)" />

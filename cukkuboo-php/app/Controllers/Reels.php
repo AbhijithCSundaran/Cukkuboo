@@ -150,18 +150,21 @@ class Reels extends ResourceController
     $builder = $this->reelsModel->where('status !=', 9);
 
     if (!empty($search)) {
-        $search = strtolower(trim($search));
+       
+        $search = strtolower(trim(preg_replace('/\s+/', ' ', $search)));
         $accessMap = [
             'free' => '1',
-            'basic' => '2',
-            'premium' => '3'
+            'premium' => '2'
         ];
         $accessValue = $accessMap[$search] ?? null;
-        $builder->groupStart();
+
+        $builder->groupStart()
+            ->like('title', $search, 'both');
+
         if ($accessValue !== null) {
             $builder->orWhere('access', $accessValue);
         }
-        $builder->orLike('LOWER(title)', $search);
+
         $builder->groupEnd();
     }
 
@@ -186,7 +189,6 @@ class Reels extends ResourceController
         'total'   => $total
     ]);
 }
-
 
 public function getReelById($id)
 {

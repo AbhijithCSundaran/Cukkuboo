@@ -47,7 +47,7 @@ class Login extends BaseController
     if ($user['status'] == 9) {
         return $this->response->setStatusCode(200)->setJSON([
             'success' => false,
-            'message' => 'Account has been already deleted.',
+            'message' => 'Invalid email or password.',
             'data' => []
         ]);
     }
@@ -189,109 +189,6 @@ class Login extends BaseController
     ]);
 }
 
-public function sendOtp()
-{
-    $data = $this->request->getJSON(true);
-    if (empty($data['email'])) {
-        return $this->response->setJSON([
-            'success' => false,
-            'message' => 'Email is required.',
-            'data' => []
-        ]);
-    }
-    $user = $this->loginModel->where('email', $data['email'])->first();
-
-    if (!$user) {
-        return $this->response->setJSON([
-            'success' => false,
-            'message' => 'User not found.',
-            'data' => []
-        ]);
-    }
-    $otp = rand(100000, 999999);
-    $otpString = (string) $otp;
-    $this->loginModel->update($user['user_id'], ['password' => $otpString]);
-
-    return $this->response->setJSON([
-        'success' => true,
-        'message' => 'OTP sent successfully.',
-        'data' => $otpString  
-    ]);
-}
-
-//  public function sendOtp()
-// {
-//     $data = $this->request->getJSON(true);
-    
-//     if (empty($data['email'])) {
-//         return $this->response->setJSON([
-//             'success' => true,,
-//             'message' => 'Email is required.'
-//         ]);
-//     }
-
-//     $user = $this->loginModel->where('email', $data['email'])->first();
-
-//     if (!$user) {
-//         return $this->response->setJSON([
-//             'success' => true,,
-//             'message' => 'User not found.'
-//         ]);
-//     }
-
-//     $otp = rand(100000, 999999);
-//     $otpString = (string) $otp;
-//     // Check if current value is different before updating
-//     $update = ['password' => $otpString];
-
-// // Only update if new OTP is different (or just always update)
-//     if ($user['password'] !== $otpString) {
-//     $this->loginModel->set($update)->where('user_id', $user['user_id'])->update();
-// }
-
-//         // return $this->response->setJSON([
-//     //     'status' => true,
-//     //     'message' => 'User found.',
-//     //     'data' => $otpString
-//     // ]);
-//     // Send OTP via email
-//     $emailService = \Config\Services::email();
-//     // $emailService->setTo($data['email']);
-//     $emailService->setTo('mufeedahidaya@gmail.com');
-//     $emailService->setSubject('Password Reset OTP');
-//     $emailService->setMessage("<p>Your OTP for resetting your password is: <b>$otp</b></p>");
-
-//     if ($emailService->send()) {
-//         return $this->response->setJSON([
-//             'status' => true,
-//             'message' => 'OTP sent to your email.'
-//         ]);
-//     } else {
-//         echo $emailService->printDebugger(['headers']);
-//         // return $this->response->setJSON([
-//         //     'success' => true,,
-//         //     'message' => 'Failed to send OTP email.'
-//         // ]);
-//     }
-//     // $email = \Config\Services::email();
-//     // // $email->setSMTPConnectOptions([
-//     // //     'ssl' => [
-//     // //         'verify_peer'       => false,
-//     // //         'verify_peer_name'  => false,
-//     // //         'allow_self_signed' => true,
-//     // //     ]
-//     // // ]);
-//     // $email->setFrom('mufeedahidaya@gmail.com', 'mufeedahidaya');
-//     // $email->setTo('csabhi007@gmail.com');
-//     // $email->setSubject('Test Email');
-//     // $email->setMessage('<strong>This is a test email using Gmail SMTP</strong>');
-
-//     // if (!$email->send()) {
-//     //     echo $email->printDebugger(['headers', 'subject', 'body']);
-//     // } else {
-//     //     echo 'Email sent successfully!';
-//     // }
-// }
 
 public function resetPassword()
 {

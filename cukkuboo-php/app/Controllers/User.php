@@ -237,7 +237,10 @@ if ($existingUser) {
     }
 
     if (!password_verify($password, $userData['password'])) {
-        return $this->failUnauthorized("Incorrect password. Account not deleted.");
+        return $this->response->setJSON([
+            'success' => false,
+            'message' => 'Incorrect password.'
+        ]);
     }
 
     $status = 9;

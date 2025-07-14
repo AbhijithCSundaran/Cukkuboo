@@ -11,9 +11,8 @@ import { SubscriptionService } from '../../services/subscription.service';
 
 @Component({
   selector: 'app-subscription-details',
-  imports: [
-    CommonModule, ContentLoaderComponent
-  ],
+  standalone: true,
+  imports: [CommonModule, ContentLoaderComponent],
   templateUrl: './subscription-details.component.html',
   styleUrl: './subscription-details.component.scss'
 })
@@ -21,6 +20,7 @@ export class SubscriptionDetailsComponent implements OnInit {
   subscriptionData: any;
   subscriptionHistory: any[] = [];
   isLonding: boolean = true;
+
   constructor(
     private subscriptionService: SubscriptionService,
     private storageService: StorageService,
@@ -29,11 +29,15 @@ export class SubscriptionDetailsComponent implements OnInit {
     private router: Router,
   ) { }
 
-
   ngOnInit(): void {
     const data = this.storageService.getItem('userData');
-    if (data?.subscription_details?.user_subscription_id)
+    if (data?.subscription_details?.user_subscription_id) {
       this.getActiveSubscription();
+    } else {
+      // No active subscription id found
+      this.subscriptionData = null;
+      this.getSubscriptionHistory();
+    }
   }
 
   getActiveSubscription(): void {
@@ -46,9 +50,11 @@ export class SubscriptionDetailsComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error fetching subscription:', err);
+        this.getSubscriptionHistory(); 
       }
     });
   }
+
   getSubscriptionHistory(): void {
     this.subscriptionService.getSubscriptionHistory().subscribe({
       next: (res: any) => {
@@ -58,22 +64,24 @@ export class SubscriptionDetailsComponent implements OnInit {
         this.isLonding = false;
       },
       error: (err) => {
-        console.error('Error fetching subscription:', err);
+        console.error('Error fetching subscription history:', err);
+        this.isLonding = false;
       }
     });
   }
 
-  askToConfirm() {
+  askToConfirm(): void {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       data: {
         message: `<p>Are you sure you want to cancel <span> Subscription</span>?</p>`
       },
     });
+
     dialogRef.afterClosed().subscribe((result: any) => {
       if (result) {
         this.cancelSubscription();
       }
-    })
+    });
   }
 
   cancelSubscription(): void {
@@ -100,6 +108,9 @@ export class SubscriptionDetailsComponent implements OnInit {
         });
       }
     });
+  }
 
+  goToSubscribe(): void {
+    this.router.navigate(['/subscribe']);
   }
 }

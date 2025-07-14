@@ -74,7 +74,7 @@ export class SignInComponent {
               else
                 this.router.navigate(['/home']);
             } else {
-              this.snackBar.open('Not a customer', '', {
+              this.snackBar.open('Invalid email or password', '', {
                 duration: 3000,
                 verticalPosition: 'top',
                 panelClass: ['snackbar-error']

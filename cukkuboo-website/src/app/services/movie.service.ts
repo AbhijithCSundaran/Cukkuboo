@@ -126,4 +126,10 @@ export class MovieService {
     });
 }
 
+viewVideo(model: any): Observable<any> {
+  return this.http.post(this.apiUrl + 'video/videoview', model, {
+    headers: this.headers
+  });
+}
+
 }

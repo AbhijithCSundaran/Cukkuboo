@@ -104,9 +104,9 @@ public function getAllMovieDetails()
 
         $builder->groupStart()
             ->like('LOWER(title)', $searchWildcard)
-            ->orLike('LOWER(genre)', $searchWildcard)
+            // ->orLike('LOWER(genre)', $searchWildcard)
             ->orLike('LOWER(cast_details)', $searchWildcard)
-            ->orLike('LOWER(category)', $searchWildcard);
+            // ->orLike('LOWER(category)', $searchWildcard);
         if ($accessValue !== null) {
             $builder->orWhere('access', $accessValue);
         }
@@ -306,8 +306,7 @@ public function movieReaction($mov_id)
 
         $accessMap = [
             'free' => 1,
-            'standard' => 2,
-            'premium' => 3
+            'premium' => 2
         ];
         $accessValue = $accessMap[$search] ?? null;
 
@@ -350,7 +349,7 @@ public function movieReaction($mov_id)
 
     // Get total count
     $countBuilder = clone $builder;
-    $total = $countBuilder->countAllResults(false);
+    $total = $countBuilder->countAllResults(true);
 
     // Get paginated results
     $movies = $builder->get($pageSize, $offset)->getResultArray();

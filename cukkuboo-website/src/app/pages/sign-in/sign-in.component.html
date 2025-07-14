@@ -8,9 +8,10 @@
         <div class="text-center">
           <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" id="pms_login">
             <!-- Logo -->
-            <div class="text-center mb-3" routerLink="/">
-              <img src="assets/images/logo-collapsed.png" alt="Logo" style="max-width: 60px;" />
-            </div>
+         <div class="text-center mb-3 clickable-logo" routerLink="/">
+  <img src="assets/images/logo-collapsed.png" alt="Logo" style="max-width: 60px;" />
+</div>
+
 
             <h4 class="text-start">Sign In{{modalData?' To Continue':''}}</h4>
 

@@ -120,4 +120,10 @@ export class MovieService {
   }
 
 
+  movieReaction(movieId: number, status: number): Observable<any> {
+    return this.http.post(`${this.apiUrl}movie/movieReaction/${movieId}`, { status }, {
+      headers: this.headers
+    });
+}
+
 }

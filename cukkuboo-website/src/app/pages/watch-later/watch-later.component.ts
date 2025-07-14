@@ -6,29 +6,33 @@ import { environment } from '../../../environments/environment';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmationDialogComponent } from '../../core/components/confirmation-dialog/confirmation-dialog.component';
+import { InfiniteScrollDirective } from '../../core/directives/infinite-scroll/infinite-scroll.directive';
 
 @Component({
   selector: 'app-watch-later',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [
+    CommonModule,
+    RouterModule,
+    InfiniteScrollDirective
+  ],
   templateUrl: './watch-later.component.html',
   styleUrls: ['./watch-later.component.scss']
 })
 export class WatchLaterComponent implements OnInit {
   watchLaterList: any[] = [];
   imageUrl: string = environment.apiUrl + 'uploads/images/';
-  Math = Math;
-
   pageIndex: number = 0;
   pageSize: number = 8;
   totalItems: number = 0;
+  stopInfiniteScroll: boolean = false;
   isLoading: boolean = false;
 
   constructor(
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
     private movieService: MovieService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.loadWatchLaterList();
@@ -40,27 +44,33 @@ export class WatchLaterComponent implements OnInit {
       next: (res) => {
         this.isLoading = false;
         if (res?.success && Array.isArray(res.data)) {
-          this.watchLaterList = res.data;
-          this.totalItems = res.total || res.data.length;
+          if (this.pageIndex === 0) {
+            this.watchLaterList = res.data;
+          } else {
+            this.watchLaterList = [...this.watchLaterList, ...res.data];
+          }
+          this.totalItems = res.total || this.watchLaterList.length;
+          if (!res.data.length || this.watchLaterList.length >= this.totalItems) {
+            this.stopInfiniteScroll = true;
+          }
         } else {
-          this.watchLaterList = [];
+          this.stopInfiniteScroll = true;
         }
       },
       error: (err) => {
-        this.isLoading = false;
         console.error('Error loading watch later list:', err);
-        this.watchLaterList = [];
+        this.isLoading = false;
+        this.stopInfiniteScroll = true;
       }
     });
   }
 
-  onPageChange(page: number): void {
-    if (page >= 0 && page < Math.ceil(this.totalItems / this.pageSize)) {
-      this.pageIndex = page;
+  onScroll(): void {
+    if (!this.stopInfiniteScroll && !this.isLoading) {
+      this.pageIndex++;
       this.loadWatchLaterList();
     }
   }
-
 
   askToRemoveItem(item: any, index: number) {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
@@ -72,7 +82,7 @@ export class WatchLaterComponent implements OnInit {
       if (result) {
         this.confirmDelete(item, index);
       }
-    })
+    });
   }
 
   confirmDelete(item: any, index: number): void {
@@ -82,7 +92,7 @@ export class WatchLaterComponent implements OnInit {
         if (res?.success) {
           this.watchLaterList.splice(index, 1);
           this.totalItems--;
-          this.snackBar.open('Successfully removed', '', {
+          this.snackBar.open('Item removed from Watch Later successfully', '', {
             duration: 3000,
             verticalPosition: 'top',
             horizontalPosition: 'center',
@@ -110,13 +120,13 @@ export class WatchLaterComponent implements OnInit {
 
   askToClearAll() {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
-      data: { message: `<p>Are you sure you want to <span>clear all</span> Watch Later?</p>` },
+      data: { message: `<p>Are you sure you want to <span>clear all</span>  items from Watch Later?</p>` },
     });
     dialogRef.afterClosed().subscribe((result: any) => {
       if (result) {
         this.confirmClearAll();
       }
-    })
+    });
   }
 
   confirmClearAll(): void {
@@ -125,6 +135,8 @@ export class WatchLaterComponent implements OnInit {
         if (res?.success) {
           this.watchLaterList = [];
           this.totalItems = 0;
+          this.pageIndex = 0;
+          this.stopInfiniteScroll = false;
           this.snackBar.open('All Watch Later items cleared', '', {
             duration: 3000,
             verticalPosition: 'top',

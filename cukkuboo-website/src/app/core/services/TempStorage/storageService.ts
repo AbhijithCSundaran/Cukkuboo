@@ -23,11 +23,23 @@ export class StorageService {
         return this._onUpdateItem.asObservable();
     }
 
-    updateItem(name: any, value: any) {
-        var storageList: any[] = storage;
-        storageList.find((item: any) => item.name === name).value = value;
-        this._onUpdateItem.next(true);
-    }
+    // updateItem(name: any, value: any) {
+    //     var storageList: any[] = storage;
+    //     storageList.find((item: any) => item.name === name).value = value;
+    //     this._onUpdateItem.next(true);
+    // }
+updateItem(name: any, value: any): void {
+  const storageList: any[] = storage;
+  const item = storageList.find((item: any) => item.name === name);
+
+  if (item) {
+    item.value = value;
+  } else {
+    storageList.push({ name, value });
+  }
+
+  this._onUpdateItem.next(true);
+}
 
     getItem(name: any) {
         var storageList: any[] = storage;

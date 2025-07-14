@@ -34,3 +34,19 @@
 .gen-movie-info h3 a:hover {
   color: red;
 }
+.no-movies-container {
+  text-align: center;
+  padding: 2rem 1rem;
+  color: #888;
+}
+
+.no-movies-icon {
+  font-size: 3rem;
+  margin-bottom: 0.5rem;
+  color: #ccc;
+}
+
+.no-movies-text {
+  font-size: 1.25rem;
+  font-weight: 500;
+}

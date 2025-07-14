@@ -34,7 +34,6 @@ export class HeaderComponent implements OnInit {
     document.body.classList.toggle('sidebar-open', value);
   }
 
-
   constructor(
     private storageService: StorageService,
     private elementRef: ElementRef,
@@ -53,20 +52,24 @@ export class HeaderComponent implements OnInit {
     this.checkAuthAndLoadNotifications();
   }
 
-  checkAuthAndLoadNotifications(): void {
-    const token = this.storageService.getItem('token');
-    this.username = this.storageService.getItem('username');
-    this.userData = this.storageService.getItem('userData')
-    this.isSignedIn = !!token;
-    if (this.userData?.unread_notifications || this.userData?.notifications)
-      this.hasUnreadNotification
-  }
+checkAuthAndLoadNotifications(): void {
+  const token = this.storageService.getItem('token');
+  this.username = this.storageService.getItem('username');
+  this.userData = this.storageService.getItem('userData');
+  this.isSignedIn = !!token;
+
+  // get notification count from storage
+  const unreadCount = Number(this.storageService.getItem('unread_notifications'));
+  console.log('Unread Notification Count:', unreadCount);
+  this.hasUnreadNotification = unreadCount > 0;
+}
+
 
   goToNotifications(): void {
-    // this.closeMenu();
     this.router.navigate(['/notifications']);
     this.hasUnreadNotification = false;
 
+    // If you want to mark them as read via API:
     // this.notificationService.markAllAsRead().subscribe({
     //   next: () => {
     //     this.hasUnreadNotification = false;
@@ -78,18 +81,18 @@ export class HeaderComponent implements OnInit {
     // });
   }
 
-
-
-  askToSignout() {
+  askToSignout(): void {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       data: { message: `Are you sure you want to <b>sign out</b>?` },
     });
+
     dialogRef.afterClosed().subscribe((result: any) => {
       if (result) {
         this.confirmSignOut();
       }
-    })
+    });
   }
+
   confirmSignOut(): void {
     this.userService.logout().subscribe({
       next: () => {
@@ -98,12 +101,14 @@ export class HeaderComponent implements OnInit {
         this.storageService.updateItem('userData', null);
         this.storageService.updateItem('username', '');
         this.storageService.updateItem('subscription', '');
+
         this.snackBar.open('Signed out successfully', '', {
           duration: 3000,
           verticalPosition: 'top',
           horizontalPosition: 'center',
           panelClass: ['snackbar-success']
         });
+
         this.router.navigate(['/']);
       },
       error: (err) => {
@@ -118,13 +123,13 @@ export class HeaderComponent implements OnInit {
     });
   }
 
-  closeMenu() {
+  closeMenu(): void {
     this.menuOpen = false;
     this.showUserDropdown = false;
   }
 
   @HostListener('document:click', ['$event'])
-  onDocumentClick(event: MouseEvent) {
+  onDocumentClick(event: MouseEvent): void {
     const clickedInside = this.elementRef.nativeElement.contains(event.target);
     if (!clickedInside) {
       this.closeMenu();

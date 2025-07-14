@@ -5,7 +5,7 @@
             <div class="col-lg-12">
                 <nav aria-label="breadcrumb">
                     <div class="gen-breadcrumb-title">
-                        <h1 class="text-uppercase">{{movieTypeTitle}} Movies</h1>
+                        <h1 class="text-uppercase">{{movieType?movieType:''}} Movies</h1>
                     </div>
                     <!-- <div class="gen-breadcrumb-container">
                         <ol class="breadcrumb">
@@ -43,7 +43,7 @@
                     <div class="gen-movie-contain h-100 d-flex flex-column">
                         <div class="gen-movie-img">
                             <img [src]="imageUrl + movie.thumbnail" alt="{{ movie.title }} thumbnail" />
-                            <div class="gen-movie-add">
+                            <!-- <div class="gen-movie-add">
                                 <div class="wpulike wpulike-heart">
                                     <div class="wp_ulike_general_class wp_ulike_is_not_liked">
                                         <button type="button" class="wp_ulike_btn wp_ulike_put_image"></button>
@@ -77,7 +77,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> -->
                             <div class="gen-movie-action">
                                 <a [routerLink]="['/movies', movie.mov_id]" [queryParams]="{ ap: 1 }"
                                     class="gen-button playBut">
@@ -105,7 +105,7 @@
 
         <div *ngIf="!stopInfiniteScroll" infiniteScroll (scrolled)="onScroll($event)" style="height: 1px"></div>
         }@else{
-        <p class="px-3">No Videos found</p>
+        
         }
     </div>
 </section>

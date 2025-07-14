@@ -67,10 +67,20 @@
       </div>
 
       <div class="w-100 d-flex flex-wrap gap-2 my-3">
+                <!-- Like Button -->
+  <button class="gen-button gen-button-outline py-1 px-3" (click)="toggleMovieReaction()">
+    <i [ngClass]="movieData.is_liked_by_user ? 'fas fa-heart text-danger' : 'far fa-heart'"></i>
+    <span class="ms-1">Like</span>
+    <span *ngIf="movieData.likes !== undefined" class="ms-1">({{ movieData.likes }})</span>
+  </button>
+
         <button class="gen-button gen-button-outline py-1 px-3" (click)="toggleWatchLater()">
           <i [class]="movieData.watch_later_id ? 'fas fa-clock' : 'far fa-clock'"></i>
           {{ movieData.watch_later_id ? 'Remove From ' : '' }}Watch Later
         </button>
+  
+
+
         <button class="gen-button gen-button-outline py-1 px-3" (click)="copyUrlToClipboard()">
           <i class="fas fa-share-alt"></i> Share
         </button>
@@ -88,14 +98,14 @@
           </ul>
         </div>
 
-        <div class="gen-socail-share">
+        <!-- <div class="gen-socail-share">
           <ul class="social-inner">
             <li><a href="https://www.facebook.com/" class="facebook" target="_blank"><i
                   class="fab fa-facebook-f"></i></a></li>
             <li><a href="https://www.instagram.com/" class="instagram" target="_blank"><i
                   class="fab fa-instagram"></i></a></li>
           </ul>
-        </div>
+        </div> -->
       </div>
     </div>
   </div>

@@ -91,11 +91,12 @@
                         <i class="fa fa-history mr-1"></i> History
                       </a>
                     </li>
-                    <li class="nav-item mt-3 border-top pt-2">
-                      <a (click)="askToSignout()" class="nav-link">
-                        <i class="fa fa-sign-out mr-1"></i> Sign Out
-                      </a>
-                    </li>
+                  <li class="nav-item mt-3 border-top pt-2">
+  <a (click)="askToSignout()" class="nav-link" style="cursor: pointer;">
+    <i class="fa fa-sign-out mr-1"></i> Sign Out
+  </a>
+</li>
+
                   </ng-container>
                 </ul>
               </div>
@@ -155,7 +156,11 @@
                     </li>
                     <li><a routerLink="/watch-later"><i class="fa fa-clock"></i> Watch Later</a></li>
                     <li><a routerLink="/history"><i class="fa fa-history"></i> History</a></li>
-                    <li><a (click)="askToSignout()"><i class="fa fa-sign-out mr-1"></i> Sign Out</a></li>
+<li>
+  <a (click)="askToSignout()" style="cursor: pointer;">
+    <i class="fa fa-sign-out mr-1"></i> Sign Out
+  </a>
+</li>
                   </ul>
                 </div>
               </div>

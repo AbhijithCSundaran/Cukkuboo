@@ -34,7 +34,6 @@ export class MoviesComponent implements OnInit {
   stopInfiniteScroll: boolean = false;
   showSearch: boolean = false;
   movieType: '' | 'latest' | 'trending' | 'most_viewed' = '';
-  movieTypeTitle: string = '';
 
   constructor(
     private route: ActivatedRoute,
@@ -43,7 +42,6 @@ export class MoviesComponent implements OnInit {
     this.route.queryParams.subscribe(params => {
       this.showSearch = !!params['search'];
       this.movieType = params['typ'] ? params['typ'] : '';
-      this.movieTypeTitle = this.movieType.replace(/_/g, ' ');
       this.searchText = ''
       setTimeout(() => {
         if (this.showSearch) {

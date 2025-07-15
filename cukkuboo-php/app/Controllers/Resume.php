@@ -18,8 +18,7 @@ class Resume extends ResourceController
 
     public function saveProgress()
     {
-        // $authHeader = $this->request->getHeaderLine('Authorization');
-        $authHeader = apache_request_headers()["Authorization"];
+        $authHeader = $this->request->getHeaderLine('Authorization');
         $user = $this->authService->getAuthenticatedUser($authHeader);
 
         if (!$user || !isset($user['user_id'])) {
@@ -50,8 +49,7 @@ class Resume extends ResourceController
 
     public function getAllHistory()
 {
-    // $authHeader = $this->request->getHeaderLine('Authorization');
-    $authHeader = apache_request_headers()["Authorization"];
+    $authHeader = $this->request->getHeaderLine('Authorization');
     $user = $this->authService->getAuthenticatedUser($authHeader);
 
     if (!$user || !isset($user['user_id'])) {
@@ -88,8 +86,7 @@ class Resume extends ResourceController
 
     public function getById($id)
 {
-    // $authHeader = $this->request->getHeaderLine('Authorization');
-    $authHeader = apache_request_headers()["Authorization"];
+    $authHeader = $this->request->getHeaderLine('Authorization');
     $user = $this->authService->getAuthenticatedUser($authHeader);
 
     if (!$user || !isset($user['user_id'])) {
@@ -111,8 +108,7 @@ class Resume extends ResourceController
 }
 public function getUserHistory()
 {
-    // $authHeader = $this->request->getHeaderLine('Authorization');
-    $authHeader = apache_request_headers()["Authorization"];
+    $authHeader = $this->request->getHeaderLine('Authorization');
     $authUser = $this->authService->getAuthenticatedUser($authHeader);
 
     if (!$authUser) {
@@ -135,8 +131,7 @@ public function getUserHistory()
 
 public function deleteById($Id)
 {
-    // $authHeader = $this->request->getHeaderLine('Authorization');
-    $authHeader = apache_request_headers()["Authorization"];
+    $authHeader = $this->request->getHeaderLine('Authorization');
     $user = $this->authService->getAuthenticatedUser($authHeader);
 
     if (!$user || !isset($user['user_id'])) {

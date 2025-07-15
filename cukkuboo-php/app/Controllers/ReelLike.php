@@ -22,8 +22,7 @@ class ReelLike extends ResourceController
 
     public function reelLike()
     {
-        // $authHeader = $this->request->getHeaderLine('Authorization');
-        $authHeader = apache_request_headers()["Authorization"];
+        $authHeader = $this->request->getHeaderLine('Authorization');
         $user = $this->authService->getAuthenticatedUser($authHeader);
 
         if (!$user) {

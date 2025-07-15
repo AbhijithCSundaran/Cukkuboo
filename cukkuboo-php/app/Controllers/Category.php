@@ -20,8 +20,7 @@ class Category extends ResourceController
  
     public function saveCategory()
     {
-        // $authHeader = $this->request->getHeaderLine('Authorization');
-        $authHeader = apache_request_headers()["Authorization"];
+        $authHeader = $this->request->getHeaderLine('Authorization');
         $user = $this->authService->getAuthenticatedUser($authHeader);
  
         if (!$user) {
@@ -130,8 +129,7 @@ public function getCategoryById($id = null)
  
     public function delete($category_id = null)
     {
-        // $authHeader = $this->request->getHeaderLine('Authorization');
-        $authHeader = apache_request_headers()["Authorization"];
+        $authHeader = $this->request->getHeaderLine('Authorization');
         $user = $this->authService->getAuthenticatedUser($authHeader);
  
         if (!$user) {

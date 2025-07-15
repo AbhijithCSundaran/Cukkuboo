@@ -30,8 +30,7 @@ class MovieDetail extends ResourceController
  
     public function store()
     {
-        // $authHeader = $this->request->getHeaderLine('Authorization');
-        $authHeader = apache_request_headers()["Authorization"];
+       $authHeader = $this->request->getHeaderLine('Authorization');
         $user = $this->authService->getAuthenticatedUser($authHeader);
         if(!$user)
             return $this->failUnauthorized('Invalid or missing token.');
@@ -163,8 +162,7 @@ public function getAllMovieDetails()
 
 public function getMovieById($id)
 {
-    // $authHeader = $this->request->getHeaderLine('Authorization');
-    $authHeader = apache_request_headers()["Authorization"];
+    $authHeader = $this->request->getHeaderLine('Authorization');
     $user = $this->authService->getAuthenticatedUser($authHeader);
  
     $getmoviesdetails = $this->moviedetail->getMovieDetailsById($id);
@@ -256,8 +254,7 @@ public function getMovieById($id)
     }
 public function movieReaction($mov_id)
 {
-    // $authHeader = $this->request->getHeaderLine('Authorization');
-    $authHeader = apache_request_headers()["Authorization"];
+    $authHeader = $this->request->getHeaderLine('Authorization');
     $user = $this->authService->getAuthenticatedUser($authHeader);
     if (!$user) return $this->failUnauthorized('Invalid or missing token.');
 
@@ -431,8 +428,7 @@ public function movieReaction($mov_id)
  
     public function deleteMovieDetails($mov_id)
     {
-        // $authHeader = $this->request->getHeaderLine('Authorization');
-        $authHeader = apache_request_headers()["Authorization"];
+        $authHeader = $this->request->getHeaderLine('Authorization');
         $user = $this->authService->getAuthenticatedUser($authHeader);
         if(!$user)
             return $this->failUnauthorized('Invalid or missing token.');
@@ -551,8 +547,7 @@ public function mostWatchedMovies()
  
 public function latestMovies()
 {
-    // $authHeader = $this->request->getHeaderLine('Authorization');
-    $authHeader = apache_request_headers()["Authorization"];
+    $authHeader = $this->request->getHeaderLine('Authorization');
     $user = $this->authService->getAuthenticatedUser($authHeader);
 
     if (!$user) {
@@ -578,8 +573,7 @@ public function latestMovies()
 
     public function getMostWatchMovies()
     {
-        // $authHeader = $this->request->getHeaderLine('Authorization');
-        $authHeader = apache_request_headers()["Authorization"];
+        $authHeader = $this->request->getHeaderLine('Authorization');
         $user = $this->authService->getAuthenticatedUser($authHeader);
         if (!$user)
             return $this->failUnauthorized('Invalid or missing token.');
@@ -599,8 +593,7 @@ public function latestMovies()
     }
     public function countActiveMovies()
     {
-        // $authHeader = $this->request->getHeaderLine('Authorization');
-        $authHeader = apache_request_headers()["Authorization"];
+        $authHeader = $this->request->getHeaderLine('Authorization');
         $user = $this->authService->getAuthenticatedUser($authHeader);
         if (!$user)
             return $this->failUnauthorized('Invalid or missing token.');
@@ -615,8 +608,7 @@ public function latestMovies()
     }
     public function countInactiveMovie()
     {
-        // $authHeader = $this->request->getHeaderLine('Authorization');
-        $authHeader = apache_request_headers()["Authorization"];
+        $authHeader = $this->request->getHeaderLine('Authorization');
         $user = $this->authService->getAuthenticatedUser($authHeader);
         if (!$user)
             return $this->failUnauthorized('Invalid or missing token.');
@@ -629,12 +621,47 @@ public function latestMovies()
             'data' => $inactiveCount
         ]);
     }
-
+ 
+//     public function getUserHomeData()
+//     {
+//     // $authHeader = $this->request->getHeaderLine('Authorization');
+//     // $user = $this->authService->getAuthenticatedUser($authHeader);
+ 
+//     // if (!$user) {
+//     //     return $this->failUnauthorized('Invalid or missing token.');
+//     // }
+   
+   
+//     return $this->respond([
+//         'success' => true,
+//         'message' => true,
+//         'data' => [
+//             'active_movie_count' => $this->moviedetail->countActiveMovies(),
+//             'In_active_movie_count' => $this->moviedetail->countInactiveMovies(),
+//             'list_1' => [
+//                 'heading' => 'Featured Movies',
+//                 'data' => $this->moviedetail->getFeaturedMovies()
+//             ],
+//             'list_2' => [
+//                 'heading' => 'Trending Movies',
+//                 'data' => $this->moviedetail->getTrendingMovies()
+//             ],
+//             'list_3' => [
+//                 'heading' => 'Latest Movies',
+//                 'data' => $this->moviedetail->latestMovies()
+//             ],
+//             'list_4' => [
+//                 'heading' => 'Most Watched Movies',
+//                 'data' => $this->moviedetail->getMostWatchedMovies()
+//             ]
+           
+//         ]
+//     ]);
+// }
  
 public function getUserHomeData()
 {
-    // $authHeader = $this->request->getHeaderLine('Authorization');
-    $authHeader = apache_request_headers()["Authorization"];
+    $authHeader = $this->request->getHeaderLine('Authorization');
     $user = $this->authService->getAuthenticatedUser($authHeader);
 
     $hasUnread = false;
@@ -679,8 +706,7 @@ public function getUserHomeData()
 
     public function getAdminDashBoardData()
     {
-        // $authHeader = $this->request->getHeaderLine('Authorization');
-        $authHeader = apache_request_headers()["Authorization"];
+        $authHeader = $this->request->getHeaderLine('Authorization');
         $user = $this->authService->getAuthenticatedUser($authHeader);
         if (!$user)
             return $this->failUnauthorized('Invalid or missing token.');
@@ -704,8 +730,7 @@ public function getUserHomeData()
  
 public function getRelatedMovies($id)
 {
-    // $authHeader = $this->request->getHeaderLine('Authorization');
-    $authHeader = apache_request_headers()["Authorization"];
+    $authHeader = $this->request->getHeaderLine('Authorization');
     $user = $this->authService->getAuthenticatedUser($authHeader);
  
     if (!$user) {

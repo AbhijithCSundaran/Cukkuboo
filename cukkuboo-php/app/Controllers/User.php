@@ -35,8 +35,7 @@ class User extends ResourceController
 {
     $data = $this->request->getJSON(true);
     $user_id = $data['user_id'] ?? 0;
-    // $authHeader = $this->request->getHeaderLine('Authorization');
-    $authHeader = apache_request_headers()["Authorization"];
+    $authHeader = $this->request->getHeaderLine('Authorization');
     $authenticatedUser = $this->authService->getAuthenticatedUser($authHeader);
 
     $userData = array_filter([
@@ -46,7 +45,7 @@ class User extends ResourceController
         'password'     => $data['password'] ?? null,
         'country'      => $data['country'] ?? null,
         'subscription' => $data['subscription'] ?? 'free',
-        'status'       => (!isset($data['status']) || $data['status'] === '' || $data['status'] === null) ? 1 : $data['status'],
+        'status'       => $data['status'] ?? 1,
         'join_date'    => $data['join_date'] ?? null,
         'user_type'    => $data['user_type'] ?? 'Customer',
         'date_of_birth'=> $data['date_of_birth'] ?? null        
@@ -204,8 +203,7 @@ class User extends ResourceController
 
  public function deleteUser($user_id)
 {
-    // $authHeader = $this->request->getHeaderLine('Authorization');
-    $authHeader = apache_request_headers()["Authorization"];
+    $authHeader = $this->request->getHeaderLine('Authorization');
     $user = $this->authService->getAuthenticatedUser($authHeader);
 
     if (!$user) {
@@ -251,8 +249,7 @@ class User extends ResourceController
 
 public function getUserDetailsById($userId = null)
 {
-    // $authHeader = $this->request->getHeaderLine('Authorization');
-    $authHeader = apache_request_headers()["Authorization"];
+    $authHeader = $this->request->getHeaderLine('Authorization');
     $authuser = $this->authService->getAuthenticatedUser($authHeader);
 
     if (!$authuser) {
@@ -350,8 +347,7 @@ public function getUserList()
     $pageSize  = (int) $this->request->getGet('pageSize');
     $search    = $this->request->getGet('search');
    
-    // $authHeader = $this->request->getHeaderLine('Authorization');
-    $authHeader = apache_request_headers()["Authorization"];
+    $authHeader = $this->request->getHeaderLine('Authorization');
     $authuser = $this->authService->getAuthenticatedUser($authHeader);
         if(!$authuser) 
             return $this->failUnauthorized('Invalid or missing token.');
@@ -405,8 +401,7 @@ public function getStaffList()
     $pageSize  = (int) $this->request->getGet('pageSize');
     $search    = $this->request->getGet('search');
    
-    // $authHeader = $this->request->getHeaderLine('Authorization');
-    $authHeader = apache_request_headers()["Authorization"];
+    $authHeader = $this->request->getHeaderLine('Authorization');
     $authuser = $this->authService->getAuthenticatedUser($authHeader);
         if(!$authuser) 
             return $this->failUnauthorized('Invalid or missing token.');
@@ -501,8 +496,7 @@ public function updateEmailPreference()
 
     public function countActiveUsers()
     {
-        // $authHeader = $this->request->getHeaderLine('Authorization');
-        $authHeader = apache_request_headers()["Authorization"];
+        $authHeader = $this->request->getHeaderLine('Authorization');
         $authuser = $this->authService->getAuthenticatedUser($authHeader);
         if(!$authuser) 
             return $this->failUnauthorized('Invalid or missing token.');
@@ -517,8 +511,7 @@ public function updateEmailPreference()
     }
     public function changePassword()
 {
-    // $authHeader = $this->request->getHeaderLine('Authorization');
-    $authHeader = apache_request_headers()["Authorization"];
+    $authHeader = $this->request->getHeaderLine('Authorization');
     $authuser = $this->authService->getAuthenticatedUser($authHeader);
 
     if (!$authuser) {
@@ -563,8 +556,7 @@ public function updateEmailPreference()
 
     public function deleteUserById($user_id)
 {
-    // $authHeader = $this->request->getHeaderLine('Authorization');
-    $authHeader = apache_request_headers()["Authorization"];
+    $authHeader = $this->request->getHeaderLine('Authorization');
     $user = $this->authService->getAuthenticatedUser($authHeader);
 
     if (!$user) {

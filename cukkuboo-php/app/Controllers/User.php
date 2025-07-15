@@ -46,7 +46,7 @@ class User extends ResourceController
         'password'     => $data['password'] ?? null,
         'country'      => $data['country'] ?? null,
         'subscription' => $data['subscription'] ?? 'free',
-        'status'       => $data['status'] ?? 1,
+        'status'       => (!isset($data['status']) || $data['status'] === '' || $data['status'] === null) ? 1 : $data['status'],
         'join_date'    => $data['join_date'] ?? null,
         'user_type'    => $data['user_type'] ?? 'Customer',
         'date_of_birth'=> $data['date_of_birth'] ?? null        

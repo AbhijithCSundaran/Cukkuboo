@@ -446,12 +446,12 @@ public function getExpiredSubscriptions()
     $userId = $user['user_id'];
     $subs = $this->usersubModel
         ->where('user_id', $userId)
-        ->whereIn('status', [2, 3])  // Include expired and cancelled
+        ->whereIn('status', [2, 3])  // 2 = expired, 3 = cancelled
         ->findAll();
 
     if (empty($subs)) {
         return $this->respond([
-            'success' => false,
+            'success' => true,
             'message' => 'No expired or cancelled subscriptions found.',
             'data'    => []
         ]);

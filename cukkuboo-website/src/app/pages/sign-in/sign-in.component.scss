@@ -9,14 +9,12 @@
 
   &.popup {
     min-height: auto;
-    // max-height: 90vh;
   }
 }
 
 .clickable-logo {
   cursor: pointer;
 }
-
 
 .gen-login-page-background {
   position: absolute;
@@ -26,13 +24,11 @@
   bottom: 0;
   height: 100%;
   width: 100%;
-
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   z-index: -1;
 }
-
 
 .gen-login-page-background::before {
   content: "";
@@ -50,7 +46,6 @@
   z-index: 2;
 }
 
-
 .login-box {
   background-color: rgba(255, 255, 255, 0.9);
   padding: 2rem;
@@ -58,17 +53,14 @@
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
 }
 
-
 h4 {
   font-size: 1.25rem;
   margin-bottom: 1rem;
 }
 
-
 mat-form-field {
   margin-bottom: 1rem;
 }
-
 
 .red-button {
   background-color: var(--primary-color);
@@ -87,7 +79,6 @@ mat-form-field {
   background-color: var(--primarydark-color);
 }
 
-
 .signup-link {
   font-size: 0.875rem;
   font-weight: 500;
@@ -100,15 +91,69 @@ mat-form-field {
 }
 
 .small-eye-icon {
-  font-size: 16px;
-  width: 16px;
-  height: 16px;
-  line-height: 16px;
+  font-size: 18px;
+  line-height: 18px;
+  width: 18px;
+  height: 18px;
 }
-
 
 *,
 ::after,
 ::before {
   box-sizing: border-box;
+}
+
+.instruction-text {
+  font-size: 0.95rem;
+  color: #ffffff;
+  opacity: 0.85;
+}
+
+.resend-link {
+  font-size: 0.875rem;
+  color: var(--primary-color);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.text-muted {
+  font-size: 0.875rem;
+  color: #ccc !important;
+}
+
+.reset-heading {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  color: var(--white-color);
+}
+
+.reset-subtext {
+  font-size: 0.95rem;
+  color: #ccc;
+  margin-bottom: 1rem;
+}
+
+/* Red email style */
+.red-email {
+  color: var(--primary-color);
+}
+
+/* Countdown section */
+.otp-countdown-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 12px; /* spacing above countdown/resend link */
+}
+
+/* Countdown sentence */
+.countdown-text {
+  font-size: 0.875rem;
+  color: #ffffff; /* default white */
+}
+
+/* Countdown number in red */
+.red-countdown {
+  color: var(--primary-color);
 }

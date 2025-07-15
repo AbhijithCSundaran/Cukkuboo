@@ -64,60 +64,111 @@
             </ng-container>
 
             <!-- Step 1: Enter Email -->
-            <ng-container *ngIf="step === 1">
-              <mat-form-field appearance="outline" class="w-100">
-                <mat-label>Email Address</mat-label>
-                <input matInput formControlName="email" />
-              </mat-form-field>
+          
+<ng-container *ngIf="step === 1">
+  <p class="instruction-text mb-2">
+Enter your email to receive a password reset OTP.
+  </p>
 
-              <button type="button" class="red-button w-100 mt-2" (click)="sendEmail()">Send OTP</button>
-              <div class="text-start mt-2">
-                <a (click)="goBackToLogin()" class="red-link">Back to Login</a>
-              </div>
-            </ng-container>
+  <mat-form-field appearance="outline" class="w-100">
+    <mat-label>Email Address</mat-label>
+    <input matInput formControlName="email" />
+  </mat-form-field>
 
-            <!-- Step 2: Enter OTP -->
-            <ng-container *ngIf="step === 2">
-              <mat-form-field appearance="outline" class="w-100">
-                <mat-label>OTP</mat-label>
-                <input matInput formControlName="otp" />
-              </mat-form-field>
+  <button type="button" class="red-button w-100 mt-2" (click)="sendEmail()">Send OTP</button>
+  <div class="text-start mt-2">
+    <a (click)="goBackToLogin()" class="red-link">Back to Login</a>
+  </div>
+</ng-container>
 
-              <button type="button" class="red-button w-100 mt-2" (click)="submitOtp()">Verify OTP</button>
-              <div class="text-start mt-2">
-                <a (click)="goBackToLogin()" class="red-link">Back to Login</a>
-              </div>
-            </ng-container>
 
-            <!-- Step 3: Reset Password -->
-            <ng-container *ngIf="step === 3">
-              <mat-form-field appearance="outline" class="w-100">
-                <mat-label>New Password</mat-label>
-                <input matInput type="password" formControlName="new_password" />
-                <mat-error *ngIf="forgotForm.controls['new_password'].hasError('required')">
-                  Password is required
-                </mat-error>
-                <mat-error *ngIf="forgotForm.controls['new_password'].hasError('minlength')">
-                  Password must be at least 8 characters
-                </mat-error>
-              </mat-form-field>
+         
+<!-- Step 2: Enter OTP -->
+<ng-container *ngIf="step === 2">
+  <!-- Instruction -->
+  <p class="instruction-text mb-1">
+    Enter 6-digit code sent to <strong class="red-email">{{ emailUsed }}</strong>
+  </p>
 
-              <mat-form-field appearance="outline" class="w-100">
-                <mat-label>Confirm Password</mat-label>
-                <input matInput type="password" formControlName="confirm_password" />
-                <mat-error *ngIf="forgotForm.controls['confirm_password'].hasError('required')">
-                  Confirm password is required
-                </mat-error>
-                <mat-error *ngIf="forgotForm.controls['confirm_password'].hasError('minlength')">
-                  Password must be at least 8 characters
-                </mat-error>
-              </mat-form-field>
+  <!-- OTP Field -->
+  <mat-form-field appearance="outline" class="w-100">
+    <mat-label>OTP Verification</mat-label>
+    <input matInput formControlName="otp" maxlength="6" />
+  </mat-form-field>
 
-              <button type="button" class="red-button w-100 mt-2" (click)="resetPassword()">Reset Password</button>
-              <div class="text-start mt-2">
-                <a (click)="goBackToLogin()" class="red-link">Back to Login</a>
-              </div>
-            </ng-container>
+  <!-- Verify OTP Button -->
+  <button type="button" class="red-button w-100 mt-2" (click)="submitOtp()">Verify OTP</button>
+
+  <!-- Countdown & Resend Link -->
+  <div class="otp-countdown-wrapper mb-2 pt-2">
+    <span *ngIf="resendCountdown > 0" class="countdown-text">
+      Resend OTP in <span class="red-countdown">{{ resendCountdown }}s</span>
+    </span>
+    <a *ngIf="resendCountdown === 0" class="resend-link" (click)="resendOtp()">Resend OTP</a>
+  </div>
+
+  <!-- Back to Login -->
+  <div class="text-start mt-2">
+    <a (click)="goBackToLogin()" class="red-link">Back to Login</a>
+  </div>
+</ng-container>
+
+
+          
+          <!-- STEP 3: RESET PASSWORD -->
+<ng-container *ngIf="step === 3">
+  <!-- Heading -->
+  <div class="text-start mb-3">
+    <!-- <h4 class="reset-heading">Reset Password</h4> -->
+    <p class="reset-subtext">Create a new password for your account.</p>
+  </div>
+
+  <!-- New Password -->
+  <mat-form-field appearance="outline" class="w-100">
+    <mat-label>New Password</mat-label>
+    <input
+      matInput
+      [type]="hideNewPassword ? 'password' : 'text'"
+      formControlName="new_password"
+    />
+    <button mat-icon-button matSuffix type="button" (click)="hideNewPassword = !hideNewPassword">
+      <mat-icon class="small-eye-icon">{{ hideNewPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+    </button>
+    <mat-error *ngIf="forgotForm.controls['new_password'].hasError('required')">
+      Password is required
+    </mat-error>
+    <mat-error *ngIf="forgotForm.controls['new_password'].hasError('minlength')">
+      Password must be at least 8 characters
+    </mat-error>
+  </mat-form-field>
+
+  <!-- Confirm Password -->
+  <mat-form-field appearance="outline" class="w-100">
+    <mat-label>Confirm Password</mat-label>
+    <input
+      matInput
+      [type]="hideConfirmPassword ? 'password' : 'text'"
+      formControlName="confirm_password"
+    />
+    <button mat-icon-button matSuffix type="button" (click)="hideConfirmPassword = !hideConfirmPassword">
+      <mat-icon class="small-eye-icon">{{ hideConfirmPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+    </button>
+    <mat-error *ngIf="forgotForm.controls['confirm_password'].hasError('required')">
+      Confirm password is required
+    </mat-error>
+    <mat-error *ngIf="forgotForm.controls['confirm_password'].hasError('minlength')">
+      Password must be at least 8 characters
+    </mat-error>
+  </mat-form-field>
+
+  <!-- Reset Button -->
+  <button type="button" class="red-button w-100 mt-2" (click)="resetPassword()">Reset Password</button>
+
+  <!-- Back Link -->
+  <div class="text-start mt-2">
+    <a (click)="goBackToLogin()" class="red-link">Back to Login</a>
+  </div>
+</ng-container>
 
           </form>
         </div>

@@ -279,7 +279,7 @@ export class ProfileComponent implements OnInit {
     this.showProfileInfo = false;
     this.ShowDeleteAccount = false;
     this.showChangePassword = true;
-    localStorage.setItem('activeTab', 'changePassword');
+    // localStorage.setItem('activeTab', 'changePassword');
   }
 
   backToProfile(): void {
@@ -293,7 +293,7 @@ export class ProfileComponent implements OnInit {
     this.showProfileInfo = false;
     this.showChangePassword = false;
     this.ShowDeleteAccount = true;
-    localStorage.setItem('activeTab', 'deleteAccount');
+    // localStorage.setItem('activeTab', 'deleteAccount');
   }
 
 

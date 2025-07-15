@@ -35,7 +35,10 @@ class Login extends BaseController
         ]);
     }
 
-    $user = $this->loginModel->where('email', $data['email'])->first();
+    $user = $this->loginModel
+    ->where('email', $data['email'])
+    ->where('status', 1)
+    ->first();
 
     if (!$user || !password_verify($data['password'], $user['password'])) {
         return $this->response->setStatusCode(200)->setJSON([

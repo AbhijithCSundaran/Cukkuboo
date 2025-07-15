@@ -55,8 +55,8 @@ export class AddReelsComponent implements OnInit {
   uploadError = '';
   isDragging = false;
 
-  videoUrl: string = environment.apiUrl + 'uploads/videos/';
-  imgUrl: string = environment.apiUrl + 'uploads/images/';
+  videoUrl: string = environment.fileUrl + 'uploads/videos/';
+  imgUrl: string = environment.fileUrl + 'uploads/images/';
 
   @ViewChild('reelInput') reelInput!: ElementRef<HTMLInputElement>;
   @ViewChild('thumbnailInput') thumbnailInput!: ElementRef<HTMLInputElement>;

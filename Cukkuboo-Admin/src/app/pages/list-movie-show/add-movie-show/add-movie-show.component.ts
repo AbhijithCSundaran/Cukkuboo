@@ -57,8 +57,8 @@ export class AddMovieShowComponent implements OnInit {
   confirmDeleteType: string | null = null;
 
 
-  videoUrl: string = environment.apiUrl + 'uploads/videos/'
-  imgUrl: string = environment.apiUrl + 'uploads/images/'
+  videoUrl: string = environment.fileUrl + 'uploads/videos/'
+  imgUrl: string = environment.fileUrl + 'uploads/images/'
 
 
   @ViewChild('videoInput') videoInputRef!: ElementRef<HTMLInputElement>;

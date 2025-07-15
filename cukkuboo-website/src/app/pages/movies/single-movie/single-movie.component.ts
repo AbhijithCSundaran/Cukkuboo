@@ -30,8 +30,8 @@ export class SingleMovieComponent implements OnInit {
   stopInfiniteScroll = false;
   movieData: any;
   selectedVideo = '';
-  videoUrl = environment.apiUrl + 'uploads/videos/';
-  imageUrl = environment.apiUrl + 'uploads/images/';
+  videoUrl = environment.fileUrl + 'uploads/videos/';
+  imageUrl = environment.fileUrl + 'uploads/images/';
   suggetionList: any[] = [];
 
   constructor(

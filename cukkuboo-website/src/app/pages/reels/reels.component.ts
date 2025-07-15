@@ -48,8 +48,8 @@ export class ReelsComponent implements OnInit, AfterViewInit, OnDestroy {
   searchText: string = '';
   searchTimeout: any;
 
-  private videoUrl = environment.apiUrl + 'uploads/videos/';
-  private imageUrl = environment.apiUrl + 'uploads/images/';
+  private videoUrl = environment.fileUrl + 'uploads/videos/';
+  private imageUrl = environment.fileUrl + 'uploads/images/';
 
   constructor(
     private storageService: StorageService,

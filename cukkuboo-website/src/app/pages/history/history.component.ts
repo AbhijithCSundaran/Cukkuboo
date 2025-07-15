@@ -17,7 +17,7 @@ import { InfiniteScrollDirective } from '../../core/directives/infinite-scroll/i
 })
 export class HistoryComponent implements OnInit {
   historyList: any[] = [];
-  imageUrl: string = environment.apiUrl + 'uploads/images/';
+  imageUrl: string = environment.fileUrl + 'uploads/images/';
   pageIndex: number = 0;
   pageSize: number = 8;
   totalItems: number = 0;

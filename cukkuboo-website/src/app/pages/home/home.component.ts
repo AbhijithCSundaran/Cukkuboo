@@ -20,8 +20,8 @@ export class HomeComponent implements OnInit {
   HomeData: any;
   bannerData: any;
   listSections: any[] = [];
-  videoUrl = environment.apiUrl + 'uploads/videos/';
-  imageUrl = environment.apiUrl + 'uploads/images/';
+  videoUrl = environment.fileUrl + 'uploads/videos/';
+  imageUrl = environment.fileUrl + 'uploads/images/';
 
   selectedItem: any;
   constructor(

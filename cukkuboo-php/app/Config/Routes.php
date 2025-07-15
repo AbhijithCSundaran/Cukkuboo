@@ -11,8 +11,6 @@ $routes->get('/', 'Home::index');
 
 $routes->post('login/login', 'Login::loginFun',['filter' => 'cors']);
 $routes->post('login/logout', 'Login::logout');
-$routes->post('login/forgot-password', 'Login::sendOtp');
-$routes->post('login/reset-password', 'Login::resetPassword');
 $routes->post('user/change-password', 'User::changePassword');
 //User 
 

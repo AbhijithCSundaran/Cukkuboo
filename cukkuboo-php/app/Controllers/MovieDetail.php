@@ -90,22 +90,33 @@ public function getAllMovieDetails()
     $pageIndex = $this->request->getGet('pageIndex');
     $pageSize  = $this->request->getGet('pageSize');
     $search    = strtolower(trim($this->request->getGet('search'))); 
+    if ($search === '0') {
+        return $this->response->setJSON([
+            'success' => false,
+            'message' => 'Invalid search term.',
+            'data'    => [],
+            'total'   => 0
+        ]);
+    }
 
     $builder = $this->moviedetail->builder(); 
     $builder->where('status !=', 9); 
-    if (!empty($search)) {
+
+    if ($search !== '') {
         $searchWildcard = '%' . str_replace(' ', '%', $search) . '%';
         $accessMap = [
             'free' => 1,
             'premium' => 2
         ];
-        $accessValue = $accessMap[$search] ?? null;
-
+        if (in_array($search, ['1', '2'])) {
+            $accessValue = (int)$search;
+        } else {
+            $accessValue = $accessMap[$search] ?? null;
+        }
         $builder->groupStart()
             ->like('LOWER(title)', $searchWildcard)
-            // ->orLike('LOWER(genre)', $searchWildcard)
             ->orLike('LOWER(cast_details)', $searchWildcard);
-            // ->orLike('LOWER(category)', $searchWildcard);
+
         if ($accessValue !== null) {
             $builder->orWhere('access', $accessValue);
         }
@@ -113,7 +124,7 @@ public function getAllMovieDetails()
         $builder->groupEnd();
     }
     if (!is_numeric($pageIndex) || !is_numeric($pageSize) || $pageIndex < 0 || $pageSize <= 0) {
-        $movies = $builder->orderBy('mov_id', 'DESC')->get()->getResult();
+        $movies = $builder->orderBy('created_on', 'DESC')->get()->getResult();
 
         return $this->response->setJSON([
             'success' => true,
@@ -122,14 +133,22 @@ public function getAllMovieDetails()
             'total'   => count($movies)
         ]);
     }
+
     $pageIndex = (int)$pageIndex;
     $pageSize  = (int)$pageSize;
     $offset    = $pageIndex * $pageSize;
     $countBuilder = clone $builder;
     $total = $countBuilder->countAllResults(false);
-
+    if ($search !== '' && $total === 0) {
+        return $this->response->setJSON([
+            'success' => false,
+            'message' => 'No results found for the search term.',
+            'data'    => [],
+            'total'   => 0
+        ]);
+    }
     $movies = $builder
-        ->orderBy('mov_id', 'DESC')
+        ->orderBy('created_on', 'DESC')
         ->get($pageSize, $offset)
         ->getResult();
 

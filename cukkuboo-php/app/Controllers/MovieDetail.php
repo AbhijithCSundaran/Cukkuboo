@@ -42,7 +42,6 @@ class MovieDetail extends ResourceController
         $moviedata = [
  
             'video' => $data['video'] ?? null,
- 
             'title' => $data['title'] ?? null,
             'genre' => $data['genre'] ?? null,
             'description' => $data['description'] ?? null,
@@ -168,6 +167,7 @@ public function getMovieById($id)
        : null;
 
         $getmoviesdetails['is_in_watch_history'] = $this->moviedetail->isInWatchHistory($user_id, $id);
+        $getmoviesdetails['is_viewed'] = $getmoviesdetails['is_in_watch_history'] ? true : false;
 
         $reaction = $this->db->table('movie_reactions')
         ->select('status')
@@ -211,12 +211,22 @@ public function getMovieById($id)
         }
     }
  
-    return $this->response->setJSON([
+        $likes = (int) ($getmoviesdetails['likes'] ?? 0);
+        $dislikes = (int) ($getmoviesdetails['dislikes'] ?? 0);
+        $totalReactions = $likes + $dislikes;
+
+        $getmoviesdetails['rating'] = $totalReactions > 0 
+        ? round(($likes / $totalReactions) * 100, 2)
+        : 0;
+
+        return $this->response->setJSON([
         'success' => true,
         'message' => 'Movie details fetched successfully.',
         'data'    => $getmoviesdetails
     ]);
-}
+
+
+    }
 public function movieReaction($mov_id)
 {
     $authHeader = $this->request->getHeaderLine('Authorization');
@@ -356,18 +366,24 @@ public function movieReaction($mov_id)
 
     // Format output
     $formattedData = array_map(function ($movie) {
-        return [
-            'mov_id' => $movie['mov_id'],
-            'title' => $movie['title'],
-            'thumbnail' => $movie['thumbnail'],
-            'banner' => $movie['banner'],
-            'release_date' => $movie['release_date'],
-            'views' => $movie['views'],
-            'rating' => $movie['rating'],
-            'description' => $movie['description'],
-            'duration' => $movie['duration'],
-        ];
-    }, $movies);
+    $likes = (int) ($movie['likes'] ?? 0);
+    $dislikes = (int) ($movie['dislikes'] ?? 0);
+    $total = $likes + $dislikes;
+
+    $calculatedRating = $total > 0 ? round(($likes / $total) * 100, 2) : 0;
+
+    return [
+        'mov_id' => $movie['mov_id'],
+        'title' => $movie['title'],
+        'thumbnail' => $movie['thumbnail'],
+        'banner' => $movie['banner'],
+        'release_date' => $movie['release_date'],
+        'views' => $movie['views'],
+        'rating' => $calculatedRating,
+        'description' => $movie['description'],
+        'duration' => $movie['duration'],
+    ];
+}, $movies);
 
     // Calculate total pages safely
     $totalPages = ($pageSize > 0) ? ceil($total / $pageSize) : 0;
@@ -452,7 +468,12 @@ public function movieReaction($mov_id)
         'trailer' => $movie['trailer'],
         'banner' => $movie['banner'],
         'thumbnail' => $movie['thumbnail'],
-        'rating' => (float) $movie['rating'],
+        'likes' => (int) ($movie['likes'] ?? 0),
+        'dislikes' => (int) ($movie['dislikes'] ?? 0),
+        'rating' => ($movie['likes'] + $movie['dislikes']) > 0 
+         ? round(($movie['likes'] / ($movie['likes'] + $movie['dislikes'])) * 100, 2)
+         : 0,
+
         'duration' => $movie['duration'],
         'genre' => explode(',', $movie['genre']),
         'description' => $movie['description']

@@ -444,59 +444,39 @@ public function getExpiredSubscriptions()
     }
 
     $userId = $user['user_id'];
-    $expiredSubs = $this->usersubModel
+    $subs = $this->usersubModel
         ->where('user_id', $userId)
-        ->where('status', '2')
+        ->whereIn('status', [2, 3])  // Include expired and cancelled
         ->findAll();
 
-    if (empty($expiredSubs)) {
+    if (empty($subs)) {
         return $this->respond([
             'success' => false,
-            'message' => 'No expired subscriptions found.',
+            'message' => 'No expired or cancelled subscriptions found.',
             'data'    => []
         ]);
     }
 
     $formatted = array_map(function ($sub) {
+        $statusText = ($sub['status'] == 2) ? 'expired' : 'cancelled';
+        $reason = ($sub['status'] == 3) ? 'cancelled by user' : 'natural expiry';
+
         return [
             'subscription_id' => $sub['user_subscription_id'],
             'plan_name'       => $sub['plan_name'],
             'price'           => $sub['price'],
             'start_date'      => $sub['start_date'],
             'end_date'        => $sub['end_date'],
-            'status'          => 'expired',
+            'status'          => $statusText,
+            'reason'          => $reason,
             'purchased_on'    => $sub['created_on']
         ];
-    }, $expiredSubs);
+    }, $subs);
 
     return $this->respond([
         'success' => true,
-        'message' => 'Expired subscriptions fetched successfully.',
+        'message' => 'Expired and cancelled subscriptions fetched successfully.',
         'data'    => $formatted
-    ]);
-}
-    private function isValidDate($date, $format = 'Y-m-d')
-    {
-        $d = \DateTime::createFromFormat($format, $date);
-        return $d && $d->format($format) === $date;
-    }
-    public function expireSubscriptions()
-{
-    $today = date('Y-m-d');
-    $expired = $this->usersubModel
-        ->where('status', 1) 
-        ->where('end_date <', $today)
-        ->findAll();
-
-    foreach ($expired as $sub) {
-        $this->usersubModel->update($sub['user_subscription_id'], ['status' => 2]);
-        $this->userModel->update($sub['user_id'], ['subscription' => 'expired']);
-    }
-
-    return $this->respond([
-        'success' => true,
-        'message' => 'Expired subscriptions updated.',
-        'expired_count' => count($expired)
     ]);
 }
 

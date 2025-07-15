@@ -1,7 +1,6 @@
 import { Component, Inject, Optional } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { Router, RouterLink } from '@angular/router';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -28,14 +27,18 @@ import { SubscriptionStatus } from '../../model/enum';
     MatCheckboxModule,
     MatButtonModule,
     MatIconModule,
-    MatSnackBarModule, RouterLink,
+    MatSnackBarModule,
+    RouterLink,
     ValidationMessagesComponent
   ]
 })
 export class SignInComponent {
   loginForm: FormGroup;
+  forgotForm: FormGroup;
   loading = false;
   hide = true;
+  step: number = 0; // 0: Login, 1: Forgot Email, 2: OTP, 3: Reset Password
+  emailUsed = '';
 
   constructor(
     private fb: FormBuilder,
@@ -44,92 +47,149 @@ export class SignInComponent {
     private storageService: StorageService,
     private router: Router,
     @Optional() @Inject(MAT_DIALOG_DATA) public modalData: any,
-    @Optional() @Inject(MatDialogRef<SignInComponent>) public dialogRef: any
+    @Optional() @Inject(MatDialogRef<SignInComponent>) public dialogRef: MatDialogRef<SignInComponent>
   ) {
+    // Login form
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required],
       rememberMe: [false]
     });
+
+    // Forgot password flow form
+    this.forgotForm = this.fb.group({
+      email: ['', [Validators.required, Validators.email]],
+      otp: [''],
+      new_password: ['', [Validators.required, Validators.minLength(8)]],
+      confirm_password: ['', [Validators.required, Validators.minLength(8)]]
+    });
   }
 
-  navigateToSignUp() {
-    this.router.navigate(['/signup']);
+  // === Snackbar Utility ===
+  private showSnackbar(message: string, isSuccess: boolean = false): void {
+    this.snackBar.open(message, '', {
+      duration: 3000,
+      verticalPosition: 'top',
+      panelClass: isSuccess ? ['snackbar-success'] : ['snackbar-error']
+    });
   }
 
+  // === Login ===
   onSubmit(): void {
     if (this.loginForm.valid) {
       const model = this.loginForm.value;
+
       this.userService.login(model).subscribe({
         next: (response) => {
-          if (response.success) {
-            if (response.data.user_type === 'Customer') {
-              localStorage.setItem('t_k', response.data?.jwt_token);
-              this.storageService.updateItem('userData', response.data);
-              this.storageService.updateItem('username', response.data?.username || 'User');
-              this.storageService.updateItem('token', response.data?.jwt_token || 'token');
-              this.storageService.updateItem('subscription', SubscriptionStatus[Number(response.data?.subscription_details?.subscription) || 0]);
-              if (this.modalData)
-                this.dialogRef.close(response)
-              else
-                this.router.navigate(['/home']);
+          if (response.success && response.data?.user_type === 'Customer') {
+            // Store user info
+            localStorage.setItem('t_k', response.data?.jwt_token);
+            this.storageService.updateItem('userData', response.data);
+            this.storageService.updateItem('username', response.data?.username || 'User');
+            this.storageService.updateItem('token', response.data?.jwt_token || 'token');
+            this.storageService.updateItem('subscription', SubscriptionStatus[+response.data?.subscription_details?.subscription || 0]);
+
+            // this.showSnackbar('Login successful', true);
+
+            // Close modal or navigate
+            if (this.modalData) {
+              this.dialogRef.close(response);
             } else {
-              this.snackBar.open('Invalid email or password', '', {
-                duration: 3000,
-                verticalPosition: 'top',
-                panelClass: ['snackbar-error']
-              });
+              this.router.navigate(['/home']);
             }
           } else {
-            this.snackBar.open(response.message, '', {
-              duration: 3000,
-              verticalPosition: 'top',
-              panelClass: ['snackbar-error']
-            });
+            this.showSnackbar(response.message || 'Invalid email or password');
           }
-
         },
-        error: (error) => {
-          console.error(error);
-          // const response: any = {
-          //   "success": true,
-          //   "message": "Login successful (type 1)",
-          //   "data": {
-          //     "user_id": "161",
-          //     "username": "Bruce Wayne",
-          //     "phone": "+917854123625",
-          //     "email": "wayne@gmail.com",
-          //     "isBlocked": true,
-          //     "subscription": "Premium",
-          //     "user_type": "Customer",
-          //     "createdAt": "2025-07-12 10:22:46",
-          //     "updatedAt": "2025-07-12 08:22:46",
-          //     "lastLogin": "2025-07-12 09:49:04",
-          //     "jwt_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3NTIzMTM3NDQsImV4cCI6MTc1MjMxNzM0NCwiZGF0YSI6eyJ1c2VyX2lkIjoiMTYxIn19.nqlLV796_LCvR-6m7_09O0fWGPGOgG3BnMDwyUr-X40",
-          //     "notifications": 1,
-          //     "subscription_details": {
-          //       "user_subscription_id": "73",
-          //       "subscriptionplan_id": "124",
-          //       "plan_name": "demo 2",
-          //       "start_date": "2025-07-12",
-          //       "end_date": "2025-07-22",
-          //       "subscription": "1"
-          //     }
-          //   }
-          // }
-          // localStorage.setItem('t_k', response.data?.jwt_token);
-          // this.storageService.updateItem('userData', response.data);
-          // this.storageService.updateItem('username', response.data?.username || 'User');
-          // this.storageService.updateItem('token', response.data?.jwt_token || 'token');
-          // this.storageService.updateItem('subscription', SubscriptionStatus[Number(response.data?.subscription_details?.subscription) || 0]);
+        error: () => {
+          this.showSnackbar('Login error. Please try again.');
         }
       });
     } else {
-      this.snackBar.open('Invalid email or password', '', {
-        duration: 3000,
-        verticalPosition: 'top',
-        panelClass: ['snackbar-error']
-      });
+      this.showSnackbar('Invalid email or password');
     }
+  }
+
+  // === Navigation ===
+  navigateToSignUp(): void {
+    this.router.navigate(['/signup']);
+  }
+
+  goBackToLogin(): void {
+    this.step = 0;
+    this.forgotForm.reset();
+  }
+
+  startForgotFlow(): void {
+    this.step = 1;
+    this.forgotForm.reset();
+  }
+
+  // === Step 1: Send OTP ===
+  sendEmail(): void {
+    const email = this.forgotForm.value.email;
+    this.userService.forgotPassword({ email }).subscribe({
+      next: () => {
+        this.showSnackbar('OTP sent to your email', true);
+        this.emailUsed = email;
+        this.step = 2;
+      },
+      error: () => {
+        this.showSnackbar('Failed to send OTP');
+      }
+    });
+  }
+
+  // === Step 2: Verify OTP ===
+  submitOtp(): void {
+    const { otp } = this.forgotForm.value;
+
+    if (!otp) {
+      this.showSnackbar('Please enter the OTP');
+      return;
+    }
+
+    this.userService.forgotPassword({ email: this.emailUsed, otp }).subscribe({
+      next: () => {
+        this.showSnackbar('OTP verified. Set your new password.', true);
+        this.step = 3;
+      },
+      error: () => {
+        this.showSnackbar('Invalid OTP');
+      }
+    });
+  }
+
+  // === Step 3: Reset Password ===
+  resetPassword(): void {
+    const { new_password, confirm_password, otp } = this.forgotForm.value;
+
+    if (!new_password || !confirm_password) {
+      this.showSnackbar('Enter both password fields');
+      return;
+    }
+
+    if (new_password !== confirm_password) {
+      this.showSnackbar('Passwords do not match');
+      return;
+    }
+
+    const data = {
+      email: this.emailUsed,
+      otp,
+      new_password,
+      confirm_password
+    };
+
+    this.userService.forgotPassword(data).subscribe({
+      next: () => {
+        this.showSnackbar('Password reset successful. Please login.', true);
+        this.step = 0;
+        this.loginForm.patchValue({ email: this.emailUsed });
+      },
+      error: () => {
+        this.showSnackbar('Failed to reset password');
+      }
+    });
   }
 }

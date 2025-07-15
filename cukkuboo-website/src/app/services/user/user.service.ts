@@ -53,4 +53,13 @@ export class UserService {
     return this.http.post(`${this.apiUrl}user/delete/${userId}`, body, { headers: this.headers });
   }
 
+
+    //  Forgot Password
+  forgotPassword(body: any): Observable<any> {
+  return this.http.post(`${this.apiUrl}user/forgot-password`, body, {
+    headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+  });
+}
+
+
 }

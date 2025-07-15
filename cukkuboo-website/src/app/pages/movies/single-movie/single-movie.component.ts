@@ -200,36 +200,40 @@ export class SingleMovieComponent implements OnInit {
     }
   }
 
- toggleMovieReaction(reactionType: number): void {
+toggleMovieReaction(reactionType: number): void {
   if (!this.movieData || !this.movieData.mov_id) return;
 
   const movieId = this.movieData.mov_id;
 
   this.movieService.movieReaction(movieId, reactionType).subscribe({
     next: () => {
+      // Convert like/dislike to number to avoid string issues
+      this.movieData.likes = Number(this.movieData.likes || 0);
+      this.movieData.dislikes = Number(this.movieData.dislikes || 0);
+
       if (reactionType === 1) {
-        // Toggling like
         if (this.movieData.is_liked_by_user) {
-          this.movieData.likes = Math.max(0, (this.movieData.likes || 0) - 1);
+          this.movieData.likes = Math.max(0, this.movieData.likes - 1);
           this.movieData.is_liked_by_user = false;
         } else {
-          this.movieData.likes = (this.movieData.likes || 0) + 1;
+          this.movieData.likes += 1;
           this.movieData.is_liked_by_user = true;
+
           if (this.movieData.is_disliked_by_user) {
-            this.movieData.dislikes = Math.max(0, (this.movieData.dislikes || 0) - 1);
+            this.movieData.dislikes = Math.max(0, this.movieData.dislikes - 1);
             this.movieData.is_disliked_by_user = false;
           }
         }
       } else if (reactionType === 2) {
-        // Toggling dislike
         if (this.movieData.is_disliked_by_user) {
-          this.movieData.dislikes = Math.max(0, (this.movieData.dislikes || 0) - 1);
+          this.movieData.dislikes = Math.max(0, this.movieData.dislikes - 1);
           this.movieData.is_disliked_by_user = false;
         } else {
-          this.movieData.dislikes = (this.movieData.dislikes || 0) + 1;
+          this.movieData.dislikes += 1;
           this.movieData.is_disliked_by_user = true;
+
           if (this.movieData.is_liked_by_user) {
-            this.movieData.likes = Math.max(0, (this.movieData.likes || 0) - 1);
+            this.movieData.likes = Math.max(0, this.movieData.likes - 1);
             this.movieData.is_liked_by_user = false;
           }
         }
@@ -238,6 +242,7 @@ export class SingleMovieComponent implements OnInit {
     error: (err) => console.error('Error updating reaction:', err)
   });
 }
+
 
 
   showSnackbar(message: string, type: 'success' | 'error'): void {

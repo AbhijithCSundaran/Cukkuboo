@@ -13,206 +13,236 @@ body {
   height: 100vh;
   background: #000;
   overflow: hidden;
+}
 
-  .reel-scroll {
-    height: 100%;
-    overflow-y: auto;
-    scroll-snap-type: y mandatory;
-  }
+.reel-wrapper .reel-scroll {
+  height: 100%;
+  overflow-y: auto;
+  scroll-snap-type: y mandatory;
+}
 
-  .reel-container {
-    height: 100vh;
-    scroll-snap-align: start;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
+.reel-wrapper .reel-container {
+  height: 100vh;
+  scroll-snap-align: start;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
-  .reel-inner {
-    min-width: 360px;
-    width: 100%;
-    max-width: 540px;
-    height: 100vh;
-    background-color: #000;
-    position: relative;
-    border-radius: 12px;
+.reel-wrapper .reel-inner {
+  min-width: 360px;
+  width: 100%;
+  max-width: 540px;
+  height: 100vh;
+  background-color: #000;
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+}
+
+.reel-wrapper .reel-inner video {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  cursor: pointer;
+  margin: auto;
+}
+
+.reel-wrapper .back-btn,
+.reel-wrapper .fullscreen-btn,
+.reel-wrapper .play-pause-btn {
+  position: absolute;
+  background: rgba(109, 109, 109, 0.2);
+  border: none;
+  border-radius: 50%;
+  color: white;
+  z-index: 10;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-shadow: 0 0 5px #000000;
+  transform-origin: center center;
+}
+
+.reel-wrapper .back-btn:hover,
+.reel-wrapper .fullscreen-btn:hover,
+.reel-wrapper .play-pause-btn:hover {
+  background: rgba(109, 109, 109, 0.5);
+}
+
+.reel-wrapper .back-btn i,
+.reel-wrapper .fullscreen-btn i,
+.reel-wrapper .play-pause-btn i {
+  transition: transform 0.2s ease;
+  transform-origin: center center;
+}
+
+.reel-wrapper .back-btn:hover i,
+.reel-wrapper .fullscreen-btn:hover i,
+.reel-wrapper .play-pause-btn:hover i {
+  transform: scale(1.2);
+}
+
+.reel-wrapper .back-btn {
+  top: 16px;
+  left: 16px;
+  width: 40px;
+  height: 40px;
+}
+
+.reel-wrapper .fullscreen-btn {
+  top: 16px;
+  right: 16px;
+  width: 40px;
+  height: 40px;
+}
+
+.reel-wrapper .fullscreen-btn i {
+  font-size: 18px;
+}
+
+.reel-wrapper .play-pause-btn {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 64px;
+  height: 64px;
+  font-size: 32px;
+}
+
+.reel-wrapper .play-pause-btn i {
+  font-size: 28px;
+}
+
+.reel-wrapper .reel-text {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: auto;
+  max-height: 40vh;
+  padding-bottom: 10px;
+  overflow: scroll;
+  color: #fff;
+  background-color: rgba(0, 0, 0, 0);
+  transition: all 0.2s ease;
+  text-shadow: 0 0 5px #000000;
+}
+
+.reel-wrapper .reel-text.open {
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+.reel-wrapper .reel-text .title {
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.reel-wrapper .reel-text .decp {
+  font-size: 14px;
+}
+
+/* Updated Control Icons */
+.reel-wrapper .cntl-icos {
+  position: absolute;
+  right: 20px;
+  bottom: 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+}
+
+.reel-wrapper .cntl-icos .icon-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  width: 60px;
+  gap: 6px;
+  text-shadow: 0 0 10px #000000;
+}
+
+.reel-wrapper .cntl-icos .icon-block i {
+  font-size: 30px;
+  color: #fff;
+  transition: transform 0.2s ease;
+}
+
+.reel-wrapper .cntl-icos .icon-block .icon-label {
+  font-size: 14px;
+  color: #fff;
+  text-align: center;
+  line-height: 1.2;
+}
+
+.reel-wrapper .cntl-icos .icon-block:hover i {
+  transform: scale(1.2);
+}
+
+.reel-wrapper .cntl-icos .text-danger {
+  color: #dc3545 !important;
+}
+
+/*  Responsive for small screens */
+@media (max-width: 991px) {
+  .reel-wrapper .reel-inner {
+    height: calc(100vh - 60px);
+    margin-bottom: 60px;
     overflow: hidden;
-    display: flex;
+  }
+}
 
-    video {
-      width: 100%;
-      height: auto;
-      object-fit: cover;
-      cursor: pointer;
-      margin: auto;
-    }
-
-    .back-btn,
-    .fullscreen-btn,
-    .play-pause-btn {
-      position: absolute;
-      background: rgba(109, 109, 109, 0.2);
-      border: none;
-      border-radius: 50%;
-      color: white;
-      z-index: 10;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-shadow: 0 0 5px #000000;
-      transform-origin: center center;
-
-      &:hover {
-        background: rgba(109, 109, 109, 0.5);
-      }
-
-      i {
-        transition: transform 0.2s ease;
-        transform-origin: center center;
-      }
-
-      &:hover i {
-        transform: scale(1.2);
-      }
-    }
-
-    .back-btn {
-      top: 16px;
-      left: 16px;
-      width: 40px;
-      height: 40px;
-    }
-
-    .fullscreen-btn {
-      top: 16px;
-      right: 16px;
-      width: 40px;
-      height: 40px;
-
-      i {
-        font-size: 18px;
-      }
-    }
-
-    .play-pause-btn {
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 64px;
-      height: 64px;
-      font-size: 32px;
-
-      i {
-        font-size: 28px;
-      }
-    }
-
-    .reel-text {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: auto;
-      max-height: 40vh;
-      padding-bottom: 10px;
-      overflow: scroll;
-      color: #fff;
-      background-color: rgba(0, 0, 0, 0);
-      transition: all 0.2s ease;
-      text-shadow: 0 0 5px #000000;
-
-      &.open {
-        background-color: rgba(0, 0, 0, 0.7);
-      }
-
-      .title {
-        font-weight: bold;
-        font-size: 18px;
-      }
-
-      .decp {
-        font-size: 14px;
-      }
-    }
-
-    .cntl-icos {
-      position: absolute;
-      right: 16px;
-      bottom: 80px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 20px;
-
-      .icon-block {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        width: 40px;
-        gap: 4px;
-        text-shadow: 0 0 10px #000000;
-
-        i {
-          font-size: 22px;
-          color: #fff;
-          transition: transform 0.2s ease;
-        }
-
-        .icon-label {
-          font-size: 12px;
-          color: #fff;
-          text-align: center;
-        }
-
-        &:hover i {
-          transform: scale(1.2);
-        }
-      }
-
-      .text-danger {
-        color: #dc3545 !important;
-      }
-    }
-
-    @media (max-width: 991px) {
-      height: calc(100vh - 60px);
-      margin-bottom: 60px;
-      overflow: hidden;
-    }
+@media (max-width: 575px) {
+  .reel-wrapper .cntl-icos {
+    gap: 20px;
   }
 
-  .nav-arrows {
-    position: absolute;
-    top: 50%;
-    right: 20px;
-    transform: translateY(-50%);
-    display: flex;
-    flex-direction: column;
-    z-index: 20;
-    gap: 12px;
-
-    .arrow {
-      background: rgba(255, 0, 0, 0.1);
-      border: 2px solid rgba(255, 0, 0, 0.6);
-      border-radius: 50%;
-      width: 48px;
-      height: 48px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: red;
-      cursor: pointer;
-
-      svg {
-        width: 24px;
-        height: 24px;
-        fill: currentColor;
-      }
-    }
+  .reel-wrapper .cntl-icos .icon-block {
+    width: 52px;
   }
+
+  .reel-wrapper .cntl-icos .icon-block i {
+    font-size: 26px;
+  }
+
+  .reel-wrapper .cntl-icos .icon-block .icon-label {
+    font-size: 12px;
+  }
+}
+
+/* Arrows */
+.reel-wrapper .nav-arrows {
+  position: absolute;
+  top: 50%;
+  right: 20px;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  z-index: 20;
+  gap: 12px;
+}
+
+.reel-wrapper .nav-arrows .arrow {
+  background: rgba(255, 0, 0, 0.1);
+  border: 2px solid rgba(255, 0, 0, 0.6);
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: red;
+  cursor: pointer;
+}
+
+.reel-wrapper .nav-arrows .arrow svg {
+  width: 24px;
+  height: 24px;
+  fill: currentColor;
 }
 
 .text-danger {

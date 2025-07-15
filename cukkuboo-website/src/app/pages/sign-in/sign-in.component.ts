@@ -1,4 +1,4 @@
-import { Component, Inject, Optional } from '@angular/core';
+import { Component, Inject, Optional, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { Router, RouterLink } from '@angular/router';
@@ -32,13 +32,21 @@ import { SubscriptionStatus } from '../../model/enum';
     ValidationMessagesComponent
   ]
 })
-export class SignInComponent {
+export class SignInComponent implements OnDestroy {
   loginForm: FormGroup;
   forgotForm: FormGroup;
   loading = false;
   hide = true;
   step: number = 0; // 0: Login, 1: Forgot Email, 2: OTP, 3: Reset Password
   emailUsed = '';
+
+  // 👁 Password toggle variables
+  hideNewPassword = true;
+  hideConfirmPassword = true;
+
+  // ⏳ OTP countdown
+  resendCountdown: number = 0;
+  private countdownInterval: any;
 
   constructor(
     private fb: FormBuilder,
@@ -56,7 +64,7 @@ export class SignInComponent {
       rememberMe: [false]
     });
 
-    // Forgot password flow form
+    // Forgot password form (used in steps 1, 2, and 3)
     this.forgotForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       otp: [''],
@@ -82,16 +90,12 @@ export class SignInComponent {
       this.userService.login(model).subscribe({
         next: (response) => {
           if (response.success && response.data?.user_type === 'Customer') {
-            // Store user info
             localStorage.setItem('t_k', response.data?.jwt_token);
             this.storageService.updateItem('userData', response.data);
             this.storageService.updateItem('username', response.data?.username || 'User');
             this.storageService.updateItem('token', response.data?.jwt_token || 'token');
             this.storageService.updateItem('subscription', SubscriptionStatus[+response.data?.subscription_details?.subscription || 0]);
 
-            // this.showSnackbar('Login successful', true);
-
-            // Close modal or navigate
             if (this.modalData) {
               this.dialogRef.close(response);
             } else {
@@ -118,6 +122,8 @@ export class SignInComponent {
   goBackToLogin(): void {
     this.step = 0;
     this.forgotForm.reset();
+    this.resendCountdown = 0;
+    clearInterval(this.countdownInterval);
   }
 
   startForgotFlow(): void {
@@ -126,21 +132,65 @@ export class SignInComponent {
   }
 
   // === Step 1: Send OTP ===
-  sendEmail(): void {
-    const email = this.forgotForm.value.email;
-    this.userService.forgotPassword({ email }).subscribe({
+sendEmail(): void {
+  const email = this.forgotForm.value.email;
+  if (!email) {
+    this.showSnackbar('Email is required');
+    return;
+  }
+
+  this.userService.forgotPassword({ email }).subscribe({
+    next: () => {
+      this.showSnackbar('OTP sent to your email', true);
+      this.emailUsed = email;
+      this.step = 2;
+      this.startResendCountdown();
+    },
+    error: (error) => {
+      const errMsg = error?.error?.message || 'Failed to send OTP';
+      
+      if (errMsg.toLowerCase().includes('not registered') || errMsg.toLowerCase().includes('invalid email')) {
+        this.showSnackbar('Invalid Mail ID');
+      } else {
+        this.showSnackbar(errMsg);
+      }
+    }
+  });
+}
+
+
+  // === Step 2: Resend OTP ===
+  resendOtp(): void {
+    if (!this.emailUsed) {
+      this.showSnackbar('Email is missing');
+      return;
+    }
+
+    this.userService.forgotPassword({ email: this.emailUsed }).subscribe({
       next: () => {
-        this.showSnackbar('OTP sent to your email', true);
-        this.emailUsed = email;
-        this.step = 2;
+        this.showSnackbar('OTP resent to your email', true);
+        this.startResendCountdown();
       },
       error: () => {
-        this.showSnackbar('Failed to send OTP');
+        this.showSnackbar('Failed to resend OTP');
       }
     });
   }
 
-  // === Step 2: Verify OTP ===
+  startResendCountdown(): void {
+    this.resendCountdown = 60;
+    if (this.countdownInterval) clearInterval(this.countdownInterval);
+
+    this.countdownInterval = setInterval(() => {
+      if (this.resendCountdown > 0) {
+        this.resendCountdown--;
+      } else {
+        clearInterval(this.countdownInterval);
+      }
+    }, 1000);
+  }
+
+  // === Step 2: Submit OTP ===
   submitOtp(): void {
     const { otp } = this.forgotForm.value;
 
@@ -191,5 +241,12 @@ export class SignInComponent {
         this.showSnackbar('Failed to reset password');
       }
     });
+  }
+
+  // === Cleanup ===
+  ngOnDestroy(): void {
+    if (this.countdownInterval) {
+      clearInterval(this.countdownInterval);
+    }
   }
 }

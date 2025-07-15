@@ -51,12 +51,40 @@ export class SingleMovieComponent implements OnInit {
 
   ngOnInit(): void {}
 
+  // getMovie(id: number, autoplay: any): void {
+  //   this.selectedVideo = '';
+  //   this.movieService.getMovieById(id).subscribe({
+  //     next: (res) => {
+  //       if (res?.success) {
+  //         this.movieData = res.data;
+  //         if (autoplay) this.playVideo(this.movieData.video);
+  //         this.pageIndex = 0;
+  //         this.stopInfiniteScroll = false;
+  //         this.suggetionList = [];
+
+  //         const userData = this.storageService.getItem('userData');
+  //         if (userData) this.getrelatedMovies();
+  //         else this.stopInfiniteScroll = true;
+  //       } else {
+  //         this.showSnackbar('Failed to load movie.', 'error');
+  //       }
+  //     },
+  //     error: (error) => {
+  //       console.error(error);
+  //     }
+  //   });
+  // }
   getMovie(id: number, autoplay: any): void {
     this.selectedVideo = '';
     this.movieService.getMovieById(id).subscribe({
       next: (res) => {
         if (res?.success) {
           this.movieData = res.data;
+
+          // Convert percentage rating to 0–5 scale
+          const ratingPercent = Number(this.movieData.rating || 0);
+          this.movieData.rating = (ratingPercent / 20).toFixed(1);
+
           if (autoplay) this.playVideo(this.movieData.video);
           this.pageIndex = 0;
           this.stopInfiniteScroll = false;
@@ -75,26 +103,37 @@ export class SingleMovieComponent implements OnInit {
     });
   }
 
-  playVideo(video: string, isTrailer: boolean = false): void {
-    const userData = this.storageService.getItem('userData');
-    if (!isTrailer) {
-      if (!userData) {
-        this.openLoginModal();
-        return;
-      }
-      if (!video || (this.movieData.access != 1 && userData.subscription_details?.subscription != 1)) {
-        this.askGotoSubscription();
-        return;
-      }
+ playVideo(video: string, isTrailer: boolean = false): void {
+  const userData = this.storageService.getItem('userData');
+  if (!isTrailer) {
+    if (!userData) {
+      this.openLoginModal();
+      return;
     }
-    this.selectedVideo = video;
-
-    if (video === this.movieData.video) {
-      const model = { mov_id: this.movieData.mov_id };
-      if (!this.movieData.is_in_watch_history) this.addToWatchHistory(model);
-      this.addToView(model);
+    if (!video || (this.movieData.access != 1 && userData.subscription_details?.subscription != 1)) {
+      this.askGotoSubscription();
+      return;
     }
   }
+
+  this.selectedVideo = video;
+
+  if (video === this.movieData.video) {
+    const model = { mov_id: this.movieData.mov_id };
+
+    // Only call if not viewed
+    if (!this.movieData.is_viewed) {
+      this.addToView(model);
+      this.movieData.is_viewed = true; 
+    }
+
+    // Save to watch history only if not present
+    if (!this.movieData.is_in_watch_history) {
+      this.addToWatchHistory(model);
+      this.movieData.is_in_watch_history = true; // prevent future duplicate history entries
+    }
+  }
+}
 
   addToWatchHistory(model: any) {
     this.movieService.saveHistory(model).subscribe({

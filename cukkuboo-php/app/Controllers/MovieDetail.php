@@ -186,7 +186,13 @@ public function getMovieById($id)
        : null;
 
         $getmoviesdetails['is_in_watch_history'] = $this->moviedetail->isInWatchHistory($user_id, $id);
-        $getmoviesdetails['is_viewed'] = $getmoviesdetails['is_in_watch_history'] ? true : false;
+        $isViewed = $this->db->table('movie_view')
+        ->where('user_id', $user['user_id'])
+        ->where('mov_id', $id)
+        ->countAllResults() > 0;
+
+         $getmoviesdetails['is_viewed'] = $isViewed;
+
 
         $reaction = $this->db->table('movie_reactions')
         ->select('status')

@@ -284,9 +284,15 @@
       </div>
     <!-- </mat-card-content> -->
 
-    <mat-card-actions class="d-flex justify-content-end px-4 pb-2">
+    <!-- <mat-card-actions class="d-flex justify-content-end px-4 pb-2" >
       <button class="save-button" (click)="submitMovie()">Save</button>
-    </mat-card-actions>
+      
+    </mat-card-actions> -->
+
+      <!-- Action -->
+        <div class="save">
+          <button class="save-button" color="primary" (click)="submitMovie()">Save</button>
+        </div>
   <!-- </mat-card> -->
   <!-- Delete Confirmation Modal -->
 <div class="modal" [class.show]="confirmDeleteType">

@@ -1,15 +1,17 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { MovieService } from '../../services/movie.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatCardModule } from '@angular/material/card';
 import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
-import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
-import { MovieService } from '../../services/movie.service';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-list-movie-show',
@@ -29,7 +31,16 @@ import { MatInputModule } from '@angular/material/input';
   ]
 })
 export class ListMovieShowComponent implements OnInit {
-  displayedColumns: string[] = ['slNo', 'title', 'access', 'likes', 'views', 'status', 'action'];
+  displayedColumns: string[] = [
+    'slNo',
+    'title',
+    'access',
+    'likes',
+    'dislikes',
+    'views',
+    'status',
+    'action'
+  ];
   dataSource = new MatTableDataSource<any>([]);
   confirmDeleteMovie: any = null;
 

@@ -19,8 +19,7 @@ class Savehistory extends ResourceController
 
     public function saveMovie()
     {
-        // $authHeader = $this->request->getHeaderLine('Authorization');
-        $authHeader = apache_request_headers()["Authorization"];
+        $authHeader = $this->request->getHeaderLine('Authorization');
         $user = $this->authService->getAuthenticatedUser($authHeader);
         $search = $this->request->getGet('search');
         if (!$user || !isset($user['user_id'])) {
@@ -44,8 +43,7 @@ class Savehistory extends ResourceController
 
     public function getHistory()
 {
-    // $authHeader = $this->request->getHeaderLine('Authorization');
-    $authHeader = apache_request_headers()["Authorization"];
+    $authHeader = $this->request->getHeaderLine('Authorization');
     $user = $this->authService->getAuthenticatedUser($authHeader);
 
     if (!$user || !isset($user['user_id'])) {
@@ -83,8 +81,7 @@ class Savehistory extends ResourceController
 
 public function getById($id)
 {
-    // $authHeader = $this->request->getHeaderLine('Authorization');
-    $authHeader = apache_request_headers()["Authorization"];
+    $authHeader = $this->request->getHeaderLine('Authorization');
     $user = $this->authService->getAuthenticatedUser($authHeader);
 
     if (!$user || !isset($user['user_id'])) {
@@ -108,8 +105,7 @@ public function getById($id)
 
 public function deleteHistory($saveHistoryId)
 {
-    // $authHeader = $this->request->getHeaderLine('Authorization');
-    $authHeader = apache_request_headers()["Authorization"];
+    $authHeader = $this->request->getHeaderLine('Authorization');
     $user = $this->authService->getAuthenticatedUser($authHeader);
 
     if (!$user || !isset($user['user_id'])) {
@@ -135,8 +131,7 @@ public function deleteHistory($saveHistoryId)
 
 public function getUserHistory()
 {
-    // $authHeader = $this->request->getHeaderLine('Authorization');
-    $authHeader = apache_request_headers()["Authorization"];
+    $authHeader = $this->request->getHeaderLine('Authorization');
     $authUser = $this->authService->getAuthenticatedUser($authHeader);
 
     if (!$authUser) {
@@ -159,8 +154,7 @@ public function getUserHistory()
 
 public function clearAllHistory()
 {
-    // $authHeader = $this->request->getHeaderLine('Authorization');
-    $authHeader = apache_request_headers()["Authorization"];
+    $authHeader = $this->request->getHeaderLine('Authorization');
     $user = $this->authService->getAuthenticatedUser($authHeader);
 
     if (!$user || !isset($user['user_id'])) {

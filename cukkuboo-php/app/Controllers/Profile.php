@@ -19,8 +19,7 @@ class Profile extends BaseController
         $this->loginModel = new LoginModel();
 	}
     public function index() {
-        // $authHeader = $this->request->getHeaderLine('Authorization');
-        $authHeader = apache_request_headers()["Authorization"];
+        $authHeader = $this->request->getHeaderLine('Authorization');
         $user = $this->authService->getAuthenticatedUser($authHeader);
         if ($user) {
             $data['user'] = $this->session->get('username');

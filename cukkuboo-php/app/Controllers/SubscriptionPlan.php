@@ -22,8 +22,7 @@ class SubscriptionPlan extends ResourceController
     $data = $this->request->getJSON(true);
     $id = isset($data['subscriptionplan_id']) ? (int)$data['subscriptionplan_id'] : null;
  
-    // $authHeader = $this->request->getHeaderLine('Authorization');
-    $authHeader = apache_request_headers()["Authorization"];
+    $authHeader = $this->request->getHeaderLine('Authorization');
     $user = $this->authService->getAuthenticatedUser($authHeader);
  
     if (!$user) {
@@ -84,7 +83,6 @@ class SubscriptionPlan extends ResourceController
         $search = $this->request->getGet('search');
  
         // $authHeader = $this->request->getHeaderLine('Authorization');
-        // $authHeader = apache_request_headers()["Authorization"];
         // $user = $this->authService->getAuthenticatedUser($authHeader);
  
         // if (!$user) {
@@ -117,8 +115,7 @@ class SubscriptionPlan extends ResourceController
  
     public function get($id)
     {
-        // $authHeader = $this->request->getHeaderLine('Authorization');
-        $authHeader = apache_request_headers()["Authorization"];
+        $authHeader = $this->request->getHeaderLine('Authorization');
         $user = $this->authService->getAuthenticatedUser($authHeader);
  
         if (!$user) {
@@ -139,8 +136,7 @@ class SubscriptionPlan extends ResourceController
  
     public function delete($id = null)
     {
-    // $authHeader = $this->request->getHeaderLine('Authorization');
-    $authHeader = apache_request_headers()["Authorization"];
+    $authHeader = $this->request->getHeaderLine('Authorization');
     $user = $this->authService->getAuthenticatedUser($authHeader);
 
     if (!$user) {

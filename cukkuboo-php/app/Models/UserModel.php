@@ -50,9 +50,27 @@ class UserModel extends Model
     }
 
     public function deleteUserById($status, $user_id)
-    {
-        return $this->where('user_id', $user_id)->set(['status' => $status])->update();
-    }
+{
+    $this->where('user_id', $user_id)->set(['status' => $status])->update();
+    $this->db->table('user_subscription')
+        ->where('user_id', $user_id)
+        ->update(['status' => $status]);
+    $this->db->table('watch_history')
+        ->where('user_id', $user_id)
+        ->update(['status' => $status]);
+
+    $this->db->table('watch_later')
+        ->where('user_id', $user_id)
+        ->update(['status' => $status]);
+    $this->db->table('notification')
+        ->where('user_id', $user_id)
+        ->update(['status' => $status]);
+    $this->db->table('resume_history')
+        ->where('user_id', $user_id)
+        ->update(['status' => $status]);
+    return true;
+}
+
     
     public function getUserById($userId)
 {
@@ -79,9 +97,30 @@ class UserModel extends Model
         return $this->where('status', 1)->countAllResults();
     }
     public function deleteById($status, $userId)
-    {
-        return $this->update($userId, ['status' => $status]);
+{
+    $userDeleted = $this->update($userId, ['status' => $status]);
+    if (!$userDeleted) {
+        return false;
     }
+    $this->db->table('user_subscription')
+        ->where('user_id', $userId)
+        ->update(['status' => $status]);
+    $this->db->table('watch_history')
+        ->where('user_id', $userId)
+        ->update(['status' => $status]);
+
+    $this->db->table('watch_later')
+        ->where('user_id', $userId)
+        ->update(['status' => $status]);
+    $this->db->table('notification')
+        ->where('user_id', $userId)
+        ->update(['status' => $status]);
+    $this->db->table('resume_history')
+        ->where('user_id', $userId)
+        ->update(['status' => $status]);
+    return true;
+}
+
 
     // -----------------------------------Password changing-----------------------//
     public function changePassword($userId, $oldPassword, $newPassword)

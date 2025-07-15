@@ -3,12 +3,9 @@
     <h2>Subscriptions List</h2>
   </div>
 
-
-
-
-
+  <!-- Filters -->
   <div class="width-50 search-bar-wrapper">
-    <!--start Date-->
+    <!-- From Date -->
     <mat-form-field class="date-picker mr-3 pr-2 hide-mobile" appearance="outline">
       <mat-label>From Date</mat-label>
       <input matInput [matDatepicker]="fromPicker" (dateChange)="onFromDateChange($event)">
@@ -17,16 +14,14 @@
     </mat-form-field>
 
     <!-- To Date -->
-    <mat-form-field class="date-picker mr-3 pr-2  hide-mobile" appearance="outline">
+    <mat-form-field class="date-picker mr-3 pr-2 hide-mobile" appearance="outline">
       <mat-label>To Date</mat-label>
       <input matInput [matDatepicker]="toPicker" (dateChange)="onToDateChange($event)">
       <mat-datepicker-toggle matSuffix [for]="toPicker"></mat-datepicker-toggle>
       <mat-datepicker #toPicker></mat-datepicker>
     </mat-form-field>
 
-
-
-    <!--Seacrh Bar-->
+    <!-- Search Bar -->
     <mat-form-field class="custom-search" appearance="outline">
       <mat-icon matPrefix>search</mat-icon>
       <input matInput placeholder="Search" (keyup)="applyGlobalFilter($event)" />
@@ -54,13 +49,11 @@
       <td mat-cell *matCellDef="let sub"> {{ sub.plan_name }} </td>
     </ng-container>
 
-    <!--Price-->
-    <!-- Plan -->
+    <!-- Price -->
     <ng-container matColumnDef="price">
       <th mat-header-cell *matHeaderCellDef> Price </th>
       <td mat-cell *matCellDef="let sub"> {{ sub.price }} </td>
     </ng-container>
-
 
     <!-- Start Date -->
     <ng-container matColumnDef="startDate">
@@ -80,11 +73,11 @@
       <td mat-cell *matCellDef="let sub">
         <span [ngClass]="{
           'badge': true,
-          'badge-enabled': sub.status === 'premium',
-          'badge-disabled': sub.status === 'expired',
-          'badge-canceled': sub.status === 'canceled'
+          'badge-enabled': sub.status == '1',
+          'badge-disabled': sub.status == '2',
+          'badge-canceled': sub.status == '3'
         }">
-          {{ sub.status }}
+          {{ sub.status == '1' ? 'Premium' : sub.status == '2' ? 'Expired' : sub.status == '3' ? 'Canceled' : 'Unknown' }}
         </span>
       </td>
     </ng-container>
@@ -93,7 +86,7 @@
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
 
-  <!-- No Data Found -->
+  <!-- No Data -->
   <div class="no-data" *ngIf="dataSource.data.length === 0">
     No Subscriptions found.
   </div>

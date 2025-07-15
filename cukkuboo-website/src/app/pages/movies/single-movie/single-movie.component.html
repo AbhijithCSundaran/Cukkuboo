@@ -73,35 +73,34 @@
         </ul>
       </div>
 
-      <div class="w-100 d-flex flex-wrap gap-2 my-3 align-items-center">
-        <!-- Like Button -->
-        <button class="reaction-button" (click)="toggleMovieReaction(1)">
-          <i [class]="movieData.is_liked_by_user ? 'fas fa-thumbs-up m-0 text-danger' : 'far fa-thumbs-up m-0'"></i>
-          <!-- <span>Like</span> -->
-          <span *ngIf="movieData.likes !== undefined">{{ movieData.likes }}</span>
-        </button>
+    <!-- Action Buttons (Like, Dislike, Share, Watch Later) -->
+<div class="w-100 d-flex flex-wrap gap-2 my-3 align-items-center">
+  <!-- Like Button -->
+  <button class="reaction-button" (click)="toggleMovieReaction(1)">
+    <i [class]="movieData.is_liked_by_user ? 'fas fa-thumbs-up text-danger' : 'far fa-thumbs-up'"></i>
+    <span *ngIf="movieData.likes !== undefined">{{ movieData.likes }}</span>
+  </button>
 
-        <!-- Dislike Button -->
-        <button class="reaction-button" (click)="toggleMovieReaction(2)">
-          <i [class]="movieData.is_disliked_by_user ? 'fas fa-thumbs-down text-danger m-0' : 'far fa-thumbs-down m-0'"></i>
-          <!-- <span>Dislike</span> -->
-          <!-- <span *ngIf="movieData.dislikes !== undefined">({{ movieData.dislikes }})</span> -->
-        </button>
+  <!-- Dislike Button -->
+  <button class="reaction-button" (click)="toggleMovieReaction(2)">
+    <i [class]="movieData.is_disliked_by_user ? 'fas fa-thumbs-down text-danger' : 'far fa-thumbs-down'"></i>
+    <span *ngIf="movieData.dislikes !== undefined">{{ movieData.dislikes }}</span>
+  </button>
+
+  <!-- Share Button -->
+  <button class="reaction-button" (click)="copyUrlToClipboard()">
+    <i class="fas fa-share-alt"></i>
+    <span>Share</span>
+  </button>
 
   <!-- Watch Later Button -->
-<button class="gen-button gen-button-outline reaction-button bookmark-button" (click)="toggleWatchLater()">
-  <i [class]="movieData?.watch_later_id ? 'fas fa-bookmark' : 'far fa-bookmark'"></i>
-  <span class="label">
-    {{ movieData?.watch_later_id ? 'Remove from Watch Later' : 'Add to Watch Later' }}
-  </span>
-</button>
-
-
-        <!-- Share Button -->
-        <button class="gen-button gen-button-outline py-1 px-3" (click)="copyUrlToClipboard()">
-          <i class="fas fa-share-alt"></i> 
-        </button>
-      </div>
+  <button class="reaction-button bookmark-button" (click)="toggleWatchLater()">
+    <i [class]="movieData?.watch_later_id ? 'fas fa-bookmark' : 'far fa-bookmark'"></i>
+    <span class="label">
+      {{ movieData?.watch_later_id ? 'Remove from Watch Later' : 'Add to Watch Later' }}
+    </span>
+  </button>
+</div>
 
       <p class="text-justify">{{ movieData.description }}</p>
 
@@ -119,7 +118,7 @@
 </section>
 
 <!-- Suggested Movies Section -->
-<section class="px-3 px-sm-4 px-md-5 pt-0 pb-3">
+<!-- <section class="px-3 px-sm-4 px-md-5 pt-0 pb-3">
   <div class="gen-more-like">
     <h5 class="gen-more-title mb-3">More Like This</h5>
     @if(suggetionList.length){
@@ -154,7 +153,7 @@
     }
   </div>
   <div *ngIf="!stopInfiniteScroll" infiniteScroll (scrolled)="onScroll()" style="height: 1px;"></div>
-</section>
+</section> -->
 
 <!-- Suggested Movies Section -->
 <section class="px-3 px-sm-4 px-md-5 pt-0 pb-3">
@@ -193,4 +192,4 @@
   </div>
   <div *ngIf="!stopInfiniteScroll" infiniteScroll (scrolled)="onScroll()" style="height: 1px;"></div>
 </section>
-}
+} 

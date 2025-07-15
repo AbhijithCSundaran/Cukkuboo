@@ -62,7 +62,7 @@ export class MoviesComponent implements OnInit {
     this.loadMovies(this.pageIndex, this.pageSize, this.searchText);
   }
 
-  loadMovies(pageIndex: number = 0, pageSize: number = 20, search: string = '') {
+  loadMovies(pageIndex: number = 0, pageSize: number = 10, search: string = '') {
     this.movieService.listMovies(pageIndex, pageSize, search, this.movieType).subscribe({
       next: (res) => {
         if (res?.success) {

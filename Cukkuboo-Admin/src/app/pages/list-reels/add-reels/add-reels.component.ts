@@ -299,7 +299,7 @@ export class AddReelsComponent implements OnInit {
     }
   }
 
- saveReel(): void {
+saveReel(): void {
   if (this.reelForm.invalid || !this.reelForm.value['video']) {
     this.reelForm.markAllAsTouched();
     this.snackBar.open('Please fill all required fields.', '', {
@@ -317,17 +317,28 @@ export class AddReelsComponent implements OnInit {
     next: (response) => {
       this.uploadInProgress = false;
       this.uploadProgress = 100;
-      this.snackBar.open('Reel saved successfully!', '', {
+      
+      const message = this.isEditMode
+        ? 'Reel updated successfully!'
+        : 'Reel saved successfully!';
+
+      this.snackBar.open(message, '', {
         duration: 3000,
         verticalPosition: 'top',
         panelClass: ['snackbar-success']
       });
+
       this.router.navigate(['/reels']);
     },
     error: (err) => {
       this.uploadInProgress = false;
       this.uploadError = 'Upload failed. Please try again.';
-      this.snackBar.open('Failed to save reel. Please try again.', '', {
+      
+      const message = this.isEditMode
+        ? 'Failed to update reel. Please try again.'
+        : 'Failed to save reel. Please try again.';
+
+      this.snackBar.open(message, '', {
         duration: 3000,
         verticalPosition: 'top',
         panelClass: ['snackbar-error']
@@ -335,6 +346,7 @@ export class AddReelsComponent implements OnInit {
     }
   });
 }
+
 
 
   goBack(): void {

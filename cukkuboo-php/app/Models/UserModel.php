@@ -51,7 +51,10 @@ class UserModel extends Model
 
     public function deleteUserById($status, $user_id)
 {
-    $this->where('user_id', $user_id)->set(['status' => $status])->update();
+    $userDeleted = $this->update($user_id, [
+        'status' => $status,
+        'jwt_token' => null
+    ]);
     $this->db->table('user_subscription')
         ->where('user_id', $user_id)
         ->update(['status' => $status]);
@@ -98,7 +101,10 @@ class UserModel extends Model
     }
     public function deleteById($status, $userId)
 {
-    $userDeleted = $this->update($userId, ['status' => $status]);
+    $userDeleted = $this->update($userId, [
+        'status' => $status,
+        'jwt_token' => null
+    ]);
     if (!$userDeleted) {
         return false;
     }

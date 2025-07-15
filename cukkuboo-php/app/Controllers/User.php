@@ -32,165 +32,155 @@ class User extends ResourceController
     }
 
     public function registerFun()
-    {
-        $data = $this->request->getJSON(true);
-        $user_id =  $data['user_id']??0;
-        $authHeader = $this->request->getHeaderLine('Authorization');
-        $authenticatedUser= $this->authService->getAuthenticatedUser($authHeader);
-        
-        $userData = array_filter([
-            'username'     => $data['username'] ?? null,
-            'phone'        => $data['phone'] ?? null,
-            'email'        => $data['email'] ?? null,
-            'password'     => $data['password']?? null,
-            'country'      => $data['country'] ?? null,
-            'subscription' => $data['subscription'] ?? 'free',
-            'status'       => $data['status'] ?? null,
-               'join_date'       => $data['join_date'] ?? null,
-            //  'status'       => 1,
-            'user_type' => $data['user_type'] ??'Customer',
-            'date_of_birth'=> $data['date_of_birth'] ?? null        
-        ]);
+{
+    $data = $this->request->getJSON(true);
+    $user_id = $data['user_id'] ?? 0;
+    $authHeader = $this->request->getHeaderLine('Authorization');
+    $authenticatedUser = $this->authService->getAuthenticatedUser($authHeader);
 
-        if (!empty($data['password'])) {
-            $userData['password'] = password_hash($data['password'], PASSWORD_BCRYPT);
+    $userData = array_filter([
+        'username'     => $data['username'] ?? null,
+        'phone'        => $data['phone'] ?? null,
+        'email'        => $data['email'] ?? null,
+        'password'     => $data['password'] ?? null,
+        'country'      => $data['country'] ?? null,
+        'subscription' => $data['subscription'] ?? 'free',
+        'status'       => $data['status'] ?? 1,
+        'join_date'    => $data['join_date'] ?? null,
+        'user_type'    => $data['user_type'] ?? 'Customer',
+        'date_of_birth'=> $data['date_of_birth'] ?? null        
+    ]);
+
+    if (!empty($data['password'])) {
+        $userData['password'] = password_hash($data['password'], PASSWORD_BCRYPT);
+    }
+    if (!$user_id) {
+        if (empty($data['phone']) && empty($data['email'])) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'Phone or email is required.'
+            ]);
         }
-        if (!$user_id) {
-            if (empty($data['phone']) && empty($data['email'])) {
+
+        $existingUser = $this->UserModel->isUserExists($data['phone'] ?? null, $data['email'] ?? null);
+
+        if ($existingUser) {
+            if ((int)$existingUser['status'] == 9) {
+                $userData['join_date']  = $userData['join_date'] ?? date('Y-m-d');
+                $userData['created_at'] = date('Y-m-d H:i:s');
+
+                $newUserId = $this->UserModel->addUser($userData);
+                $user = $this->UserModel->find($newUserId);
+
+                $jwt = new Jwt();
+                $token = $jwt->encode(['user_id' => $user['user_id']]);
+                $created_by = $authenticatedUser ? $authenticatedUser['user_id'] : $newUserId;
+
+                $this->UserModel->update($newUserId, [
+                    'created_by' => $created_by,
+                    'jwt_token'  => $token
+                ]);
+
+                $user = $this->UserModel->find($newUserId);
+
+                return $this->response->setJSON([
+                    'success' => true,
+                    'message' => 'User re-registered successfully.',
+                    'data' => [
+                        'user_id'       => $user['user_id'],
+                        'username'      => $user['username'],
+                        'email'         => $user['email'],
+                        'password'      => $user['password'],
+                        'phone'         => $user['phone'],
+                        'status'        => $user['status'],
+                        'join_date'     => $user['join_date'],
+                        'date_of_birth' => $user['date_of_birth'], 
+                        'subscription'  => $user['subscription'],
+                        'user_type'     => $user['user_type'],
+                        'created_at'    => $user['created_at'],
+                        'created_by'    => $user['created_by'],
+                        'jwt_token'     => $user['jwt_token']
+                    ]
+                ]);
+            } else {
                 return $this->response->setJSON([
                     'success' => false,
-                    'message' => 'Phone or email is required.'
+                    'message' => 'User already exists.'
                 ]);
             }
+        }
+        $userData['join_date']  = $userData['join_date'] ?? date('Y-m-d');
+        $userData['created_at'] = date('Y-m-d H:i:s');
 
-            // if ($this->UserModel->isUserExists($data['phone'] ?? null, $data['email'] ?? null)) {
-            //     return $this->response->setJSON([
-            //         'success' => false,
-            //         'message' => 'User already exists.'
-            //     ]);
-            // }
-            $existingUser = $this->UserModel->isUserExists($data['phone'] ?? null, $data['email'] ?? null);
+        $newUserId = $this->UserModel->addUser($userData);
+        $user = $this->UserModel->find($newUserId);
 
-if ($existingUser) {
-    if ($existingUser['status'] == 9) {
-        // Reactivate deleted user
-        $userData['status'] = 1;
-        $userData['updated_at'] = date('Y-m-d H:i:s');
-        $this->UserModel->update($existingUser['user_id'], $userData);
+        $jwt = new Jwt();
+        $token = $jwt->encode(['user_id' => $user['user_id']]);
+        $created_by = $authenticatedUser ? $authenticatedUser['user_id'] : $newUserId;
 
-        $jwt   = new Jwt();
-        $token = $jwt->encode(['user_id' => $existingUser['user_id']]);
+        $this->UserModel->update($user['user_id'], [
+            'created_by' => $created_by,
+            'jwt_token'  => $token
+        ]);
 
-        $this->UserModel->update($existingUser['user_id'], ['jwt_token' => $token]);
-
-        $user = $this->UserModel->find($existingUser['user_id']);
+        $user = $this->UserModel->find($newUserId);
 
         return $this->response->setJSON([
             'success' => true,
-            'message' => 'User re-registered successfully.',
-            'data'    => [
-                'user_id'             => $user['user_id'],
-                'username'            => $user['username'],
-                'email'               => $user['email'],
-                'password'            => $user['password'],
-                'phone'               => $user['phone'],
-                'status'              => $user['status'],
-                'join_date'           => $user['join_date'],
-                'date_of_birth'       => $user['date_of_birth'], 
-                'subscription' => $user['subscription'],
-                'user_type'           => $user['user_type'],
-                'created_at'          => $user['created_at'],
-                'created_by'          => $user['created_by'],
-                'jwt_token'           => $user['jwt_token']
+            'message' => 'User registered successfully.',
+            'data' => [
+                'user_id'       => $user['user_id'],
+                'username'      => $user['username'],
+                'email'         => $user['email'],
+                'password'      => $user['password'],
+                'phone'         => $user['phone'],
+                'status'        => $user['status'],
+                'join_date'     => $user['join_date'],
+                'date_of_birth' => $user['date_of_birth'], 
+                'subscription'  => $user['subscription'],
+                'user_type'     => $user['user_type'],
+                'created_at'    => $user['created_at'],
+                'created_by'    => $user['created_by'],
+                'jwt_token'     => $user['jwt_token']
+            ]
+        ]);
+    }
+    if ($authenticatedUser) {
+        $userData['updated_at'] = date('Y-m-d H:i:s');
+        $userData['updated_by'] = $authenticatedUser['user_id'];
+
+        $this->UserModel->updateUser($user_id, $userData);
+        $user = $this->UserModel->find($user_id);
+
+        return $this->response->setJSON([
+            'success' => true,
+            'message' => 'User updated successfully.',
+            'data' => [
+                'user_id'       => $user['user_id'],
+                'username'      => $user['username'],
+                'email'         => $user['email'],
+                'password'      => $user['password'],
+                'phone'         => $user['phone'],
+                'status'        => $user['status'],
+                'join_date'     => $user['join_date'],
+                'date_of_birth' => $user['date_of_birth'], 
+                'subscription'  => $user['subscription'],
+                'user_type'     => $user['user_type'],
+                'created_at'    => $user['created_at'],
+                'created_by'    => $user['created_by'],
+                'updated_at'    => $user['updated_at'],
+                'updated_by'    => $user['updated_by']
             ]
         ]);
     } else {
-        // Existing active user
         return $this->response->setJSON([
             'success' => false,
-            'message' => 'User already exists.'
+            'message' => 'Unauthorised User',
+            'data'    => null
         ]);
     }
 }
-
-            $userData['join_date'] = $userData['join_date'] ?? date('Y-m-d');
-            $userData['created_at'] = date('Y-m-d H:i:s');
-            $userId = $this->UserModel->addUser($userData);
-            $user   = $this->UserModel->find($userId);
-
-            $jwt   = new Jwt();
-            $token = $jwt->encode(['user_id' => $user['user_id']]);
-
-            $created_by = $authenticatedUser ? $authenticatedUser['user_id'] : $userId;
-
-            
-            $this->UserModel->update($user['user_id'], [
-                'created_by' => $created_by,
-                'jwt_token'  => $token
-            ]);
-
-            
-            $user = $this->UserModel->find($userId);
-
-            return $this->response->setJSON([
-                'success'  => true,
-                'message' => 'User registered successfully.',
-                'data'    => [
-                    'user_id'             => $user['user_id'],
-                    'username'            => $user['username'],
-                    'email'               => $user['email'],
-                    'password'            => $user['password'],
-                    'phone'               => $user['phone'],
-                    'status'              => $user['status'],
-                    'join_date'           => $user['join_date'],
-                    'date_of_birth'       => $user['date_of_birth'], 
-                    'subscription' => $user['subscription'],
-                    'user_type'           => $user['user_type'],
-                    'created_at'          => $user['created_at'],
-                    'created_by'          => $created_by,
-                    'jwt_token'           => $user['jwt_token']
-                ]
-            ]);
-         } 
-
-      
-        else {
-            if($authenticatedUser){
-                $userData['updated_at'] = date('Y-m-d H:i:s');
-                $userData['updated_by'] = $authenticatedUser['user_id'];
-                $this->UserModel->updateUser($user_id, $userData);
-                $user = $this->UserModel->find($user_id);
-                return $this->response->setJSON([
-                    'success' => true,
-                    'message' => 'User updated successfully.',
-                    'data' => [
-                        'user_id'             => $user['user_id'],
-                        'username'            => $user['username'],
-                        'email'               => $user['email'],
-                        'password'            => $user['password'],
-                        'phone'               => $user['phone'],
-                        'status'              => $user['status'],
-                        'join_date'           => $user['join_date'],
-                        'date_of_birth'       => $user['date_of_birth'], 
-                        'subscription'        => $user['subscription'],
-                        'user_type'           => $user['user_type'],
-                        'created_at'          => $user['created_at'],
-                        'created_by'          => $user['created_by'],
-                        'updated_at'          => $user['updated_at'],
-                        'updated_by'          => $user['updated_by']
-                    ]
-                ]);
-            }
-            else{
-                return $this->response->setJSON([
-                    'success' => false,
-                    'message' => 'Unauthorised User',
-                    'data' => null
-                ]);
-            }
-        }
-    }
-
 
     //  Get user details
     // public function getUserDetails()

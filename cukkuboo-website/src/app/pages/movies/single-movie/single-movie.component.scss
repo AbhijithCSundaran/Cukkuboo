@@ -1,20 +1,23 @@
+/* SECTION PADDING */
 .gen-section-padding-3 {
   padding: 12px 0px 90px 0px;
 }
 
+/* PLAY MOVIE TEXT */
 .play-movie {
   color: white;
   font-size: 23px;
 }
 
+/* MOVIE TITLE IN BANNER */
 .gen-banner-movies.single .gen-movie-info h3 {
   font-size: 45px;
   font-weight: 600;
   line-height: 1.2;
   color: #fff;
-  // text-transform: uppercase;
 }
 
+/* PLAY BUTTON CONTAINER */
 .gen-btn-container a.playBut {
   display: flex;
   align-items: center;
@@ -23,30 +26,30 @@
   color: white;
 }
 
+/* PLAY ICON SIZE */
 .gen-btn-container a.playBut svg {
   width: 40px;
   height: 40px;
 }
 
+/* MOVIE CARD TITLES */
 .gen-more-like .gen-movie-info h3 a {
   cursor: pointer;
   text-decoration: none;
   color: #fff;
 }
 
-.gen-movie-info h3 a {
-  cursor: pointer;
-}
+/* HOVER EFFECT ON MOVIE TITLES */
+// .gen-movie-info a:hover {
+//   color: red !important;
+// }
 
+/* BANNER PLAY BUTTON */
 .gen-banner-movies .playBut {
   cursor: pointer;
 }
 
-.gen-movie-info a:hover {
-  color: red !important;
-}
-
-/* ✅ Responsive Fix for Metadata Pairs */
+/* EXTRA INFO SECTION */
 .gen-extra-data ul {
   padding: 0;
   margin: 0;
@@ -66,6 +69,44 @@
   white-space: nowrap;
 }
 
+/* ==== REACTION BUTTONS (Like, Dislike, Share, Watch Later) ==== */
+.reaction-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 6px 14px;
+  font-size: 15px;
+  height: 40px;
+  background: transparent;
+  border: 1px solid var(--primary-color);
+  color: var(--primary-color);
+  white-space: nowrap;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.reaction-button i {
+  font-size: 16px;
+}
+
+/* WATCH LATER (BOOKMARK) BUTTON */
+.bookmark-button {
+  padding: 6px 14px;
+}
+
+.bookmark-button i {
+  font-size: 18px;
+}
+
+/* Label inside bookmark and share buttons */
+.bookmark-button .label,
+.reaction-button span {
+  display: inline;
+}
+
+/* RESPONSIVE TWEAKS */
 @media (max-width: 767px) {
   .play-movie {
     font-size: 18px;
@@ -87,5 +128,17 @@
 
   .gen-extra-data li.meta-pair span {
     word-break: break-word;
+  }
+
+  .reaction-button {
+    font-size: 14px;
+    height: 38px;
+    padding: 5px 10px;
+    min-width: auto;
+  }
+
+  /* Hide long label on bookmark for smaller screens */
+  .bookmark-button .label {
+    display: none;
   }
 }

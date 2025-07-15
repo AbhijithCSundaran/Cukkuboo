@@ -98,16 +98,15 @@ public function getAllMovieDetails()
         $searchWildcard = '%' . str_replace(' ', '%', $search) . '%';
         $accessMap = [
             'free' => 1,
-            'standard' => 2,
-            'premium' => 3
+            'premium' => 2
         ];
         $accessValue = $accessMap[$search] ?? null;
 
         $builder->groupStart()
             ->like('LOWER(title)', $searchWildcard)
-            ->orLike('LOWER(genre)', $searchWildcard)
-            ->orLike('LOWER(cast_details)', $searchWildcard)
-            ->orLike('LOWER(category)', $searchWildcard);
+            // ->orLike('LOWER(genre)', $searchWildcard)
+            ->orLike('LOWER(cast_details)', $searchWildcard);
+            // ->orLike('LOWER(category)', $searchWildcard);
         if ($accessValue !== null) {
             $builder->orWhere('access', $accessValue);
         }
@@ -288,31 +287,56 @@ public function movieReaction($mov_id)
  public function getMoviesList()
 {
     $type = $this->request->getGet('type');
-    $page = (int) $this->request->getGet('page') ?: 1;
-    $limit = (int) $this->request->getGet('limit') ?: 10;
-    $offset = ($page - 1) * $limit;
+    $pageIndex = $this->request->getGet('pageIndex');
+    $pageSize = $this->request->getGet('pageSize');
+    $search = $this->request->getGet('search');
 
-    $model = new MovieDetailsModel();
-    $data = [];
-    $totalMovies = 0;
-    $title = '';
+    // Validate and sanitize pagination params
+    $pageIndex = is_numeric($pageIndex) && $pageIndex >= 0 ? (int)$pageIndex : 0;
+    $pageSize = is_numeric($pageSize) && $pageSize > 0 ? (int)$pageSize : 10;
 
+    $offset = $pageIndex * $pageSize;
+
+    $builder = $this->db->table('movies_details')->where('status !=', 9);
+
+    // Optional search
+    if (!empty($search)) {
+        $search = strtolower(trim($search));
+        $searchWildcard = '%' . str_replace(' ', '%', $search) . '%';
+
+        $accessMap = [
+            'free' => 1,
+            'premium' => 2
+        ];
+        $accessValue = $accessMap[$search] ?? null;
+
+        $builder->groupStart()
+            ->like('LOWER(title)', $searchWildcard)
+            ->orLike('LOWER(genre)', $searchWildcard)
+            ->orLike('LOWER(cast_details)', $searchWildcard)
+            ->orLike('LOWER(category)', $searchWildcard);
+
+        if ($accessValue !== null) {
+            $builder->orWhere('access', $accessValue);
+        }
+
+        $builder->groupEnd();
+    }
+
+    // Sorting logic based on `type`
     switch ($type) {
         case 'trending':
-            $data = $model->getTrendingList($limit, $offset);
-            $totalMovies = $model->countActiveMovies(); // or a separate trending count method
+            $builder->orderBy('likes', 'DESC');
             $title = 'Trending Movies';
             break;
 
         case 'latest':
-            $data = $model->getLatestList($limit, $offset);
-            $totalMovies = $model->countActiveMovies(); // or latest count
+            $builder->orderBy('release_date', 'DESC');
             $title = 'Latest Movies';
             break;
 
         case 'most_viewed':
-            $data = $model->getMostViewedList($limit, $offset);
-            $totalMovies = $model->countActiveMovies(); // or most_viewed count
+            $builder->orderBy('views', 'DESC');
             $title = 'Most Watched Movies';
             break;
 
@@ -323,30 +347,39 @@ public function movieReaction($mov_id)
             ], 400);
     }
 
-    // Format output data
-    $formattedData = [];
-    foreach ($data as $movie) {
-        $formattedData[] = [
+    // Get total count
+    $countBuilder = clone $builder;
+    $total = $countBuilder->countAllResults(true);
+
+    // Get paginated results
+    $movies = $builder->get($pageSize, $offset)->getResultArray();
+
+    // Format output
+    $formattedData = array_map(function ($movie) {
+        return [
             'mov_id' => $movie['mov_id'],
             'title' => $movie['title'],
             'thumbnail' => $movie['thumbnail'],
-            'banner'=>$movie['banner'],
+            'banner' => $movie['banner'],
             'release_date' => $movie['release_date'],
             'views' => $movie['views'],
             'rating' => $movie['rating'],
             'description' => $movie['description'],
             'duration' => $movie['duration'],
         ];
-    }
+    }, $movies);
 
-    $totalPages = ceil($totalMovies / $limit);
+    // Calculate total pages safely
+    $totalPages = ($pageSize > 0) ? ceil($total / $pageSize) : 0;
 
     return $this->respond([
         'success' => true,
         'type' => $type,
         'title' => $title,
-        'page' => $page,
-        'total_pages' => $totalPages,
+        'pageIndex' => $pageIndex,
+        'pageSize' => $pageSize,
+        'total' => $total,
+        'totalPages' => $totalPages,
         'data' => $formattedData
     ]);
 }
@@ -601,23 +634,28 @@ public function getUserHomeData()
             'In_active_movie_count' => $this->moviedetail->countInactiveMovies(),
             'has_unread_notifications' => $hasUnread,
             'list_1' => [
-                'heading' => 'Featured Movies',
-                'data' => $this->moviedetail->getFeaturedMovies()
-            ],
-            'list_2' => [
-                'heading' => 'Trending Movies',
-                'data' => $this->moviedetail->getTrendingMovies()
-            ],
-            'list_3' => [
-                'heading' => 'Latest Movies',
-                'data' => $this->moviedetail->latestMovies()
-            ],
-            'list_4' => [
-                'heading' => 'Most Watched Movies',
-                'data' => $this->moviedetail->getMostWatchedMovies()
-            ]
+            'type' => 'featured',
+            'heading' => 'Featured Movies',
+            'data' => $this->moviedetail->getFeaturedMovies()
+        ],
+        'list_2' => [
+            'type' => 'trending',
+            'heading' => 'Trending Movies',
+            'data' => $this->moviedetail->getTrendingMovies()
+        ],
+        'list_3' => [
+            'type' => 'latest',
+            'heading' => 'Latest Movies',
+            'data' => $this->moviedetail->latestMovies()
+        ],
+        'list_4' => [
+            'type' => 'most_viewed',
+            'heading' => 'Most Watched Movies',
+            'data' => $this->moviedetail->getMostWatchedMovies()
         ]
-    ]);
+    ]
+]);
+
 }
 
     public function getAdminDashBoardData()

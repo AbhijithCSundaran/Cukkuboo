@@ -3,6 +3,7 @@
 namespace App\Controllers;
 use CodeIgniter\RESTful\ResourceController;
 use App\Models\NotificationModel;
+use App\Models\UserModel;
 use App\Libraries\AuthService;
 
 class Notification extends ResourceController
@@ -13,49 +14,61 @@ class Notification extends ResourceController
     public function __construct()
     {
         $this->notificationModel = new NotificationModel();
+        $this->UserModel = new UserModel();
         $this->authService = new AuthService();
     }
 
     public function createOrUpdate()
-    {
-        $authHeader = $this->request->getHeaderLine('Authorization');
-        $user = $this->authService->getAuthenticatedUser($authHeader);
-        if(!$user){ 
-            return $this->failUnauthorized('Invalid or missing token.');
-        }
-        $notificationModel = new NotificationModel();
-        $data = $this->request->getJSON(true);
-        $notificationId = $data['notification_id'] ?? null;
-
-        $notificationData = [
-            'user_id'     => $user['user_id'],
-            'title'     => $data['title'] ?? '',
-            'content'     => $data['content'] ?? '',
-            'status'      => $data['status'] ?? 1,
-        ];
-
-        if ($notificationId) {
-            $notificationData['modify_by'] = $user['user_id'];
-            $notificationData['modify_on'] = date('Y-m-d H:i:s');
-
-            $updated = $this->notificationModel->update($notificationId, $notificationData);
-            return $this->respond([
-                'success' => true,
-                'message' => $updated ? 'Notification updated' : 'Update failed',
-                'data' => $notificationData
-            ]);
-        } else {
-            $notificationData['created_by'] = $user['user_id'];
-            $notificationData['created_on'] = date('Y-m-d H:i:s');
-            $notificationData['status'] = 1;
-            $id = $this->notificationModel->insert($notificationData);
-            return $this->respond([
-                'success' => true,
-                'message' => 'Notification created',
-                'data' => $notificationData
-            ]);
-        }
+{
+    $authHeader = $this->request->getHeaderLine('Authorization');
+    $user = $this->authService->getAuthenticatedUser($authHeader);
+    if (!$user) {
+        return $this->failUnauthorized('Invalid or missing token.');
     }
+
+    $notificationModel = new NotificationModel();
+    $userModel = new UserModel(); 
+
+    $data = $this->request->getJSON(true);
+    $notificationId = $data['notification_id'] ?? null;
+
+    $notificationData = [
+        'user_id'   => $user['user_id'],
+        'title'     => $data['title'] ?? '',
+        'content'   => $data['content'] ?? '',
+        'status'    => $data['status'] ?? 1,
+    ];
+
+    if ($notificationId) {
+        $notificationData['modify_by'] = $user['user_id'];
+        $notificationData['modify_on'] = date('Y-m-d H:i:s');
+
+        $updated = $notificationModel->update($notificationId, $notificationData);
+        $notificationData['notification_id'] = $notificationId;
+        $notificationData['name'] = $user['username'] ?? '';
+
+        return $this->respond([
+            'success' => true,
+            'message' => $updated ? 'Notification updated' : 'Update failed',
+            'data' => $notificationData
+        ]);
+    } else {
+        $notificationData['created_by'] = $user['user_id'];
+        $notificationData['created_on'] = date('Y-m-d H:i:s');
+        $notificationData['status'] = 1;
+
+        $insertedId = $notificationModel->insert($notificationData);
+        $notificationData['notification_id'] = $insertedId;
+        $notificationData['name'] = $user['username'] ?? '';
+
+        return $this->respond([
+            'success' => true,
+            'message' => 'Notification created',
+            'data' => $notificationData
+        ]);
+    }
+}
+
 
     public function getAllNotifications()
 {

@@ -519,7 +519,6 @@ getVideoDuration(file: File): void {
     this.cdr.detectChanges();
   }
 
-
 submitMovie() {
   if (this.movieForm.invalid) {
     this.movieForm.markAllAsTouched();
@@ -533,19 +532,20 @@ submitMovie() {
 
   const model = this.movieForm.value;
 
-
-
   this.movieService.addmovies(model).subscribe({
     next: (response) => {
       console.log('Movie save response:', response); 
-      this.showSnackbar('Movie saved successfully!', 'snackbar-success');
+      const message = this.isEditMode ? 'Movie updated successfully!' : 'Movie saved successfully!';
+      this.showSnackbar(message, 'snackbar-success');
       this.router.navigate(['/list-movie-show']);
     },
-    error: (error) => {
-      this.showSnackbar('Failed to save movie. Please try again.', 'snackbar-error');
+    error: () => {
+      const errorMessage = this.isEditMode ? 'Failed to update movie. Please try again.' : 'Failed to save movie. Please try again.';
+      this.showSnackbar(errorMessage, 'snackbar-error');
     }
   });
 }
+
 
 
 

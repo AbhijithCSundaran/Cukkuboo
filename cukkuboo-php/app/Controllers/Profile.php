@@ -40,10 +40,14 @@ class Profile extends BaseController
 			return redirect()->to(base_url()); 
 		}
 	}
-	public function resetPasswordFlow()
+	public function resetPassword()
 {
-    $step = $this->input->getPost('step');
-    $email = $this->input->getPost('email');
+    $json = $this->request->getJSON(true);
+
+    $email = isset($json['email']) ? trim($json['email']) : null;
+    $otpInput = isset($json['otp']) ? trim($json['otp']) : null;
+    $newPassword = isset($json['new_password']) ? $json['new_password'] : null;
+    $confirmPassword = isset($json['confirm_password']) ? $json['confirm_password'] : null;
 
     if (!$email) {
         return $this->response->setJSON([
@@ -51,29 +55,29 @@ class Profile extends BaseController
             'message' => 'Email is required.'
         ]);
     }
+
     $user = $this->loginModel->where('email', $email)->first();
     if (!$user) {
         return $this->response->setJSON([
             'success' => false,
-            'message' => 'Enter valid data.'
+            'message' => 'User not found.'
         ]);
     }
-    if ($step === 'send') {
+    if ($email && !$otpInput && !$newPassword && !$confirmPassword) {
         $otp = rand(100000, 999999);
         session()->set('reset_otp_' . $email, $otp);
         session()->set('otp_expiry_' . $email, time() + 300); 
 
-        // Send email via SMTP
         try {
             $mail = new PHPMailer(true);
             $mail->isSMTP();
             $mail->Host       = 'mail.smartlounge.online';
-		    $mail->SMTPAuth   = true;
-			$mail->Username   = 'no-reply@smartlounge.online';
-			$mail->Password   = 'JujjmH9WkpL7AgP4TgHe';
-			$mail->SMTPSecure = 'ssl';
-			$mail->Port       = 465;
-			$mail->setFrom('no-reply@smartlounge.online', 'Promat');
+            $mail->SMTPAuth   = true;
+            $mail->Username   = 'no-reply@smartlounge.online';
+            $mail->Password   = 'JujjmH9WkpL7AgP4TgHe';
+            $mail->SMTPSecure = 'ssl';
+            $mail->Port       = 465;
+            $mail->setFrom('no-reply@smartlounge.online', 'Promat');
             $mail->addAddress($email, $user['username']);
             $mail->isHTML(true);
             $mail->Subject = "OTP for Password Reset - Promat";
@@ -96,8 +100,7 @@ class Profile extends BaseController
             ]);
         }
     }
-    if ($step === 'verify') {
-        $otpInput = $this->input->getPost('otp');
+    if ($email && $otpInput && !$newPassword && !$confirmPassword) {
         $storedOtp = session()->get('reset_otp_' . $email);
         $otpExpiry = session()->get('otp_expiry_' . $email);
 
@@ -115,51 +118,49 @@ class Profile extends BaseController
             ]);
         }
 
+        session()->set('otp_verified_' . $email, true);
+
         return $this->response->setJSON([
             'success' => true,
             'message' => 'OTP verified. You may now reset your password.'
         ]);
     }
-    if ($step === 'reset') {
-        $newPassword = $this->input->getPost('new_password');
-        $otpInput = $this->input->getPost('otp');
-
+    if ($email && $otpInput && $newPassword && $confirmPassword) {
         $storedOtp = session()->get('reset_otp_' . $email);
         $otpExpiry = session()->get('otp_expiry_' . $email);
+        $otpVerified = session()->get('otp_verified_' . $email);
 
-        if (!$storedOtp || !$otpExpiry || time() > $otpExpiry || $otpInput != $storedOtp) {
+        if (!$storedOtp || !$otpExpiry || time() > $otpExpiry || $otpInput != $storedOtp || !$otpVerified) {
             return $this->response->setJSON([
                 'success' => false,
                 'message' => 'Invalid OTP or session expired. Please try again.'
             ]);
         }
 
-        if (!$newPassword) {
+        if ($newPassword !== $confirmPassword) {
             return $this->response->setJSON([
                 'success' => false,
-                'message' => 'New password required.'
+                'message' => 'New password and confirm password do not match.'
             ]);
         }
 
-        
         $hashedPassword = password_hash($newPassword, PASSWORD_BCRYPT);
-
         $this->loginModel->update($user['user_id'], ['password' => $hashedPassword]);
-
         session()->remove('reset_otp_' . $email);
         session()->remove('otp_expiry_' . $email);
+        session()->remove('otp_verified_' . $email);
 
         return $this->response->setJSON([
             'success' => true,
             'message' => 'Password has been reset successfully.'
         ]);
     }
-
     return $this->response->setJSON([
         'success' => false,
-        'message' => 'Invalid step.'
+        'message' => 'Invalid request payload.'
     ]);
 }
+
 	public function removeUser() {
     $userId = $this->input->getPost('userId');
     $this->AuthModel->delUser($userId);

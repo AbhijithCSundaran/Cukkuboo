@@ -81,11 +81,11 @@
     <span *ngIf="movieData.likes !== undefined">{{ movieData.likes }}</span>
   </button>
 
-  <!-- Dislike Button -->
-  <button class="reaction-button" (click)="toggleMovieReaction(2)">
-    <i [class]="movieData.is_disliked_by_user ? 'fas fa-thumbs-down text-danger' : 'far fa-thumbs-down'"></i>
-    <span *ngIf="movieData.dislikes !== undefined">{{ movieData.dislikes }}</span>
-  </button>
+ <!-- Dislike Button (Count hidden) -->
+<button class="reaction-button" (click)="toggleMovieReaction(2)">
+  <i [class]="movieData.is_disliked_by_user ? 'fas fa-thumbs-down text-danger' : 'far fa-thumbs-down'"></i>
+  <!-- <span *ngIf="movieData.dislikes !== undefined">{{ movieData.dislikes }}</span> -->
+</button>
 
   <!-- Share Button -->
   <button class="reaction-button" (click)="copyUrlToClipboard()">

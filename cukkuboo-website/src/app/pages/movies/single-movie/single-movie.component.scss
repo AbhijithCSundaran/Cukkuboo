@@ -39,34 +39,9 @@
   color: #fff;
 }
 
-/* HOVER EFFECT ON MOVIE TITLES */
-// .gen-movie-info a:hover {
-//   color: red !important;
-// }
-
 /* BANNER PLAY BUTTON */
 .gen-banner-movies .playBut {
   cursor: pointer;
-}
-
-/* EXTRA INFO SECTION */
-.gen-extra-data ul {
-  padding: 0;
-  margin: 0;
-  list-style: none;
-}
-
-.gen-extra-data li.meta-pair {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-bottom: 8px;
-  font-size: 15px;
-  color: #fff;
-}
-
-.gen-extra-data li.meta-pair strong {
-  white-space: nowrap;
 }
 
 /* ==== REACTION BUTTONS (Like, Dislike, Share, Watch Later) ==== */
@@ -100,13 +75,43 @@
   font-size: 18px;
 }
 
-/* Label inside bookmark and share buttons */
 .bookmark-button .label,
 .reaction-button span {
   display: inline;
 }
 
-/* RESPONSIVE TWEAKS */
+/* ==== EXTRA INFO SECTION (Updated) ==== */
+.gen-extra-data ul {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.gen-extra-data li.meta-pair {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 10px;
+  font-size: 16px;
+  color: #fff;
+  line-height: 1.5;
+}
+
+.gen-extra-data li.meta-pair strong {
+  white-space: nowrap;
+  font-weight: 600;
+  font-size: 16px;
+  color: #ffffff;
+}
+
+.gen-extra-data li.meta-pair span {
+  word-break: break-word;
+  flex: 1;
+  font-size: 16px;
+  color: #e0e0e0;
+}
+
+/* ==== RESPONSIVE TWEAKS ==== */
 @media (max-width: 767px) {
   .play-movie {
     font-size: 18px;
@@ -124,10 +129,15 @@
   .gen-extra-data li.meta-pair {
     flex-direction: row;
     align-items: baseline;
+    font-size: 15px;
+  }
+
+  .gen-extra-data li.meta-pair strong {
+    font-size: 15px;
   }
 
   .gen-extra-data li.meta-pair span {
-    word-break: break-word;
+    font-size: 15px;
   }
 
   .reaction-button {

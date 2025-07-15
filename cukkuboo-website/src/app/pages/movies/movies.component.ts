@@ -25,7 +25,7 @@ import { InfiniteScrollDirective } from '../../core/directives/infinite-scroll/i
 export class MoviesComponent implements OnInit {
   @ViewChild('searchInput') searchInput!: ElementRef<HTMLInputElement>;
   movies: any[] = [];
-  imageUrl = environment.apiUrl + 'uploads/images/';
+  imageUrl = environment.fileUrl + 'uploads/images/';
   pageIndex: number = 0;
   pageSize: number = 10;
   totalItems: number = 0;

@@ -148,7 +148,7 @@
   color: white;
 }
 
-/* Media Queries */
+/* Responsive Media Queries */
 
 @media (max-width: 1200px) {
   .header-row h2 {
@@ -201,10 +201,12 @@
     font-size: 12px;
   }
 
-      th.mat-column-likes,
+  th.mat-column-likes,
   td.mat-column-likes,
+  th.mat-column-dislikes,
+  td.mat-column-dislikes,
   th.mat-column-views,
-  td.mat-column-views{
+  td.mat-column-views {
     display: none !important;
   }
 }
@@ -238,18 +240,21 @@
     font-size: 12px;
   }
 
-   th.mat-column-slNo,
+  th.mat-column-slNo,
   td.mat-column-slNo,
   th.mat-column-status,
   td.mat-column-status,
   th.mat-column-likes,
   td.mat-column-likes,
+  th.mat-column-dislikes,
+  td.mat-column-dislikes,
   th.mat-column-views,
   td.mat-column-views,
   th.mat-column-access,
   td.mat-column-access {
     display: none !important;
   }
+
   .pagination-wrapper {
     font-size: 12px;
   }

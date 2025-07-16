@@ -22,7 +22,8 @@ class ReelView extends ResourceController
 
     public function viewReel()
 {
-    $authHeader = $this->request->getHeaderLine('Authorization');
+    // $authHeader = $this->request->getHeaderLine('Authorization');
+    $authHeader = apache_request_headers()["Authorization"];
     $user = $this->authService->getAuthenticatedUser($authHeader);
 
     if (!$user) {

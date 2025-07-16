@@ -26,7 +26,8 @@ class Usersub extends ResourceController
  public function createSubscribe()
 {
     $data = $this->request->getJSON(true);
-    $authHeader = $this->request->getHeaderLine('Authorization');
+    // $authHeader = $this->request->getHeaderLine('Authorization');
+    $authHeader = apache_request_headers()["Authorization"];
     $user = $this->authService->getAuthenticatedUser($authHeader);
 
     if (!$user || !isset($user['user_id'])) {
@@ -202,7 +203,8 @@ class Usersub extends ResourceController
 
 public function getUserSubscriptions()
 {
-    $authHeader = $this->request->getHeaderLine('Authorization');
+    // $authHeader = $this->request->getHeaderLine('Authorization');
+    $authHeader = apache_request_headers()["Authorization"];
     $authuser = $this->authService->getAuthenticatedUser($authHeader);
 
     if (!$authuser) {
@@ -278,7 +280,8 @@ public function getUserSubscriptions()
 
 public function deleteSubscription($id = null)
 {
-    $authHeader = $this->request->getHeaderLine('Authorization');
+    // $authHeader = $this->request->getHeaderLine('Authorization');
+    $authHeader = apache_request_headers()["Authorization"];
     $user = $this->authService->getAuthenticatedUser($authHeader);
     if (!$user) {
         return $this->failUnauthorized('Invalid or missing token.');
@@ -307,7 +310,8 @@ public function deleteSubscription($id = null)
 }
 public function cancelSubscription()
 {
-    $authHeader = $this->request->getHeaderLine('Authorization');
+    // $authHeader = $this->request->getHeaderLine('Authorization');
+    $authHeader = apache_request_headers()["Authorization"];
     $user = $this->authService->getAuthenticatedUser($authHeader);
 
     if (!$user) {
@@ -329,7 +333,8 @@ public function cancelSubscription()
 }
     public function countSubscribers()
     {
-        $authHeader = $this->request->getHeaderLine('Authorization');
+        // $authHeader = $this->request->getHeaderLine('Authorization');
+        $authHeader = apache_request_headers()["Authorization"];
         $authuser = $this->authService->getAuthenticatedUser($authHeader);
         if (!$authuser) 
             return $this->failUnauthorized('Invalid or missing token.');
@@ -344,7 +349,8 @@ public function cancelSubscription()
     }
     public function countRevenue()
     {
-        $authHeader = $this->request->getHeaderLine('Authorization');
+        // $authHeader = $this->request->getHeaderLine('Authorization');
+        $authHeader = apache_request_headers()["Authorization"];
         $authUser = $this->authService->getAuthenticatedUser($authHeader);
 
         if (!$authUser) {
@@ -361,7 +367,8 @@ public function cancelSubscription()
     }
     public function listTransactions()
 {
-    $authHeader = $this->request->getHeaderLine('Authorization');
+    // $authHeader = $this->request->getHeaderLine('Authorization');
+    $authHeader = apache_request_headers()["Authorization"];
     $authUser = $this->authService->getAuthenticatedUser($authHeader);
 
     if (!$authUser || !isset($authUser['user_id'])) {
@@ -387,7 +394,8 @@ public function cancelSubscription()
 
    public function getActiveSubscription()
 {
-    $authHeader = $this->request->getHeaderLine('Authorization');
+    // $authHeader = $this->request->getHeaderLine('Authorization');
+    $authHeader = apache_request_headers()["Authorization"];
     $user = $this->authService->getAuthenticatedUser($authHeader);
 
     if (!$user || !isset($user['user_id'])) {
@@ -436,7 +444,8 @@ public function cancelSubscription()
 
 public function getExpiredSubscriptions()
 {
-    $authHeader = $this->request->getHeaderLine('Authorization');
+    // $authHeader = $this->request->getHeaderLine('Authorization');
+    $authHeader = apache_request_headers()["Authorization"];
     $user = $this->authService->getAuthenticatedUser($authHeader);
 
     if (!$user || !isset($user['user_id'])) {

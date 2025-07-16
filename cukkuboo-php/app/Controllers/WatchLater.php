@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use CodeIgniter\RESTful\ResourceController;
+use App\Helpers\AuthHelper; 
 use App\Models\WatchLaterModel;
 use App\Libraries\AuthService;
 
@@ -20,7 +21,7 @@ class WatchLater extends ResourceController
     public function add()
 {
     // $authHeader = $this->request->getHeaderLine('Authorization');
-    $authHeader = apache_request_headers()["Authorization"];
+   $authHeader = AuthHelper::getAuthorizationToken($this->request);
     $user = $this->authService->getAuthenticatedUser($authHeader);
     if (!$user) 
             return $this->failUnauthorized('Invalid or missing token.');
@@ -66,7 +67,7 @@ class WatchLater extends ResourceController
 public function getlist()
 {
     // $authHeader = $this->request->getHeaderLine('Authorization');
-    $authHeader = apache_request_headers()["Authorization"];
+    $authHeader = AuthHelper::getAuthorizationToken($this->request);
     $user = $this->authService->getAuthenticatedUser($authHeader);
 
     if (!$user || !isset($user['user_id'])) {
@@ -104,7 +105,7 @@ public function getlist()
  public function getById($id)
 {
     // $authHeader = $this->request->getHeaderLine('Authorization');
-    $authHeader = apache_request_headers()["Authorization"];
+    $authHeader = AuthHelper::getAuthorizationToken($this->request);
     $user = $this->authService->getAuthenticatedUser($authHeader);
 
     if (!$user) {
@@ -131,7 +132,7 @@ public function getlist()
 public function getUserWatchLater($userId = null)
 {
     // $authHeader = $this->request->getHeaderLine('Authorization');
-    $authHeader = apache_request_headers()["Authorization"];
+   $authHeader = AuthHelper::getAuthorizationToken($this->request);
     $authUser = $this->authService->getAuthenticatedUser($authHeader);
 
     if (!$authUser) {
@@ -159,7 +160,7 @@ public function getUserWatchLater($userId = null)
 public function delete($id = null)
 {
     // $authHeader = $this->request->getHeaderLine('Authorization');
-    $authHeader = apache_request_headers()["Authorization"];
+    $authHeader = AuthHelper::getAuthorizationToken($this->request);
     $user = $this->authService->getAuthenticatedUser($authHeader);
     
     if (!$user) {
@@ -185,7 +186,7 @@ public function delete($id = null)
 public function clearAllHistory()
 {
     // $authHeader = $this->request->getHeaderLine('Authorization');
-    $authHeader = apache_request_headers()["Authorization"];
+    $authHeader = AuthHelper::getAuthorizationToken($this->request);
     $user = $this->authService->getAuthenticatedUser($authHeader);
 
     if (!$user || !isset($user['user_id'])) {

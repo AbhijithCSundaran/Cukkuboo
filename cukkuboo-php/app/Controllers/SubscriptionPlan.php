@@ -3,6 +3,7 @@
 namespace App\Controllers;
  
 use CodeIgniter\RESTful\ResourceController;
+use App\Helpers\AuthHelper; 
 use App\Models\SubscriptionPlanModel;
 use App\Libraries\AuthService;
  
@@ -23,7 +24,7 @@ class SubscriptionPlan extends ResourceController
     $id = isset($data['subscriptionplan_id']) ? (int)$data['subscriptionplan_id'] : null;
  
     // $authHeader = $this->request->getHeaderLine('Authorization');
-    $authHeader = apache_request_headers()["Authorization"];
+   $authHeader = AuthHelper::getAuthorizationToken($this->request);
     $user = $this->authService->getAuthenticatedUser($authHeader);
  
     if (!$user) {
@@ -83,8 +84,8 @@ class SubscriptionPlan extends ResourceController
         $pageSize = (int)$this->request->getGet('pageSize') ?? 10;
         $search = $this->request->getGet('search');
  
-        // $authHeader = $this->request->getHeaderLine('Authorization');
-        // $authHeader = apache_request_headers()["Authorization"];
+        
+        // $authHeader = AuthHelper::getAuthorizationToken($this->request);
         // $user = $this->authService->getAuthenticatedUser($authHeader);
  
         // if (!$user) {
@@ -118,7 +119,7 @@ class SubscriptionPlan extends ResourceController
     public function get($id)
     {
         // $authHeader = $this->request->getHeaderLine('Authorization');
-        $authHeader = apache_request_headers()["Authorization"];
+        $authHeader = AuthHelper::getAuthorizationToken($this->request);
         $user = $this->authService->getAuthenticatedUser($authHeader);
  
         if (!$user) {
@@ -140,7 +141,7 @@ class SubscriptionPlan extends ResourceController
     public function delete($id = null)
     {
     // $authHeader = $this->request->getHeaderLine('Authorization');
-    $authHeader = apache_request_headers()["Authorization"];
+    $authHeader = AuthHelper::getAuthorizationToken($this->request);
     $user = $this->authService->getAuthenticatedUser($authHeader);
 
     if (!$user) {

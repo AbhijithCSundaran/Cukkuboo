@@ -27,6 +27,7 @@ export class WatchLaterComponent implements OnInit {
   totalItems: number = 0;
   stopInfiniteScroll: boolean = false;
   isLoading: boolean = false;
+  randomBanner: string = 'assets/images/background/movie_banner.jpg';
 
   constructor(
     private dialog: MatDialog,
@@ -38,32 +39,46 @@ export class WatchLaterComponent implements OnInit {
     this.loadWatchLaterList();
   }
 
-  loadWatchLaterList(): void {
-    this.isLoading = true;
-    this.movieService.getWatchLaterList(this.pageIndex, this.pageSize).subscribe({
-      next: (res) => {
-        this.isLoading = false;
-        if (res?.success && Array.isArray(res.data)) {
-          if (this.pageIndex === 0) {
-            this.watchLaterList = res.data;
+
+loadWatchLaterList(): void {
+  this.isLoading = true;
+  this.movieService.getWatchLaterList(this.pageIndex, this.pageSize).subscribe({
+    next: (res) => {
+      this.isLoading = false;
+      if (res?.success && Array.isArray(res.data)) {
+        if (this.pageIndex === 0) {
+          this.watchLaterList = res.data;
+
+          // Get banners and select one at random
+          const banners = res.data.map((m: any) => m.banner).filter((b: string) => !!b);
+          if (banners.length) {
+            const randomIndex = Math.floor(Math.random() * banners.length);
+            this.randomBanner = this.imageUrl + banners[randomIndex];
           } else {
-            this.watchLaterList = [...this.watchLaterList, ...res.data];
+            this.randomBanner = 'assets/images/background/movie_banner.jpg';
           }
-          this.totalItems = res.total || this.watchLaterList.length;
-          if (!res.data.length || this.watchLaterList.length >= this.totalItems) {
-            this.stopInfiniteScroll = true;
-          }
+
         } else {
+          this.watchLaterList = [...this.watchLaterList, ...res.data];
+        }
+
+        this.totalItems = res.total || this.watchLaterList.length;
+        if (!res.data.length || this.watchLaterList.length >= this.totalItems) {
           this.stopInfiniteScroll = true;
         }
-      },
-      error: (err) => {
-        console.error('Error loading watch later list:', err);
-        this.isLoading = false;
+      } else {
         this.stopInfiniteScroll = true;
       }
-    });
-  }
+    },
+    error: (err) => {
+      console.error('Error loading watch later list:', err);
+      this.isLoading = false;
+      this.stopInfiniteScroll = true;
+      this.randomBanner = 'assets/images/background/movie_banner.jpg';
+    }
+  });
+}
+
 
   onScroll(): void {
     if (!this.stopInfiniteScroll && !this.isLoading) {

@@ -279,7 +279,7 @@ export class ProfileComponent implements OnInit {
     this.showProfileInfo = false;
     this.ShowDeleteAccount = false;
     this.showChangePassword = true;
-    localStorage.setItem('activeTab', 'changePassword');
+    // localStorage.setItem('activeTab', 'changePassword');
   }
 
   backToProfile(): void {
@@ -293,7 +293,7 @@ export class ProfileComponent implements OnInit {
     this.showProfileInfo = false;
     this.showChangePassword = false;
     this.ShowDeleteAccount = true;
-    localStorage.setItem('activeTab', 'deleteAccount');
+    // localStorage.setItem('activeTab', 'deleteAccount');
   }
 
 
@@ -379,7 +379,7 @@ export class ProfileComponent implements OnInit {
 
           this.router.navigate(['/']);
         } else {
-          this.snackBar.open('Failed to delete account.', '', {
+          this.snackBar.open('Incorrect Password', '', {
             duration: 3000,
             verticalPosition: 'top',
             panelClass: ['snackbar-error']
@@ -388,7 +388,7 @@ export class ProfileComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error deleting account:', err);
-        this.snackBar.open('Incorrect password or Account not Deleted.', '', {
+        this.snackBar.open('Failed to Delete.', '', {
           duration: 3000,
           verticalPosition: 'top',
           panelClass: ['snackbar-error']

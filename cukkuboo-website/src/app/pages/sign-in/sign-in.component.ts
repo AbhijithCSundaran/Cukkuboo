@@ -37,14 +37,10 @@ export class SignInComponent implements OnDestroy {
   forgotForm: FormGroup;
   loading = false;
   hide = true;
-  step: number = 0; // 0: Login, 1: Forgot Email, 2: OTP, 3: Reset Password
+  step: number = 0;
   emailUsed = '';
-
-  // 👁 Password toggle variables
   hideNewPassword = true;
   hideConfirmPassword = true;
-
-  // ⏳ OTP countdown
   resendCountdown: number = 0;
   private countdownInterval: any;
 
@@ -57,14 +53,12 @@ export class SignInComponent implements OnDestroy {
     @Optional() @Inject(MAT_DIALOG_DATA) public modalData: any,
     @Optional() @Inject(MatDialogRef<SignInComponent>) public dialogRef: MatDialogRef<SignInComponent>
   ) {
-    // Login form
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required],
       rememberMe: [false]
     });
 
-    // Forgot password form (used in steps 1, 2, and 3)
     this.forgotForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       otp: [''],
@@ -73,7 +67,6 @@ export class SignInComponent implements OnDestroy {
     });
   }
 
-  // === Snackbar Utility ===
   private showSnackbar(message: string, isSuccess: boolean = false): void {
     this.snackBar.open(message, '', {
       duration: 3000,
@@ -82,25 +75,20 @@ export class SignInComponent implements OnDestroy {
     });
   }
 
-  // === Login ===
   onSubmit(): void {
     if (this.loginForm.valid) {
       const model = this.loginForm.value;
 
       this.userService.login(model).subscribe({
         next: (response) => {
-          if (response.success && response.data?.user_type === 'Customer') {
+          if (response.success === true && response.data?.user_type === 'Customer') {
             localStorage.setItem('t_k', response.data?.jwt_token);
             this.storageService.updateItem('userData', response.data);
             this.storageService.updateItem('username', response.data?.username || 'User');
             this.storageService.updateItem('token', response.data?.jwt_token || 'token');
             this.storageService.updateItem('subscription', SubscriptionStatus[+response.data?.subscription_details?.subscription || 0]);
 
-            if (this.modalData) {
-              this.dialogRef.close(response);
-            } else {
-              this.router.navigate(['/home']);
-            }
+            this.modalData ? this.dialogRef.close(response) : this.router.navigate(['/home']);
           } else {
             this.showSnackbar(response.message || 'Invalid email or password');
           }
@@ -114,7 +102,6 @@ export class SignInComponent implements OnDestroy {
     }
   }
 
-  // === Navigation ===
   navigateToSignUp(): void {
     this.router.navigate(['/signup']);
   }
@@ -131,39 +118,35 @@ export class SignInComponent implements OnDestroy {
     this.forgotForm.reset();
   }
 
-  // === Step 1: Send OTP ===
-sendEmail(): void {
-  const email = this.forgotForm.value.email;
+  sendEmail(): void {
+    const email = this.forgotForm.value.email;
+    if (!email) {
+      this.showSnackbar('Email is required');
+      return;
+    }
 
-  if (!email) {
-    this.showSnackbar('Email is required');
-    return;
+    this.userService.forgotPassword({ email }).subscribe({
+      next: (response) => {
+        if (response.success === true) {
+          this.showSnackbar('OTP sent to your email', true);
+          this.emailUsed = email;
+          this.step = 2;
+          this.startResendCountdown();
+        } else if (response.success === false) {
+          this.showSnackbar(response.message || 'User not found');
+        }
+      },
+      error: (error) => {
+        const errMsg = error?.error?.message || 'Failed to send OTP';
+        if (errMsg.toLowerCase().includes('not registered') || errMsg.toLowerCase().includes('user not found')) {
+          this.showSnackbar('User not found');
+        } else {
+          this.showSnackbar(errMsg);
+        }
+      }
+    });
   }
 
-  this.userService.forgotPassword({ email }).subscribe({
-    next: () => {
-      this.showSnackbar('OTP sent to your email', true);
-      this.emailUsed = email;
-      this.step = 2;
-      this.startResendCountdown();
-      this.startOtpExpiryCountdown(); // if you added it
-    },
-    error: (error) => {
-      const errMsg = error?.error?.message?.toLowerCase() || 'Failed to send OTP';
-
-      if (errMsg.includes('user not found') || errMsg.includes('not registered') || errMsg.includes('invalid email')) {
-        this.showSnackbar('User not found');
-        this.step = 1; // Stay on step 1
-      } else {
-        this.showSnackbar('Failed to send OTP');
-      }
-    }
-  });
-}
-
-
-
-  // === Step 2: Resend OTP ===
   resendOtp(): void {
     if (!this.emailUsed) {
       this.showSnackbar('Email is missing');
@@ -171,9 +154,13 @@ sendEmail(): void {
     }
 
     this.userService.forgotPassword({ email: this.emailUsed }).subscribe({
-      next: () => {
-        this.showSnackbar('OTP resent to your email', true);
-        this.startResendCountdown();
+      next: (response) => {
+        if (response.success === true) {
+          this.showSnackbar('OTP resent to your email', true);
+          this.startResendCountdown();
+        } else {
+          this.showSnackbar(response.message || 'Failed to resend OTP');
+        }
       },
       error: () => {
         this.showSnackbar('Failed to resend OTP');
@@ -184,7 +171,6 @@ sendEmail(): void {
   startResendCountdown(): void {
     this.resendCountdown = 60;
     if (this.countdownInterval) clearInterval(this.countdownInterval);
-
     this.countdownInterval = setInterval(() => {
       if (this.resendCountdown > 0) {
         this.resendCountdown--;
@@ -194,36 +180,34 @@ sendEmail(): void {
     }, 1000);
   }
 
-  // === Step 2: Submit OTP ===
- submitOtp(): void {
-  const { otp } = this.forgotForm.value;
+  submitOtp(): void {
+    const { otp } = this.forgotForm.value;
+    if (!otp) {
+      this.showSnackbar('Please enter the OTP');
+      return;
+    }
 
-  if (!otp) {
-    this.showSnackbar('Please enter the OTP');
-    return;
+    this.userService.forgotPassword({ email: this.emailUsed, otp }).subscribe({
+      next: (response) => {
+        if (response.success === true) {
+          this.showSnackbar('OTP verified. Set your new password.', true);
+          this.step = 3;
+        } else {
+          const message = response.message?.toLowerCase() || '';
+          if (message.includes('expired')) {
+            this.showSnackbar('OTP has expired.');
+          } else {
+            this.showSnackbar(response.message || 'Invalid OTP');
+          }
+        }
+      },
+      error: (error) => {
+        const errMsg = error?.error?.message || 'OTP verification failed';
+        this.showSnackbar(errMsg);
+      }
+    });
   }
 
-  this.userService.forgotPassword({ email: this.emailUsed, otp }).subscribe({
-    next: () => {
-      this.showSnackbar('OTP verified. Set your new password.', true);
-      this.step = 3;
-    },
-    error: (error) => {
-      const errMsg = error?.error?.message?.toLowerCase() || 'Invalid OTP';
-
-      if (errMsg.includes('expired')) {
-        this.showSnackbar('OTP has expired. Please request a new one.');
-        this.step = 1; // go back to email entry OR
-        this.resendOtp(); // optionally auto-resend
-      } else {
-        this.showSnackbar('Invalid OTP');
-      }
-    }
-  });
-}
-
-
-  // === Step 3: Reset Password ===
   resetPassword(): void {
     const { new_password, confirm_password, otp } = this.forgotForm.value;
 
@@ -245,10 +229,14 @@ sendEmail(): void {
     };
 
     this.userService.forgotPassword(data).subscribe({
-      next: () => {
-        this.showSnackbar('Password reset successful. Please login.', true);
-        this.step = 0;
-        this.loginForm.patchValue({ email: this.emailUsed });
+      next: (response) => {
+        if (response.success === true) {
+          this.showSnackbar('Password reset successful. Please login.', true);
+          this.step = 0;
+          this.loginForm.patchValue({ email: this.emailUsed });
+        } else {
+          this.showSnackbar(response.message || 'Failed to reset password');
+        }
       },
       error: () => {
         this.showSnackbar('Failed to reset password');
@@ -256,10 +244,17 @@ sendEmail(): void {
     });
   }
 
-  // === Cleanup ===
   ngOnDestroy(): void {
     if (this.countdownInterval) {
       clearInterval(this.countdownInterval);
     }
   }
+  allowOnlyNumbers(event: KeyboardEvent): void {
+  const charCode = event.key.charCodeAt(0);
+  // Allow only digits (0-9)
+  if (charCode < 48 || charCode > 57) {
+    event.preventDefault();
+  }
+}
+
 }

@@ -13,40 +13,53 @@
 
 
 .gen-breadcrumb {
-  margin-bottom: 1rem;
+
+  //  width: auto;       
+  // position: relative;
+  // background-size: cover;         
+  // background-position: center;    
+  // background-repeat: no-repeat;    
+  // min-height: 500px;             
+  // display: flex;
+  // align-items: center;           
+  // justify-content: center;
+  // padding: 2rem 0rem;
+  // border-radius: 0.5rem;
+  // overflow: hidden;
+  // margin-bottom: 1rem;
 }
 
-
-#gen-footer {
-  padding-top: 1rem;  
-  padding-bottom: 1rem;
-}
-
-
-.mb-gap {
-  margin-bottom: 1rem; 
-}
 .gen-movie-info h3 a {
   cursor: pointer;
-  text-decoration: none; 
-  color: inherit; 
+  text-decoration: none;
+  color: inherit;
 }
 .gen-movie-info h3 a:hover {
   color: red;
 }
+
 .no-movies-container {
   text-align: center;
   padding: 2rem 1rem;
   color: #888;
 }
-
 .no-movies-icon {
   font-size: 3rem;
   margin-bottom: 0.5rem;
   color: #ccc;
 }
-
 .no-movies-text {
   font-size: 1.25rem;
   font-weight: 500;
+}
+
+
+#gen-footer {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+
+.mb-gap {
+  margin-bottom: 1rem;
 }

@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Models\LoginModel;
 use App\Libraries\Jwt;
+use App\Helpers\AuthHelper; 
 use App\Libraries\AuthService;
 use App\Config\Email;
 use App\Models\UsersubModel;
@@ -86,14 +87,23 @@ class GoogleLogin extends BaseController
     } else {
         // Create new user
         $newUserData = [
-            'email' => $email,
-            'username' => explode('@', $email)[0],
-            'password' => null, // no password for Google login
-            'auth_type' => 'google',
-            'status' => 1,
-            'created_at' => $now,
-            'updated_at' => $now,
+            'email'         => $email,
+            'username'      => explode('@', $email)[0],
+            'password'      => '', // no password for Google login
+            'auth_type'     => 'google',
+            'phone'         => '',          
+            'user_type'     => 'user',      
+            'status'        => 1,           
+            'subscription'  => 0,           
+            'isBlocked'     => 0,           
+            'join_date'     => $now,        
+            'date_of_birth' => null,        
+            'country'       => '',          
+            'created_at'    => $now,
+            'updated_at'    => $now,
+            'last_login'    => $now,
         ];
+
 
         $this->loginModel->insert($newUserData);
         $userId = $this->loginModel->insertID();

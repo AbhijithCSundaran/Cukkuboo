@@ -35,7 +35,8 @@ class User extends ResourceController
 {
     $data = $this->request->getJSON(true);
     $user_id = $data['user_id'] ?? 0;
-    $authHeader = $this->request->getHeaderLine('Authorization');
+    // $authHeader = $this->request->getHeaderLine('Authorization');
+    $authHeader = apache_request_headers()["Authorization"];
     $authenticatedUser = $this->authService->getAuthenticatedUser($authHeader);
 
     $userData = array_filter([
@@ -48,8 +49,7 @@ class User extends ResourceController
         'status'       => (!empty($data['status']) && $data['status'] != 0) ? $data['status'] : 1,
         'join_date'    => $data['join_date'] ?? null,
         'user_type'    => $data['user_type'] ?? 'Customer',
-        'date_of_birth'=> $data['date_of_birth'] ?? null,
-        'fcm_token'    => $data['fcm_token'] ?? null
+        'date_of_birth'=> $data['date_of_birth'] ?? null
     ]);
 
     if (!empty($data['password'])) {
@@ -131,9 +131,6 @@ class User extends ResourceController
                     'created_by'    => $user['created_by'],
                     'jwt_token'     => $user['jwt_token'],
                 ];
-                if (!empty($data['fcm_token'])) {
-                    $responseData['fcm_token'] = $user['fcm_token'];
-                }
 
                 return $this->response->setJSON([
                     'success' => true,
@@ -180,10 +177,6 @@ class User extends ResourceController
             'created_by'    => $user['created_by'],
             'jwt_token'     => $user['jwt_token'],
         ];
-        if (!empty($data['fcm_token'])) {
-            $responseData['fcm_token'] = $user['fcm_token'];
-        }
-
         return $this->response->setJSON([
             'success' => true,
             'message' => 'User registered successfully.',
@@ -214,10 +207,6 @@ class User extends ResourceController
             'updated_at'    => $user['updated_at'],
             'updated_by'    => $user['updated_by']
         ];
-        if (!empty($data['fcm_token'])) {
-            $responseData['fcm_token'] = $user['fcm_token'];
-        }
-
         return $this->response->setJSON([
             'success' => true,
             'message' => 'User updated successfully.',
@@ -253,7 +242,8 @@ class User extends ResourceController
 
  public function deleteUser($user_id)
 {
-    $authHeader = $this->request->getHeaderLine('Authorization');
+    // $authHeader = $this->request->getHeaderLine('Authorization');
+    $authHeader = apache_request_headers()["Authorization"];
     $user = $this->authService->getAuthenticatedUser($authHeader);
 
     if (!$user) {
@@ -299,7 +289,8 @@ class User extends ResourceController
 
 public function getUserDetailsById($userId = null)
 {
-    $authHeader = $this->request->getHeaderLine('Authorization');
+    // $authHeader = $this->request->getHeaderLine('Authorization');
+    $authHeader = apache_request_headers()["Authorization"];
     $authuser = $this->authService->getAuthenticatedUser($authHeader);
 
     if (!$authuser) {
@@ -397,7 +388,8 @@ public function getUserList()
     $pageSize  = (int) $this->request->getGet('pageSize');
     $search    = $this->request->getGet('search');
    
-    $authHeader = $this->request->getHeaderLine('Authorization');
+    // $authHeader = $this->request->getHeaderLine('Authorization');
+    $authHeader = apache_request_headers()["Authorization"];
     $authuser = $this->authService->getAuthenticatedUser($authHeader);
         if(!$authuser) 
             return $this->failUnauthorized('Invalid or missing token.');
@@ -451,7 +443,8 @@ public function getStaffList()
     $pageSize  = (int) $this->request->getGet('pageSize');
     $search    = $this->request->getGet('search');
    
-    $authHeader = $this->request->getHeaderLine('Authorization');
+    // $authHeader = $this->request->getHeaderLine('Authorization');
+    $authHeader = apache_request_headers()["Authorization"];
     $authuser = $this->authService->getAuthenticatedUser($authHeader);
         if(!$authuser) 
             return $this->failUnauthorized('Invalid or missing token.');
@@ -546,7 +539,8 @@ public function updateEmailPreference()
 
     public function countActiveUsers()
     {
-        $authHeader = $this->request->getHeaderLine('Authorization');
+        // $authHeader = $this->request->getHeaderLine('Authorization');
+        $authHeader = apache_request_headers()["Authorization"];
         $authuser = $this->authService->getAuthenticatedUser($authHeader);
         if(!$authuser) 
             return $this->failUnauthorized('Invalid or missing token.');
@@ -561,7 +555,8 @@ public function updateEmailPreference()
     }
     public function changePassword()
 {
-    $authHeader = $this->request->getHeaderLine('Authorization');
+    // $authHeader = $this->request->getHeaderLine('Authorization');
+    $authHeader = apache_request_headers()["Authorization"];
     $authuser = $this->authService->getAuthenticatedUser($authHeader);
 
     if (!$authuser) {
@@ -606,7 +601,8 @@ public function updateEmailPreference()
 
     public function deleteUserById($user_id)
 {
-    $authHeader = $this->request->getHeaderLine('Authorization');
+    // $authHeader = $this->request->getHeaderLine('Authorization');
+    $authHeader = apache_request_headers()["Authorization"];
     $user = $this->authService->getAuthenticatedUser($authHeader);
 
     if (!$user) {

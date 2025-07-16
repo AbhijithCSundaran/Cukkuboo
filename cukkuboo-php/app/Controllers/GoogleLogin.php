@@ -87,6 +87,7 @@ class GoogleLogin extends BaseController
     } else {
         // Create new user
         $newUserData = [
+
             'email'         => $email,
             'username'      => explode('@', $email)[0],
             'password'      => '', // no password for Google login
@@ -103,8 +104,7 @@ class GoogleLogin extends BaseController
             'updated_at'    => $now,
             'last_login'    => $now,
         ];
-
-
+     
         $this->loginModel->insert($newUserData);
         $userId = $this->loginModel->insertID();
 

@@ -2079,8 +2079,9 @@ Breadcrum
     text-align: center;
     position: relative;
     background-attachment: fixed !important;
-    background-size: contain !important;
+    background-size: cover;
     background-position: center;
+    background-repeat: repeat-x;
 }
 
 .gen-breadcrumb:before {
@@ -2100,10 +2101,13 @@ Breadcrum
 }
 
 .gen-breadcrumb .gen-breadcrumb-title h1 {
-    font-size: 56px;
-    line-height: 64px;
-    margin-bottom: 15px;
+    font-size: 2.5rem;
+    line-height: 1;
     color: var(--white-color);
+    font-weight: bold;
+    text-shadow: 0 0px 18px rgba(0, 0, 0, 0.7);
+    margin: 0;
+    text-transform: uppercase;
 }
 
 .gen-breadcrumb-container .breadcrumb {
@@ -2165,8 +2169,7 @@ Breadcrum
     }
 
     .gen-breadcrumb .gen-breadcrumb-title h1 {
-        font-size: 42px;
-        line-height: 50px;
+        font-size: 2rem;
     }
 
     .gen-breadcrumb-container .breadcrumb {
@@ -2185,8 +2188,7 @@ Breadcrum
     }
 
     .gen-breadcrumb .gen-breadcrumb-title h1 {
-        font-size: 34px;
-        line-height: 42px;
+        font-size: 1.5rem;
     }
 
     .gen-breadcrumb-container .breadcrumb li,
@@ -4689,7 +4691,7 @@ Carousel Movies
 
 .gen-carousel-movies-style-3 .gen-movie-contain .gen-movie-info h3 {
     font-size: 20px;
-    line-height: 28px;
+    line-height: 1.1;
     font-weight: 400;
     text-overflow: ellipsis;
     overflow: hidden;
@@ -5424,6 +5426,10 @@ Banner
         font-size: 54px;
         line-height: 62px;
     }
+
+    .gen-carousel-movies-style-3 .gen-movie-contain .gen-movie-info h3 {
+        font-size: 18px;
+    }
 }
 
 @media (max-width: 1365px) {
@@ -5450,6 +5456,9 @@ Banner
     .gen-banner-movies .owl-carousel .owl-nav {
         display: none;
     }
+    .gen-carousel-movies-style-3 .gen-movie-contain .gen-movie-info h3 {
+        font-size: 16px;
+    }
 }
 
 @media (max-width: 979px) {
@@ -5462,6 +5471,9 @@ Banner
     .gen-banner-movies .gen-movie-contain .gen-movie-info h3 {
         font-size: 40px;
         line-height: 48px;
+    }
+    .gen-carousel-movies-style-3 .gen-movie-contain .gen-movie-info h3 {
+        font-size: 14px;
     }
 
     .gen-banner-movies .gen-movie-contain .gen-movie-meta-holder p,

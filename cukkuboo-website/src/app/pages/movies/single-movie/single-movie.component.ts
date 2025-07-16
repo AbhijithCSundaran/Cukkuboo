@@ -81,9 +81,12 @@ export class SingleMovieComponent implements OnInit {
         if (res?.success) {
           this.movieData = res.data;
 
-          // Convert percentage rating to 0–5 scale
+           // ✅ Convert percentage rating (0–100) to 0–5 and remove trailing .0
           const ratingPercent = Number(this.movieData.rating || 0);
-          this.movieData.rating = (ratingPercent / 20).toFixed(1);
+          const convertedRating = ratingPercent / 20;
+          this.movieData.rating = Number.isInteger(convertedRating)
+            ? convertedRating.toString()
+            : convertedRating.toFixed(1);
 
           if (autoplay) this.playVideo(this.movieData.video);
           this.pageIndex = 0;

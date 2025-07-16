@@ -23,6 +23,7 @@ export class HistoryComponent implements OnInit {
   totalItems: number = 0;
   stopInfiniteScroll: boolean = false;
   isLoading: boolean = false;
+    randomBanner: string = 'assets/images/background/movie_banner.jpg';
 
   constructor(
     private movieService: MovieService,
@@ -34,7 +35,7 @@ export class HistoryComponent implements OnInit {
     this.fetchHistory();
   }
 
-  fetchHistory(): void {
+ fetchHistory(): void {
     this.isLoading = true;
     this.movieService.getHistory(this.pageIndex, this.pageSize).subscribe({
       next: (res) => {
@@ -42,6 +43,13 @@ export class HistoryComponent implements OnInit {
         if (res?.success && Array.isArray(res.data)) {
           if (this.pageIndex === 0) {
             this.historyList = res.data;
+
+            //  random banner
+            const banners = res.data.map((m: any) => m.banner).filter((b: string) => !!b);
+            if (banners.length) {
+              const randomIndex = Math.floor(Math.random() * banners.length);
+              this.randomBanner = this.imageUrl + banners[randomIndex];
+            }
           } else {
             this.historyList = [...this.historyList, ...res.data];
           }
@@ -58,6 +66,7 @@ export class HistoryComponent implements OnInit {
         console.error('History fetch error:', err);
         this.isLoading = false;
         this.stopInfiniteScroll = true;
+        this.randomBanner = 'assets/images/background/movie_banner.jpg';
       }
     });
   }

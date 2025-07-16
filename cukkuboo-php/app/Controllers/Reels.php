@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 use CodeIgniter\RESTful\ResourceController;
+use App\Helpers\AuthHelper; 
 use App\Models\ReelsModel;
 use App\Models\UserModel;
 use App\Libraries\Jwt;
@@ -141,7 +142,7 @@ class Reels extends ResourceController
     $pageSize  = (int) $this->request->getGet('pageSize');
     $search    = $this->request->getGet('search');
     // $authHeader = $this->request->getHeaderLine('Authorization');
-    $authHeader = apache_request_headers()["Authorization"];
+    $authHeader = AuthHelper::getAuthorizationToken($this->request);
     $user = $this->authService->getAuthenticatedUser($authHeader);
 
     if ($pageSize <= 0) {
@@ -195,8 +196,8 @@ class Reels extends ResourceController
 
 public function getReelById($id)
 {
-    // $authHeader = $this->request->getHeaderLine('Authorization');
-    // $authHeader = apache_request_headers()["Authorization"];
+    
+    //$authHeader = AuthHelper::getAuthorizationToken($this->request);
     // $user = $this->authService->getAuthenticatedUser($authHeader);
     // if(!$user){ 
     //         return $this->failUnauthorized('Invalid or missing token.');
@@ -213,8 +214,7 @@ public function getReelById($id)
 
 public function deleteReel($reels_id)
 {
-    // $authHeader = $this->request->getHeaderLine('Authorization');
-    // $authHeader = apache_request_headers()["Authorization"];
+    //$authHeader = AuthHelper::getAuthorizationToken($this->request);
     // $user = $this->authService->getAuthenticatedUser($authHeader);
     // if (!$user)
     //     return $this->failUnauthorized('Invalid or missing token.');

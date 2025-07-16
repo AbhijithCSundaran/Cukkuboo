@@ -2,7 +2,7 @@
 
 namespace App\Controllers;
 use CodeIgniter\RESTful\ResourceController;
-
+use App\Helpers\AuthHelper; 
 use App\Models\UserModel;
 use App\Libraries\Jwt;
 use App\Models\UsersubModel;
@@ -36,7 +36,7 @@ class User extends ResourceController
     $data = $this->request->getJSON(true);
     $user_id = $data['user_id'] ?? 0;
     // $authHeader = $this->request->getHeaderLine('Authorization');
-    $authHeader = apache_request_headers()["Authorization"];
+     $authHeader = AuthHelper::getAuthorizationToken($this->request);
     $authenticatedUser = $this->authService->getAuthenticatedUser($authHeader);
 
     $userData = array_filter([
@@ -243,7 +243,7 @@ class User extends ResourceController
  public function deleteUser($user_id)
 {
     // $authHeader = $this->request->getHeaderLine('Authorization');
-    $authHeader = apache_request_headers()["Authorization"];
+     $authHeader = AuthHelper::getAuthorizationToken($this->request);
     $user = $this->authService->getAuthenticatedUser($authHeader);
 
     if (!$user) {
@@ -290,7 +290,7 @@ class User extends ResourceController
 public function getUserDetailsById($userId = null)
 {
     // $authHeader = $this->request->getHeaderLine('Authorization');
-    $authHeader = apache_request_headers()["Authorization"];
+     $authHeader = AuthHelper::getAuthorizationToken($this->request);
     $authuser = $this->authService->getAuthenticatedUser($authHeader);
 
     if (!$authuser) {
@@ -389,7 +389,7 @@ public function getUserList()
     $search    = $this->request->getGet('search');
    
     // $authHeader = $this->request->getHeaderLine('Authorization');
-    $authHeader = apache_request_headers()["Authorization"];
+     $authHeader = AuthHelper::getAuthorizationToken($this->request);
     $authuser = $this->authService->getAuthenticatedUser($authHeader);
         if(!$authuser) 
             return $this->failUnauthorized('Invalid or missing token.');
@@ -444,7 +444,7 @@ public function getStaffList()
     $search    = $this->request->getGet('search');
    
     // $authHeader = $this->request->getHeaderLine('Authorization');
-    $authHeader = apache_request_headers()["Authorization"];
+     $authHeader = AuthHelper::getAuthorizationToken($this->request);
     $authuser = $this->authService->getAuthenticatedUser($authHeader);
         if(!$authuser) 
             return $this->failUnauthorized('Invalid or missing token.');
@@ -540,7 +540,7 @@ public function updateEmailPreference()
     public function countActiveUsers()
     {
         // $authHeader = $this->request->getHeaderLine('Authorization');
-        $authHeader = apache_request_headers()["Authorization"];
+        $authHeader = AuthHelper::getAuthorizationToken($this->request);
         $authuser = $this->authService->getAuthenticatedUser($authHeader);
         if(!$authuser) 
             return $this->failUnauthorized('Invalid or missing token.');
@@ -556,7 +556,7 @@ public function updateEmailPreference()
     public function changePassword()
 {
     // $authHeader = $this->request->getHeaderLine('Authorization');
-    $authHeader = apache_request_headers()["Authorization"];
+     $authHeader = AuthHelper::getAuthorizationToken($this->request);
     $authuser = $this->authService->getAuthenticatedUser($authHeader);
 
     if (!$authuser) {
@@ -602,7 +602,7 @@ public function updateEmailPreference()
     public function deleteUserById($user_id)
 {
     // $authHeader = $this->request->getHeaderLine('Authorization');
-    $authHeader = apache_request_headers()["Authorization"];
+     $authHeader = AuthHelper::getAuthorizationToken($this->request);
     $user = $this->authService->getAuthenticatedUser($authHeader);
 
     if (!$user) {

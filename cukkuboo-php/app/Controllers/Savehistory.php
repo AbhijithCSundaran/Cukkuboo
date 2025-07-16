@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use CodeIgniter\RESTful\ResourceController;
+use App\Helpers\AuthHelper; 
 use App\Models\SavehistoryModel;
 use App\Libraries\AuthService;
 
@@ -20,7 +21,7 @@ class Savehistory extends ResourceController
     public function saveMovie()
     {
         // $authHeader = $this->request->getHeaderLine('Authorization');
-        $authHeader = apache_request_headers()["Authorization"];
+        $authHeader = AuthHelper::getAuthorizationToken($this->request);
         $user = $this->authService->getAuthenticatedUser($authHeader);
         $search = $this->request->getGet('search');
         if (!$user || !isset($user['user_id'])) {
@@ -45,7 +46,7 @@ class Savehistory extends ResourceController
     public function getHistory()
 {
     // $authHeader = $this->request->getHeaderLine('Authorization');
-    $authHeader = apache_request_headers()["Authorization"];
+    $authHeader = AuthHelper::getAuthorizationToken($this->request);
     $user = $this->authService->getAuthenticatedUser($authHeader);
 
     if (!$user || !isset($user['user_id'])) {
@@ -84,7 +85,7 @@ class Savehistory extends ResourceController
 public function getById($id)
 {
     // $authHeader = $this->request->getHeaderLine('Authorization');
-    $authHeader = apache_request_headers()["Authorization"];
+    $authHeader = AuthHelper::getAuthorizationToken($this->request);
     $user = $this->authService->getAuthenticatedUser($authHeader);
 
     if (!$user || !isset($user['user_id'])) {
@@ -109,7 +110,7 @@ public function getById($id)
 public function deleteHistory($saveHistoryId)
 {
     // $authHeader = $this->request->getHeaderLine('Authorization');
-    $authHeader = apache_request_headers()["Authorization"];
+    $authHeader = AuthHelper::getAuthorizationToken($this->request);
     $user = $this->authService->getAuthenticatedUser($authHeader);
 
     if (!$user || !isset($user['user_id'])) {
@@ -136,7 +137,7 @@ public function deleteHistory($saveHistoryId)
 public function getUserHistory()
 {
     // $authHeader = $this->request->getHeaderLine('Authorization');
-    $authHeader = apache_request_headers()["Authorization"];
+    $authHeader = AuthHelper::getAuthorizationToken($this->request);
     $authUser = $this->authService->getAuthenticatedUser($authHeader);
 
     if (!$authUser) {
@@ -160,7 +161,7 @@ public function getUserHistory()
 public function clearAllHistory()
 {
     // $authHeader = $this->request->getHeaderLine('Authorization');
-    $authHeader = apache_request_headers()["Authorization"];
+    $authHeader = AuthHelper::getAuthorizationToken($this->request);
     $user = $this->authService->getAuthenticatedUser($authHeader);
 
     if (!$user || !isset($user['user_id'])) {

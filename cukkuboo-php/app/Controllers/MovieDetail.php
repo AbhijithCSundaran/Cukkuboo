@@ -103,28 +103,21 @@ public function getAllMovieDetails()
 
     $builder = $this->moviedetail->builder(); 
     $builder->where('status !=', 9); 
-
     if ($search !== '') {
         $searchWildcard = '%' . str_replace(' ', '%', $search) . '%';
-        $accessMap = [
-            'free' => 1,
-            'premium' => 2
-        ];
-        if (in_array($search, ['1', '2'])) {
-            $accessValue = (int)$search;
+        if ($search === 'free') {
+            $builder->where('access', 1);
+        } elseif ($search === 'premium') {
+            $builder->where('access', 2);
         } else {
-            $accessValue = $accessMap[$search] ?? null;
+            $searchWildcard = '%' . str_replace(' ', '%', $search) . '%';
+            $builder->groupStart()
+                ->like('LOWER(title)', $searchWildcard)
+                ->orLike('LOWER(cast_details)', $searchWildcard)
+                ->groupEnd();
         }
-        $builder->groupStart()
-            ->like('LOWER(title)', $searchWildcard)
-            ->orLike('LOWER(cast_details)', $searchWildcard);
-
-        if ($accessValue !== null) {
-            $builder->orWhere('access', $accessValue);
-        }
-
-        $builder->groupEnd();
     }
+
     if (!is_numeric($pageIndex) || !is_numeric($pageSize) || $pageIndex < 0 || $pageSize <= 0) {
         $movies = $builder->orderBy('created_on', 'DESC')->get()->getResult();
 

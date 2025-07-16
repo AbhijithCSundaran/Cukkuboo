@@ -137,4 +137,8 @@ $routes->get('watch/user', 'WatchLater::getUserWatchLater');
 $routes->delete('watch/delete/(:num)', 'WatchLater::delete/$1');
 $routes->delete('watch/clear-all', 'WatchLater::clearAllHistory');
 
+$routes->post('support/submit', 'Support::submitIssue');
+
+
+
 ?>

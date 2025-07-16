@@ -152,18 +152,13 @@ export class ProfileComponent implements OnInit {
       // countryCode: ['', Validators.required],
       phone: ['', [Validators.required,
 
-      Validators.pattern('^[0-9]{1,15}$')
+      Validators.pattern('^[0-9]{6,15}$')
       ]],
       subscription: [''],
       country_code: ['+91']
+ });
 
-
-    });
-
-
-
-
-    this.changePasswordForm = this.fb.group({
+ this.changePasswordForm = this.fb.group({
       currentPassword: ['', Validators.required],
       newPassword: ['', Validators.required],
       confirmPassword: ['', Validators.required],
@@ -225,7 +220,12 @@ export class ProfileComponent implements OnInit {
   }
   isFormChanged(): boolean {
     const currentValue = this.profileForm.getRawValue();
+
     return JSON.stringify(currentValue) !== JSON.stringify(this.initialFormValue);
+  }
+  isPhoneValid(): boolean {
+    const phone = this.profileForm.get('phone')?.value;
+    return phone?.length >= 7;
   }
   //update Profile
   onSubmit(): void {

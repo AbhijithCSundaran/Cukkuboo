@@ -36,10 +36,10 @@
   align-items: flex-start;
 }
 
-.gen-movie-info h3 {
-  flex: 1;
-  margin-right: 8px;
-}
+// .gen-movie-info h3 {
+//   flex: 1;
+//   margin-right: 8px;
+// }
 
 .gen-movie-info h3 a {
   cursor: pointer;
@@ -195,14 +195,10 @@
     padding: 0.5rem;
   }
 
-  .gen-movie-info h3 {
-    font-size: 14px;
-  }
+  // .gen-movie-info h3 {
+  //   font-size: 14px;
+  // }
 
-  .gen-breadcrumb-title h1 {
-    font-size: 20px;
-    text-align: center;
-  }
 
   .btn-danger.btn-sm {
     font-size: 12px;

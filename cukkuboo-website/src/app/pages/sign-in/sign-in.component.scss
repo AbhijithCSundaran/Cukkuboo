@@ -114,6 +114,9 @@ mat-form-field {
   color: var(--primary-color);
   text-decoration: underline;
   cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  line-height: 1.5;
 }
 
 .text-muted {
@@ -134,26 +137,36 @@ mat-form-field {
   margin-bottom: 1rem;
 }
 
-/* Red email style */
 .red-email {
   color: var(--primary-color);
+  font-weight: bold;
 }
-
+ 
 /* Countdown section */
 .otp-countdown-wrapper {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding-top: 12px; /* spacing above countdown/resend link */
+  padding-top: 12px;
+  min-height: 24px; /* Ensures equal height even when switching */
 }
 
-/* Countdown sentence */
 .countdown-text {
   font-size: 0.875rem;
-  color: #ffffff; /* default white */
+  color: #ffffff;
+  display: inline-flex;
+  align-items: center;
+  line-height: 1.5;
 }
 
-/* Countdown number in red */
 .red-countdown {
   color: var(--primary-color);
+  font-weight: 700; // optional: consistent with <strong>
+  vertical-align: baseline; // 🔧 Fixes alignment issue
+  font-size: inherit;       // ensures it matches the parent
+  line-height: inherit;     // match parent line height
+}
+.red-countdown {
+  position: relative;
+  top: 1px; // tweak this up or down (1px to -1px) to align perfectly
 }

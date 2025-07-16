@@ -45,15 +45,17 @@ class User extends ResourceController
         'password'     => $data['password'] ?? null,
         'country'      => $data['country'] ?? null,
         'subscription' => $data['subscription'] ?? 'free',
-        'status'       => $data['status'] ?? 1,
+        'status'       => (!empty($data['status']) && $data['status'] != 0) ? $data['status'] : 1,
         'join_date'    => $data['join_date'] ?? null,
         'user_type'    => $data['user_type'] ?? 'Customer',
-        'date_of_birth'=> $data['date_of_birth'] ?? null        
+        'date_of_birth'=> $data['date_of_birth'] ?? null,
+        'fcm_token'    => $data['fcm_token'] ?? null
     ]);
 
     if (!empty($data['password'])) {
         $userData['password'] = password_hash($data['password'], PASSWORD_BCRYPT);
     }
+
     if (!$user_id) {
         if (empty($data['phone']) && empty($data['email'])) {
             return $this->response->setJSON([
@@ -61,10 +63,41 @@ class User extends ResourceController
                 'message' => 'Phone or email is required.'
             ]);
         }
+        if (!empty($data['email'])) {
+        $emailExists = $this->UserModel->checkExistingActiveUser('email', $data['email']);
+        if ($emailExists) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'Email already in use by an active user.'
+            ]);
+        }
+    }
 
+    if (!empty($data['phone'])) {
+        $phoneExists = $this->UserModel->checkExistingActiveUser('phone', $data['phone']);
+        if ($phoneExists) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'Phone already in use by an active user.'
+            ]);
+        }
+    }
         $existingUser = $this->UserModel->isUserExists($data['phone'] ?? null, $data['email'] ?? null);
 
         if ($existingUser) {
+            $conflictUser = $this->UserModel->where('status !=', 9)
+                                            ->groupStart()
+                                            ->where('email', $data['email'] ?? '')
+                                            ->orWhere('phone', $data['phone'] ?? '')
+                                            ->groupEnd()
+                                            ->first();
+
+            if ($conflictUser && $conflictUser['user_id'] != $existingUser['user_id']) {
+                return $this->response->setJSON([
+                    'success' => false,
+                    'message' => 'Email or phone is already in use by another active user.'
+                ]);
+            }
             if ((int)$existingUser['status'] == 9) {
                 $userData['join_date']  = $userData['join_date'] ?? date('Y-m-d');
                 $userData['created_at'] = date('Y-m-d H:i:s');
@@ -83,24 +116,29 @@ class User extends ResourceController
 
                 $user = $this->UserModel->find($newUserId);
 
+                $responseData = [
+                    'user_id'       => $user['user_id'],
+                    'username'      => $user['username'],
+                    'email'         => $user['email'],
+                    'password'      => $user['password'],
+                    'phone'         => $user['phone'],
+                    'status'        => $user['status'],
+                    'join_date'     => $user['join_date'],
+                    'date_of_birth' => $user['date_of_birth'],
+                    'subscription'  => $user['subscription'],
+                    'user_type'     => $user['user_type'],
+                    'created_at'    => $user['created_at'],
+                    'created_by'    => $user['created_by'],
+                    'jwt_token'     => $user['jwt_token'],
+                ];
+                if (!empty($data['fcm_token'])) {
+                    $responseData['fcm_token'] = $user['fcm_token'];
+                }
+
                 return $this->response->setJSON([
                     'success' => true,
                     'message' => 'User re-registered successfully.',
-                    'data' => [
-                        'user_id'       => $user['user_id'],
-                        'username'      => $user['username'],
-                        'email'         => $user['email'],
-                        'password'      => $user['password'],
-                        'phone'         => $user['phone'],
-                        'status'        => $user['status'],
-                        'join_date'     => $user['join_date'],
-                        'date_of_birth' => $user['date_of_birth'], 
-                        'subscription'  => $user['subscription'],
-                        'user_type'     => $user['user_type'],
-                        'created_at'    => $user['created_at'],
-                        'created_by'    => $user['created_by'],
-                        'jwt_token'     => $user['jwt_token']
-                    ]
+                    'data'    => $responseData
                 ]);
             } else {
                 return $this->response->setJSON([
@@ -109,6 +147,7 @@ class User extends ResourceController
                 ]);
             }
         }
+
         $userData['join_date']  = $userData['join_date'] ?? date('Y-m-d');
         $userData['created_at'] = date('Y-m-d H:i:s');
 
@@ -126,26 +165,32 @@ class User extends ResourceController
 
         $user = $this->UserModel->find($newUserId);
 
+        $responseData = [
+            'user_id'       => $user['user_id'],
+            'username'      => $user['username'],
+            'email'         => $user['email'],
+            'password'      => $user['password'],
+            'phone'         => $user['phone'],
+            'status'        => $user['status'],
+            'join_date'     => $user['join_date'],
+            'date_of_birth' => $user['date_of_birth'],
+            'subscription'  => $user['subscription'],
+            'user_type'     => $user['user_type'],
+            'created_at'    => $user['created_at'],
+            'created_by'    => $user['created_by'],
+            'jwt_token'     => $user['jwt_token'],
+        ];
+        if (!empty($data['fcm_token'])) {
+            $responseData['fcm_token'] = $user['fcm_token'];
+        }
+
         return $this->response->setJSON([
             'success' => true,
             'message' => 'User registered successfully.',
-            'data' => [
-                'user_id'       => $user['user_id'],
-                'username'      => $user['username'],
-                'email'         => $user['email'],
-                'password'      => $user['password'],
-                'phone'         => $user['phone'],
-                'status'        => $user['status'],
-                'join_date'     => $user['join_date'],
-                'date_of_birth' => $user['date_of_birth'], 
-                'subscription'  => $user['subscription'],
-                'user_type'     => $user['user_type'],
-                'created_at'    => $user['created_at'],
-                'created_by'    => $user['created_by'],
-                'jwt_token'     => $user['jwt_token']
-            ]
+            'data'    => $responseData
         ]);
     }
+
     if ($authenticatedUser) {
         $userData['updated_at'] = date('Y-m-d H:i:s');
         $userData['updated_by'] = $authenticatedUser['user_id'];
@@ -153,33 +198,38 @@ class User extends ResourceController
         $this->UserModel->updateUser($user_id, $userData);
         $user = $this->UserModel->find($user_id);
 
+        $responseData = [
+            'user_id'       => $user['user_id'],
+            'username'      => $user['username'],
+            'email'         => $user['email'],
+            'password'      => $user['password'],
+            'phone'         => $user['phone'],
+            'status'        => $user['status'],
+            'join_date'     => $user['join_date'],
+            'date_of_birth' => $user['date_of_birth'],
+            'subscription'  => $user['subscription'],
+            'user_type'     => $user['user_type'],
+            'created_at'    => $user['created_at'],
+            'created_by'    => $user['created_by'],
+            'updated_at'    => $user['updated_at'],
+            'updated_by'    => $user['updated_by']
+        ];
+        if (!empty($data['fcm_token'])) {
+            $responseData['fcm_token'] = $user['fcm_token'];
+        }
+
         return $this->response->setJSON([
             'success' => true,
             'message' => 'User updated successfully.',
-            'data' => [
-                'user_id'       => $user['user_id'],
-                'username'      => $user['username'],
-                'email'         => $user['email'],
-                'password'      => $user['password'],
-                'phone'         => $user['phone'],
-                'status'        => $user['status'],
-                'join_date'     => $user['join_date'],
-                'date_of_birth' => $user['date_of_birth'], 
-                'subscription'  => $user['subscription'],
-                'user_type'     => $user['user_type'],
-                'created_at'    => $user['created_at'],
-                'created_by'    => $user['created_by'],
-                'updated_at'    => $user['updated_at'],
-                'updated_by'    => $user['updated_by']
-            ]
-        ]);
-    } else {
-        return $this->response->setJSON([
-            'success' => false,
-            'message' => 'Unauthorised User',
-            'data'    => null
+            'data'    => $responseData
         ]);
     }
+
+    return $this->response->setJSON([
+        'success' => false,
+        'message' => 'Unauthorised User',
+        'data'    => null
+    ]);
 }
 
     //  Get user details

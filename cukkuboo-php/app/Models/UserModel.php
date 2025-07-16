@@ -72,16 +72,22 @@ class UserModel extends Model
         ->where('user_id', $user_id)
         ->update(['status' => $status]);
     return true;
-}
+    }
 
     
     public function getUserById($userId)
-{
+    {
     return $this->select('*') 
                 ->where('user_id', $userId)
                 ->first();
-}
+    }
 
+    public function checkExistingActiveUser($field, $value)
+    {
+    return $this->where($field, $value)
+                ->where('status !=', 9)
+                ->first();
+    }
 
 
     public function findUserByToken($token)

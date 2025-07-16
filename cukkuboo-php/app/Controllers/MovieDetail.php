@@ -103,7 +103,6 @@ public function getAllMovieDetails()
 
     $builder = $this->moviedetail->builder(); 
     $builder->where('status !=', 9); 
-
     if ($search !== '') {
         $searchWildcard = '%' . str_replace(' ', '%', $search) . '%';
         if ($search === 'free') {

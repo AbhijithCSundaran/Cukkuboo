@@ -1,8 +1,6 @@
-
 .mr-2 {
   margin-right: 10px;
 }
-
 
 .search-section {
   padding: 1rem;
@@ -12,34 +10,25 @@
   margin-bottom: 1rem;
 }
 
-
 .gen-breadcrumb {
   margin-bottom: 1rem;
 }
-
 
 #gen-footer {
   padding-top: 1rem;
   padding-bottom: 1rem;
 }
 
-
 .movie-class {
   display: flex;
   flex-wrap: wrap;
 }
-
 
 .gen-movie-info {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
 }
-
-// .gen-movie-info h3 {
-//   flex: 1;
-//   margin-right: 8px;
-// }
 
 .gen-movie-info h3 a {
   cursor: pointer;
@@ -70,7 +59,7 @@
   margin-right: 4px;
 }
 
-/* Modal */
+/* ===== Modal ===== */
 .modal {
   display: none;
   position: fixed;
@@ -145,8 +134,10 @@
   color: white;
 }
 
+/* ===== Movie Card ===== */
 .gen-movie-img {
   position: relative;
+  width: 100%;
 }
 
 .gen-movie-img img {
@@ -155,34 +146,45 @@
   display: block;
 }
 
+/* Perfectly center the play button */
 .gen-movie-img .centered-play {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .gen-movie-img .gen-button.playBut {
   background-color: rgba(0, 0, 0, 0.6);
   border-radius: 50%;
-  padding: 12px;
+  padding: 14px;
   font-size: 20px;
   color: #fff;
   transition: background-color 0.3s;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .gen-movie-img .gen-button.playBut:hover {
   background-color: #e53935;
 }
 
-
+/* Watched On label */
 .gen-movie-img .bg-opacity-75 {
   font-size: 12px;
   padding: 4px 8px;
 }
 
-/*  2 cards per row on screens below 992px */
+/* ===== Responsive Cards ===== */
+
+/* 2 cards per row below 992px */
 @media (max-width: 991.98px) {
   .movie-class > div {
     flex: 0 0 50% !important;
@@ -194,11 +196,6 @@
   .gen-movie-contain {
     padding: 0.5rem;
   }
-
-  // .gen-movie-info h3 {
-  //   font-size: 14px;
-  // }
-
 
   .btn-danger.btn-sm {
     font-size: 12px;

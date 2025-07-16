@@ -9,10 +9,12 @@ import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { InfiniteScrollDirective } from '../../core/directives/infinite-scroll/infinite-scroll.directive';
 
-
 @Component({
   selector: 'app-movies',
-  imports: [CommonModule, RouterLink,
+  standalone: true,
+  imports: [
+    CommonModule,
+    RouterLink,
     MatFormFieldModule,
     MatInputModule,
     FormsModule,
@@ -34,15 +36,18 @@ export class MoviesComponent implements OnInit {
   stopInfiniteScroll: boolean = false;
   showSearch: boolean = false;
   movieType: '' | 'latest' | 'trending' | 'most_viewed' = '';
+  movieTypeTitle: string = '';
+  randomBanner: string = 'assets/images/background/movie_banner.jpg';
 
   constructor(
     private route: ActivatedRoute,
-    private movieService: MovieService,
+    private movieService: MovieService
   ) {
     this.route.queryParams.subscribe(params => {
       this.showSearch = !!params['search'];
-      this.movieType = params['typ'] ? params['typ'] : '';
-      this.searchText = ''
+      this.movieType = params['typ'] || '';
+      this.movieTypeTitle = this.movieType.replace(/_/g, ' ');
+      this.searchText = '';
       setTimeout(() => {
         if (this.showSearch) {
           this.searchInput.nativeElement.focus();
@@ -54,9 +59,7 @@ export class MoviesComponent implements OnInit {
   ngOnInit(): void {
     this.loadMovies(this.pageIndex, this.pageSize, this.searchText);
   }
-  // isValidMovieType(value: any) {
-  //   return ['', 'latest', 'trending', 'most_viewed'].includes(value);
-  // }
+
   onScroll(event: any) {
     this.pageIndex++;
     this.loadMovies(this.pageIndex, this.pageSize, this.searchText);
@@ -66,14 +69,31 @@ export class MoviesComponent implements OnInit {
     this.movieService.listMovies(pageIndex, pageSize, search, this.movieType).subscribe({
       next: (res) => {
         if (res?.success) {
-          if (res.data.length)
+          if (res.data.length) {
             this.movies = [...this.movies, ...res.data];
-          else
+
+           
+            if (pageIndex === 0) {
+              const banners = res.data
+               .map((m: any) => m.banner)
+                .filter((b: string) => !!b);
+
+              if (banners.length) {
+                const randomIndex = Math.floor(Math.random() * banners.length);
+                this.randomBanner = this.imageUrl + banners[randomIndex];
+              }
+            }
+          } else {
             this.stopInfiniteScroll = true;
+            if (pageIndex === 0) {
+              this.randomBanner = 'assets/images/background/movie_banner.jpg';
+            }
+          }
         }
       },
       error: (error) => {
         console.error(error);
+        this.randomBanner = 'assets/images/background/movie_banner.jpg';
       }
     });
   }
@@ -87,5 +107,4 @@ export class MoviesComponent implements OnInit {
       this.loadMovies(this.pageIndex, this.pageSize, this.searchText);
     }, 400);
   }
-
 }

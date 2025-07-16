@@ -10,6 +10,7 @@ use App\Models\UsersubModel;
 use App\Models\UserModel;
 use App\Models\SubscriptionPlanModel;
 use App\Models\NotificationModel;
+use App\Helpers\AuthHelper;
 class Login extends BaseController
 {
     protected $loginModel;
@@ -195,7 +196,7 @@ class Login extends BaseController
     public function logout()
     {
     // $authHeader = $this->request->getHeaderLine('Authorization');
-    $authHeader = apache_request_headers()["Authorization"];
+    $authHeader = AuthHelper::getAuthorizationToken($this->request);
     $auth = new AuthService();
     $user=$auth->getAuthenticatedUser($authHeader);
 

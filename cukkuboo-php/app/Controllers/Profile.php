@@ -8,6 +8,7 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 use App\Libraries\AuthService;
 use App\Models\LoginModel;
+use App\Helpers\AuthHelper; 
 
 class Profile extends BaseController
 {
@@ -20,7 +21,7 @@ class Profile extends BaseController
 	}
     public function index() {
         // $authHeader = $this->request->getHeaderLine('Authorization');
-        $authHeader = apache_request_headers()["Authorization"];
+        $authHeader = AuthHelper::getAuthorizationToken($this->request);
         $user = $this->authService->getAuthenticatedUser($authHeader);
         if ($user) {
             $data['user'] = $this->session->get('username');

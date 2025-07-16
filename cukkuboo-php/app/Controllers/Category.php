@@ -4,6 +4,7 @@ namespace App\Controllers;
  
 use App\Models\CategoryModel;
 use CodeIgniter\RESTful\ResourceController;
+use App\Helpers\AuthHelper;
 use App\Libraries\Jwt;
 use App\Libraries\AuthService;
  
@@ -20,7 +21,8 @@ class Category extends ResourceController
  
     public function saveCategory()
     {
-        $authHeader = $this->request->getHeaderLine('Authorization');
+        // $authHeader = $this->request->getHeaderLine('Authorization');
+         $authHeader = AuthHelper::getAuthorizationToken($this->request);
         $user = $this->authService->getAuthenticatedUser($authHeader);
  
         if (!$user) {
@@ -129,7 +131,8 @@ public function getCategoryById($id = null)
  
     public function delete($category_id = null)
     {
-        $authHeader = $this->request->getHeaderLine('Authorization');
+        // $authHeader = $this->request->getHeaderLine('Authorization');
+         $authHeader = AuthHelper::getAuthorizationToken($this->request);
         $user = $this->authService->getAuthenticatedUser($authHeader);
  
         if (!$user) {

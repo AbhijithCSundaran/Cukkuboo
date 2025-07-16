@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use CodeIgniter\RESTful\ResourceController;
+use App\Helpers\AuthHelper;
 use App\Models\UserModel;
 use App\Libraries\Jwt;
 use App\Libraries\AuthService;
@@ -25,7 +26,8 @@ class Uploads extends ResourceController
     {
         ini_set('max_execution_time', '0');
         ini_set('upload_max_filesize', '20000M');
-        $authHeader = $this->request->getHeaderLine('Authorization');
+        // $authHeader = $this->request->getHeaderLine('Authorization');
+        $authHeader = AuthHelper::getAuthorizationToken($this->request);
         $user = $this->authService->getAuthenticatedUser($authHeader);
         if(!$user) 
             return $this->failUnauthorized('Invalid or missing token.');
@@ -60,8 +62,9 @@ class Uploads extends ResourceController
     }
     public function uploadImage()
 {
-    $authHeader = $this->request->getHeaderLine('Authorization');
-        $user = $this->authService->getAuthenticatedUser($authHeader);
+    // $authHeader = $this->request->getHeaderLine('Authorization');
+    $authHeader = AuthHelper::getAuthorizationToken($this->request);
+    $user = $this->authService->getAuthenticatedUser($authHeader);
         if(!$user) 
             return $this->failUnauthorized('Invalid or missing token.');
     $image = $this->request->getFile('image');

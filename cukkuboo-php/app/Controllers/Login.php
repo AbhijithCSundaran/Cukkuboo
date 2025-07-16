@@ -10,6 +10,7 @@ use App\Models\UsersubModel;
 use App\Models\UserModel;
 use App\Models\SubscriptionPlanModel;
 use App\Models\NotificationModel;
+use App\Helpers\AuthHelper;
 class Login extends BaseController
 {
     protected $loginModel;
@@ -40,14 +41,38 @@ class Login extends BaseController
     ->where('status', 1)
     ->first();
 
-    if (!$user || !password_verify($data['password'], $user['password'])) {
+    if (!$user) {
+        $suspendedUser = $this->loginModel
+            ->where('email', $data['email'])
+            ->where('status', 2)
+            ->first();
+
+        if ($suspendedUser) {
+            return $this->response->setStatusCode(200)->setJSON([
+                'success' => false,
+                'message' => 'Your account has been suspended by the admin.',
+                'data' => []
+            ]);
+        }
+        $deletedUser = $this->loginModel
+            ->where('email', $data['email'])
+            ->where('status', 9)
+            ->first();
+
+        if ($deletedUser) {
+            return $this->response->setStatusCode(200)->setJSON([
+                'success' => false,
+                'message' => 'Invalid email or password.',
+                'data' => []
+            ]);
+        }
         return $this->response->setStatusCode(200)->setJSON([
             'success' => false,
             'message' => 'Invalid email or password.',
             'data' => []
         ]);
     }
-    if ($user['status'] == 9) {
+    if (!password_verify($data['password'], $user['password'])) {
         return $this->response->setStatusCode(200)->setJSON([
             'success' => false,
             'message' => 'Invalid email or password.',
@@ -55,7 +80,6 @@ class Login extends BaseController
         ]);
     }
     $now = date('Y-m-d H:i:s');
-
     $jwt = new Jwt();
     $token = $jwt->encode(['user_id' => $user['user_id']]);
     $updateData = [
@@ -171,7 +195,8 @@ class Login extends BaseController
 
     public function logout()
     {
-    $authHeader = $this->request->getHeaderLine('Authorization');
+    // $authHeader = $this->request->getHeaderLine('Authorization');
+    $authHeader = AuthHelper::getAuthorizationToken($this->request);
     $auth = new AuthService();
     $user=$auth->getAuthenticatedUser($authHeader);
 

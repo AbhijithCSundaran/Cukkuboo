@@ -12,6 +12,7 @@ $routes->get('/', 'Home::index');
 $routes->post('login/login', 'Login::loginFun',['filter' => 'cors']);
 $routes->post('login/logout', 'Login::logout');
 $routes->post('user/change-password', 'User::changePassword');
+$routes->post('login/google-login', 'GoogleLogin::googleLogin');
 //User 
 
 $routes->post('user/register','User::registerFun');

@@ -134,6 +134,7 @@ export class SignInComponent implements OnDestroy {
   // === Step 1: Send OTP ===
 sendEmail(): void {
   const email = this.forgotForm.value.email;
+
   if (!email) {
     this.showSnackbar('Email is required');
     return;
@@ -145,18 +146,21 @@ sendEmail(): void {
       this.emailUsed = email;
       this.step = 2;
       this.startResendCountdown();
+      this.startOtpExpiryCountdown(); // if you added it
     },
     error: (error) => {
-      const errMsg = error?.error?.message || 'Failed to send OTP';
-      
-      if (errMsg.toLowerCase().includes('not registered') || errMsg.toLowerCase().includes('invalid email')) {
-        this.showSnackbar('Invalid Mail ID');
+      const errMsg = error?.error?.message?.toLowerCase() || 'Failed to send OTP';
+
+      if (errMsg.includes('user not found') || errMsg.includes('not registered') || errMsg.includes('invalid email')) {
+        this.showSnackbar('User not found');
+        this.step = 1; // Stay on step 1
       } else {
-        this.showSnackbar(errMsg);
+        this.showSnackbar('Failed to send OTP');
       }
     }
   });
 }
+
 
 
   // === Step 2: Resend OTP ===
@@ -191,24 +195,33 @@ sendEmail(): void {
   }
 
   // === Step 2: Submit OTP ===
-  submitOtp(): void {
-    const { otp } = this.forgotForm.value;
+ submitOtp(): void {
+  const { otp } = this.forgotForm.value;
 
-    if (!otp) {
-      this.showSnackbar('Please enter the OTP');
-      return;
-    }
+  if (!otp) {
+    this.showSnackbar('Please enter the OTP');
+    return;
+  }
 
-    this.userService.forgotPassword({ email: this.emailUsed, otp }).subscribe({
-      next: () => {
-        this.showSnackbar('OTP verified. Set your new password.', true);
-        this.step = 3;
-      },
-      error: () => {
+  this.userService.forgotPassword({ email: this.emailUsed, otp }).subscribe({
+    next: () => {
+      this.showSnackbar('OTP verified. Set your new password.', true);
+      this.step = 3;
+    },
+    error: (error) => {
+      const errMsg = error?.error?.message?.toLowerCase() || 'Invalid OTP';
+
+      if (errMsg.includes('expired')) {
+        this.showSnackbar('OTP has expired. Please request a new one.');
+        this.step = 1; // go back to email entry OR
+        this.resendOtp(); // optionally auto-resend
+      } else {
         this.showSnackbar('Invalid OTP');
       }
-    });
-  }
+    }
+  });
+}
+
 
   // === Step 3: Reset Password ===
   resetPassword(): void {

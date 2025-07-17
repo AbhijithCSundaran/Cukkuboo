@@ -173,20 +173,14 @@ export class SignUpComponent implements OnInit {
     this.signUpForm = this.fb.group(
       {
         username: ['', Validators.required],
-        email: ['', [Validators.required, Validators.email, ValidationService.emailValidator]],
+        email: ['', [Validators.required, ValidationService.emailValidator]],
         countryCode: [this.selectedCountryCode, Validators.required],
-        phone: [
-          '',
-          [
-            Validators.required,
-            Validators.pattern(/^\d{6,15}$/)
-          ]
-        ],
+        phone: ['', [Validators.required, Validators.pattern(/^\d{6,15}$/)]],
         date_of_birth: ['', [Validators.required, this.ageValidator(18)]],
         password: ['', [Validators.required, Validators.minLength(8), ValidationService.passwordValidator]],
         confirmPassword: ['', Validators.required]
       },
-      { validators: [this.passwordMatchValidator] }
+      { validators: [this.passwordConfirming] }
     );
   }
 
@@ -207,6 +201,26 @@ export class SignUpComponent implements OnInit {
     const password = group.get('password')?.value;
     const confirm = group.get('confirmPassword')?.value;
     return password === confirm ? null : { passwordMismatch: true };
+  }
+
+  passwordConfirming(group: AbstractControl): null | { [key: string]: boolean } {
+    const passwordControl = group.get('password');
+    const confirmPasswordControl = group.get('confirmPassword');
+    if (!passwordControl || !confirmPasswordControl) {
+      return null;
+    }
+    const password = passwordControl.value;
+    const confirmPassword = confirmPasswordControl.value;
+    if (password && confirmPassword && password !== confirmPassword) {
+      confirmPasswordControl.setErrors({ passwordsMismatch: true }); // Set the error on the `confirm_password` control
+      return { passwordsMismatch: true };
+    } else if (!confirmPassword) {
+      confirmPasswordControl.setErrors({ required: true }); // Clear the error if passwords match
+      return { required: true };
+    } else {
+      confirmPasswordControl.setErrors(null); // Clear the error if passwords match
+      return null;
+    }
   }
 
   onNumberInput(event: any): void {

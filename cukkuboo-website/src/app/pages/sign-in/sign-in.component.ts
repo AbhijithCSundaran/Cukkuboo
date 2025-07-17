@@ -13,6 +13,7 @@ import { StorageService } from '../../core/services/TempStorage/storageService';
 import { UserService } from '../../services/user/user.service';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { SubscriptionStatus } from '../../model/enum';
+import { ValidationService } from '../../core/services/validation.service';
 
 @Component({
   selector: 'app-sign-in',
@@ -54,15 +55,15 @@ export class SignInComponent implements OnDestroy {
     @Optional() @Inject(MatDialogRef<SignInComponent>) public dialogRef: MatDialogRef<SignInComponent>
   ) {
     this.loginForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
+      email: ['', [Validators.required, Validators.email,ValidationService.emailValidator]],
       password: ['', Validators.required],
       rememberMe: [false]
     });
 
     this.forgotForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
+      email: ['', [Validators.required, Validators.email,ValidationService.emailValidator]],
       otp: [''],
-      new_password: ['', [Validators.required, Validators.minLength(8)]],
+      new_password: ['', [Validators.required, Validators.minLength(8),ValidationService.passwordValidator]],
       confirm_password: ['', [Validators.required, Validators.minLength(8)]]
     });
   }
@@ -250,11 +251,11 @@ export class SignInComponent implements OnDestroy {
     }
   }
   allowOnlyNumbers(event: KeyboardEvent): void {
-  const charCode = event.key.charCodeAt(0);
-  // Allow only digits (0-9)
-  if (charCode < 48 || charCode > 57) {
-    event.preventDefault();
+    const charCode = event.key.charCodeAt(0);
+    // Allow only digits (0-9)
+    if (charCode < 48 || charCode > 57) {
+      event.preventDefault();
+    }
   }
-}
 
 }

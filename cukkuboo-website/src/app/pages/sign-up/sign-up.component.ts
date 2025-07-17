@@ -230,57 +230,62 @@ export class SignUpComponent implements OnInit {
     this.signUpForm.get('phone')?.setValue(filteredValue, { emitEvent: false });
   }
 
-  onSubmit(): void {
-    this.signUpForm.markAllAsTouched();
+onSubmit(): void {
+  this.signUpForm.markAllAsTouched();
 
-    if (this.signUpForm.hasError('passwordMismatch')) {
-      this.snackBar.open('Password and Confirm Password do not match.', '', {
-        duration: 3000,
-        verticalPosition: 'top',
-        panelClass: ['snackbar-error']
-      });
-      return;
-    }
+  if (this.signUpForm.hasError('passwordMismatch')) {
+    this.snackBar.open('Password and Confirm Password do not match.', '', {
+      duration: 3000,
+      verticalPosition: 'top',
+      panelClass: ['snackbar-error']
+    });
+    return;
+  }
 
-    if (this.signUpForm.invalid) {
-      this.snackBar.open('Please fill all required fields correctly.', '', {
-        duration: 3000,
-        verticalPosition: 'top',
-        panelClass: ['snackbar-error']
-      });
-      return;
-    }
+  if (this.signUpForm.invalid) {
+    this.snackBar.open('Please fill all required fields correctly.', '', {
+      duration: 3000,
+      verticalPosition: 'top',
+      panelClass: ['snackbar-error']
+    });
+    return;
+  }
 
-    const formData = this.signUpForm.value;
-    formData.phone = `${formData.countryCode}${formData.phone}`;
+  // Don't change phone value inside the form
+  const formValue = this.signUpForm.value;
+  const formData = {
+    ...formValue,
+    phone: `${formValue.countryCode}${formValue.phone}` // just for API
+  };
 
-    this.userService.register(formData).subscribe({
-      next: (response) => {
-        if (response?.success) {
-          this.snackBar.open('Registration successful!', '', {
-            duration: 3000,
-            verticalPosition: 'top',
-            panelClass: ['snackbar-success']
-          });
-          this.signUpForm.reset();
-          this.router.navigate(['/signin']);
-        } else {
-          this.snackBar.open(response?.message || 'Registration failed', '', {
-            duration: 3000,
-            verticalPosition: 'top',
-            panelClass: ['snackbar-error']
-          });
-        }
-      },
-      error: (err) => {
-        this.snackBar.open(err?.error?.message || 'Something went wrong. Please try again.', '', {
+  this.userService.register(formData).subscribe({
+    next: (response) => {
+      if (response?.success) {
+        this.snackBar.open('Registration successful!', '', {
+          duration: 3000,
+          verticalPosition: 'top',
+          panelClass: ['snackbar-success']
+        });
+        this.signUpForm.reset();
+        this.router.navigate(['/signin']);
+      } else {
+        this.snackBar.open(response?.message || 'Registration failed', '', {
           duration: 3000,
           verticalPosition: 'top',
           panelClass: ['snackbar-error']
         });
       }
-    });
-  }
+    },
+    error: (err) => {
+      this.snackBar.open(err?.error?.message || 'Something went wrong. Please try again.', '', {
+        duration: 3000,
+        verticalPosition: 'top',
+        panelClass: ['snackbar-error']
+      });
+    }
+  });
+}
+
 
   navigateToSignIn(): void {
     this.router.navigate(['/signin']);

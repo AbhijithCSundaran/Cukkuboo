@@ -94,35 +94,43 @@ class GoogleLogin extends BaseController
             'last_login' => $now
         ]);
     } else {
+        $userId = null;
+        $now = date('Y-m-d H:i:s');
         $newUserData = [
-            'email'         => $email,
-            'username'      => explode('@', $email)[0],
-            'password'      => '',
-            'auth_type'     => 'google',
-            'phone'         => '',
-            'user_type'     => 'user',
-            'status'        => 1,
-            'subscription'  => 0,
-            'isBlocked'     => 0,
-            'join_date'     => $now,
-            'date_of_birth' => null,
-            'country'       => '',
-            'created_at'    => $now,
-            'updated_at'    => $now,
-            'last_login'    => $now,
+            'email'          => $email,
+            'username'       => explode('@', $email)[0],
+            'password'       => '', 
+            'auth_type'      => 'google',
+            'phone'          => '',
+            'user_type'      => 'user',
+            'status'         => 1,
+            'subscription'   => 'free', 
+            'isBlocked'      => 0,
+            'join_date'      => $now,
+            'date_of_birth'  => null,
+            'country'        => '',
+            'created_at'     => $now,
+            'updated_at'     => $now,
+            'last_login'     => $now,
+            'created_by'     => 0,
+            'modified_by'    => 0,
+            'modified_at'    => $now
         ];
 
         $this->loginModel->insert($newUserData);
         $userId = $this->loginModel->insertID();
 
         $token = $jwt->encode(['user_id' => $userId]);
+
         $this->loginModel->update($userId, [
-            'jwt_token' => $token,
-            'last_login' => $now
+            'jwt_token'  => $token,
+            'last_login' => $now,
+            'modified_at'=> $now
         ]);
 
         $user = $this->loginModel->find($userId);
         $isNew = true;
+
     }
     $subscription = $this->usersubModel
         ->select('user_subscription.*, subscriptionplan.plan_name')
@@ -163,6 +171,7 @@ class GoogleLogin extends BaseController
             'auth_type'    => $user['auth_type'] ?? 'google',
             'isBlocked'    => $user['status'] == 2,
             'subscription' => $user['subscription'] ?? '',
+            'status'        => $user['status'], 
             'user_type'    => $user['user_type'] ?? 'user',
             'createdAt'    => $user['created_at'],
             'updatedAt'    => $user['updated_at'],

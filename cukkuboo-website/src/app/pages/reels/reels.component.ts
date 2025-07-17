@@ -41,7 +41,6 @@ export class ReelsComponent implements OnInit, AfterViewInit, OnDestroy {
   hoveredIndex: number | null = null;
   isFullscreen = false;
   private currentIndex = 0;
-public likeInProgress: { [reelId: number]: boolean } = {};
 
   stopInfiniteScroll: boolean = false;
   pageIndex: number = 0;
@@ -188,35 +187,32 @@ public likeInProgress: { [reelId: number]: boolean } = {};
     });
   }
 
- toggleLike(reel: any): void {
-  this.userData = this.storageService.getItem('userData');
-  if (!this.userData) {
-    this.openLoginModal();
-    return;
-  }
-
-  // Prevent rapid double clicks
-  if (this.likeInProgress[reel.id]) return;
-  this.likeInProgress[reel.id] = true;
-
-  const alreadyLiked = reel.is_liked_by_user;
-  const model = {
-    reels_id: reel.id,
-    status: alreadyLiked ? 2 : 1
-  };
-
-  this.movieService.likeReel(model).subscribe({
-    next: () => {
-      reel.is_liked_by_user = !alreadyLiked;
-      reel.likes += alreadyLiked ? -1 : 1;
-      this.likeInProgress[reel.id] = false; // Unlock
-    },
-    error: (err) => {
-      console.error('Error toggling like:', err);
-      this.likeInProgress[reel.id] = false; // Unlock even on error
+  toggleLike(reel: any): void {
+    this.userData = this.storageService.getItem('userData');
+    if (!this.userData) {
+      this.openLoginModal();
+      return;
     }
-  });
-}
+    reel.clicked = true;
+    const alreadyLiked = reel.is_liked_by_user;
+    const model = {
+      reels_id: reel.id,
+      status: alreadyLiked ? 2 : 1
+    };
+
+    this.movieService.likeReel(model).subscribe({
+      next: () => {
+        reel.is_liked_by_user = !alreadyLiked;
+        reel.likes += alreadyLiked ? -1 : 1;
+        reel.clicked = false;
+
+      },
+      error: (err) => {
+        console.error('Error toggling like:', err);
+        reel.clicked = false;
+      }
+    });
+  }
 
 
   togglePlayPause(index: number): void {

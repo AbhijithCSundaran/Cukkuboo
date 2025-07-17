@@ -61,10 +61,12 @@ export class UserService {
   });
   }
 
-  googleLogin(model: { email: string, google_token: string }): Observable<any> {
-    return this.http.post(this.apiUrl, model, {
-      headers: new HttpHeaders({ 'Content-Type': 'application/json' })
-    });
-  }
+googleLogin(model: any): Observable<any> {
+  const body = model;
+  return this.http.post(`${this.apiUrl}login/google-login`, body, {
+    headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+  });
+}
+
   
 }

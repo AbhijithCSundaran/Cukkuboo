@@ -170,3 +170,34 @@ mat-form-field {
   position: relative;
   top: 1px; // tweak this up or down (1px to -1px) to align perfectly
 }
+#googleSignInBtn {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: flex-start;
+
+  div {
+    width: 100% !important;
+  }
+}
+.or-separator {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  color: #999;
+  font-size: 14px;
+}
+
+.or-separator::before,
+.or-separator::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid #ccc;
+}
+
+.or-separator:not(:empty)::before {
+  margin-right: .75em;
+}
+
+.or-separator:not(:empty)::after {
+  margin-left: .75em;
+}

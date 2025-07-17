@@ -71,13 +71,9 @@ export class SignInComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.initializeGoogleSignIn();
   }
-
-  ngOnDestroy(): void {
-    if (this.countdownInterval) {
-      clearInterval(this.countdownInterval);
-    }
+  ngAfterViewInit() {
+    this.initializeGoogleSignIn();
   }
 
   showSnackbar(message: string, isSuccess: boolean = false): void {
@@ -267,7 +263,8 @@ export class SignInComponent implements OnInit, OnDestroy {
   // Google Login Logic
 
   initializeGoogleSignIn(): void {
-    window.onload = () => {
+    debugger;
+    // window.onload = () => {
       google.accounts.id.initialize({
         client_id: '738497402180-j1miqtb3oopgef6v3i9d4s2c9f8mmtjo.apps.googleusercontent.com', // Replace this!
         callback: (response: any) => this.handleGoogleLogin(response),
@@ -276,12 +273,13 @@ export class SignInComponent implements OnInit, OnDestroy {
       google.accounts.id.renderButton(
         document.getElementById('googleSignInBtn'),
         {
-          theme: 'outline',
+          // theme: 'outline',
+          theme: 'filled_black',
           size: 'large',
           width: '100%',
         }
       );
-    };
+    // };
   }
 
   handleGoogleLogin(response: any): void {
@@ -321,6 +319,13 @@ export class SignInComponent implements OnInit, OnDestroy {
       return JSON.parse(jsonPayload);
     } catch (e) {
       return null;
+    }
+  }
+
+
+  ngOnDestroy(): void {
+    if (this.countdownInterval) {
+      clearInterval(this.countdownInterval);
     }
   }
 }

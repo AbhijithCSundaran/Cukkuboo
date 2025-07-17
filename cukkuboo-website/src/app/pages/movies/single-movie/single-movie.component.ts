@@ -232,7 +232,7 @@ export class SingleMovieComponent implements OnInit {
   copyUrlToClipboard(): void {
     if (document.hasFocus()) {
       const url = window.location.href.split('?')[0];
-      navigator.clipboard.writeText(url).then(() => {
+      navigator.clipboard?.writeText(url).then(() => {
         this.showSnackbar('Copied! Movie is ready to share.', 'success');
       }).catch(err => {
         console.error('Clipboard write failed:', err);

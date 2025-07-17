@@ -50,7 +50,6 @@ export class HeaderComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    debugger;
     this.checkAuthAndLoadNotifications();
   }
 

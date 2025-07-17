@@ -51,7 +51,6 @@ export class InterceptorService implements HttpInterceptor {
   // }
 
   private handleAuthError(err: HttpErrorResponse, request: HttpRequest<any>, next: HttpHandler): Observable<any> {
-    debugger;
     //handle your auth error or rethrow
     if (err.status === 0 || err.status === 401 || err.status === 403) {
       console.clear()

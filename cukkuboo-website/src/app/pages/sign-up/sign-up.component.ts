@@ -163,7 +163,7 @@ export class SignUpComponent implements OnInit {
     private userService: UserService,
     private snackBar: MatSnackBar,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     const today = new Date();
@@ -173,17 +173,17 @@ export class SignUpComponent implements OnInit {
     this.signUpForm = this.fb.group(
       {
         username: ['', Validators.required],
-        email: ['', [Validators.required, Validators.email,ValidationService.emailValidator]],
+        email: ['', [Validators.required, Validators.email, ValidationService.emailValidator]],
         countryCode: [this.selectedCountryCode, Validators.required],
         phone: [
           '',
           [
             Validators.required,
-            Validators.pattern(/^\d{6,15}$/) 
+            Validators.pattern(/^\d{6,15}$/)
           ]
         ],
         date_of_birth: ['', [Validators.required, this.ageValidator(18)]],
-        password: ['', [Validators.required, Validators.minLength(8)]],
+        password: ['', [Validators.required, Validators.minLength(8), ValidationService.passwordValidator]],
         confirmPassword: ['', Validators.required]
       },
       { validators: [this.passwordMatchValidator] }

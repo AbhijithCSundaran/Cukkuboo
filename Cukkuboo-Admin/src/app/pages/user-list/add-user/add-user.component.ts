@@ -14,6 +14,26 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
+import { AbstractControl, ValidationErrors } from '@angular/forms';
+
+export function strictEmailValidator(control: AbstractControl): ValidationErrors | null {
+  const email = control.value;
+
+  // Skip validation if field is empty — let 'required' handle it
+  if (!email) return null;
+
+  const regex = /^(?!.*\.\.)[a-zA-Z0-9._%+-]+@[a-zA-Z0-9-]+\.[a-zA-Z]{2,6}$/;
+  const knownTLDs = ['com', 'org', 'net', 'in', 'co', 'io'];
+
+  if (!regex.test(email)) return { strictEmail: true };
+
+  const tld = email.split('.').pop()?.toLowerCase();
+  if (!tld || !knownTLDs.includes(tld)) return { strictEmail: true };
+
+  return null;
+}
+
+
 
 
 @Component({
@@ -125,10 +145,11 @@ export class AddUserComponent implements OnInit {
     this.userForm = this.fb.group({
       user_id: [0],
       username: ['', Validators.required],
-password: ['', [Validators.required, Validators.minLength(8)]],
+      password: ['', [Validators.required, Validators.minLength(8)]],
       countryCode: [this.selectedCountryCode, Validators.required],
-      phone: ['', [Validators.required, Validators.pattern(/^\d{0,15}$/), Validators.maxLength(15)]],
-      email: ['', [Validators.email]],
+      phone: ['', [Validators.required, Validators.pattern(/^\d{6,15}$/), Validators.maxLength(15)]],
+      // email: ['', [Validators.required, Validators.email]],
+      email: ['', [Validators.required, strictEmailValidator]],
       country: ['', [Validators.pattern(/^[a-zA-Z\s]*$/)]],
       date_of_birth: ['', Validators.required],
       status: ['1', Validators.required],
@@ -146,120 +167,120 @@ password: ['', [Validators.required, Validators.minLength(8)]],
     console.log('Token from localStorage:', token);
   }
 
- loadUserData(id: number): void {
-  this.userService.getUserById(id).subscribe({
-    next: (response) => {
-      const data = Array.isArray(response?.data) ? response.data[0] : response.data;
-      if (data) {
-        let countryCode = this.selectedCountryCode;
-        let phone = data.phone;
+  loadUserData(id: number): void {
+    this.userService.getUserById(id).subscribe({
+      next: (response) => {
+        const data = Array.isArray(response?.data) ? response.data[0] : response.data;
+        if (data) {
+          let countryCode = this.selectedCountryCode;
+          let phone = data.phone;
 
-        // Try to match against country code list
-        const matchedCountry = this.countryCodes.find(c => data.phone?.startsWith(c.dial_code));
-        if (matchedCountry) {
-          countryCode = matchedCountry.dial_code;
-          phone = data.phone.replace(matchedCountry.dial_code, '');
-        }
-
-        // Patch the form with user data
-        this.userForm.patchValue({
-          user_id: data.user_id,
-          username: data.username,
-          password: '', // Leave password empty in edit mode
-          phone: phone,
-          email: data.email,
-          country: data.country,
-          countryCode: countryCode,
-          date_of_birth: new Date(data.date_of_birth),
-          status: data.status,
-          subscription: data.subscription
-        });
-
-        //  Set validators for password field in edit mode
-        const passwordControl = this.userForm.get('password') as FormControl;
-        passwordControl.setValidators([
-          Validators.minLength(8)
-        ]);
-        passwordControl.updateValueAndValidity();
-
-      } else {
-        console.warn('User not found for ID:', id);
-      }
-    },
-    error: (error) => {
-      console.error('Error fetching user data:', error);
-      this.snackBar.open('Failed to load user data', '', {
-        duration: 3000,
-        verticalPosition: 'top',
-        panelClass: ['snackbar-error']
-      });
-    }
-  });
-}
-
-
-  togglePasswordVisibility(): void {
-    this.hidePassword = !this.hidePassword;
-  }
-
-saveUser(): void {
-  if (this.userForm.valid) {
-    const model = this.userForm.value;
-
-    // Format date
-    const dob: Date = model.date_of_birth;
-    model.date_of_birth = this.formatDate(dob);
-
-    // Combine country code with phone
-    model.phone = `${model.countryCode}${model.phone}`;
-
-    this.userService.register(model).subscribe({
-      next: (res) => {
-        if (res.success === true) {
-          // ✅ Registration successful
-          this.snackBar.open(res.message || 'User registered successfully', '', {
-            duration: 3000,
-            verticalPosition: 'top',
-            panelClass: ['snackbar-success']
-          });
-          this.router.navigate(['/user-list']);
-        } else if (res.success === false) {
-          // ❌ Registration failed (e.g., user exists)
-          if (res.message?.toLowerCase().includes('user already exists')) {
-            this.snackBar.open('User already exists.', '', {
-              duration: 3000,
-              verticalPosition: 'top',
-              panelClass: ['snackbar-error']
-            });
-          } else {
-            this.snackBar.open(res.message || 'Something went wrong.', '', {
-              duration: 3000,
-              verticalPosition: 'top',
-              panelClass: ['snackbar-error']
-            });
+          // Try to match against country code list
+          const matchedCountry = this.countryCodes.find(c => data.phone?.startsWith(c.dial_code));
+          if (matchedCountry) {
+            countryCode = matchedCountry.dial_code;
+            phone = data.phone.replace(matchedCountry.dial_code, '');
           }
+
+          // Patch the form with user data
+          this.userForm.patchValue({
+            user_id: data.user_id,
+            username: data.username,
+            password: '', // Leave password empty in edit mode
+            phone: phone,
+            email: data.email,
+            country: data.country,
+            countryCode: countryCode,
+            date_of_birth: new Date(data.date_of_birth),
+            status: data.status,
+            subscription: data.subscription
+          });
+
+          //  Set validators for password field in edit mode
+          const passwordControl = this.userForm.get('password') as FormControl;
+          passwordControl.setValidators([
+            Validators.minLength(8)
+          ]);
+          passwordControl.updateValueAndValidity();
+
+        } else {
+          console.warn('User not found for ID:', id);
         }
       },
-      error: (err) => {
-        // ⚠️ Actual HTTP/server error
-        const errorMessage = err.error?.message || 'Server error occurred';
-        this.snackBar.open(errorMessage, '', {
+      error: (error) => {
+        console.error('Error fetching user data:', error);
+        this.snackBar.open('Failed to load user data', '', {
           duration: 3000,
           verticalPosition: 'top',
           panelClass: ['snackbar-error']
         });
       }
     });
-  } else {
-    // Form is invalid
-    this.userForm.markAllAsTouched();
-    this.snackBar.open('Please fill all required fields.', '', {
-      duration: 3000,
-      verticalPosition: 'top',
-      panelClass: ['snackbar-error']
-    });
   }
-}
+
+
+  togglePasswordVisibility(): void {
+    this.hidePassword = !this.hidePassword;
+  }
+
+  saveUser(): void {
+    if (this.userForm.valid) {
+      const model = this.userForm.value;
+
+      // Format date
+      const dob: Date = model.date_of_birth;
+      model.date_of_birth = this.formatDate(dob);
+
+      // Combine country code with phone
+      model.phone = `${model.countryCode}${model.phone}`;
+
+      this.userService.register(model).subscribe({
+        next: (res) => {
+          if (res.success === true) {
+            // ✅ Registration successful
+            this.snackBar.open(res.message || 'User registered successfully', '', {
+              duration: 3000,
+              verticalPosition: 'top',
+              panelClass: ['snackbar-success']
+            });
+            this.router.navigate(['/user-list']);
+          } else if (res.success === false) {
+            // ❌ Registration failed (e.g., user exists)
+            if (res.message?.toLowerCase().includes('user already exists')) {
+              this.snackBar.open('User already exists.', '', {
+                duration: 3000,
+                verticalPosition: 'top',
+                panelClass: ['snackbar-error']
+              });
+            } else {
+              this.snackBar.open(res.message || 'Something went wrong.', '', {
+                duration: 3000,
+                verticalPosition: 'top',
+                panelClass: ['snackbar-error']
+              });
+            }
+          }
+        },
+        error: (err) => {
+          // ⚠️ Actual HTTP/server error
+          const errorMessage = err.error?.message || 'Server error occurred';
+          this.snackBar.open(errorMessage, '', {
+            duration: 3000,
+            verticalPosition: 'top',
+            panelClass: ['snackbar-error']
+          });
+        }
+      });
+    } else {
+      // Form is invalid
+      this.userForm.markAllAsTouched();
+      this.snackBar.open('Please fill all required fields.', '', {
+        duration: 3000,
+        verticalPosition: 'top',
+        panelClass: ['snackbar-error']
+      });
+    }
+  }
 
   formatDate(date: Date): string {
     const year = date.getFullYear();

@@ -8,7 +8,8 @@
     <!-- From Date -->
     <mat-form-field class="date-picker mr-3 pr-2 hide-mobile" appearance="outline">
       <mat-label>From Date</mat-label>
-      <input matInput [matDatepicker]="fromPicker" (dateChange)="onFromDateChange($event)">
+      <input matInput [matDatepicker]="fromPicker" (dateChange)="onFromDateChange($event)" 
+       (focus)="fromPicker.open()"  readonly>
       <mat-datepicker-toggle matSuffix [for]="fromPicker"></mat-datepicker-toggle>
       <mat-datepicker #fromPicker></mat-datepicker>
     </mat-form-field>
@@ -16,10 +17,12 @@
     <!-- To Date -->
     <mat-form-field class="date-picker mr-3 pr-2 hide-mobile" appearance="outline">
       <mat-label>To Date</mat-label>
-      <input matInput [matDatepicker]="toPicker" (dateChange)="onToDateChange($event)">
+      <input matInput [matDatepicker]="toPicker" (dateChange)="onToDateChange($event)" 
+      [min]="fromDate"  (focus)="toPicker.open()" readonly>
       <mat-datepicker-toggle matSuffix [for]="toPicker"></mat-datepicker-toggle>
       <mat-datepicker #toPicker></mat-datepicker>
     </mat-form-field>
+
 
     <!-- Search Bar -->
     <mat-form-field class="custom-search" appearance="outline">
@@ -77,7 +80,8 @@
           'badge-disabled': sub.status == '2',
           'badge-canceled': sub.status == '3'
         }">
-          {{ sub.status == '1' ? 'Premium' : sub.status == '2' ? 'Expired' : sub.status == '3' ? 'Canceled' : 'Unknown' }}
+          {{ sub.status == '1' ? 'Premium' : sub.status == '2' ? 'Expired' : sub.status == '3' ? 'Canceled' : 'Unknown'
+          }}
         </span>
       </td>
     </ng-container>

@@ -12,9 +12,32 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-
+import { AbstractControl, ValidationErrors } from '@angular/forms';
 // Your custom service
 import { StaffService } from '../../../staff.service';
+
+
+export function strictEmailValidator(control: AbstractControl): ValidationErrors | null {
+  const email = control.value;
+
+  // Skip validation if field is empty — let 'required' handle it
+  if (!email) return null;
+
+  const regex = /^(?!.*\.\.)[a-zA-Z0-9._%+-]+@[a-zA-Z0-9-]+\.[a-zA-Z]{2,6}$/;
+  const knownTLDs = ['com', 'org', 'net', 'in', 'co', 'io'];
+
+  if (!regex.test(email)) return { strictEmail: true };
+
+  const tld = email.split('.').pop()?.toLowerCase();
+  if (!tld || !knownTLDs.includes(tld)) return { strictEmail: true };
+
+  return null;
+}
+
+
+
+
+
 
 @Component({
   selector: 'app-add-staff',
@@ -123,9 +146,10 @@ export class AddStaffComponent {
     this.staffForm = this.fb.group({
       user_id: [0],
       username: ['', Validators.required],
-      phone: ['', [Validators.required, Validators.pattern(/^\d{0,15}$/), Validators.maxLength(15)]],
+      phone: ['', [Validators.required, Validators.pattern(/^\d{6,15}$/), Validators.maxLength(15)]],
       countryCode: [this.selectedCountryCode, Validators.required],
-      email: ['', [Validators.email]],
+      // email: ['', [Validators.email]],
+      email: ['', [Validators.required, strictEmailValidator]],
       password: ['', Validators.required],
       status: ['1', Validators.required],
       join_date: [''],

@@ -27,6 +27,7 @@ import { MatSelectModule } from '@angular/material/select';
 
 import { UserService } from '../../services/user/user.service';
 import { ValidationMessagesComponent } from '../../core/components/validation-messsage/validaation-message.component';
+import { ValidationService } from '../../core/services/validation.service';
 
 export class CustomDateAdapter extends NativeDateAdapter {
   override format(date: Date, displayFormat: Object): string {
@@ -172,7 +173,7 @@ export class SignUpComponent implements OnInit {
     this.signUpForm = this.fb.group(
       {
         username: ['', Validators.required],
-        email: ['', [Validators.required, Validators.email]],
+        email: ['', [Validators.required, Validators.email,ValidationService.emailValidator]],
         countryCode: [this.selectedCountryCode, Validators.required],
         phone: [
           '',

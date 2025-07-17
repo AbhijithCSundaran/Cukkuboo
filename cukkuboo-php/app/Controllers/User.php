@@ -49,7 +49,8 @@ class User extends ResourceController
         'status'       => (!empty($data['status']) && $data['status'] != 0) ? $data['status'] : 1,
         'join_date'    => $data['join_date'] ?? null,
         'user_type'    => $data['user_type'] ?? 'Customer',
-        'date_of_birth'=> $data['date_of_birth'] ?? null
+        'date_of_birth'=> $data['date_of_birth'] ?? null,
+        'auth_type'    => $data['auth_type'] ?? 'manual',
     ]);
 
     if (!empty($data['password'])) {
@@ -130,6 +131,7 @@ class User extends ResourceController
                     'created_at'    => $user['created_at'],
                     'created_by'    => $user['created_by'],
                     'jwt_token'     => $user['jwt_token'],
+                    'auth_type'     => $user['auth_type'],
                 ];
 
                 return $this->response->setJSON([
@@ -176,6 +178,7 @@ class User extends ResourceController
             'created_at'    => $user['created_at'],
             'created_by'    => $user['created_by'],
             'jwt_token'     => $user['jwt_token'],
+            'auth_type'     => $user['auth_type'],
         ];
         return $this->response->setJSON([
             'success' => true,
@@ -202,10 +205,11 @@ class User extends ResourceController
             'date_of_birth' => $user['date_of_birth'],
             'subscription'  => $user['subscription'],
             'user_type'     => $user['user_type'],
+            'auth_type'     => $user['auth_type'],
             'created_at'    => $user['created_at'],
             'created_by'    => $user['created_by'],
             'updated_at'    => $user['updated_at'],
-            'updated_by'    => $user['updated_by']
+            'updated_by'    => $user['updated_by'],
         ];
         return $this->response->setJSON([
             'success' => true,
@@ -369,6 +373,7 @@ public function getUserDetailsById($userId = null)
             'date_of_birth' => $user['date_of_birth'],
             'join_date'     => $user['join_date'],
             'user_type'     => $user['user_type'],
+            'auth_type'     => $user['auth_type'],
             'createdAt'     => $user['created_at'],
             'updatedAt'     => $user['updated_at'],
             'lastLogin'     => $user['last_login'],

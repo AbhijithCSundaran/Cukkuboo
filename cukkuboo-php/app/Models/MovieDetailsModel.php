@@ -53,7 +53,8 @@ public function deleteMovieDetailsById($status, $mov_id)
            
   public function getFeaturedMovies()
 {
-    $results = $this->where('status', 1)
+    $results = $this->select('*, likes, dislikes')
+                     ->where('status', 1)
                     ->where('release_date <=', date('Y-m-d'))
                     ->orderBy('rating', 'DESC')
                     ->limit(5)
@@ -68,7 +69,8 @@ public function deleteMovieDetailsById($status, $mov_id)
  
     public function getTrendingMovies()
 {
-    $results = $this->where('status', 1)
+    $results = $this->select('*, likes, dislikes')
+                    ->where('status', 1)
                     ->where('release_date <=', date('Y-m-d'))
                     ->orderBy('rating', 'DESC')
                     ->limit(5)
@@ -294,7 +296,12 @@ public function getWatchLaterId($user_id, $mov_id)
  
     return $result ? $result->watch_later_id : null;
 }
- 
+ private function calculateRating($likes, $dislikes)
+{
+    $total = $likes + $dislikes;
+    return $total > 0 ? round(($likes / $total) * 100, 2) : 0;
+}
+
  
 }
  

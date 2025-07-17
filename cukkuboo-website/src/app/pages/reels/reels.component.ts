@@ -314,7 +314,7 @@ export class ReelsComponent implements OnInit, AfterViewInit, OnDestroy {
   copyUrlToClipboard(reel: any): void {
     if (document.hasFocus()) {
       const url = window.location.href.split('?')[0] + '?re=' + this.commonService.EncodeId(reel.id);
-      navigator.clipboard.writeText(url).then(() => {
+      navigator.clipboard?.writeText(url).then(() => {
         this.snackBar.open('Copied! Reel is ready to share.', '', {
           duration: 3000,
           verticalPosition: 'top',

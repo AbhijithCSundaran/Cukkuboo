@@ -10,7 +10,7 @@ export class ValidationService {
             'LatLongValidator': `Not Valid`,
             'invalidEmailAddress': 'Invalid email address',
             'invalidPhoneNo': 'Invalid phone number',
-            'invalidPassword': 'Invalid password. Must be 8+ characters, with uppercase, lowercase, number, and special character',
+            'invalidPassword': 'Must be 8+ characters, with uppercase, lowercase, number, and special character',
             'passwordsMismatch': 'Passwords Mismatch',
             'minlength': `Minimum length ${validatorValue.requiredLength}`,
             'maxlength': `Maximum length ${validatorValue.requiredLength}`,
@@ -122,12 +122,9 @@ export class ValidationService {
     }
 
     static emailValidator(control: any) {
-        // var regexStr = "/[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/";
-        // var regexStr = "^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$";
-        // var regexStr = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-][a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]*[@][a-z][a-z]*[.][a-z]?[a-z][a-z]$";
-
-        // var regexStr = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-][a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]*[@][a-z0-9][a-z0-9]*[.][a-z]?[a-z][a-z]$";
-        var regexStr = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-][a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]*[@][a-z0-9._-][a-z0-9._-]*[.][a-z]?[a-z][a-z]$";
+        // var regexStr = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-][a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]*[@][a-z0-9._-][a-z0-9._-]*[.][a-z]?[a-z][a-z]$";
+        // blocked special chars $%&
+        var regexStr = "^[a-zA-Z0-9.!#'*+/?^_`{|}~-][a-zA-Z0-9.!#'*+/?^_`{|}~-]*[@][a-z0-9._-][a-z0-9._-]*[.][a-z]?[a-z][a-z]$";
         if (control.value != undefined && control.value != null && control.value != '') {
             if (control.value.match(regexStr))
                 return null;

@@ -32,22 +32,24 @@
         </div>
 
         <!-- Icons: Like, Mute, Share -->
-      <div class="cntl-icos">
-  <div class="icon-block" (click)="toggleLike(reel)">
+  
+<div class="cntl-icos">
+  <div class="icon-block"
+       [class.disabled]="reel.clicked"
+       (click)="toggleLike(reel)">
     <i class="fas" [ngClass]="reel.is_liked_by_user ? 'fa-heart text-danger' : 'fa-heart'"></i>
     <div class="icon-label">{{ reel.likes }}</div>
   </div>
 
   <div class="icon-block" (click)="copyUrlToClipboard(reel)">
     <i class="fas fa-share-alt"></i>
-    <!-- <div class="icon-label">Share</div> -->
   </div>
 
   <div class="icon-block" (click)="toggleMute(i)">
     <i class="fas" [ngClass]="mutedStates[i] ? 'fa-volume-mute' : 'fa-volume-up'"></i>
-    <!-- <div class="icon-label">{{ mutedStates[i] ? 'Muted' : 'Sound' }}</div> -->
   </div>
 </div>
+
       </div>
     </div>
 

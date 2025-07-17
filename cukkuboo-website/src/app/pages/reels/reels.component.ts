@@ -193,6 +193,7 @@ export class ReelsComponent implements OnInit, AfterViewInit, OnDestroy {
       this.openLoginModal();
       return;
     }
+    reel.clicked = true;
     const alreadyLiked = reel.is_liked_by_user;
     const model = {
       reels_id: reel.id,
@@ -203,12 +204,16 @@ export class ReelsComponent implements OnInit, AfterViewInit, OnDestroy {
       next: () => {
         reel.is_liked_by_user = !alreadyLiked;
         reel.likes += alreadyLiked ? -1 : 1;
+        reel.clicked = false;
+
       },
       error: (err) => {
         console.error('Error toggling like:', err);
+        reel.clicked = false;
       }
     });
   }
+
 
   togglePlayPause(index: number): void {
     const video = this.videos.get(index)?.nativeElement;

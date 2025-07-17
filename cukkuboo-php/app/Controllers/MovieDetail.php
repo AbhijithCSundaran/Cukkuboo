@@ -120,6 +120,15 @@ public function getAllMovieDetails()
 
     if (!is_numeric($pageIndex) || !is_numeric($pageSize) || $pageIndex < 0 || $pageSize <= 0) {
         $movies = $builder->orderBy('created_on', 'DESC')->get()->getResult();
+    foreach ($movies as $movie) {
+    $likes = $movie->likes ?? 0;
+    $dislikes = $movie->dislikes ?? 0;
+    $total = $likes + $dislikes;
+    $movie->rating = $total > 0 ? round(($likes / $total) * 100, 2) : 0;
+}
+
+
+
 
         return $this->response->setJSON([
             'success' => true,
@@ -460,12 +469,13 @@ public function movieReaction($mov_id)
    public function homeDisplay()
 {
     $movieModel = new MovieDetailsModel();
+    
  
     $featuredRaw = $movieModel->getFeaturedMovies();
     $trendingRaw = $movieModel->getTrendingMovies();
  
     $featured = array_map([$this, 'formatMovie'], $featuredRaw);
-    $trending = array_map([$this, 'formatTrending'], $trendingRaw);
+    $trending = array_map([$this, 'formatMovie'], $trendingRaw);
  
     return $this->respond([
         'success' => true,
@@ -480,6 +490,12 @@ public function movieReaction($mov_id)
  
     private function formatMovie($movie)
 {
+    
+    $likes = intval($movie['likes'] ?? 0);
+    $dislikes = intval($movie['dislikes'] ?? 0);
+    $total = $likes + $dislikes;
+
+
     return [
         'mov_id' => $movie['mov_id'],
         'title' => $movie['title'],
@@ -491,17 +507,15 @@ public function movieReaction($mov_id)
         'trailer' => $movie['trailer'],
         'banner' => $movie['banner'],
         'thumbnail' => $movie['thumbnail'],
-        'likes' => (int) ($movie['likes'] ?? 0),
-        'dislikes' => (int) ($movie['dislikes'] ?? 0),
-        'rating' => ($movie['likes'] + $movie['dislikes']) > 0 
-         ? round(($movie['likes'] / ($movie['likes'] + $movie['dislikes'])) * 100, 2)
-         : 0,
-
+        'likes' => $likes,
+        'dislikes' => $dislikes,
+        'rating' => $total > 0 ? round(($likes / $total) * 100, 2) : 0,
         'duration' => $movie['duration'],
         'genre' => explode(',', $movie['genre']),
         'description' => $movie['description']
     ];
 }
+
  
 // public function getLatestMovies()
 // {
@@ -638,7 +652,16 @@ public function getUserHomeData()
         $notificationModel = new \App\Models\NotificationModel();
         $hasUnread = $notificationModel->hasUnreadNotifications($userId);
     }
+    $featuredRaw = $this->moviedetail->getFeaturedMovies();
+    $trendingRaw = $this->moviedetail->getTrendingMovies();
+    $latestRaw = $this->moviedetail->latestMovies();
+    $mostViewedRaw = $this->moviedetail->getMostWatchedMovies();
 
+    // Format movies with rating calculation
+    $featured = array_map([$this, 'formatMovie'], $featuredRaw);
+    $trending = array_map([$this, 'formatMovie'], $trendingRaw);
+    $latest = array_map([$this, 'formatMovie'], $latestRaw);
+    $mostViewed = array_map([$this, 'formatMovie'], $mostViewedRaw);
     return $this->respond([
         'success' => true,
         'message' => true,

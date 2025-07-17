@@ -24,7 +24,8 @@ class LoginModel extends Model
         'updated_at',
         'last_login',
         'jwt_token',
-        'fcm_token'
+        'fcm_token',
+        'auth_type'
     ];
 
     // Optional: Clear all jwt_tokens

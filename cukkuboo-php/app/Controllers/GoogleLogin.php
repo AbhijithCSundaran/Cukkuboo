@@ -60,12 +60,21 @@ class GoogleLogin extends BaseController
             'data' => []
         ]);
     }
-    $user = $this->loginModel->where('email', $email)->first();
 
+    $user = $this->loginModel->where('email', $email)->first();
     $now = date('Y-m-d H:i:s');
     $jwt = new Jwt();
+    $isNew = false;
 
     if ($user) {
+        if ($user['auth_type'] !== 'google') {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'This account is registered with manual login. Please use email and password.',
+                'data' => []
+            ]);
+        }
+
         if ($user['status'] == 2) {
             return $this->response->setJSON([
                 'success' => false,
@@ -85,43 +94,38 @@ class GoogleLogin extends BaseController
             'last_login' => $now
         ]);
     } else {
-        // Create new user
         $newUserData = [
-
             'email'         => $email,
             'username'      => explode('@', $email)[0],
-            'password'      => '', // no password for Google login
+            'password'      => '',
             'auth_type'     => 'google',
-            'phone'         => '',          
-            'user_type'     => 'user',      
-            'status'        => 1,           
-            'subscription'  => 0,           
-            'isBlocked'     => 0,           
-            'join_date'     => $now,        
-            'date_of_birth' => null,        
-            'country'       => '',          
+            'phone'         => '',
+            'user_type'     => 'user',
+            'status'        => 1,
+            'subscription'  => 0,
+            'isBlocked'     => 0,
+            'join_date'     => $now,
+            'date_of_birth' => null,
+            'country'       => '',
             'created_at'    => $now,
             'updated_at'    => $now,
             'last_login'    => $now,
         ];
-     
+
         $this->loginModel->insert($newUserData);
         $userId = $this->loginModel->insertID();
 
         $token = $jwt->encode(['user_id' => $userId]);
-
         $this->loginModel->update($userId, [
             'jwt_token' => $token,
             'last_login' => $now
         ]);
 
         $user = $this->loginModel->find($userId);
+        $isNew = true;
     }
-    $usersubModel = new UsersubModel();
-    $notificationModel = new NotificationModel();
-
-    $subscription = $usersubModel
-        ->select('user_subscription.*, subscriptionplan.plan_name') 
+    $subscription = $this->usersubModel
+        ->select('user_subscription.*, subscriptionplan.plan_name')
         ->join('subscriptionplan', 'subscriptionplan.subscriptionplan_id = user_subscription.subscriptionplan_id')
         ->where('user_id', $user['user_id'])
         ->where('user_subscription.status !=', 9)
@@ -129,12 +133,12 @@ class GoogleLogin extends BaseController
         ->first();
 
     $subscriptionData = $subscription ? [
-        'user_subscription_id'=> $subscription['user_subscription_id'],
-        'subscriptionplan_id' => $subscription['subscriptionplan_id'],
-        'plan_name'           => $subscription['plan_name'],
-        'start_date'          => $subscription['start_date'],
-        'end_date'            => $subscription['end_date'],
-        'subscription'        => $subscription['status']
+        'user_subscription_id' => $subscription['user_subscription_id'],
+        'subscriptionplan_id'  => $subscription['subscriptionplan_id'],
+        'plan_name'            => $subscription['plan_name'],
+        'start_date'           => $subscription['start_date'],
+        'end_date'             => $subscription['end_date'],
+        'subscription'         => $subscription['status']
     ] : [
         'subscriptionplan_id' => null,
         'plan_name' => null,
@@ -143,26 +147,27 @@ class GoogleLogin extends BaseController
         'subscription' => 0
     ];
 
-    $unreadCount = $notificationModel
+    $unreadCount = $this->notificationModel
         ->where('user_id', $user['user_id'])
         ->where('status', 1)
         ->countAllResults();
 
     return $this->response->setJSON([
         'success' => true,
-        'message' => 'Google login successful.',
+        'message' => $isNew ? 'Registration successful via Google.' : 'Google login successful.',
         'data' => [
-            'user_id' => $user['user_id'],
-            'username' => $user['username'],
-            'phone' => $user['phone'] ?? '',
-            'email' => $user['email'],
-            'isBlocked' => $user['status'] !== 'active',
+            'user_id'      => $user['user_id'],
+            'username'     => $user['username'],
+            'phone'        => $user['phone'] ?? '',
+            'email'        => $user['email'],
+            'auth_type'    => $user['auth_type'] ?? 'google',
+            'isBlocked'    => $user['status'] == 2,
             'subscription' => $user['subscription'] ?? '',
-            'user_type' => $user['user_type'] ?? 'user',
-            'createdAt' => $user['created_at'],
-            'updatedAt' => $user['updated_at'],
-            'lastLogin' => $now,
-            'jwt_token' => $token,
+            'user_type'    => $user['user_type'] ?? 'user',
+            'createdAt'    => $user['created_at'],
+            'updatedAt'    => $user['updated_at'],
+            'lastLogin'    => $now,
+            'jwt_token'    => $token,
             'notifications' => $unreadCount,
             'subscription_details' => $subscriptionData
         ]

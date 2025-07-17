@@ -59,7 +59,12 @@ export class UserService {
   return this.http.post(`${this.apiUrl}user/forgot-password`, body, {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
   });
-}
+  }
 
-
+  googleLogin(model: { email: string, google_token: string }): Observable<any> {
+    return this.http.post(this.apiUrl, model, {
+      headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+    });
+  }
+  
 }

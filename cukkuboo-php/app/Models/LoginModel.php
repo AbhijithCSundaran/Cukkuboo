@@ -20,6 +20,7 @@ class LoginModel extends Model
         'phone',
         'join_date',
         'status',
+        'user_type',
         'subscription',
         'created_at',
         'updated_at',

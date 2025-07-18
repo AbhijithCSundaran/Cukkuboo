@@ -296,12 +296,6 @@ public function getWatchLaterId($user_id, $mov_id)
  
     return $result ? $result->watch_later_id : null;
 }
- private function calculateRating($likes, $dislikes)
-{
-    $total = $likes + $dislikes;
-    return $total > 0 ? round(($likes / $total) * 100, 2) : 0;
-}
-
  
 }
  

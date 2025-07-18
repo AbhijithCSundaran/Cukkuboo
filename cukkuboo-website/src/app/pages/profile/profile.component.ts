@@ -122,7 +122,7 @@ export class ProfileComponent implements OnInit {
     private fb: FormBuilder,
     private snackBar: MatSnackBar,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     const activeTab = localStorage.getItem('activeTab');
@@ -151,7 +151,7 @@ export class ProfileComponent implements OnInit {
 
     this.changePasswordForm = this.fb.group({
       currentPassword: ['', Validators.required],
-      password: ['', [Validators.required, Validators.minLength(8), ValidationService.passwordValidator]],
+      newPassword: ['', [Validators.required, Validators.minLength(8), ValidationService.passwordValidator]],
       confirmPassword: ['', Validators.required]
     });
 
@@ -273,9 +273,9 @@ export class ProfileComponent implements OnInit {
 
   onChangePassword(): void {
     if (this.changePasswordForm.valid) {
-      const { currentPassword, password, confirmPassword } = this.changePasswordForm.value;
+      const { currentPassword, newPassword, confirmPassword } = this.changePasswordForm.value;
 
-      if (password !== confirmPassword) {
+      if (newPassword !== confirmPassword) {
         this.snackBar.open('New passwords do not match.', '', {
           duration: 3000,
           verticalPosition: 'top',
@@ -286,7 +286,7 @@ export class ProfileComponent implements OnInit {
 
       const model = {
         oldPassword: currentPassword.trim(),
-        newPassword: password.trim(),
+        newPassword: newPassword.trim(),
         confirmPassword: confirmPassword.trim()
       };
 

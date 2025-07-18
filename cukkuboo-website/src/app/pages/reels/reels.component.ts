@@ -66,7 +66,9 @@ export class ReelsComponent implements OnInit, AfterViewInit, OnDestroy {
         this.reels = [];
         this.videoStates = [];
         this.mutedStates = [];
-        this.getReelById(String(this.commonService.DecodeId(reelId)));
+        const id = String(this.commonService.DecodeId(reelId))
+        alert(id)
+        this.getReelById(id);
         this.router.navigate([], { queryParams: { re: null }, queryParamsHandling: 'merge' });
       }
       else
@@ -309,9 +311,15 @@ export class ReelsComponent implements OnInit, AfterViewInit, OnDestroy {
     const elem = document.documentElement;
 
     if (!document.fullscreenElement) {
-      elem.requestFullscreen().then(() => (this.isFullscreen = true));
+      elem.requestFullscreen().then(() => {
+        this.scrollToIndex(this.currentIndex);
+        this.isFullscreen = true;
+      });
     } else {
-      document.exitFullscreen().then(() => (this.isFullscreen = false));
+      document.exitFullscreen().then(() => {
+        this.isFullscreen = false;
+        this.scrollToIndex(this.currentIndex);
+      });
     }
   }
 

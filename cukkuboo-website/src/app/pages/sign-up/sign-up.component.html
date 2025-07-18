@@ -30,11 +30,12 @@
 
               <li class="pms-field mb-0 mb-sm-1 mb-md-3">
                 <div class="d-flex">
-                  <mat-form-field appearance="outline" class="me-2" style="width: 35%;">
+                  <mat-form-field appearance="outline" class="me-1" style="width: 35%;">
                     <mat-label>Code</mat-label>
                     <mat-select formControlName="countryCode">
-                      <mat-option *ngFor="let country of countryCodes" [value]="country.dial_code">
-                        ({{ country.dial_code }})
+                      <mat-option *ngFor="let country of countryCodes" [value]="country.dial_code"
+                        [matTooltip]="country.name">
+                        <small>{{country.id}} ({{ country.dial_code }})</small>
                       </mat-option>
                     </mat-select>
                   </mat-form-field>
@@ -51,16 +52,18 @@
               </li>
 
 
-              <!-- Email -->
-              <li class="pms-field mb-0 mb-sm-1 mb-md-3">
-                <mat-form-field appearance="outline" class="w-100">
-                  <mat-label>Email</mat-label>
-                  <input matInput type="email" formControlName="email" placeholder="Enter email" />
-                  <mat-error>
-                    <Validation-Messages [control]="signUpForm.controls['email']"></Validation-Messages>
-                  </mat-error>
-                </mat-form-field>
-              </li>
+             <!-- Email -->
+<li class="pms-field mb-0 mb-sm-1 mb-md-3">
+  <mat-form-field appearance="outline" class="w-100">
+    <mat-label>Email</mat-label>
+    <input matInput type="email" formControlName="email" placeholder="Enter email"
+           (input)="forceLowerCaseEmail()" />
+    <mat-error>
+      <Validation-Messages [control]="signUpForm.controls['email']"></Validation-Messages>
+    </mat-error>
+  </mat-form-field>
+</li>
+
 
               <!-- Date of Birth -->
               <li class="pms-field mb-0 mb-sm-1 mb-md-3">
@@ -107,7 +110,8 @@
                   </button>
                   <mat-error>
                     <Validation-Messages [control]="signUpForm.controls['confirmPassword']"></Validation-Messages>
-                    <span *ngIf="signUpForm.hasError('passwordMismatch')">Password and Confirm Password do not match.</span>
+                    <span *ngIf="signUpForm.hasError('passwordMismatch')">Password and Confirm Password do not
+                      match.</span>
                   </mat-error>
                   <!-- Password mismatch error -->
                   <!-- <mat-error *ngIf="signUpForm.hasError('passwordMismatch') && !signUpForm.get('confirmPassword')?.hasError('required')">

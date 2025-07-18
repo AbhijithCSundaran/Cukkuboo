@@ -98,7 +98,7 @@ class GoogleLogin extends BaseController
         $now = date('Y-m-d H:i:s');
         $newUserData = [
             'email'          => $email,
-            'username'       => explode('@', $email)[0],
+            'username'       => isset($googleUser['name']) ? $googleUser['name'] : explode('@', $email)[0],
             'password'       => '', 
             'auth_type'      => 'google',
             'phone'          => '',

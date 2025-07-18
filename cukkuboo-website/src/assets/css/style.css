@@ -990,7 +990,7 @@ Login, Register
     background: var(--dark-color);
     position: relative;
     z-index: 9;
-    width: 750px;
+    width: 100%;
     display: inline-block;
     text-align: left;
 }

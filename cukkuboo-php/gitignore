@@ -1,8 +1,9 @@
 # Composer dependencies
-/vendor/
+/vendor
 
 # Node modules (if using npm)
-node_modules/
+/Composer
+/node_modules
 
 # Log files and cache
 /writable/cache/*

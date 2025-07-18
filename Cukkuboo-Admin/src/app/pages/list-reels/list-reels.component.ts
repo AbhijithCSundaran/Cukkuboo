@@ -92,6 +92,7 @@ export class ListReelsComponent implements OnInit, AfterViewInit {
     this.reelsService.deleteReels(reel.reels_id).subscribe({
       next: () => {
         this.dataSource.data = this.dataSource.data.filter(r => r.reels_id !== reel.reels_id);
+        this.listReels(this.pageIndex, this.pageSize, this.searchText);
         this.showSnackbar('Reel deleted successfully!', 'snackbar-success');
       },
       error: (err) => {

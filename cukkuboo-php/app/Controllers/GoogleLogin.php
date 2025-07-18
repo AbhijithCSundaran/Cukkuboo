@@ -110,11 +110,10 @@ class GoogleLogin extends BaseController
             'date_of_birth'  => null,
             'country'        => '',
             'created_at'     => $now,
-            'updated_at'     => $now,
             'last_login'     => $now,
             'created_by'     => 0,
-            'modified_by'    => 0,
-            'modified_at'    => $now
+            'updated_by'    => 0,
+            'updated_at'    => $now
         ];
 
         $this->loginModel->insert($newUserData);

@@ -105,6 +105,7 @@ export class ListMovieShowComponent implements OnInit {
       next: () => {
         this.dataSource.data = this.dataSource.data.filter(m => m.mov_id !== movie.mov_id);
         this.totalItems--;
+        this.listMovies(this.pageIndex, this.pageSize, this.searchText);
         this.showSnackbar('Movie deleted successfully!', 'snackbar-success');
       },
       error: (err) => {

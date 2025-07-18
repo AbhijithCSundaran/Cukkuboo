@@ -641,27 +641,16 @@ public function latestMovies()
  
 public function getUserHomeData()
 {
-    // $authHeader = $this->request->getHeaderLine('Authorization');
-     $authHeader = AuthHelper::getAuthorizationToken($this->request);
+    $authHeader = AuthHelper::getAuthorizationToken($this->request);
     $user = $this->authService->getAuthenticatedUser($authHeader);
 
     $hasUnread = false;
-
     if ($user) {
         $userId = $user['user_id'];
         $notificationModel = new \App\Models\NotificationModel();
         $hasUnread = $notificationModel->hasUnreadNotifications($userId);
     }
-    $featuredRaw = $this->moviedetail->getFeaturedMovies();
-    $trendingRaw = $this->moviedetail->getTrendingMovies();
-    $latestRaw = $this->moviedetail->latestMovies();
-    $mostViewedRaw = $this->moviedetail->getMostWatchedMovies();
 
-    // Format movies with rating calculation
-    $featured = array_map([$this, 'formatMovie'], $featuredRaw);
-    $trending = array_map([$this, 'formatMovie'], $trendingRaw);
-    $latest = array_map([$this, 'formatMovie'], $latestRaw);
-    $mostViewed = array_map([$this, 'formatMovie'], $mostViewedRaw);
     return $this->respond([
         'success' => true,
         'message' => true,
@@ -669,30 +658,33 @@ public function getUserHomeData()
             'active_movie_count' => $this->moviedetail->countActiveMovies(),
             'In_active_movie_count' => $this->moviedetail->countInactiveMovies(),
             'has_unread_notifications' => $hasUnread,
-            'list_1' => [
-            'type' => 'featured',
-            'heading' => 'Featured Movies',
-            'data' => $this->moviedetail->getFeaturedMovies()
-        ],
-        'list_2' => [
-            'type' => 'trending',
-            'heading' => 'Trending Movies',
-            'data' => $this->moviedetail->getTrendingMovies()
-        ],
-        'list_3' => [
-            'type' => 'latest',
-            'heading' => 'Latest Movies',
-            'data' => $this->moviedetail->latestMovies()
-        ],
-        'list_4' => [
-            'type' => 'most_viewed',
-            'heading' => 'Most Watched Movies',
-            'data' => $this->moviedetail->getMostWatchedMovies()
-        ]
-    ]
-]);
 
+            'list_1' => [
+                'type' => 'featured',
+                'heading' => 'Featured Movies',
+                'data' => array_map([$this, 'calculateRatingForMovie'], $this->moviedetail->getFeaturedMovies())
+            ],
+            'list_2' => [
+                'type' => 'trending',
+                'heading' => 'Trending Movies',
+                'data' => array_map([$this, 'calculateRatingForMovie'], $this->moviedetail->getTrendingMovies())
+            ],
+            'list_3' => [
+                'type' => 'latest',
+                'heading' => 'Latest Movies',
+                'data' => array_map([$this, 'calculateRatingForMovie'], $this->moviedetail->latestMovies())
+            ],
+            'list_4' => [
+                'type' => 'most_viewed',
+                'heading' => 'Most Watched Movies',
+                'data' => array_map([$this, 'calculateRatingForMovie'], $this->moviedetail->getMostWatchedMovies())
+            ]
+        ]
+    ]);
 }
+
+
+
 
     public function getAdminDashBoardData()
     {
@@ -756,7 +748,14 @@ public function getRelatedMovies($id)
         'data' => $relatedMovies
     ]);
 }
- 
+ private function calculateRatingForMovie($movie)
+{
+    $likes = intval($movie['likes'] ?? 0);
+    $dislikes = intval($movie['dislikes'] ?? 0);
+    $total = $likes + $dislikes;
+    $movie['rating'] = $total > 0 ? round(($likes / $total) * 100, 1) : 0;
+    return $movie;
+}
 }
  
  

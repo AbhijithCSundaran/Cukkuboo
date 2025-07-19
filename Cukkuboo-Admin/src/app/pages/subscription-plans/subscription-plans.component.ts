@@ -17,6 +17,7 @@ interface SubscriptionPlan {
   discount_price?: string | number;
   period: string;
   features: string;
+  expanded?: boolean;
 }
 
 @Component({
@@ -73,6 +74,8 @@ export class SubscriptionPlansComponent implements OnInit, AfterViewInit {
       console.log('API response from listPlans():', response); 
       this.dataSource.data = response?.data || response || [];
       this.totalItems = response?.total || this.dataSource.data.length;
+      expanded: false
+      
     },
     error: (error) => {
       console.error('Error fetching plans:', error);
@@ -129,5 +132,8 @@ export class SubscriptionPlansComponent implements OnInit, AfterViewInit {
       verticalPosition: 'top',
       panelClass: [panelClass]
     });
+  }
+  toggleContent(plan: SubscriptionPlan): void {
+    plan.expanded = !plan.expanded;
   }
 }

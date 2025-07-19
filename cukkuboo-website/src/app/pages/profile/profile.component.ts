@@ -125,7 +125,8 @@ export class ProfileComponent implements OnInit {
     private storageService: StorageService,
     private fb: FormBuilder,
     private snackBar: MatSnackBar,
-    private router: Router) { }
+    private router: Router
+  ) { }
 
   ngOnInit(): void {
     const activeTab = localStorage.getItem('activeTab');
@@ -160,8 +161,11 @@ export class ProfileComponent implements OnInit {
 
  this.changePasswordForm = this.fb.group({
       currentPassword: ['', Validators.required],
-        password: ['', [Validators.required, Validators.minLength(8), ValidationService.passwordValidator]],
-      confirmPassword: ['', Validators.required],
+
+
+      newPassword: ['', [Validators.required, Validators.minLength(8), ValidationService.passwordValidator]],
+      confirmPassword: ['', Validators.required]
+
     });
 
     this.deleteAccountForm = this.fb.group({

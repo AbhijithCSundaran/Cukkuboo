@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '../../services/user/user.service';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CommonModule } from '@angular/common';
 import { StorageService } from '../../core/services/TempStorage/storageService';
@@ -114,21 +115,25 @@ export class ProfileComponent implements OnInit {
     { name: 'Jamaica', dial_code: '+1-876', code: 'JM' },
     { name: 'Japan', dial_code: '+81', code: 'JP' },
     { name: 'Jordan', dial_code: '+962', code: 'JO' },
+
   ];
+
+
 
   constructor(
     private userService: UserService,
     private storageService: StorageService,
     private fb: FormBuilder,
     private snackBar: MatSnackBar,
-    private router: Router
-  ) {}
+    private router: Router) { }
 
   ngOnInit(): void {
     const activeTab = localStorage.getItem('activeTab');
     const savedView = localStorage.getItem('showProfileInfo');
     this.showProfileInfo = savedView !== 'false';
 
+
+    // Reset all first
     this.showProfileInfo = false;
     this.showChangePassword = false;
     this.ShowDeleteAccount = false;
@@ -138,21 +143,25 @@ export class ProfileComponent implements OnInit {
     } else if (activeTab === 'deleteAccount') {
       this.ShowDeleteAccount = true;
     } else {
-      this.showProfileInfo = true;
+      this.showProfileInfo = true; // default to profile
     }
 
     this.profileForm = this.fb.group({
       username: ['', [Validators.required]],
       email: ['', [Validators.required, ValidationService.emailValidator]],
-      phone: ['', [Validators.required, Validators.pattern('^[0-9]{6,15}$')]],
+      // countryCode: ['', Validators.required],
+      phone: ['', [Validators.required,
+
+      Validators.pattern('^[0-9]{6,15}$')
+      ]],
       subscription: [''],
       country_code: ['+91']
-    });
+ });
 
-    this.changePasswordForm = this.fb.group({
+ this.changePasswordForm = this.fb.group({
       currentPassword: ['', Validators.required],
-      password: ['', [Validators.required, Validators.minLength(8), ValidationService.passwordValidator]],
-      confirmPassword: ['', Validators.required]
+        password: ['', [Validators.required, Validators.minLength(8), ValidationService.passwordValidator]],
+      confirmPassword: ['', Validators.required],
     });
 
     this.deleteAccountForm = this.fb.group({
@@ -162,18 +171,13 @@ export class ProfileComponent implements OnInit {
     this.loadUserData();
   }
 
-  forceLowercase(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    const lowercaseValue = input.value.toLowerCase();
-    input.value = lowercaseValue;
-    this.profileForm.get('email')?.setValue(lowercaseValue, { emitEvent: false });
-  }
 
   loadUserData(): void {
     const data = this.storageService.getItem('userData');
     if (data) {
       this.userId = data.user_id;
-      let countryCode = '+91';
+      // Find matching country code from the full number
+      let countryCode = '+91'; // default
       let phoneNumber = data.phone || '';
 
       for (const country of this.countryCodes) {
@@ -183,29 +187,47 @@ export class ProfileComponent implements OnInit {
           break;
         }
       }
-
       this.profileForm.patchValue({
         username: data.username,
         email: data.email,
         phone: phoneNumber,
         subscription: SubscriptionStatus[Number(data?.subscription_details?.subscription) || 0],
-        country_code: countryCode
-      });
+        country_code: countryCode,
 
+      });
       this.initialFormValue = this.profileForm.getRawValue();
     }
-  }
+    // this.storageService.onUpdateItem.subscribe(() => {    });
+    // this.userService.getProfile().subscribe({
+    //   next: (response) => {
+    //     const data = response.data;
+    //     this.userId = data.user_id;
+    //     this.profileForm.patchValue({
+    //       username: data.username,
+    //       email: data.email,
+    //       phone: data.phone,
+    //       subscription: data.subscription,
+    //       country_code: data.country_code || '+91',
 
+    //     });
+    //     this.initialFormValue = this.profileForm.getRawValue();
+    //   },
+
+    //   error: (err) => {
+    //     console.error('Error fetching profile', err);
+    //   }
+    // });
+  }
   isFormChanged(): boolean {
     const currentValue = this.profileForm.getRawValue();
+
     return JSON.stringify(currentValue) !== JSON.stringify(this.initialFormValue);
   }
-
   isPhoneValid(): boolean {
     const phone = this.profileForm.get('phone')?.value;
     return phone?.length >= 7;
   }
-
+  //update Profile
   onSubmit(): void {
     if (this.profileForm.valid) {
       const formValue = this.profileForm.value;
@@ -237,6 +259,7 @@ export class ProfileComponent implements OnInit {
         }
       });
     } else {
+      console.warn('Form is invalid');
       this.snackBar.open('Form is invalid', '', {
         duration: 3000,
         verticalPosition: 'top',
@@ -244,7 +267,6 @@ export class ProfileComponent implements OnInit {
       });
     }
   }
-
   allowOnlyDigits(event: KeyboardEvent): void {
     const charCode = event.which ? event.which : event.keyCode;
     if (charCode < 48 || charCode > 57) {
@@ -252,10 +274,12 @@ export class ProfileComponent implements OnInit {
     }
   }
 
+
   toggleChangePassword(): void {
     this.showProfileInfo = false;
     this.ShowDeleteAccount = false;
     this.showChangePassword = true;
+    // localStorage.setItem('activeTab', 'changePassword');
   }
 
   backToProfile(): void {
@@ -269,13 +293,15 @@ export class ProfileComponent implements OnInit {
     this.showProfileInfo = false;
     this.showChangePassword = false;
     this.ShowDeleteAccount = true;
+    // localStorage.setItem('activeTab', 'deleteAccount');
   }
+
 
   onChangePassword(): void {
     if (this.changePasswordForm.valid) {
-      const { currentPassword, password, confirmPassword } = this.changePasswordForm.value;
+      const { currentPassword, newPassword, confirmPassword } = this.changePasswordForm.value;
 
-      if (password !== confirmPassword) {
+      if (newPassword !== confirmPassword) {
         this.snackBar.open('New passwords do not match.', '', {
           duration: 3000,
           verticalPosition: 'top',
@@ -286,7 +312,7 @@ export class ProfileComponent implements OnInit {
 
       const model = {
         oldPassword: currentPassword.trim(),
-        newPassword: password.trim(),
+        newPassword: newPassword.trim(),
         confirmPassword: confirmPassword.trim()
       };
 
@@ -328,6 +354,9 @@ export class ProfileComponent implements OnInit {
     }
   }
 
+
+
+
   onDeleteAccount(): void {
     const password = this.deleteAccountForm.get('deleteProfile')?.value;
     if (!password) return;
@@ -367,4 +396,8 @@ export class ProfileComponent implements OnInit {
       }
     });
   }
+
+
+
+
 }

@@ -59,18 +59,13 @@
                             </div>
                         </div>
 
-<!-- Email -->
+                        <!-- Email -->
+                       <!-- Email -->
 <div class="form-group row align-items-center mb-3">
   <label class="col-sm-3 col-form-label">Email Address:</label>
   <div class="col-sm-9 position-relative">
-    <input
-      class="form-control"
-      type="email"
-      formControlName="email"
-      (input)="forceLowercase($event)"
-      autocomplete="email"
-      style="text-transform: lowercase"
-    />
+    <input class="form-control" type="email" formControlName="email" />
+
     <div class="text-danger mt-1" *ngIf="profileForm.get('email')?.invalid && profileForm.get('email')?.touched">
       <small *ngIf="profileForm.get('email')?.errors?.['required']">Email is required.</small>
       <small *ngIf="profileForm.get('email')?.errors?.['email']">Please enter a valid email address.</small>

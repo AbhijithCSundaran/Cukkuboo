@@ -16,6 +16,7 @@ class Support extends ResourceController
     {
         $this->supportModel = new SupportModel();
         $this->authService = new AuthService();
+        $this->db = \Config\Database::connect();
     }
 
     public function submitIssue()
@@ -35,10 +36,27 @@ class Support extends ResourceController
         $description = $this->request->getPost('description');
         $status      = $this->request->getPost('status') ?? 1; 
 
-        if (empty($email)) return $this->failValidationErrors('Email is required.');
-        if (empty($issue_type)) return $this->failValidationErrors('Issue type is required.');
-        if (empty($description)) return $this->failValidationErrors('Description is required.');
+        if (empty($email)) {
+            return $this->failValidationErrors('Email is required.');
+        }
+        if (empty($phone)) {
+            return $this->failValidationErrors('Phone Number is required.');
+        }
+        if (empty($issue_type)){
+            return $this->failValidationErrors('Issue type is required.');
+        }
+        if (empty($description)){
+            return $this->failValidationErrors('Description is required.');
+        }
+        $userData = $this->db->table('user')
+        ->select('email, phone')
+        ->where('user_id', $userId)
+        ->get()
+        ->getRowArray();
 
+        if (!$userData || $userData['email'] !== $email || $userData['phone'] !== $phone) {
+            return $this->failValidationErrors('Email or phone does not match your account information.');
+        }
         $screenshotName = null;
         $screenshot = $this->request->getFile('screenshot');
         if ($screenshot && $screenshot->isValid() && !$screenshot->hasMoved()) {

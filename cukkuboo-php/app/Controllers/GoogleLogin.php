@@ -82,20 +82,47 @@ class GoogleLogin extends BaseController
                 'data' => []
             ]);
         } elseif ($user['status'] == 9) {
-            return $this->response->setJSON([
-                'success' => false,
-                'message' => 'Account deleted.',
-                'data' => []
+            $newUserData = [
+                'email'          => $email,
+                'username'       => isset($googleUser['name']) ? $googleUser['name'] : explode('@', $email)[0],
+                'password'       => '', 
+                'auth_type'      => 'google',
+                'phone'          => '',
+                'user_type'      => 'Customer',
+                'status'         => 1,
+                'subscription'   => 'free', 
+                'isBlocked'      => 0,
+                'join_date'      => $now,
+                'date_of_birth'  => null,
+                'country'        => '',
+                'created_at'     => $now,
+                'last_login'     => $now,
+                'updated_at'     => $now
+            ];
+
+            $this->loginModel->insert($newUserData);
+            $userId = $this->loginModel->insertID();
+
+            $token = $jwt->encode(['user_id' => $userId]);
+
+            $this->loginModel->update($userId, [
+                'jwt_token'  => $token,
+                'last_login' => $now,
+                'created_by' => $userId,
+                'updated_by' => $userId,
+                'updated_at' => $now
+            ]);
+
+            $user = $this->loginModel->find($userId);
+            $isNew = true;
+        } else {
+            $token = $jwt->encode(['user_id' => $user['user_id']]);
+            $this->loginModel->update($user['user_id'], [
+                'jwt_token' => $token,
+                'last_login' => $now
             ]);
         }
-        $token = $jwt->encode(['user_id' => $user['user_id']]);
-        $this->loginModel->update($user['user_id'], [
-            'jwt_token' => $token,
-            'last_login' => $now
-        ]);
     } else {
-        $userId = null;
-        $now = date('Y-m-d H:i:s');
         $newUserData = [
             'email'          => $email,
             'username'       => isset($googleUser['name']) ? $googleUser['name'] : explode('@', $email)[0],
@@ -111,7 +138,7 @@ class GoogleLogin extends BaseController
             'country'        => '',
             'created_at'     => $now,
             'last_login'     => $now,
-            'updated_at'    => $now
+            'updated_at'     => $now
         ];
 
         $this->loginModel->insert($newUserData);
@@ -129,8 +156,8 @@ class GoogleLogin extends BaseController
 
         $user = $this->loginModel->find($userId);
         $isNew = true;
-
     }
+
     $subscription = $this->usersubModel
         ->select('user_subscription.*, subscriptionplan.plan_name')
         ->join('subscriptionplan', 'subscriptionplan.subscriptionplan_id = user_subscription.subscriptionplan_id')
@@ -173,7 +200,6 @@ class GoogleLogin extends BaseController
             'status'       => $user['status'], 
             'user_type'    => $user['user_type'] ?? 'Customer',
             'created_by'   => $user['user_id'],
-            // 'updated_by'   => $user['user_id'],
             'created_at'   => $user['created_at'],
             'updated_at'   => $user['updated_at'],
             'lastLogin'    => $now,

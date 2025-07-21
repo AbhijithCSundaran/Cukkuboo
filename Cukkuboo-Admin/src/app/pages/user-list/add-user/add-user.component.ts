@@ -14,25 +14,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
-import { AbstractControl, ValidationErrors } from '@angular/forms';
-
-export function strictEmailValidator(control: AbstractControl): ValidationErrors | null {
-  const email = control.value;
-
-  if (!email) return null;
-
-  const normalizedEmail = email.toLowerCase();
-  const regex = /^(?!.*\.\.)[a-z0-9._%+-]+@[a-z0-9-]+\.[a-z]{2,6}$/;
-
-  const knownTLDs = ['com', 'org', 'net', 'in', 'co', 'io'];
-
-  if (!regex.test(normalizedEmail)) return { strictEmail: true };
-
-  const tld = normalizedEmail.split('.').pop();
-  if (!tld || !knownTLDs.includes(tld)) return { strictEmail: true };
-
-  return null;
-}
+import { ValidationMessagesComponent } from '../../../core/components/validation-messsage/validaation-message.component';
+import { ValidationService } from '../../../core/services/validation.service';
 
 
 export class CustomDateAdapter extends NativeDateAdapter {
@@ -81,7 +64,8 @@ export const CUSTOM_DATE_FORMATS = {
     ReactiveFormsModule,
     MatSnackBarModule,
     MatIconModule,
-    CommonModule
+    CommonModule,
+    ValidationMessagesComponent
   ],
   templateUrl: './add-user.component.html',
   styleUrls: ['./add-user.component.scss'],
@@ -183,8 +167,7 @@ export class AddUserComponent implements OnInit {
       password: ['', [Validators.required, Validators.minLength(8)]],
       countryCode: [this.selectedCountryCode, Validators.required],
       phone: ['', [Validators.required, Validators.pattern(/^\d{6,15}$/), Validators.maxLength(15)]],
-      // email: ['', [Validators.required, Validators.email]],
-      email: ['', [Validators.required, strictEmailValidator]],
+       email: ['', [Validators.required, ValidationService.emailValidator]],
       country: ['', [Validators.pattern(/^[a-zA-Z\s]*$/)]],
       date_of_birth: ['', Validators.required],
       status: ['1', Validators.required],
@@ -201,6 +184,33 @@ export class AddUserComponent implements OnInit {
     const token = localStorage.getItem('token');
     console.log('Token from localStorage:', token);
   }
+
+  //  forceLowerCaseEmail(): void {
+  //   const emailControl = this.userForm.get('email');
+  //   const currentValue = emailControl?.value || '';
+  //   const lowerCased = currentValue.toLowerCase();
+  //   if (currentValue !== lowerCased) {
+  //     emailControl?.setValue(lowerCased, { emitEvent: false });
+  //   }
+  // }
+
+  forceLowerCaseEmail(event: any): void {
+  const inputElement = event.target;
+  const currentValue: string = inputElement.value;
+  const lowerCaseValue = currentValue.toLowerCase();
+
+  if (currentValue !== lowerCaseValue) {
+    const cursorPosition = inputElement.selectionStart;
+
+    // Set lowercased value
+    inputElement.value = lowerCaseValue;
+    this.userForm.get('email')?.setValue(lowerCaseValue, { emitEvent: false });
+
+    // Restore cursor position
+    inputElement.setSelectionRange(cursorPosition, cursorPosition);
+  }
+}
+
 
   loadUserData(id: number): void {
     this.userService.getUserById(id).subscribe({
@@ -334,12 +344,6 @@ export class AddUserComponent implements OnInit {
   goBack(): void {
     this.router.navigate(['/user-list']);
   }
-  normalizeEmail(): void {
-  const emailControl = this.userForm.get('email');
-  if (emailControl && emailControl.value) {
-    emailControl.setValue(emailControl.value.toLowerCase(), { emitEvent: false });
-  }
-}
 
 
 

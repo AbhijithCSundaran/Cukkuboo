@@ -177,7 +177,7 @@ export class SingleMovieComponent implements OnInit {
   askGotoSubscription() {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       data: {
-        message: `<p>Access this movie by subscribing to our platform,<br>Do you want to go to <span>Subscriptions</span> page now?</p>`
+message: `<p>Subscribe to our platform to access this movie.<br>Would you like to visit the <span>Subscription Plan</span> page now?</p>`
       }
     });
     dialogRef.afterClosed().subscribe((result: any) => {
@@ -232,7 +232,7 @@ export class SingleMovieComponent implements OnInit {
   copyUrlToClipboard(): void {
     if (document.hasFocus()) {
       const url = window.location.href.split('?')[0];
-      navigator.clipboard.writeText(url).then(() => {
+      navigator.clipboard?.writeText(url).then(() => {
         this.showSnackbar('Copied! Movie is ready to share.', 'success');
       }).catch(err => {
         console.error('Clipboard write failed:', err);

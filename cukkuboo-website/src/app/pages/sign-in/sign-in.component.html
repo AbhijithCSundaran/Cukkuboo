@@ -1,15 +1,12 @@
 <section class="position-relative pb-0 sign_wrpr" [class.popup]="modalData">
-  <div class="gen-login-page-background" style="background-image: url('assets/images/background/movie_banner.jpg')"></div>
+  <div class="gen-login-page-background" style="background-image: url('assets/images/background/movie_banner.jpg')">
+  </div>
 
   <div [ngClass]="modalData ? 'container-fluid m-0 p-0' : 'container'">
     <div class="row">
       <div class="col-lg-12">
         <div class="text-center">
-          <form
-            [formGroup]="step === 0 ? loginForm : forgotForm"
-            (ngSubmit)="step === 0 ? onSubmit() : null"
-            id="pms_login"
-          >
+          <form [formGroup]="step === 0 ? loginForm : forgotForm" (ngSubmit)="step === 0 ? onSubmit() : null" id="pms_login">
             <!-- Logo -->
             <div class="text-center mb-3 clickable-logo" routerLink="/">
               <img src="assets/images/logo-collapsed.png" alt="Logo" style="max-width: 60px;" />
@@ -32,7 +29,13 @@
             <ng-container *ngIf="step === 0">
               <mat-form-field appearance="outline" class="w-100">
                 <mat-label>Email Address</mat-label>
-                <input matInput formControlName="email" placeholder="Enter your email" />
+                <input
+                  matInput
+                  formControlName="email"
+                  placeholder="Enter your email"
+                  (input)="forceLowerCase('login')"
+                  (paste)="forceLowerCase('login')"
+                />
                 <mat-error>
                   <Validation-Messages [control]="loginForm.controls['email']"></Validation-Messages>
                 </mat-error>
@@ -40,7 +43,12 @@
 
               <mat-form-field appearance="outline" class="w-100">
                 <mat-label>Password</mat-label>
-                <input matInput [type]="hide ? 'password' : 'text'" formControlName="password" placeholder="Enter your password" />
+                <input
+                  matInput
+                  [type]="hide ? 'password' : 'text'"
+                  formControlName="password"
+                  placeholder="Enter your password"
+                />
                 <button mat-icon-button matSuffix (click)="hide = !hide" type="button">
                   <mat-icon class="small-eye-icon">{{ hide ? 'visibility_off' : 'visibility' }}</mat-icon>
                 </button>
@@ -57,6 +65,14 @@
                 <a (click)="startForgotFlow()" class="red-link">Forgot Password?</a>
               </div>
 
+              <div class="or-separator mt-2">
+                <span>or</span>
+              </div>
+
+              <div class="text-center mt-1 col-12 d-flex">
+                <div id="googleSignInBtn" class=""></div>
+              </div>
+
               <div class="text-start mt-2">
                 <span class="me-2">Don't have an account?</span>
                 <a (click)="navigateToSignUp()" class="signup-link red-link">Sign Up</a>
@@ -71,10 +87,17 @@
 
               <mat-form-field appearance="outline" class="w-100">
                 <mat-label>Email Address</mat-label>
-                <input matInput formControlName="email" />
+                <input
+                  matInput
+                  formControlName="email"
+                  placeholder="Enter your email"
+                  (input)="forceLowerCase('forgot')"
+                  (paste)="forceLowerCase('forgot')"
+                />
               </mat-form-field>
 
               <button type="button" class="red-button w-100 mt-2" (click)="sendEmail()">Send OTP</button>
+
               <div class="text-start mt-2">
                 <a (click)="goBackToLogin()" class="red-link">Back to Login</a>
               </div>
@@ -129,11 +152,8 @@
                 <button mat-icon-button matSuffix type="button" (click)="hideNewPassword = !hideNewPassword">
                   <mat-icon class="small-eye-icon">{{ hideNewPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
                 </button>
-                <mat-error *ngIf="forgotForm.controls['new_password'].hasError('required')">
-                  Password is required
-                </mat-error>
-                <mat-error *ngIf="forgotForm.controls['new_password'].hasError('minlength')">
-                  Password must be at least 8 characters
+                <mat-error>
+                  <Validation-Messages [control]="forgotForm.controls['new_password']"></Validation-Messages>
                 </mat-error>
               </mat-form-field>
 
@@ -147,11 +167,8 @@
                 <button mat-icon-button matSuffix type="button" (click)="hideConfirmPassword = !hideConfirmPassword">
                   <mat-icon class="small-eye-icon">{{ hideConfirmPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
                 </button>
-                <mat-error *ngIf="forgotForm.controls['confirm_password'].hasError('required')">
-                  Confirm password is required
-                </mat-error>
-                <mat-error *ngIf="forgotForm.controls['confirm_password'].hasError('minlength')">
-                  Password must be at least 8 characters
+                <mat-error>
+                  <Validation-Messages [control]="forgotForm.controls['confirm_password']"></Validation-Messages>
                 </mat-error>
               </mat-form-field>
 

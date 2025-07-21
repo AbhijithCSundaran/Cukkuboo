@@ -26,7 +26,8 @@ class UserModel extends Model
         'updated_by',
         'updated_at',
         'date_of_birth',
-        'email_preference'
+        'email_preference',
+        'auth_type',
     ];
 
 

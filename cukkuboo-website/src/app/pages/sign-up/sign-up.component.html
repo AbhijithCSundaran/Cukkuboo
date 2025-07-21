@@ -1,13 +1,14 @@
 <section class="position-relative pb-0 sign_wrpr">
-  <div class="gen-register-page-background" style="background-image: url('assets/images/background/movie_banner.jpg');"></div>
+  <div class="gen-register-page-background" style="background-image: url('assets/images/background/movie_banner.jpg');">
+  </div>
   <div class="container">
     <div class="row">
       <div class="col-lg-12">
         <div class="form-aligned px-1">
           <form id="pms_register-form" class="pms-form" [formGroup]="signUpForm" (ngSubmit)="onSubmit()">
             <div class="text-center mb-3 clickable-logo" routerLink="/">
-  <img src="assets/images/logo-collapsed.png" alt="Logo" style="max-width: 60px;" />
-</div>
+              <img src="assets/images/logo-collapsed.png" alt="Logo" style="max-width: 60px;" />
+            </div>
 
 
             <h4 class="text-start">Join now for unlimited entertainment</h4>
@@ -19,125 +20,105 @@
                 <mat-form-field appearance="outline" class="w-100">
                   <mat-label>Name</mat-label>
                   <input matInput formControlName="username" placeholder="Enter name" />
-                  <mat-error *ngIf="signUpForm.controls['username'].touched && signUpForm.controls['username'].invalid">
+                  <mat-error>
                     <Validation-Messages [control]="signUpForm.controls['username']"></Validation-Messages>
                   </mat-error>
                 </mat-form-field>
               </li>
 
               <!-- Mobile Number -->
-           
-<li class="pms-field mb-0 mb-sm-1 mb-md-3">
-  <div class="d-flex">
-    <mat-form-field appearance="outline" class="me-2" style="width: 35%;">
-      <mat-label>Code</mat-label>
-      <mat-select formControlName="countryCode">
-        <mat-option *ngFor="let country of countryCodes" [value]="country.dial_code">
-          ({{ country.dial_code }})
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
 
-    <mat-form-field appearance="outline" style="width: 65%;">
-      <mat-label>Mobile Number</mat-label>
-      <input
-        matInput
-        formControlName="phone"
-        maxlength="15"
-        placeholder="Enter mobile number"
-        (input)="onNumberInput($event)"
-      />
-      <mat-error *ngIf="signUpForm.controls['phone'].touched && signUpForm.controls['phone'].invalid">
-        <Validation-Messages [control]="signUpForm.controls['phone']"></Validation-Messages>
-      </mat-error>
-    </mat-form-field>
-  </div>
+              <li class="pms-field mb-0 mb-sm-1 mb-md-3">
+                <div class="d-flex">
+                  <mat-form-field appearance="outline" class="me-1" style="width: 35%;">
+                    <mat-label>Code</mat-label>
+                    <mat-select formControlName="countryCode">
+                      <mat-option *ngFor="let country of countryCodes" [value]="country.dial_code"
+                        [matTooltip]="country.name">
+                        <small>{{country.id}} ({{ country.dial_code }})</small>
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline" style="width: 65%;">
+                    <mat-label>Mobile Number</mat-label>
+                    <input matInput formControlName="phone" maxlength="15" placeholder="Enter mobile number"
+                      (input)="onNumberInput($event)" />
+                    <mat-error>
+                      <Validation-Messages [control]="signUpForm.controls['phone']"></Validation-Messages>
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+              </li>
+
+
+             <!-- Email -->
+<li class="pms-field mb-0 mb-sm-1 mb-md-3">
+  <mat-form-field appearance="outline" class="w-100">
+    <mat-label>Email</mat-label>
+    <input matInput type="email" formControlName="email" placeholder="Enter email"
+           (input)="forceLowerCaseEmail()" />
+    <mat-error>
+      <Validation-Messages [control]="signUpForm.controls['email']"></Validation-Messages>
+    </mat-error>
+  </mat-form-field>
 </li>
 
 
-              <!-- Email -->
+              <!-- Date of Birth -->
               <li class="pms-field mb-0 mb-sm-1 mb-md-3">
                 <mat-form-field appearance="outline" class="w-100">
-                  <mat-label>Email</mat-label>
-                  <input matInput type="email" formControlName="email" placeholder="Enter email" />
-                  <mat-error *ngIf="signUpForm.controls['email'].touched && signUpForm.controls['email'].invalid">
-                    <Validation-Messages [control]="signUpForm.controls['email']"></Validation-Messages>
+                  <mat-label>Date of Birth</mat-label>
+                  <input matInput [matDatepicker]="dobPicker" formControlName="date_of_birth"
+                    placeholder="Choose a date" [max]="maxDate" (click)="dobPicker.open()" readonly />
+                  <mat-datepicker-toggle matSuffix [for]="dobPicker"></mat-datepicker-toggle>
+                  <mat-datepicker #dobPicker></mat-datepicker>
+                  <mat-error>
+                    <Validation-Messages [control]="signUpForm.controls['date_of_birth']"></Validation-Messages>
                   </mat-error>
                 </mat-form-field>
               </li>
 
-            <!-- Date of Birth -->
-<li class="pms-field mb-0 mb-sm-1 mb-md-3">
-  <mat-form-field appearance="outline" class="w-100">
-    <mat-label>Date of Birth</mat-label>
-    <input
-      matInput
-      [matDatepicker]="dobPicker"
-      formControlName="date_of_birth"
-      placeholder="Choose a date"
-      [max]="maxDate"
-      (click)="dobPicker.open()"
-      readonly
-    />
-    <mat-datepicker-toggle matSuffix [for]="dobPicker"></mat-datepicker-toggle>
-    <mat-datepicker #dobPicker></mat-datepicker>
-    <mat-error *ngIf="signUpForm.controls['date_of_birth'].touched && signUpForm.controls['date_of_birth'].invalid">
-      <Validation-Messages [control]="signUpForm.controls['date_of_birth']"></Validation-Messages>
-    </mat-error>
-  </mat-form-field>
-</li>
-
 
               <!-- Password -->
-           
-<li class="pms-field mb-0 mb-sm-1 mb-md-3">
-  <mat-form-field appearance="outline" class="w-100">
-    <mat-label>Password</mat-label>
-    <input
-      matInput
-      [type]="hidePassword ? 'password' : 'text'"
-      formControlName="password"
-      placeholder="Enter password"
-    />
-    <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" type="button">
-      <mat-icon class="small-eye-icon">{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
-    </button>
 
-    <!-- Custom password validation error -->
-    <mat-error *ngIf="signUpForm.controls['password'].touched && signUpForm.controls['password'].invalid">
-      <ng-container *ngIf="signUpForm.controls['password'].errors?.['required']">
-        Password is required.
-      </ng-container>
-      <ng-container *ngIf="signUpForm.controls['password'].errors?.['minlength']">
-        Password must be at least 8 characters long.
-      </ng-container>
-    </mat-error>
-  </mat-form-field>
-</li>
+              <li class="pms-field mb-0 mb-sm-1 mb-md-3">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Password</mat-label>
+                  <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password"
+                    placeholder="Enter password" />
+                  <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" type="button">
+                    <mat-icon class="small-eye-icon">{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+                  </button>
+
+                  <!-- Custom password validation error -->
+                  <mat-error>
+                    <Validation-Messages [control]="signUpForm.controls['password']"></Validation-Messages>
+                  </mat-error>
+                </mat-form-field>
+              </li>
 
               <!-- Confirm Password -->
               <li class="pms-field mb-0 mb-sm-1 mb-md-3">
                 <mat-form-field appearance="outline" class="w-100">
                   <mat-label>Confirm Password</mat-label>
-                  <input
-                    matInput
-                    [type]="hideConfirmPassword ? 'password' : 'text'"
-                    formControlName="confirmPassword"
-                    placeholder="Repeat password"
-                  />
+                  <input matInput [type]="hideConfirmPassword ? 'password' : 'text'" formControlName="confirmPassword"
+                    placeholder="Repeat password" />
                   <button mat-icon-button matSuffix (click)="hideConfirmPassword = !hideConfirmPassword" type="button">
-                    <mat-icon class="small-eye-icon">{{ hideConfirmPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+                    <mat-icon class="small-eye-icon">{{ hideConfirmPassword ? 'visibility_off' : 'visibility'
+                      }}</mat-icon>
                   </button>
-
-                  <mat-error *ngIf="signUpForm.controls['confirmPassword'].touched && signUpForm.controls['confirmPassword'].invalid">
+                  <mat-error>
                     <Validation-Messages [control]="signUpForm.controls['confirmPassword']"></Validation-Messages>
+                    <span *ngIf="signUpForm.hasError('passwordMismatch')">Password and Confirm Password do not
+                      match.</span>
                   </mat-error>
-
                   <!-- Password mismatch error -->
-                  <mat-error *ngIf="signUpForm.hasError('passwordMismatch') && signUpForm.get('confirmPassword')?.touched">
-                    Password and Confirm Password do not match.
-                  </mat-error>
+                  <!-- <mat-error *ngIf="signUpForm.hasError('passwordMismatch') && !signUpForm.get('confirmPassword')?.hasError('required')">
+                    
+                  </mat-error> -->
                 </mat-form-field>
+                <!-- {{}} -->
               </li>
             </ul>
 

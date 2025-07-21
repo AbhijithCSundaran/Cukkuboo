@@ -1,18 +1,41 @@
-import { Component, Inject, Optional, OnDestroy } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import {
+  Component,
+  Inject,
+  Optional,
+  OnDestroy,
+  OnInit
+} from '@angular/core';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators
+} from '@angular/forms';
+import {
+  MatSnackBar,
+  MatSnackBarModule
+} from '@angular/material/snack-bar';
 import { Router, RouterLink } from '@angular/router';
-import { MatFormFieldModule } from '@angular/material/form-field';
+import {
+  MatFormFieldModule
+} from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { ValidationMessagesComponent } from '../../core/components/validation-messsage/validaation-message.component';
 import { CommonModule } from '@angular/common';
+
 import { StorageService } from '../../core/services/TempStorage/storageService';
 import { UserService } from '../../services/user/user.service';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { ValidationMessagesComponent } from '../../core/components/validation-messsage/validaation-message.component';
+import { ValidationService } from '../../core/services/validation.service';
+import {
+  MAT_DIALOG_DATA,
+  MatDialogRef
+} from '@angular/material/dialog';
 import { SubscriptionStatus } from '../../model/enum';
+
+declare const google: any;
 
 @Component({
   selector: 'app-sign-in',
@@ -32,16 +55,15 @@ import { SubscriptionStatus } from '../../model/enum';
     ValidationMessagesComponent
   ]
 })
-export class SignInComponent implements OnDestroy {
+export class SignInComponent implements OnInit, OnDestroy {
   loginForm: FormGroup;
   forgotForm: FormGroup;
-  loading = false;
   hide = true;
-  step: number = 0;
-  emailUsed = '';
   hideNewPassword = true;
   hideConfirmPassword = true;
+  step: number = 0;
   resendCountdown: number = 0;
+  emailUsed = '';
   private countdownInterval: any;
 
   constructor(
@@ -54,20 +76,34 @@ export class SignInComponent implements OnDestroy {
     @Optional() @Inject(MatDialogRef<SignInComponent>) public dialogRef: MatDialogRef<SignInComponent>
   ) {
     this.loginForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
+      email: ['', [Validators.required, Validators.email, ValidationService.emailValidator]],
       password: ['', Validators.required],
       rememberMe: [false]
     });
 
     this.forgotForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
+      email: ['', [Validators.required, Validators.email, ValidationService.emailValidator]],
       otp: [''],
-      new_password: ['', [Validators.required, Validators.minLength(8)]],
+      new_password: ['', [Validators.required, Validators.minLength(8), ValidationService.passwordValidator]],
       confirm_password: ['', [Validators.required, Validators.minLength(8)]]
     });
   }
 
-  private showSnackbar(message: string, isSuccess: boolean = false): void {
+  ngOnInit(): void {}
+
+  ngAfterViewInit() {
+    this.initializeGoogleSignIn();
+  }
+
+  forceLowerCase(formType: 'login' | 'forgot') {
+    const form = formType === 'login' ? this.loginForm : this.forgotForm;
+    const currentValue = form.get('email')?.value;
+    if (currentValue) {
+      form.get('email')?.setValue(currentValue.toLowerCase(), { emitEvent: false });
+    }
+  }
+
+  showSnackbar(message: string, isSuccess: boolean = false): void {
     this.snackBar.open(message, '', {
       duration: 3000,
       verticalPosition: 'top',
@@ -86,7 +122,10 @@ export class SignInComponent implements OnDestroy {
             this.storageService.updateItem('userData', response.data);
             this.storageService.updateItem('username', response.data?.username || 'User');
             this.storageService.updateItem('token', response.data?.jwt_token || 'token');
-            this.storageService.updateItem('subscription', SubscriptionStatus[+response.data?.subscription_details?.subscription || 0]);
+            this.storageService.updateItem(
+              'subscription',
+              SubscriptionStatus[+response.data?.subscription_details?.subscription || 0]
+            );
 
             this.modalData ? this.dialogRef.close(response) : this.router.navigate(['/home']);
           } else {
@@ -132,7 +171,7 @@ export class SignInComponent implements OnDestroy {
           this.emailUsed = email;
           this.step = 2;
           this.startResendCountdown();
-        } else if (response.success === false) {
+        } else {
           this.showSnackbar(response.message || 'User not found');
         }
       },
@@ -244,17 +283,77 @@ export class SignInComponent implements OnDestroy {
     });
   }
 
+  allowOnlyNumbers(event: KeyboardEvent): void {
+    const charCode = event.key.charCodeAt(0);
+    if (charCode < 48 || charCode > 57) {
+      event.preventDefault();
+    }
+  }
+
+  initializeGoogleSignIn(): void {
+    google.accounts.id.initialize({
+      client_id: '738497402180-j1miqtb3oopgef6v3i9d4s2c9f8mmtjo.apps.googleusercontent.com',
+      callback: (response: any) => this.handleGoogleLogin(response),
+    });
+
+    google.accounts.id.renderButton(
+      document.getElementById('googleSignInBtn'),
+      {
+        theme: 'filled_black',
+        size: 'large',
+        width: '100%',
+      }
+    );
+  }
+
+  handleGoogleLogin(response: any): void {
+    const credential = response.credential;
+    const email = this.parseJwt(credential)?.email || '';
+
+    const model = {
+      email,
+      google_token: credential
+    };
+
+    this.userService.googleLogin(model).subscribe({
+      next: (res) => {
+        if (res.success && res.data?.jwt_token) {
+          localStorage.setItem('t_k', res.data.jwt_token);
+          this.storageService.updateItem('userData', res.data);
+          this.storageService.updateItem('username', res.data?.username || 'User');
+          this.storageService.updateItem('token', res.data?.jwt_token || 'token');
+          this.storageService.updateItem(
+            'subscription',
+            SubscriptionStatus[+res.data?.subscription_details?.subscription || 0]
+          );
+
+          this.modalData ? this.dialogRef.close(res) : this.router.navigate(['/home']);
+        } else {
+          this.showSnackbar(res.message || 'Google login failed');
+        }
+      },
+      error: () => this.showSnackbar('Google login error')
+    });
+  }
+
+  parseJwt(token: string): any {
+    try {
+      const base64Url = token.split('.')[1];
+      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      const jsonPayload = decodeURIComponent(
+        atob(base64).split('').map(c =>
+          '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
+        ).join('')
+      );
+      return JSON.parse(jsonPayload);
+    } catch (e) {
+      return null;
+    }
+  }
+
   ngOnDestroy(): void {
     if (this.countdownInterval) {
       clearInterval(this.countdownInterval);
     }
   }
-  allowOnlyNumbers(event: KeyboardEvent): void {
-  const charCode = event.key.charCodeAt(0);
-  // Allow only digits (0-9)
-  if (charCode < 48 || charCode > 57) {
-    event.preventDefault();
-  }
-}
-
 }

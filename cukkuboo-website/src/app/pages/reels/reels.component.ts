@@ -62,13 +62,22 @@ export class ReelsComponent implements OnInit, AfterViewInit, OnDestroy {
   ) {
     this.route.paramMap.subscribe(params => {
       const reelId = this.route.snapshot.queryParamMap.get('re');
-      if (reelId) this.getReelById(String(this.commonService.DecodeId(reelId)));
+      if (reelId) {
+        this.reels = [];
+        this.videoStates = [];
+        this.mutedStates = [];
+        const id = String(this.commonService.DecodeId(reelId))
+        alert(id)
+        this.getReelById(id);
+        this.router.navigate([], { queryParams: { re: null }, queryParamsHandling: 'merge' });
+      }
+      else
+        this.loadReels();
     });
   }
 
   ngOnInit(): void {
     document.body.classList.add('reels-page');
-    this.loadReels();
     this.userData = this.storageService.getItem('userData');
   }
 
@@ -139,6 +148,7 @@ export class ReelsComponent implements OnInit, AfterViewInit, OnDestroy {
             this.mutedStates.push(...new Array(newReel.length).fill(true));
           }
         }
+        this.loadReels();
       },
     })
   }
@@ -193,6 +203,7 @@ export class ReelsComponent implements OnInit, AfterViewInit, OnDestroy {
       this.openLoginModal();
       return;
     }
+    reel.clicked = true;
     const alreadyLiked = reel.is_liked_by_user;
     const model = {
       reels_id: reel.id,
@@ -203,12 +214,16 @@ export class ReelsComponent implements OnInit, AfterViewInit, OnDestroy {
       next: () => {
         reel.is_liked_by_user = !alreadyLiked;
         reel.likes += alreadyLiked ? -1 : 1;
+        reel.clicked = false;
+
       },
       error: (err) => {
         console.error('Error toggling like:', err);
+        reel.clicked = false;
       }
     });
   }
+
 
   togglePlayPause(index: number): void {
     const video = this.videos.get(index)?.nativeElement;
@@ -296,9 +311,15 @@ export class ReelsComponent implements OnInit, AfterViewInit, OnDestroy {
     const elem = document.documentElement;
 
     if (!document.fullscreenElement) {
-      elem.requestFullscreen().then(() => (this.isFullscreen = true));
+      elem.requestFullscreen().then(() => {
+        this.scrollToIndex(this.currentIndex);
+        this.isFullscreen = true;
+      });
     } else {
-      document.exitFullscreen().then(() => (this.isFullscreen = false));
+      document.exitFullscreen().then(() => {
+        this.isFullscreen = false;
+        this.scrollToIndex(this.currentIndex);
+      });
     }
   }
 
@@ -309,7 +330,7 @@ export class ReelsComponent implements OnInit, AfterViewInit, OnDestroy {
   copyUrlToClipboard(reel: any): void {
     if (document.hasFocus()) {
       const url = window.location.href.split('?')[0] + '?re=' + this.commonService.EncodeId(reel.id);
-      navigator.clipboard.writeText(url).then(() => {
+      navigator.clipboard?.writeText(url).then(() => {
         this.snackBar.open('Copied! Reel is ready to share.', '', {
           duration: 3000,
           verticalPosition: 'top',
@@ -331,3 +352,5 @@ export class ReelsComponent implements OnInit, AfterViewInit, OnDestroy {
     window.removeEventListener('keydown', this.handleKeydown);
   }
 }
+
+

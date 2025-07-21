@@ -9,8 +9,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material/core';
-import { HttpClientModule } from '@angular/common/http';
+import { MatNativeDateModule, DateAdapter, MAT_DATE_FORMATS, NativeDateAdapter } from '@angular/material/core';
 
 interface Subscription {
   username: string;
@@ -20,20 +19,45 @@ interface Subscription {
   end_date: string;
   status: string; // will be '1', '2', or '3'
 }
+export class CustomDateAdapter extends NativeDateAdapter {
+  override format(date: Date, displayFormat: Object): string {
+    if (displayFormat === 'input') {
+      const day = this._to2digit(date.getDate());
+      const month = this._to2digit(date.getMonth() + 1);
+      const year = date.getFullYear();
+      return `${day}-${month}-${year}`;
+    }
+    return super.format(date, displayFormat);
+  }
+
+  private _to2digit(n: number): string {
+    return ('00' + n).slice(-2);
+  }
+}
+
+export const CUSTOM_DATE_FORMATS = {
+  parse: {
+    dateInput: { day: 'numeric', month: 'numeric', year: 'numeric' }
+  },
+  display: {
+    dateInput: 'input',
+    monthYearLabel: { year: 'numeric', month: 'short' },
+    dateA11yLabel: { year: 'numeric', month: 'long', day: 'numeric' },
+    monthYearA11yLabel: { year: 'numeric', month: 'long' }
+  }
+};
+
 
 @Component({
   selector: 'app-subscriptions',
   standalone: true,
   imports: [
-    CommonModule,
-    MatTableModule,
-    MatPaginatorModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatIconModule,
-    MatDatepickerModule,
-    MatNativeDateModule,
-    HttpClientModule
+    CommonModule, MatTableModule, MatPaginatorModule, MatFormFieldModule,
+    MatInputModule, MatIconModule, MatDatepickerModule, MatNativeDateModule,
+  ],
+  providers: [
+    { provide: DateAdapter, useClass: CustomDateAdapter },
+    { provide: MAT_DATE_FORMATS, useValue: CUSTOM_DATE_FORMATS }
   ],
   templateUrl: './subscriptions.component.html',
   styleUrls: ['./subscriptions.component.scss']

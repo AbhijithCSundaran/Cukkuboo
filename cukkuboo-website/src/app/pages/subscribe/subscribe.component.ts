@@ -292,7 +292,7 @@ export class SubscribeComponent implements OnInit {
           res.data.subscription = res.data?.status | 1;
           this.UserData.subscription_details = res.data;
           this.storageService.updateItem('userData', this.UserData);
-          this.router.navigate(['/profile'])
+          this.router.navigate(['/subscription-details'])
         }
         this.snackBar.open(res?.success ? 'Subscription activated successfully.' : res?.messages?.error || 'Subscription failed.', '',
           {

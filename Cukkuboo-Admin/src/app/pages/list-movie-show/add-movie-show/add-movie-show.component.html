@@ -18,7 +18,8 @@
                 <div class="drag-drop-zone" (dragover)="onVideoDragOver($event)" (drop)="onVideoDrop($event)"
                   (click)="videoInput.click()">
                   <i class="fa-sharp fa-solid fa-arrow-up-from-bracket upload-icon"></i>
-                  <p *ngIf="!videoName">Drag & drop a video here or click to select (MP4 only)</p>
+                  <p *ngIf="!videoName">Drag & drop a video here or click to select (MP4 files only, with a maximum size of 2GB)</p>
+                  <!-- <span>You can upload videos with a maximum size of 2GB.</span> -->
                   <p *ngIf="videoName">Video Selected: {{ videoName }}</p>
 
                   <div *ngIf="uploadProgress > 0 && uploadProgress < 100" class="progress-container">

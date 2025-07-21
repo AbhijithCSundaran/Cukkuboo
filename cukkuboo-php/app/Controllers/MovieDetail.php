@@ -638,7 +638,6 @@ public function latestMovies()
         ]);
     }
 
- 
 public function getUserHomeData()
 {
     $authHeader = AuthHelper::getAuthorizationToken($this->request);
@@ -682,9 +681,6 @@ public function getUserHomeData()
         ]
     ]);
 }
-
-
-
 
     public function getAdminDashBoardData()
     {

@@ -297,8 +297,6 @@ public function getWatchLaterId($user_id, $mov_id)
     return $result ? $result->watch_later_id : null;
 }
  
-
- 
 }
  
  

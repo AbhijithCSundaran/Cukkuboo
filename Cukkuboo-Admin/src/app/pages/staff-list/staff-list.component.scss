@@ -165,6 +165,14 @@
 .title{
   text-transform: capitalize;
 }
+.truncate-text {
+   overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  max-width: 200px;
+ 
+  
+}
 
   /*  Media Queries  */
   

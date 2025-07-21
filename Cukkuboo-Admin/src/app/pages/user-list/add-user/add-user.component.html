@@ -58,7 +58,7 @@
         <div class="w-50 px-2 pb-3">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Email</mat-label>
-            <input matInput formControlName="email" type="email" placeholder="Add email" />
+            <input matInput formControlName="email" type="email" placeholder="Add email" (input)="normalizeEmail()" />
             <mat-error *ngIf="userForm.get('email')?.hasError('required')">
               Email is required.
             </mat-error>

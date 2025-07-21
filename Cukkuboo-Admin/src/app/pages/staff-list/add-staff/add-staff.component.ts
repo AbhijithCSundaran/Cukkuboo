@@ -300,4 +300,10 @@ export class AddStaffComponent {
   goBack(): void {
     this.router.navigate(['/staff-list']);
   }
+   normalizeEmail(): void {
+  const emailControl = this.staffForm.get('email');
+  if (emailControl && emailControl.value) {
+    emailControl.setValue(emailControl.value.toLowerCase(), { emitEvent: false });
+  }
+}
 }

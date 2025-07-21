@@ -19,19 +19,21 @@ import { AbstractControl, ValidationErrors } from '@angular/forms';
 export function strictEmailValidator(control: AbstractControl): ValidationErrors | null {
   const email = control.value;
 
-  // Skip validation if field is empty — let 'required' handle it
   if (!email) return null;
 
-  const regex = /^(?!.*\.\.)[a-zA-Z0-9._%+-]+@[a-zA-Z0-9-]+\.[a-zA-Z]{2,6}$/;
+  const normalizedEmail = email.toLowerCase();
+  const regex = /^(?!.*\.\.)[a-z0-9._%+-]+@[a-z0-9-]+\.[a-z]{2,6}$/;
+
   const knownTLDs = ['com', 'org', 'net', 'in', 'co', 'io'];
 
-  if (!regex.test(email)) return { strictEmail: true };
+  if (!regex.test(normalizedEmail)) return { strictEmail: true };
 
-  const tld = email.split('.').pop()?.toLowerCase();
+  const tld = normalizedEmail.split('.').pop();
   if (!tld || !knownTLDs.includes(tld)) return { strictEmail: true };
 
   return null;
 }
+
 
 export class CustomDateAdapter extends NativeDateAdapter {
   override format(date: Date, displayFormat: Object): string {
@@ -84,9 +86,9 @@ export const CUSTOM_DATE_FORMATS = {
   templateUrl: './add-user.component.html',
   styleUrls: ['./add-user.component.scss'],
   providers: [
-      { provide: DateAdapter, useClass: CustomDateAdapter },
-      { provide: MAT_DATE_FORMATS, useValue: CUSTOM_DATE_FORMATS }
-    ],
+    { provide: DateAdapter, useClass: CustomDateAdapter },
+    { provide: MAT_DATE_FORMATS, useValue: CUSTOM_DATE_FORMATS }
+  ],
 })
 export class AddUserComponent implements OnInit {
   public UserId: number = 0;
@@ -259,7 +261,7 @@ export class AddUserComponent implements OnInit {
   saveUser(): void {
     if (this.userForm.valid) {
       const model = this.userForm.value;
-
+      model.email = model.email.toLowerCase(); 
       // Format date
       const dob: Date = model.date_of_birth;
       model.date_of_birth = this.formatDate(dob);
@@ -332,6 +334,13 @@ export class AddUserComponent implements OnInit {
   goBack(): void {
     this.router.navigate(['/user-list']);
   }
+  normalizeEmail(): void {
+  const emailControl = this.userForm.get('email');
+  if (emailControl && emailControl.value) {
+    emailControl.setValue(emailControl.value.toLowerCase(), { emitEvent: false });
+  }
+}
+
 
 
 }

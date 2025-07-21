@@ -25,6 +25,7 @@ class LoginModel extends Model
         'created_at',
         'updated_at',
         'last_login',
+        'created_by',
         'jwt_token',
         'fcm_token',
         'auth_type'

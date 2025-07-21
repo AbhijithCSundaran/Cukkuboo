@@ -111,8 +111,6 @@ class GoogleLogin extends BaseController
             'country'        => '',
             'created_at'     => $now,
             'last_login'     => $now,
-            'created_by'     => 0,
-            'updated_by'    => 0,
             'updated_at'    => $now
         ];
 
@@ -124,7 +122,9 @@ class GoogleLogin extends BaseController
         $this->loginModel->update($userId, [
             'jwt_token'  => $token,
             'last_login' => $now,
-            'modified_at'=> $now
+            'created_by' => $userId,
+            'updated_by' => $userId,
+            'updated_at' => $now
         ]);
 
         $user = $this->loginModel->find($userId);
@@ -170,10 +170,12 @@ class GoogleLogin extends BaseController
             'auth_type'    => $user['auth_type'] ?? 'google',
             'isBlocked'    => $user['status'] == 2,
             'subscription' => $user['subscription'] ?? '',
-            'status'        => $user['status'], 
+            'status'       => $user['status'], 
             'user_type'    => $user['user_type'] ?? 'Customer',
-            'createdAt'    => $user['created_at'],
-            'updatedAt'    => $user['updated_at'],
+            'created_by'   => $user['user_id'],
+            // 'updated_by'   => $user['user_id'],
+            'created_at'   => $user['created_at'],
+            'updated_at'   => $user['updated_at'],
             'lastLogin'    => $now,
             'jwt_token'    => $token,
             'notifications' => $unreadCount,

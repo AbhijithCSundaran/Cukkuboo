@@ -8,6 +8,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { UserService } from '../../services/user.service';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-user-list',
@@ -22,6 +23,7 @@ import { UserService } from '../../services/user.service';
     MatIconModule,
     MatFormFieldModule,
     MatInputModule,
+    MatTooltipModule
   ]
 })
 export class UserListComponent implements OnInit, AfterViewInit {

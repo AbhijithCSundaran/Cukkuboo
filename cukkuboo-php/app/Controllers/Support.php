@@ -68,7 +68,7 @@ class Support extends ResourceController
         $data['modify_on'] = date('Y-m-d H:i:s');
 
         if ($this->supportModel->update($supportId, $data)) {
-            $updatedData = $this->supportModel->find($supportId); // fetch updated record
+            $updatedData = $this->supportModel->find($supportId); 
             return $this->respond([
                 'success' => true,
                 'message' => 'Support issue updated successfully.',

@@ -144,7 +144,7 @@ body {
   font-size: 14px;
 }
 
-/* Updated Control Icons */
+/* Control Icons */
 .reel-wrapper .cntl-icos {
   position: absolute;
   right: 20px;
@@ -187,7 +187,7 @@ body {
   color: #dc3545 !important;
 }
 
-/*  Responsive for small screens */
+/* Responsive - Tablet */
 @media (max-width: 991px) {
   .reel-wrapper .reel-inner {
     height: calc(100vh - 60px);
@@ -196,9 +196,10 @@ body {
   }
 }
 
+/* Responsive - Mobile */
 @media (max-width: 575px) {
   .reel-wrapper .cntl-icos {
-    gap: 20px;
+    gap: 50px; /* Increased space between icons */
   }
 
   .reel-wrapper .cntl-icos .icon-block {
@@ -211,6 +212,11 @@ body {
 
   .reel-wrapper .cntl-icos .icon-block .icon-label {
     font-size: 12px;
+  }
+
+  /* Extra space below mute icon */
+  .reel-wrapper .cntl-icos .icon-block:last-child {
+    margin-bottom: 40px;
   }
 }
 

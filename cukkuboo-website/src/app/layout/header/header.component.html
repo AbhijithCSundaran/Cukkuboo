@@ -62,9 +62,11 @@
                   <li class="menu-item" routerLinkActive="active">
                     <a routerLink="/reels">Reels</a>
                   </li>
-                  <li class="menu-item" routerLinkActive="active">
-                    <a routerLink="/subscription-details"> My Subscription</a>
-                  </li>
+     <ng-container *ngIf="isSignedIn">
+  <li class="menu-item" routerLinkActive="active">
+    <a routerLink="/subscription-details"> My Subscription</a>
+  </li>
+</ng-container>
 
                   <ng-container *ngIf="!isSignedIn">
                     <li class="nav-item">
@@ -91,12 +93,11 @@
                         <i class="fa fa-history mr-1"></i> History
                       </a>
                     </li>
-                  <li class="nav-item mt-3 border-top pt-2">
-  <a (click)="askToSignout()" class="nav-link" style="cursor: pointer;">
-    <i class="fa fa-sign-out mr-1"></i> Sign Out
-  </a>
-</li>
-
+                    <li class="nav-item mt-3 border-top pt-2">
+                      <a (click)="askToSignout()" class="nav-link" style="cursor: pointer;">
+                        <i class="fa fa-sign-out mr-1"></i> Sign Out
+                      </a>
+                    </li>
                   </ng-container>
                 </ul>
               </div>
@@ -114,11 +115,6 @@
                   </li>
                   <li class="menu-item" routerLinkActive="active">
                     <a routerLink="/reels">Reels</a>
-                  </li>
-                  <li class="menu-item" routerLinkActive="active">
-                    <a routerLink="/movies" [queryParams]="{ search: 1 }">
-                      <i class="fa-solid fa-magnifying-glass search"></i>
-                    </a>
                   </li>
 
                   <ng-container *ngIf="!isSignedIn">
@@ -140,6 +136,8 @@
 
             <!-- User Info (Desktop) -->
             <div *ngIf="isSignedIn" class="gen-header-info-box d-none d-lg-flex align-items-center ml-auto">
+
+              <!-- Account Holder -->
               <div class="gen-account-holder" (mouseleave)="closeMenu()">
                 <a href="javascript:void(0)" id="gen-user-btn" (click)="showUserDropdown = !showUserDropdown">
                   <i class="fa fa-user p-1 user-icon"></i>
@@ -149,28 +147,30 @@
                 <div class="gen-account-menu" [class.gen-form-show]="showUserDropdown">
                   <ul class="col-12">
                     <li><a routerLink="/profile"><i class="fa fa-user"></i> Profile</a></li>
-                    <li>
-                      <a routerLink="/subscription-details">
-                        <i class="fa-solid fa-star"></i> My Subscription
-                      </a>
-                    </li>
+                    <li><a routerLink="/subscription-details"><i class="fa-solid fa-star"></i> My Subscription</a></li>
                     <li><a routerLink="/watch-later"><i class="fa fa-clock"></i> Watch Later</a></li>
                     <li><a routerLink="/history"><i class="fa fa-history"></i> History</a></li>
-<li>
-  <a (click)="askToSignout()" style="cursor: pointer;">
-    <i class="fa fa-sign-out mr-1"></i> Sign Out
-  </a>
-</li>
+                    <li>
+                      <a (click)="askToSignout()" style="cursor: pointer;">
+                        <i class="fa fa-sign-out mr-1"></i> Sign Out
+                      </a>
+                    </li>
                   </ul>
                 </div>
               </div>
 
-              <!--  Bell icon (Desktop) -->
-              <div class="notification-icon mx-4 position-relative d-none d-lg-block">
+              <!-- 🔍 Search icon (moved left of bell) -->
+              <a routerLink="/movies" [queryParams]="{ search: 1 }" class="d-none d-lg-block mx-2">
+                <i class="fa-solid fa-magnifying-glass search"></i>
+              </a>
+
+              <!-- 🔔 Bell icon -->
+              <div class="notification-icon mx-2 position-relative d-none d-lg-block">
                 <i class="fa-solid fa-bell search" (click)="goToNotifications()"></i>
                 <span class="notification-dot" *ngIf="hasUnreadNotification"></span>
               </div>
 
+              <!-- Subscribe button -->
               <div class="gen-btn-container ml-3" *ngIf="userData?.subscription_details?.subscription!=1">
                 <a routerLink="/subscribe" class="gen-button">
                   <div class="gen-button-block">
@@ -179,6 +179,7 @@
                   </div>
                 </a>
               </div>
+
             </div>
           </nav>
         </div>

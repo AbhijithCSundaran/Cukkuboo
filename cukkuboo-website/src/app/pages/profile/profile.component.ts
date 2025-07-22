@@ -16,6 +16,7 @@ import { SubscriptionStatus } from '../../model/enum';
 import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
 
+
 @Component({
   selector: 'app-profile',
   imports: [
@@ -47,7 +48,7 @@ export class ProfileComponent implements OnInit {
   deleteAccountForm!: FormGroup;
   showSignOutModal: boolean = false;
 
-  public countryCodes = [
+public countryCodes = [
     { name: 'Afghanistan', dial_code: '+93', code: 'AF' },
     { name: 'Albania', dial_code: '+355', code: 'AL' },
     { name: 'Algeria', dial_code: '+213', code: 'DZ' },
@@ -117,24 +118,19 @@ export class ProfileComponent implements OnInit {
     { name: 'Jordan', dial_code: '+962', code: 'JO' },
 
   ];
-
-
-
   constructor(
     private userService: UserService,
     private storageService: StorageService,
     private fb: FormBuilder,
     private snackBar: MatSnackBar,
     private router: Router
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     const activeTab = localStorage.getItem('activeTab');
     const savedView = localStorage.getItem('showProfileInfo');
     this.showProfileInfo = savedView !== 'false';
 
-
-    // Reset all first
     this.showProfileInfo = false;
     this.showChangePassword = false;
     this.ShowDeleteAccount = false;
@@ -144,28 +140,21 @@ export class ProfileComponent implements OnInit {
     } else if (activeTab === 'deleteAccount') {
       this.ShowDeleteAccount = true;
     } else {
-      this.showProfileInfo = true; // default to profile
+      this.showProfileInfo = true;
     }
 
     this.profileForm = this.fb.group({
       username: ['', [Validators.required]],
       email: ['', [Validators.required, ValidationService.emailValidator]],
-      // countryCode: ['', Validators.required],
-      phone: ['', [Validators.required,
-
-      Validators.pattern('^[0-9]{6,15}$')
-      ]],
+      phone: ['', [Validators.required, Validators.pattern('^[0-9]{6,15}$')]],
       subscription: [''],
       country_code: ['+91']
- });
+    });
 
- this.changePasswordForm = this.fb.group({
+    this.changePasswordForm = this.fb.group({
       currentPassword: ['', Validators.required],
-
-
       newPassword: ['', [Validators.required, Validators.minLength(8), ValidationService.passwordValidator]],
       confirmPassword: ['', Validators.required]
-
     });
 
     this.deleteAccountForm = this.fb.group({
@@ -175,13 +164,11 @@ export class ProfileComponent implements OnInit {
     this.loadUserData();
   }
 
-
   loadUserData(): void {
     const data = this.storageService.getItem('userData');
     if (data) {
       this.userId = data.user_id;
-      // Find matching country code from the full number
-      let countryCode = '+91'; // default
+      let countryCode = '+91';
       let phoneNumber = data.phone || '';
 
       for (const country of this.countryCodes) {
@@ -191,47 +178,29 @@ export class ProfileComponent implements OnInit {
           break;
         }
       }
+
       this.profileForm.patchValue({
         username: data.username,
         email: data.email,
         phone: phoneNumber,
         subscription: SubscriptionStatus[Number(data?.subscription_details?.subscription) || 0],
-        country_code: countryCode,
-
+        country_code: countryCode
       });
+
       this.initialFormValue = this.profileForm.getRawValue();
     }
-    // this.storageService.onUpdateItem.subscribe(() => {    });
-    // this.userService.getProfile().subscribe({
-    //   next: (response) => {
-    //     const data = response.data;
-    //     this.userId = data.user_id;
-    //     this.profileForm.patchValue({
-    //       username: data.username,
-    //       email: data.email,
-    //       phone: data.phone,
-    //       subscription: data.subscription,
-    //       country_code: data.country_code || '+91',
-
-    //     });
-    //     this.initialFormValue = this.profileForm.getRawValue();
-    //   },
-
-    //   error: (err) => {
-    //     console.error('Error fetching profile', err);
-    //   }
-    // });
   }
+
   isFormChanged(): boolean {
     const currentValue = this.profileForm.getRawValue();
-
     return JSON.stringify(currentValue) !== JSON.stringify(this.initialFormValue);
   }
+
   isPhoneValid(): boolean {
     const phone = this.profileForm.get('phone')?.value;
     return phone?.length >= 7;
   }
-  //update Profile
+
   onSubmit(): void {
     if (this.profileForm.valid) {
       const formValue = this.profileForm.value;
@@ -263,7 +232,6 @@ export class ProfileComponent implements OnInit {
         }
       });
     } else {
-      console.warn('Form is invalid');
       this.snackBar.open('Form is invalid', '', {
         duration: 3000,
         verticalPosition: 'top',
@@ -271,6 +239,7 @@ export class ProfileComponent implements OnInit {
       });
     }
   }
+
   allowOnlyDigits(event: KeyboardEvent): void {
     const charCode = event.which ? event.which : event.keyCode;
     if (charCode < 48 || charCode > 57) {
@@ -278,12 +247,10 @@ export class ProfileComponent implements OnInit {
     }
   }
 
-
   toggleChangePassword(): void {
     this.showProfileInfo = false;
     this.ShowDeleteAccount = false;
     this.showChangePassword = true;
-    // localStorage.setItem('activeTab', 'changePassword');
   }
 
   backToProfile(): void {
@@ -297,9 +264,7 @@ export class ProfileComponent implements OnInit {
     this.showProfileInfo = false;
     this.showChangePassword = false;
     this.ShowDeleteAccount = true;
-    // localStorage.setItem('activeTab', 'deleteAccount');
   }
-
 
   onChangePassword(): void {
     if (this.changePasswordForm.valid) {
@@ -348,7 +313,6 @@ export class ProfileComponent implements OnInit {
           });
         }
       });
-
     } else {
       this.snackBar.open('Please fill all required fields.', '', {
         duration: 3000,
@@ -357,9 +321,6 @@ export class ProfileComponent implements OnInit {
       });
     }
   }
-
-
-
 
   onDeleteAccount(): void {
     const password = this.deleteAccountForm.get('deleteProfile')?.value;
@@ -401,7 +362,11 @@ export class ProfileComponent implements OnInit {
     });
   }
 
-
-
-
+  // ✅ Add this method to fix your error
+  forceLowercase(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const lowercased = input.value.toLowerCase();
+    input.value = lowercased;
+    this.profileForm.get('email')?.setValue(lowercased);
+  }
 }

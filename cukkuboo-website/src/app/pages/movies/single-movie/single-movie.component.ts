@@ -49,7 +49,7 @@ export class SingleMovieComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
   // getMovie(id: number, autoplay: any): void {
   //   this.selectedVideo = '';
@@ -81,7 +81,7 @@ export class SingleMovieComponent implements OnInit {
         if (res?.success) {
           this.movieData = res.data;
 
-           // ✅ Convert percentage rating (0–100) to 0–5 and remove trailing .0
+          // ✅ Convert percentage rating (0–100) to 0–5 and remove trailing .0
           const ratingPercent = Number(this.movieData.rating || 0);
           const convertedRating = ratingPercent / 20;
           this.movieData.rating = Number.isInteger(convertedRating)
@@ -106,37 +106,37 @@ export class SingleMovieComponent implements OnInit {
     });
   }
 
- playVideo(video: string, isTrailer: boolean = false): void {
-  const userData = this.storageService.getItem('userData');
-  if (!isTrailer) {
-    if (!userData) {
-      this.openLoginModal();
-      return;
+  playVideo(video: string, isTrailer: boolean = false): void {
+    const userData = this.storageService.getItem('userData');
+    if (!isTrailer) {
+      if (!userData) {
+        this.openLoginModal();
+        return;
+      }
+      if (!video || (this.movieData.access != 1 && userData.subscription_details?.subscription != 1)) {
+        this.askGotoSubscription();
+        return;
+      }
     }
-    if (!video || (this.movieData.access != 1 && userData.subscription_details?.subscription != 1)) {
-      this.askGotoSubscription();
-      return;
+
+    this.selectedVideo = video;
+
+    if (video === this.movieData.video) {
+      const model = { mov_id: this.movieData.mov_id };
+
+      // Only call if not viewed
+      if (!this.movieData.is_viewed) {
+        this.addToView(model);
+        this.movieData.is_viewed = true;
+      }
+
+      // Save to watch history only if not present
+      if (!this.movieData.is_in_watch_history) {
+        this.addToWatchHistory(model);
+        this.movieData.is_in_watch_history = true; // prevent future duplicate history entries
+      }
     }
   }
-
-  this.selectedVideo = video;
-
-  if (video === this.movieData.video) {
-    const model = { mov_id: this.movieData.mov_id };
-
-    // Only call if not viewed
-    if (!this.movieData.is_viewed) {
-      this.addToView(model);
-      this.movieData.is_viewed = true; 
-    }
-
-    // Save to watch history only if not present
-    if (!this.movieData.is_in_watch_history) {
-      this.addToWatchHistory(model);
-      this.movieData.is_in_watch_history = true; // prevent future duplicate history entries
-    }
-  }
-}
 
   addToWatchHistory(model: any) {
     this.movieService.saveHistory(model).subscribe({
@@ -177,15 +177,19 @@ export class SingleMovieComponent implements OnInit {
   askGotoSubscription() {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       data: {
-message: `<p>Subscribe to our platform to access this movie.<br>Would you like to visit the <span>Subscription Plan</span> page now?</p>`
+        message: `<p>Subscribe to our platform to access this movie.<br>Would you like to visit the <span>Subscription Plan</span> page now?</p>`
       }
     });
+
     dialogRef.afterClosed().subscribe((result: any) => {
       if (result) {
+        this.storageService.updateItem('movieId', this.movieData.mov_id);
         this.router.navigate(['/subscribe']);
       }
     });
   }
+
+
 
   toggleWatchLater(): void {
     const userData = this.storageService.getItem('userData');
@@ -242,48 +246,48 @@ message: `<p>Subscribe to our platform to access this movie.<br>Would you like t
     }
   }
 
-toggleMovieReaction(reactionType: number): void {
-  if (!this.movieData || !this.movieData.mov_id) return;
+  toggleMovieReaction(reactionType: number): void {
+    if (!this.movieData || !this.movieData.mov_id) return;
 
-  const movieId = this.movieData.mov_id;
+    const movieId = this.movieData.mov_id;
 
-  this.movieService.movieReaction(movieId, reactionType).subscribe({
-    next: () => {
-      // Convert like/dislike to number to avoid string issues
-      this.movieData.likes = Number(this.movieData.likes || 0);
-      this.movieData.dislikes = Number(this.movieData.dislikes || 0);
+    this.movieService.movieReaction(movieId, reactionType).subscribe({
+      next: () => {
+        // Convert like/dislike to number to avoid string issues
+        this.movieData.likes = Number(this.movieData.likes || 0);
+        this.movieData.dislikes = Number(this.movieData.dislikes || 0);
 
-      if (reactionType === 1) {
-        if (this.movieData.is_liked_by_user) {
-          this.movieData.likes = Math.max(0, this.movieData.likes - 1);
-          this.movieData.is_liked_by_user = false;
-        } else {
-          this.movieData.likes += 1;
-          this.movieData.is_liked_by_user = true;
-
-          if (this.movieData.is_disliked_by_user) {
-            this.movieData.dislikes = Math.max(0, this.movieData.dislikes - 1);
-            this.movieData.is_disliked_by_user = false;
-          }
-        }
-      } else if (reactionType === 2) {
-        if (this.movieData.is_disliked_by_user) {
-          this.movieData.dislikes = Math.max(0, this.movieData.dislikes - 1);
-          this.movieData.is_disliked_by_user = false;
-        } else {
-          this.movieData.dislikes += 1;
-          this.movieData.is_disliked_by_user = true;
-
+        if (reactionType === 1) {
           if (this.movieData.is_liked_by_user) {
             this.movieData.likes = Math.max(0, this.movieData.likes - 1);
             this.movieData.is_liked_by_user = false;
+          } else {
+            this.movieData.likes += 1;
+            this.movieData.is_liked_by_user = true;
+
+            if (this.movieData.is_disliked_by_user) {
+              this.movieData.dislikes = Math.max(0, this.movieData.dislikes - 1);
+              this.movieData.is_disliked_by_user = false;
+            }
+          }
+        } else if (reactionType === 2) {
+          if (this.movieData.is_disliked_by_user) {
+            this.movieData.dislikes = Math.max(0, this.movieData.dislikes - 1);
+            this.movieData.is_disliked_by_user = false;
+          } else {
+            this.movieData.dislikes += 1;
+            this.movieData.is_disliked_by_user = true;
+
+            if (this.movieData.is_liked_by_user) {
+              this.movieData.likes = Math.max(0, this.movieData.likes - 1);
+              this.movieData.is_liked_by_user = false;
+            }
           }
         }
-      }
-    },
-    error: (err) => console.error('Error updating reaction:', err)
-  });
-}
+      },
+      error: (err) => console.error('Error updating reaction:', err)
+    });
+  }
 
 
 

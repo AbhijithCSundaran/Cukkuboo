@@ -59,3 +59,9 @@ footer#gen-footer[_ngcontent-ng-c3844748969] .gen-footer-top[_ngcontent-ng-c3844
 #back-to-top {
   cursor: pointer;
 }
+.gen-copyright-footer a {
+  cursor: default; 
+  pointer-events: none; 
+  text-decoration: none; 
+  color: inherit; 
+}

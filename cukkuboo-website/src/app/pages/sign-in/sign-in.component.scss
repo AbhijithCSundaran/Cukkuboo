@@ -201,3 +201,104 @@ mat-form-field {
 .or-separator:not(:empty)::after {
   margin-left: .75em;
 }
+.sign_wrpr.popup {
+  padding: 0.5rem !important;
+  min-height: auto;
+  overflow: visible;
+  font-size: 0.8rem !important;
+
+  // Logo
+  .clickable-logo {
+    margin-bottom: 0.5rem !important; // reduced space below logo
+        margin-top: 0.5rem !important; 
+
+    img {
+      max-width: 36px !important; // smaller logo
+      height: auto;
+    }
+  }
+
+  // Heading
+  h4,
+  .reset-heading {
+    font-size: 0.8rem !important;
+    margin: 0.25rem 0 0.5rem !important; // reduced top space
+  }
+
+  // Form fields
+  mat-form-field {
+    margin-bottom: 0  !important;
+    font-size: 1 rem !important;
+    width: 100% ;
+
+    .mat-form-field-wrapper {
+      padding-bottom: 0 !important;
+    }
+
+    .mat-form-field-infix {
+      padding: 0.2rem 0 !important;
+      min-height: 28px !important; // reduce height
+    }
+
+    .mat-input-element {
+      font-size: 1rem !important;
+      padding: 0.2rem 0.4rem !important;
+    }
+  }
+mat-form-field[_ngcontent-ng-c998379010] {
+    margin-bottom: 0rem !important;
+}
+  // Sign In button
+  .red-button {
+    font-size: 8px !important;
+    padding: 2px 5px !important;
+    min-width: 100px !important;
+    margin-top: 0rem !important; // reduce space above
+  }
+
+  // Google Sign-in
+  #googleSignInBtn {
+    margin-top: 0rem !important;
+    transform: scale(0.65) !important; // shrink button
+    transform-origin: left;
+  }
+
+  // Others
+  .or-separator {
+    font-size: 8px !important;
+    margin: 0rem 0 !important;
+  }
+
+  .instruction-text,
+  .reset-subtext,
+  .red-link,
+  .signup-link,
+  .resend-link,
+  .text-muted,
+  .countdown-text {
+    font-size: 0.7rem !important;
+  }
+
+  .mat-icon-button {
+    width: 28px !important;
+    height: 28px !important;
+  }
+
+  .small-eye-icon {
+    font-size: 12px !important;
+    width: 12px !important;
+    height: 12px !important;
+  }
+
+  .login-box {
+    padding: 0.55rem !important;
+    border-radius: 6px !important;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.12);
+  }
+  #pms_login {
+    padding-top: 0;
+  }
+
+
+  
+}

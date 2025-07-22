@@ -39,6 +39,10 @@ $routes->delete('category/categories/(:any)', 'Category::delete/$1');
 
 $routes->post('upload-video', 'Uploads::uploadVideo');
 $routes->post('upload-image', 'Uploads::uploadImage');
+// $routes->get('test-encryption', 'Uploads::testEncryption');
+// $routes->get('stream-video', 'Uploads::streamVideo');
+
+
 
 //Movie details
 

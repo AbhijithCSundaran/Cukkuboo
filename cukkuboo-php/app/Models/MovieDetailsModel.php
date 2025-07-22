@@ -113,48 +113,55 @@ public function countAllMovies()
                     ->get()
                    ->getResultArray();
  }
-// public function getLatestMovies($limit = 10, $offset = 0, $search = null)
-// {
-//     $builder = $this->where('status !=', 9);
- 
-//     if (!empty($search)) {
-//         $builder->groupStart()
-//                 ->like('title', $search)
-//                 ->orLike('cast_details', $search)
-//                 ->groupEnd();
-//     }
- 
-//     $total = $builder->countAllResults(false);
- 
-//     $results = $builder->orderBy('release_date', 'DESC')
-//                        ->findAll($limit, $offset);
- 
-//     return [
-//         'movies' => $results,
-//         'total'  => $total
-//     ];
-// }
- 
- 
- 
-public function getMostWatchedMovies()
+public function getLatestMovies($limit = 10, $offset = 0, $search = null)
 {
-    $results = $this->where('status', 1)
-                    ->orderBy('views', 'DESC')
-                    ->limit(10)
-                    ->findAll();
+    $builder = $this->where('status !=', 9);
  
+   if (!empty($search)) {
+        $this->applySearchFilter($builder, $search);
+    }
+    $total = $builder->countAllResults(false);
+ 
+    $results = $builder->orderBy('release_date', 'DESC')
+                       ->findAll($limit, $offset);
+ 
+    return [
+        'movies' => $results,
+        'total'  => $total
+    ];
+}
+ 
+ 
+ 
+public function getMostWatchedMovies($limit = 10, $offset = 0, $search = null)
+{
+    $builder = $this->where('status', 1);
+
+    if (!empty($search)) {
+        $this->applySearchFilter($builder, $search);
+    }
+
+    $total = $builder->countAllResults(false);
+
+    $results = $builder->orderBy('views', 'DESC')
+                       ->limit($limit, $offset)
+                       ->findAll();
+
     foreach ($results as &$row) {
         unset($row['video']);
     }
- 
-    return $results;
+
+    return [
+        'movies' => $results,
+        'total' => $total
+    ];
 }
- public function getTrendingList($limit, $offset)
+
+ public function getTrendingList($limit, $offset, $search = null)
 {
     $sevenDaysAgo = date('Y-m-d', strtotime('-7 days'));
-
-    return $this->db->table('movies_details md')
+    
+    $builder = $this->db->table('movies_details md')
         ->select('md.*, COUNT(wh.mov_id) as recent_views')
         ->join(
             'watch_history wh',
@@ -162,15 +169,19 @@ public function getMostWatchedMovies()
             'left'
         )
         ->where('md.status', 1)
-        ->where('md.release_date <=', date('Y-m-d'))
-        ->groupBy('md.mov_id')
-        ->orderBy('recent_views', 'DESC')  // Primary: recent views
-        ->orderBy('md.likes', 'DESC')      // Secondary: likes
-        ->limit($limit, $offset)
-        ->get()
-        ->getResultArray();
-}
+        ->where('md.release_date <=', date('Y-m-d'));
 
+    if (!empty($search)) {
+        $this->applySearchFilter($builder, $search);
+    }
+
+    $builder->groupBy('md.mov_id')
+            ->orderBy('recent_views', 'DESC')  // Primary: recent views
+            ->orderBy('md.likes', 'DESC')      // Secondary: likes
+            ->limit($limit, $offset);
+
+    return $builder->get()->getResultArray();
+}
 
 public function getLatestList($limit, $offset)
 {
@@ -296,7 +307,34 @@ public function getWatchLaterId($user_id, $mov_id)
  
     return $result ? $result->watch_later_id : null;
 }
- 
+ private function applySearchFilter($builder, $search)
+{
+    $search = strtolower(trim($search));
+    $searchWildcard = '%' . str_replace(' ', '%', $search) . '%';
+
+    $accessMap = ['free' => 1, 'premium' => 2];
+    $accessValue = $accessMap[$search] ?? null;
+
+    if (is_numeric($search)) {
+        $numericAccess = (int)$search;
+        if (in_array($numericAccess, [1, 2])) {
+            $accessValue = $numericAccess;
+        }
+    }
+
+    $builder->groupStart()
+        ->like('LOWER(title)', $searchWildcard)
+        ->orLike('LOWER(cast_details)', $searchWildcard)
+        ->orLike('LOWER(category)', $searchWildcard)
+        ->orLike('LOWER(genre)', $searchWildcard);
+
+    if ($accessValue !== null) {
+        $builder->orWhere('access', $accessValue);
+    }
+
+    $builder->groupEnd();
+}
+
 }
  
  

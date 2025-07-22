@@ -517,32 +517,37 @@ public function movieReaction($mov_id)
 }
 
  
-// public function getLatestMovies()
-// {
-//     $pageIndex = (int) $this->request->getGet('pageIndex') ?? 0;
-//     $pageSize  = (int) $this->request->getGet('pageSize') ?? 10;
-//     $search    = $this->request->getGet('search'); 
-//     $offset    = $pageIndex * $pageSize;
+public function getLatestMovies()
+{
+    $pageIndex = (int) $this->request->getGet('pageIndex') ?? 0;
+    $pageSize  = (int) $this->request->getGet('pageSize') ?? 10;
+    $search    = $this->request->getGet('search'); 
+    $offset    = $pageIndex * $pageSize;
 
-//     $movieModel = new MovieDetailsModel();
-//     $result = $movieModel->getLatestMovies($pageSize, $offset, $search);
+    $movieModel = new MovieDetailsModel();
+    $result = $movieModel->getLatestMovies($pageSize, $offset, $search);
 
-//     $latest = array_map([$this, 'formatMovie'], $result['movies']);
+    $latest = array_map([$this, 'formatMovie'], $result['movies']);
 
-//     return $this->response->setJSON([
-//         'success' => true,
-//         'message' => 'success',
-//         'data'    => $latest,
-//         'total'   => $result['total']
-//     ]);
-// }
+    return $this->response->setJSON([
+        'success' => true,
+        'message' => 'success',
+        'data'    => $latest,
+        'total'   => $result['total']
+    ]);
+}
 
 
  
 public function mostWatchedMovies()
 {
+    $pageIndex = (int) $this->request->getGet('pageIndex') ?? 0;
+    $pageSize  = (int) $this->request->getGet('pageSize') ?? 10;
+    $search    = $this->request->getGet('search'); 
+    $offset    = $pageIndex * $pageSize;
+    
     $movieModel = new MovieDetailsModel();
-    $moviesRaw = $movieModel->getMostWatchedMovies();
+    $moviesRaw = $movieModel->getMostWatchedMovies($pageSize, $offset, $search);
  
     $movies = array_map([$this, 'formatMovie'], $moviesRaw);
  
@@ -553,7 +558,26 @@ public function mostWatchedMovies()
     ]);
 }
  
- 
+public function getTrendingMovies()
+{
+    $pageIndex = (int) $this->request->getGet('pageIndex') ?? 0;
+    $pageSize  = (int) $this->request->getGet('pageSize') ?? 10;
+    $search    = $this->request->getGet('search'); 
+    $offset    = $pageIndex * $pageSize;
+
+    $movieModel = new \App\Models\MovieDetailsModel();
+    $result = $movieModel->getTrendingList($pageSize, $offset, $search);
+
+    $trending = array_map([$this, 'formatMovie'], $result['movies']);
+
+    return $this->response->setJSON([
+        'success' => true,
+        'message' => 'Trending movies fetched successfully.',
+        'data'    => $trending,
+        'total'   => $result['total']
+    ]);
+}
+
  
 // ---------------------------------Admin home  Display--------------------------------------//
  

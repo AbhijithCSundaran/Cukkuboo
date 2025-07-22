@@ -38,10 +38,15 @@ class Support extends ResourceController
     $description = $this->request->getPost('description');
     $status      = $this->request->getPost('status') ?? 1;
 
-    if (empty($email)) return $this->failValidationErrors('Email is required.');
-    if (empty($issue_type)) return $this->failValidationErrors('Issue type is required.');
-    if (empty($description)) return $this->failValidationErrors('Description is required.');
-
+    if (empty($email)){
+        return $this->failValidationErrors('Email is required.');
+    }
+    if (empty($issue_type)){
+        return $this->failValidationErrors('Issue type is required.');
+    }
+    if (empty($description)){
+        return $this->failValidationErrors('Description is required.');
+    }
     $screenshotName = null;
     $screenshot = $this->request->getFile('screenshot');
     if ($screenshot && $screenshot->isValid() && !$screenshot->hasMoved()) {
@@ -84,7 +89,7 @@ class Support extends ResourceController
 
         if ($this->supportModel->insert($data)) {
             $newSupportId = $this->supportModel->insertID();
-            $createdData = $this->supportModel->find($newSupportId); // fetch created record
+            $createdData = $this->supportModel->find($newSupportId); 
             return $this->respondCreated([
                 'success' => true,
                 'message' => 'Support issue created successfully.',

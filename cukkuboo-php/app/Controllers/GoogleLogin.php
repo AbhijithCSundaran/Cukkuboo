@@ -18,6 +18,8 @@ class GoogleLogin extends BaseController
 
     public function __construct()
     {
+        $this->session = \Config\Services::session();
+        $this->input = \Config\Services::request();
         $this->loginModel = new LoginModel();
         $this->usersubModel = new UsersubModel();
         $this->subscriptionPlanModel = new SubscriptionPlanModel();
@@ -80,20 +82,20 @@ class GoogleLogin extends BaseController
     }
 
     if ($activeUser) {
-        if ($activeUser['auth_type'] !== 'google') {
-            return $this->response->setJSON([
-                'success' => false,
-                'message' => 'This account is registered with manual login. Please use email and password.',
-                'data'    => []
-            ]);
-        }
-
-        $token = $jwt->encode(['user_id' => $activeUser['user_id']]);
-        $this->loginModel->update($activeUser['user_id'], [
-            'jwt_token'  => $token,
-            'last_login' => $now
+    if ($activeUser['auth_type'] === 'manual') {
+        return $this->response->setJSON([
+            'success' => false,
+            'message' => 'This account is registered with manual login. Please use email and password.',
+            'data'    => []
         ]);
-        $user = $this->loginModel->find($activeUser['user_id']);
+    }
+    $token = $jwt->encode(['user_id' => $activeUser['user_id']]);
+    $this->loginModel->update($activeUser['user_id'], [
+        'jwt_token'  => $token,
+        'last_login' => $now
+    ]);
+    $user = $this->loginModel->find($activeUser['user_id']);
+
     } elseif ($deletedUser) {
         $existingNewUser = $this->loginModel
             ->where('email', $email)

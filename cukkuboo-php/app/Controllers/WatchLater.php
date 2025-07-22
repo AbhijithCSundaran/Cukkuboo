@@ -14,6 +14,8 @@ class WatchLater extends ResourceController
 
     public function __construct()
     {
+        $this->session = \Config\Services::session();
+        $this->input = \Config\Services::request();
         $this->watchLaterModel = new WatchLaterModel();
         $this->authService = new AuthService();
     }

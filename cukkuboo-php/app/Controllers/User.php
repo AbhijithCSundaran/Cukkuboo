@@ -36,7 +36,7 @@ class User extends ResourceController
     $data = $this->request->getJSON(true);
     $user_id = $data['user_id'] ?? 0;
     // $authHeader = $this->request->getHeaderLine('Authorization');
-     $authHeader = AuthHelper::getAuthorizationToken($this->request);
+    $authHeader = AuthHelper::getAuthorizationToken($this->request);
     $authenticatedUser = $this->authService->getAuthenticatedUser($authHeader);
 
     $userData = array_filter([

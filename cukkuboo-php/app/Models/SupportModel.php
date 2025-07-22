@@ -6,9 +6,14 @@ use CodeIgniter\Model;
 
 class SupportModel extends Model
 {
-    protected $table = 'support_issues';
-    protected $primaryKey = 'support_id';
-    protected $allowedFields = ['user_id', 'email', 'phone', 'issue_type', 'description', 'screenshot','status','created_by','created_on','modify_by','modify_on'];
+    protected $table            = 'support_issues';
+    protected $primaryKey       = 'support_id';
+    protected $allowedFields    = [
+        'user_id', 'email', 'phone', 'issue_type', 'description',
+        'screenshot', 'status', 'created_by', 'created_on', 'modify_by', 'modify_on'
+    ];
+    protected $useAutoIncrement = true;
+    protected $returnType       = 'array';
 
 public function getAllComplaints($search = '')
 {

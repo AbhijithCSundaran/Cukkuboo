@@ -3,7 +3,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
   padding: 0;
   position: relative;
 
@@ -14,6 +15,10 @@
 
 .clickable-logo {
   cursor: pointer;
+
+  img {
+    max-width: 60px;
+  }
 }
 
 .gen-login-page-background {
@@ -141,14 +146,15 @@ mat-form-field {
   color: var(--primary-color);
   font-weight: bold;
 }
- 
+
 /* Countdown section */
 .otp-countdown-wrapper {
   display: flex;
   justify-content: center;
   align-items: center;
   padding-top: 12px;
-  min-height: 24px; /* Ensures equal height even when switching */
+  min-height: 24px;
+  /* Ensures equal height even when switching */
 }
 
 .countdown-text {
@@ -163,13 +169,15 @@ mat-form-field {
   color: var(--primary-color);
   font-weight: 700; // optional: consistent with <strong>
   vertical-align: baseline; // 🔧 Fixes alignment issue
-  font-size: inherit;       // ensures it matches the parent
-  line-height: inherit;     // match parent line height
+  font-size: inherit; // ensures it matches the parent
+  line-height: inherit; // match parent line height
 }
+
 .red-countdown {
   position: relative;
   top: 1px; // tweak this up or down (1px to -1px) to align perfectly
 }
+
 #googleSignInBtn {
   margin-top: 1rem;
   display: flex;
@@ -179,6 +187,7 @@ mat-form-field {
     width: 100% !important;
   }
 }
+
 .or-separator {
   display: flex;
   align-items: center;
@@ -201,6 +210,7 @@ mat-form-field {
 .or-separator:not(:empty)::after {
   margin-left: .75em;
 }
+
 .sign_wrpr.popup {
   padding: 0.5rem !important;
   min-height: auto;
@@ -209,8 +219,7 @@ mat-form-field {
 
   // Logo
   .clickable-logo {
-    margin-bottom: 0.5rem !important; // reduced space below logo
-        margin-top: 0.5rem !important; 
+    display: none;
 
     img {
       max-width: 36px !important; // smaller logo
@@ -221,18 +230,18 @@ mat-form-field {
   // Heading
   h4,
   .reset-heading {
-    font-size: 0.8rem !important;
-    margin: 0.25rem 0 0.5rem !important; // reduced top space
+    font-size: 1rem !important;
+    // margin: 0.25rem 0 0.5rem !important; // reduced top space
   }
 
-  // Form fields
+  Form fields
   mat-form-field {
-    margin-bottom: 0  !important;
+    margin-bottom: 6px !important;
     font-size: 1 rem !important;
-    width: 100% ;
+    width: 100%;
 
     .mat-form-field-wrapper {
-      padding-bottom: 0 !important;
+      padding-bottom: 2px !important;
     }
 
     .mat-form-field-infix {
@@ -245,27 +254,29 @@ mat-form-field {
       padding: 0.2rem 0.4rem !important;
     }
   }
-mat-form-field[_ngcontent-ng-c998379010] {
+
+  mat-form-field[_ngcontent-ng-c998379010] {
     margin-bottom: 0rem !important;
-}
+  }
+
   // Sign In button
   .red-button {
-    font-size: 8px !important;
-    padding: 2px 5px !important;
+    font-size: 12px !important;
+    padding: 4px 8px !important;
     min-width: 100px !important;
-    margin-top: 0rem !important; // reduce space above
+    margin-top: 1px !important; // reduce space above
   }
 
   // Google Sign-in
   #googleSignInBtn {
     margin-top: 0rem !important;
-    transform: scale(0.65) !important; // shrink button
+    transform: scale(0.85) !important; // shrink button
     transform-origin: left;
   }
 
   // Others
   .or-separator {
-    font-size: 8px !important;
+    font-size: 10px !important;
     margin: 0rem 0 !important;
   }
 
@@ -290,15 +301,13 @@ mat-form-field[_ngcontent-ng-c998379010] {
     height: 12px !important;
   }
 
-  .login-box {
-    padding: 0.55rem !important;
-    border-radius: 6px !important;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.12);
-  }
-  #pms_login {
-    padding-top: 0;
-  }
+  // .login-box {
+  //   padding: 0.55rem !important;
+  //   border-radius: 6px !important;
+  //   box-shadow: 0 0 10px rgba(0, 0, 0, 0.12);
+  // }
 
-
-  
+  // #pms_login {
+  //   padding-top: 0;
+  // }
 }

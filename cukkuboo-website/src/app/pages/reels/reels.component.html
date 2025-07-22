@@ -10,13 +10,27 @@
         <video #videoEl [src]="reel.video" [poster]="reel.image" [muted]="mutedStates[i]" autoplay loop playsinline
           (click)="togglePlayPause(i)"></video>
 
+<div 
+  class="seekbar-wrapper"
+  (mousedown)="onSeekStart($event, i)"
+  (touchstart)="onSeekStart($event, i)"
+  (mousemove)="onSeekMove($event, i)"
+  (mouseup)="onSeekEnd()"
+  (mouseleave)="onSeekEnd()"
+  (touchmove)="onSeekMove($event, i)"
+  (touchend)="onSeekEnd()">
+  <div class="seekbar-progress" [style.width.%]="progressValues[i] || 0"></div>
+</div>
+
+
         <button class="back-btn" (click)="navigateHome()" aria-label="Back to Home">
           <span class="material-icons"> chevron_left</span>
         </button>
-        <!-- Fullscreen Button -->
-        <button class="fullscreen-btn" (click)="toggleFullscreen($event)">
-          <i class="fas" [ngClass]="isFullscreen ? 'fa-compress' : 'fa-expand'"></i>
-        </button>
+       <!-- Fullscreen Button -->
+<button class="fullscreen-btn d-none d-sm-flex" (click)="toggleFullscreen($event)">
+  <i class="fas" [ngClass]="isFullscreen ? 'fa-compress' : 'fa-expand'"></i>
+</button>
+
 
         <!-- Play/Pause Button -->
         <button class="play-pause-btn" *ngIf="hoveredIndex === i"

@@ -3,13 +3,12 @@
   </div>
 
   <div [ngClass]="modalData ? 'container-fluid m-0 p-0' : 'container'">
-    <div class="row">
       <div class="col-lg-12">
         <div class="text-center">
           <form [formGroup]="step === 0 ? loginForm : forgotForm" (ngSubmit)="step === 0 ? onSubmit() : null" id="pms_login">
             <!-- Logo -->
             <div class="text-center mb-3 clickable-logo" routerLink="/">
-              <img src="assets/images/logo-collapsed.png" alt="Logo" style="max-width: 60px;" />
+              <img src="assets/images/logo-collapsed.png" alt="Logo" />
             </div>
 
             <!-- Headings -->
@@ -181,6 +180,5 @@
           </form>
         </div>
       </div>
-    </div>
   </div>
 </section>

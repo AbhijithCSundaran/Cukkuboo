@@ -83,11 +83,15 @@
                             <div class="col-sm-9  d-flex flex-column">
                                 <!-- Country code select -->
                                 <div class="d-flex mb-1">
-                                    <select class="form-select me-2 country-code" formControlName="country_code">
-                                        <option *ngFor="let country of countryCodes" [value]="country.dial_code">
-                                            ({{ country.dial_code }})
-                                        </option>
-                                    </select>
+                                    <mat-form-field appearance="outline" class="me-1" style="width: 35%;">
+                                        <mat-label>Code</mat-label>
+                                        <mat-select formControlName="countryCode">
+                                            <mat-option *ngFor="let country of countryCodes" [value]="country.dial_code"
+                                                [matTooltip]="country.name">
+                                                <small>{{country.id}} ({{ country.dial_code }})</small>
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
                                     <!-- <mat-form-field appearance="outline" class="me-2 country-code-field">
                                         <mat-select formControlName="country_code">
                                             <mat-option *ngFor="let country of countryCodes"
@@ -98,8 +102,18 @@
                                     </mat-form-field> -->
 
                                     <!-- Phone number input -->
-                                    <input class="form-control" type="text" formControlName="phone" maxlength="15"
-                                        placeholder="Enter phone number" (keypress)="allowOnlyDigits($event)" />
+                                    <!-- <input class="form-control" type="text" formControlName="phone" maxlength="15"
+                                        placeholder="Enter phone number" (keypress)="allowOnlyDigits($event)" /> -->
+
+                                    <mat-form-field appearance="outline" style="width: 65%;">
+                                        <mat-label>Mobile Number</mat-label>
+                                        <input matInput formControlName="phone" maxlength="15"
+                                            placeholder="Enter mobile number" />
+                                        <mat-error>
+                                            <Validation-Messages
+                                                [control]="profileForm.controls['phone']"></Validation-Messages>
+                                        </mat-error>
+                                    </mat-form-field>
                                 </div>
 
                                 <!-- Validation message -->

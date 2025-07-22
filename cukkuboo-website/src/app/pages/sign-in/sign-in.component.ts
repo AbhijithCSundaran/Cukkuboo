@@ -145,12 +145,15 @@ export class SignInComponent implements OnInit, OnDestroy {
     this.router.navigate(['/signup']);
   }
 
-  goBackToLogin(): void {
-    this.step = 0;
-    this.forgotForm.reset();
-    this.resendCountdown = 0;
-    clearInterval(this.countdownInterval);
-  }
+goBackToLogin(): void {
+  this.step = 0;
+  this.forgotForm.reset();
+  this.resendCountdown = 0;
+  clearInterval(this.countdownInterval);
+
+  // Re-render the Google Sign-In button after view updates
+  setTimeout(() => this.initializeGoogleSignIn(), 0);
+}
 
   startForgotFlow(): void {
     this.step = 1;

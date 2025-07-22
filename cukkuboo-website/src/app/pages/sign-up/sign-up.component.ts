@@ -197,7 +197,7 @@ export class SignUpComponent implements OnInit {
     const formValue = this.signUpForm.value;
     const formData = {
       ...formValue,
-      phone: `${formValue.countryCode}${formValue.phone}`
+      phone: `${formValue.countryCode}-${formValue.phone}`
     };
 
     this.userService.register(formData).subscribe({

@@ -16,6 +16,8 @@ class VideoView extends ResourceController
 
     public function __construct()
     {
+        $this->session = \Config\Services::session();
+        $this->input = \Config\Services::request();
         $this->videoviewModel = new VideoviewModel();
         $this->userModel = new UserModel();	
         $this->authService = new AuthService();

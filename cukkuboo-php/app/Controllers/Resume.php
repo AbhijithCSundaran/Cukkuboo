@@ -13,6 +13,8 @@ class Resume extends ResourceController
 
     public function __construct()
     {
+        $this->session = \Config\Services::session();
+        $this->input = \Config\Services::request();
         $this->resumeModel = new ResumeModel();
         $this->authService = new AuthService();
     }

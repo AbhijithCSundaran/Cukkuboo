@@ -18,6 +18,8 @@ class GoogleLogin extends BaseController
 
     public function __construct()
     {
+        $this->session = \Config\Services::session();
+        $this->input = \Config\Services::request();
         $this->loginModel = new LoginModel();
         $this->usersubModel = new UsersubModel();
         $this->subscriptionPlanModel = new SubscriptionPlanModel();
@@ -87,8 +89,6 @@ class GoogleLogin extends BaseController
             'data'    => []
         ]);
     }
-
-    // Allow login for active Google-authenticated users
     $token = $jwt->encode(['user_id' => $activeUser['user_id']]);
     $this->loginModel->update($activeUser['user_id'], [
         'jwt_token'  => $token,

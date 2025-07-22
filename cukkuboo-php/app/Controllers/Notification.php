@@ -14,6 +14,8 @@ class Notification extends ResourceController
 
     public function __construct()
     {
+        $this->session = \Config\Services::session();
+        $this->input = \Config\Services::request();
         $this->notificationModel = new NotificationModel();
         $this->UserModel = new UserModel();
         $this->authService = new AuthService();

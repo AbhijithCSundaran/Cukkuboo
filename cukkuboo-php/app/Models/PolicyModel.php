@@ -14,21 +14,16 @@ class PolicyModel extends Model
     public function getPolicyList($type = '', $search = '', $limit = 10, $offset = 0)
 {
     $builder = $this->db->table('policies')
-                        ->where('status !=', 9); 
-    $validTypes = ['terms', 'privacy', 'refund', 'grievance_redressal'];
-    if (in_array($type, $validTypes)) {
-        $builder->where('type', $type);
+                        ->where('status !=', 9);
+
+    if (!empty($type)) {
+        $typeInput = strtolower(trim($type));
+        $builder->where('LOWER(type) LIKE', '%' . $typeInput . '%');
     }
-    // if (!empty($search)) {
-    //     $search = strtolower(trim($search));
-    //     $builder->groupStart()
-    //             ->like('LOWER(title)', $search)
-    //             ->orLike('LOWER(content)', $search)
-    //             ->groupEnd();
-    // }
     $builder->orderBy('created_on', 'DESC');
     $countBuilder = clone $builder;
     $total = $countBuilder->countAllResults(false);
+
     $data = $builder->limit($limit, $offset)
                     ->get()
                     ->getResultArray();

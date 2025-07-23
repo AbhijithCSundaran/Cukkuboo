@@ -94,8 +94,8 @@ public function getAllMovieDetails()
     $search    = strtolower(trim($this->request->getGet('search'))); 
     if ($search === '0') {
         return $this->response->setJSON([
-            'success' => false,
-            'message' => 'Invalid search term.',
+            'success' => true,
+            'message' => 'No results found for the search term.',
             'data'    => [],
             'total'   => 0
         ]);
@@ -145,7 +145,7 @@ public function getAllMovieDetails()
     $total = $countBuilder->countAllResults(false);
     if ($search !== '' && $total === 0) {
         return $this->response->setJSON([
-            'success' => false,
+            'success' => true,
             'message' => 'No results found for the search term.',
             'data'    => [],
             'total'   => 0

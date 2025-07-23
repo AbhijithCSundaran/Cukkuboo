@@ -341,28 +341,16 @@ public function movieReaction($mov_id)
     $builder = $this->db->table('movies_details')->where('status !=', 9);
 
     // Optional search
-    if (!empty($search)) {
-        $search = strtolower(trim($search));
-        $searchWildcard = '%' . str_replace(' ', '%', $search) . '%';
+    // Optional search - strictly check only title, even if search is "0"
+if ($this->request->getGet('search') !== null && trim($search) !== '') {
+    $search = strtolower(trim($search));
+    $searchWildcard = '%' . $search . '%';
 
-        $accessMap = [
-            'free' => 1,
-            'premium' => 2
-        ];
-        $accessValue = $accessMap[$search] ?? null;
+    $builder->groupStart()
+        ->like('LOWER(title)', $searchWildcard)
+        ->groupEnd();
+}
 
-        $builder->groupStart()
-            ->like('LOWER(title)', $searchWildcard)
-            ->orLike('LOWER(genre)', $searchWildcard)
-            ->orLike('LOWER(cast_details)', $searchWildcard)
-            ->orLike('LOWER(category)', $searchWildcard);
-
-        if ($accessValue !== null) {
-            $builder->orWhere('access', $accessValue);
-        }
-
-        $builder->groupEnd();
-    }
 
     // Sorting logic based on `type`
     switch ($type) {

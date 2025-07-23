@@ -23,9 +23,7 @@ import { CommonService } from '../../core/services/common.service';
 @Component({
   selector: 'app-reels',
   standalone: true,
-  imports: [CommonModule, InfiniteScrollDirective,
-    TruncatePipe
-  ],
+  imports: [CommonModule, InfiniteScrollDirective, TruncatePipe],
   templateUrl: './reels.component.html',
   styleUrls: ['./reels.component.scss']
 })
@@ -34,10 +32,9 @@ export class ReelsComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('reelScroll') reelScroll!: ElementRef<HTMLDivElement>;
 
   reels: any[] = [];
-
-  userData: any;
   videoStates: boolean[] = [];
   mutedStates: boolean[] = [];
+  progressValues: number[] = [];
   hoveredIndex: number | null = null;
   isFullscreen = false;
   private currentIndex = 0;
@@ -47,6 +44,11 @@ export class ReelsComponent implements OnInit, AfterViewInit, OnDestroy {
   pageSize: number = 10;
   searchText: string = '';
   searchTimeout: any;
+  userData: any;
+
+  // Seekbar related
+  isSeeking: boolean = false;
+  activeSeekIndex: number | null = null;
 
   private videoUrl = environment.fileUrl + 'uploads/videos/';
   private imageUrl = environment.fileUrl + 'uploads/images/';
@@ -66,13 +68,13 @@ export class ReelsComponent implements OnInit, AfterViewInit, OnDestroy {
         this.reels = [];
         this.videoStates = [];
         this.mutedStates = [];
-        const id = String(this.commonService.DecodeId(reelId))
-        alert(id)
+        this.progressValues = [];
+        const id = String(this.commonService.DecodeId(reelId));
         this.getReelById(id);
         this.router.navigate([], { queryParams: { re: null }, queryParamsHandling: 'merge' });
-      }
-      else
+      } else {
         this.loadReels();
+      }
     });
   }
 
@@ -81,16 +83,14 @@ export class ReelsComponent implements OnInit, AfterViewInit, OnDestroy {
     this.userData = this.storageService.getItem('userData');
   }
 
-
   ngAfterViewInit(): void {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           const video = entry.target as HTMLVideoElement;
           const index = Array.from(this.videos).findIndex((v) => v.nativeElement === video);
+          if (!video) return;
 
-          if (!video)
-            return;
           if (entry.isIntersecting) {
             video.play();
             this.videoStates[index] = true;
@@ -112,16 +112,43 @@ export class ReelsComponent implements OnInit, AfterViewInit, OnDestroy {
       { threshold: 0.6 }
     );
 
-    this.videos.changes.subscribe(() => {
-      this.videos.forEach((videoRef) => observer.observe(videoRef.nativeElement));
+    this.videos.forEach((videoRef, i) => {
+      const video = videoRef.nativeElement;
+
+      video.addEventListener('timeupdate', () => {
+        const percentage = (video.currentTime / video.duration) * 100;
+        this.progressValues[i] = percentage || 0;
+      });
+
+      observer.observe(video);
     });
 
-    setTimeout(() => {
-      this.videos.forEach((videoRef) => observer.observe(videoRef.nativeElement));
+    this.videos.changes.subscribe(() => {
+      this.videos.forEach((videoRef, i) => {
+        const video = videoRef.nativeElement;
+
+        video.addEventListener('timeupdate', () => {
+          const percentage = (video.currentTime / video.duration) * 100;
+          this.progressValues[i] = percentage || 0;
+        });
+
+        observer.observe(video);
+      });
     });
+
+    // Fullscreen on mobile
+    if (window.innerWidth < 576 && !document.fullscreenElement) {
+      const elem = document.documentElement;
+      elem.requestFullscreen().then(() => {
+        this.isFullscreen = true;
+      }).catch(err => {
+        console.warn("Fullscreen request failed:", err);
+      });
+    }
 
     window.addEventListener('keydown', this.handleKeydown);
   }
+
   onScroll(): void {
     this.pageIndex++;
     this.loadReels(this.pageIndex, this.pageSize, this.searchText);
@@ -144,14 +171,16 @@ export class ReelsComponent implements OnInit, AfterViewInit, OnDestroy {
 
           if (newReel) {
             this.reels = [...this.reels, ...newReel];
-            this.videoStates.push(...new Array(newReel.length).fill(true));
-            this.mutedStates.push(...new Array(newReel.length).fill(true));
+            this.videoStates.push(true);
+            this.mutedStates.push(true);
+            this.progressValues.push(0);
           }
         }
         this.loadReels();
       },
-    })
+    });
   }
+
   loadReels(pageIndex: number = 0, pageSize: number = 10, search: string = ''): void {
     this.movieService.getReelsData(pageIndex, pageSize, search).subscribe({
       next: (res) => {
@@ -171,6 +200,7 @@ export class ReelsComponent implements OnInit, AfterViewInit, OnDestroy {
             this.reels = [...this.reels, ...newReels];
             this.videoStates.push(...new Array(newReels.length).fill(true));
             this.mutedStates.push(...new Array(newReels.length).fill(true));
+            this.progressValues.push(...new Array(newReels.length).fill(0));
           } else {
             this.stopInfiniteScroll = true;
           }
@@ -215,7 +245,6 @@ export class ReelsComponent implements OnInit, AfterViewInit, OnDestroy {
         reel.is_liked_by_user = !alreadyLiked;
         reel.likes += alreadyLiked ? -1 : 1;
         reel.clicked = false;
-
       },
       error: (err) => {
         console.error('Error toggling like:', err);
@@ -223,7 +252,6 @@ export class ReelsComponent implements OnInit, AfterViewInit, OnDestroy {
       }
     });
   }
-
 
   togglePlayPause(index: number): void {
     const video = this.videos.get(index)?.nativeElement;
@@ -253,10 +281,6 @@ export class ReelsComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  onShare(index: number): void {
-
-  }
-
   onHover(index: number): void {
     this.hoveredIndex = index;
   }
@@ -270,7 +294,6 @@ export class ReelsComponent implements OnInit, AfterViewInit, OnDestroy {
   capitalizeFirst(text: string): string {
     return text ? text.charAt(0).toUpperCase() + text.slice(1) : '';
   }
-
 
   handleKeydown = (e: KeyboardEvent) => {
     if (e.key === 'ArrowDown') this.scrollToNext();
@@ -337,14 +360,46 @@ export class ReelsComponent implements OnInit, AfterViewInit, OnDestroy {
           horizontalPosition: 'center',
           panelClass: ['snackbar-success']
         });
-        // Optionally show a toast or snackbar
       }).catch(err => {
         console.error('Clipboard write failed:', err);
       });
     } else {
-      console.warn('Clipboard copy blocked: document not focused.');
       alert('Please tap the screen and try again.');
     }
+  }
+
+  // Seekbar handlers
+  onSeekStart(event: MouseEvent | TouchEvent, index: number): void {
+    this.isSeeking = true;
+    this.activeSeekIndex = index;
+    this.seekTo(event, index);
+    if (event.cancelable) event.preventDefault();
+  }
+
+  onSeekMove(event: MouseEvent | TouchEvent, index: number): void {
+    if (!this.isSeeking || this.activeSeekIndex !== index) return;
+    this.seekTo(event, index);
+  }
+
+  onSeekEnd(): void {
+    this.isSeeking = false;
+    this.activeSeekIndex = null;
+  }
+
+  private seekTo(event: MouseEvent | TouchEvent, index: number): void {
+    const video = this.videos.get(index)?.nativeElement;
+    if (!video) return;
+
+    const seekbar = (event.target as HTMLElement).closest('.seekbar-wrapper') as HTMLElement;
+    if (!seekbar) return;
+
+    const rect = seekbar.getBoundingClientRect();
+    const clientX = (event instanceof MouseEvent) ? event.clientX : event.touches[0].clientX;
+    const offsetX = clientX - rect.left;
+    const percentage = Math.min(Math.max(offsetX / rect.width, 0), 1);
+
+    video.currentTime = percentage * video.duration;
+    this.progressValues[index] = percentage * 100;
   }
 
   ngOnDestroy(): void {
@@ -352,5 +407,3 @@ export class ReelsComponent implements OnInit, AfterViewInit, OnDestroy {
     window.removeEventListener('keydown', this.handleKeydown);
   }
 }
-
-

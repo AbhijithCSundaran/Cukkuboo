@@ -5,7 +5,7 @@ import { UserService } from '../../services/user/user.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmationDialogComponent } from '../../core/components/confirmation-dialog/confirmation-dialog.component';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { ContentLoaderComponent } from '../../core/components/content-loader/content-loader.component';
 import { SubscriptionService } from '../../services/subscription.service';
 
@@ -20,6 +20,7 @@ export class SubscriptionDetailsComponent implements OnInit {
   subscriptionData: any;
   subscriptionHistory: any[] = [];
   isLonding: boolean = true;
+  redirectToMovieId: string | null = null;
 
   constructor(
     private subscriptionService: SubscriptionService,
@@ -27,14 +28,16 @@ export class SubscriptionDetailsComponent implements OnInit {
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
     private router: Router,
+    private route: ActivatedRoute
   ) { }
 
   ngOnInit(): void {
+    // Read query param if user was redirected from a movie page
+    this.redirectToMovieId = this.storageService.getItem('movieId');
     const data = this.storageService.getItem('userData');
     if (data?.subscription_details?.user_subscription_id) {
       this.getActiveSubscription();
     } else {
-      // No active subscription id found
       this.subscriptionData = null;
       this.getSubscriptionHistory();
     }
@@ -50,7 +53,7 @@ export class SubscriptionDetailsComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error fetching subscription:', err);
-        this.getSubscriptionHistory(); 
+        this.getSubscriptionHistory();
       }
     });
   }
@@ -113,4 +116,14 @@ export class SubscriptionDetailsComponent implements OnInit {
   goToSubscribe(): void {
     this.router.navigate(['/subscribe']);
   }
+
+  goToWatch(): void {
+    if (this.redirectToMovieId) {
+      this.storageService.updateItem('movieId', 0);
+      this.router.navigate(['/movies', this.redirectToMovieId]);
+    } else {
+      this.router.navigate(['/']);
+    }
+  }
+
 }

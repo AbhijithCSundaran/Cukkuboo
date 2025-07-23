@@ -4,13 +4,13 @@
 
     <form [formGroup]="helpForm" (ngSubmit)="submitIssue()" class="help-form">
       <!-- Name -->
-      <mat-form-field appearance="outline" class="w-100 mb-3">
+      <!-- <mat-form-field appearance="outline" class="w-100 mb-3">
         <mat-label>Name</mat-label>
         <input matInput formControlName="name" placeholder="Enter your name" />
-        <mat-error *ngIf="helpForm.get('name')?.touched && helpForm.get('name')?.invalid">
+        <mat-error>
           Name is required
         </mat-error>
-      </mat-form-field>
+      </mat-form-field> -->
 
    <!-- Email -->
 <mat-form-field appearance="outline" class="w-100 mb-3">
@@ -22,7 +22,7 @@
     placeholder="Enter your email"
     (input)="forceLowerCaseEmail()"
   />
-  <mat-error *ngIf="helpForm.get('email')?.touched && helpForm.get('email')?.invalid">
+  <mat-error>
     Please enter a valid email address
   </mat-error>
 </mat-form-field>
@@ -32,11 +32,12 @@
   <mat-form-field appearance="outline" class="w-25">
     <mat-label>Code</mat-label>
     <mat-select formControlName="countryCode">
-      <mat-option *ngFor="let code of countryCodes" [value]="code">
-        {{ code }}
-      </mat-option>
+     <mat-option *ngFor="let country of countryCodes" [value]="country.dial_code" [matTooltip]="country.name">
+  <small>{{country.id}} ({{ country.dial_code }})</small>
+</mat-option>
+
     </mat-select>
-    <mat-error *ngIf="helpForm.get('countryCode')?.touched && helpForm.get('countryCode')?.invalid">
+    <mat-error >
       Country code is required
     </mat-error>
   </mat-form-field>
@@ -50,7 +51,7 @@
       maxlength="15"
       (input)="onNumberInput($event)"
     />
-    <mat-error *ngIf="helpForm.get('phone')?.touched && helpForm.get('phone')?.invalid">
+    <mat-error>
       Enter a valid phone number
     </mat-error>
   </mat-form-field>
@@ -68,7 +69,7 @@
           <mat-option value="Movies Related issue">Movies Related issue</mat-option>
           <mat-option value="Others">Others</mat-option>
         </mat-select>
-        <mat-error *ngIf="helpForm.get('issueType')?.touched && helpForm.get('issueType')?.invalid">
+        <mat-error >
           Please select an issue type
         </mat-error>
       </mat-form-field>
@@ -82,7 +83,7 @@
           placeholder="Describe your issue"
           rows="4"
         ></textarea>
-        <mat-error *ngIf="helpForm.get('message')?.touched && helpForm.get('message')?.invalid">
+        <mat-error>
           Message must be at least 10 characters
         </mat-error>
       </mat-form-field>
@@ -107,7 +108,7 @@
       <div class="d-flex justify-content-between">
         <button  type="button" (click)="goBack()">Back</button>
         <button type="submit" [disabled]="loading || helpForm.invalid" class="submit-btn">
-          {{ loading ? 'Submitting...' : 'Submit' }}
+          Submit
         </button>
       </div>
     </form>

@@ -4,59 +4,37 @@
 
     <form [formGroup]="helpForm" (ngSubmit)="submitIssue()" class="help-form">
       <!-- Name -->
-      <!-- <mat-form-field appearance="outline" class="w-100 mb-3">
+      <mat-form-field appearance="outline" class="w-100 mb-3">
         <mat-label>Name</mat-label>
         <input matInput formControlName="name" placeholder="Enter your name" />
-        <mat-error>
-          Name is required
-        </mat-error>
-      </mat-form-field> -->
+        <mat-error>Name is required</mat-error>
+      </mat-form-field>
 
-   <!-- Email -->
-<mat-form-field appearance="outline" class="w-100 mb-3">
-  <mat-label>Email Address</mat-label>
-  <input
-    matInput
-    type="email"
-    formControlName="email"
-    placeholder="Enter your email"
-    (input)="forceLowerCaseEmail()"
-  />
-  <mat-error>
-    Please enter a valid email address
-  </mat-error>
-</mat-form-field>
+      <!-- Email -->
+      <mat-form-field appearance="outline" class="w-100 mb-3">
+        <mat-label>Email Address</mat-label>
+        <input
+          matInput
+          type="email"
+          formControlName="email"
+          placeholder="Enter your email"
+          (input)="forceLowerCaseEmail()"
+        />
+        <mat-error>Please enter a valid email address</mat-error>
+      </mat-form-field>
 
-<!-- Phone with Country Code -->
-<div class="d-flex gap-2 mb-3">
-  <mat-form-field appearance="outline" class="w-25">
-    <mat-label>Code</mat-label>
-    <mat-select formControlName="countryCode">
-     <mat-option *ngFor="let country of countryCodes" [value]="country.dial_code" [matTooltip]="country.name">
-  <small>{{country.id}} ({{ country.dial_code }})</small>
-</mat-option>
-
-    </mat-select>
-    <mat-error >
-      Country code is required
-    </mat-error>
-  </mat-form-field>
-
-  <mat-form-field appearance="outline" class="w-75">
-    <mat-label>Phone Number</mat-label>
-    <input
-      matInput
-      formControlName="phone"
-      placeholder="Enter your phone number"
-      maxlength="15"
-      (input)="onNumberInput($event)"
-    />
-    <mat-error>
-      Enter a valid phone number
-    </mat-error>
-  </mat-form-field>
-</div>
-
+      <!-- Phone Number -->
+      <mat-form-field appearance="outline" class="w-100 mb-3">
+        <mat-label>Mobile Number</mat-label>
+        <input
+          matInput
+          formControlName="phone"
+          placeholder="Enter your phone number"
+          maxlength="15"
+          (input)="onNumberInput($event)"
+        />
+        <mat-error>Enter a valid phone number</mat-error>
+      </mat-form-field>
 
       <!-- Issue Type Dropdown -->
       <mat-form-field appearance="outline" class="w-100 mb-3">
@@ -69,23 +47,19 @@
           <mat-option value="Movies Related issue">Movies Related issue</mat-option>
           <mat-option value="Others">Others</mat-option>
         </mat-select>
-        <mat-error >
-          Please select an issue type
-        </mat-error>
+        <mat-error>Please select an issue type</mat-error>
       </mat-form-field>
 
-      <!-- Message -->
+      <!-- Description -->
       <mat-form-field appearance="outline" class="w-100 mb-3">
-        <mat-label>Message</mat-label>
+        <mat-label>Description</mat-label>
         <textarea
           matInput
-          formControlName="message"
+          formControlName="description"
           placeholder="Describe your issue"
           rows="4"
         ></textarea>
-        <mat-error>
-          Message must be at least 10 characters
-        </mat-error>
+        <mat-error>Description must be at least 10 characters</mat-error>
       </mat-form-field>
 
       <!-- File Upload -->
@@ -106,8 +80,8 @@
 
       <!-- Buttons -->
       <div class="d-flex justify-content-between">
-        <button  type="button" (click)="goBack()">Back</button>
-        <button type="submit" [disabled]="loading || helpForm.invalid" class="submit-btn">
+        <button type="button" (click)="goBack()">Back</button>
+        <button type="submit"  class="submit-btn">
           Submit
         </button>
       </div>

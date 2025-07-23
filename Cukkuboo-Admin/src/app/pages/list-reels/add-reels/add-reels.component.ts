@@ -177,6 +177,9 @@ export class AddReelsComponent implements OnInit {
     this.uploadError = '';
     this.selectedReelFile = file;
 
+
+
+    
     this.fileUploadService.uploadVideo(file).subscribe({
       next: (event: HttpEvent<any>) => {
         if (event.type === HttpEventType.UploadProgress && event.total) {

@@ -72,8 +72,10 @@ onResize(event: any) {
     },
     // { name: 'Reports & Analytics', icon: 'fa-chart-bar', path: '/reports' },
     { name: 'Notifications', icon: 'fa-bell', path: '/notifications' },
+      { name: 'Tickets', icon: 'fa fa-tags',path: '/tickets' },
     { name: 'Settings', icon: 'fa-sliders-h', subItems: [
       { name: 'Subscription Plans', path: '/subscription-plans' },
+    
      
     ], },
   ];

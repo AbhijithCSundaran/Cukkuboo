@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { environment } from '../environments/environment';
 import { UserService } from './services/user/user.service';
 import { SubscriptionStatus } from './model/enum';
+import { CommonService } from './core/services/common.service';
 
 @Component({
   selector: 'app-root',
@@ -22,10 +23,12 @@ export class AppComponent {
   isInitial: boolean = true;
   constructor(
     private storageService: StorageService,
+    private commonService: CommonService,
     private userService: UserService,
     private router: Router,
   ) {
 
+    console.log(this.commonService.decryptData('ctybwYg8CiK2p6u0bclvqqWGjCoP2GBkWBpShqSxtEjbXyOAbEcwakcmcPYcDqC5hSFSS9yxlnRFL+6vdEV26gsCXImfoIYutiIiOHuNpSmLUwghoj/QaBBdaZlDCO4O','Abhijith123456789'))
 
     this.router.events.subscribe(event => {
       if (event instanceof NavigationStart) {

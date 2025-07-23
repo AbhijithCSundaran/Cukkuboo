@@ -63,9 +63,11 @@
       <div class="gen-single-meta-holder">
         <ul>
           <li class="gen-sen-rating">{{ movieData.age_rating === '2' ? '16+' : '18+' }}</li>
-          <li>
-            <i class="fas fa-eye"></i><span>{{ movieData.views || 0 }} Views</span>
-          </li>
+        <li>
+  <i class="fas fa-eye"></i>
+  <span>{{ formatNumber(movieData.views || 0) }} Views</span>
+</li>
+
           <li>
             <i class="fas fa-star text-warning"></i>
             <span class="ms-1">{{ movieData.rating || '0' }}/5</span>
@@ -78,14 +80,16 @@
   <!-- Like Button -->
   <button class="reaction-button" (click)="toggleMovieReaction(1)">
     <i [class]="movieData.is_liked_by_user ? 'fas fa-thumbs-up text-danger' : 'far fa-thumbs-up'"></i>
-    <span *ngIf="movieData.likes !== undefined">{{ movieData.likes }}</span>
+<span *ngIf="movieData.likes !== undefined">{{ formatNumber(movieData.likes) }}</span>
   </button>
 
  <!-- Dislike Button (Count hidden) -->
+
 <button class="reaction-button" (click)="toggleMovieReaction(2)">
   <i [class]="movieData.is_disliked_by_user ? 'fas fa-thumbs-down text-danger' : 'far fa-thumbs-down'"></i>
-  <!-- <span *ngIf="movieData.dislikes !== undefined">{{ movieData.dislikes }}</span> -->
+  <span *ngIf="movieData.dislikes !== undefined">{{ formatNumber(movieData.dislikes) }}</span>
 </button>
+
 
   <!-- Share Button -->
   <button class="reaction-button" (click)="copyUrlToClipboard()">
@@ -187,7 +191,9 @@
       </div>
     </div>
     }@else {
-    <p class="py-3">No related movies...</p>
+<div class="d-flex justify-content-center align-items-center py-3 w-100">
+  <p class="m-0 text-white">No related movies...</p>
+</div>
     }
   </div>
   <div *ngIf="!stopInfiniteScroll" infiniteScroll (scrolled)="onScroll()" style="height: 1px;"></div>

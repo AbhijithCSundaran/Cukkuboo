@@ -110,14 +110,14 @@ export class SignInComponent implements OnInit, OnDestroy {
       panelClass: isSuccess ? ['snackbar-success'] : ['snackbar-error']
     });
   }
+onSubmit(): void {
+  if (this.loginForm.valid) {
+    const model = this.loginForm.value;
 
-  onSubmit(): void {
-    if (this.loginForm.valid) {
-      const model = this.loginForm.value;
-
-      this.userService.login(model).subscribe({
-        next: (response) => {
-          if (response.success === true && response.data?.user_type === 'Customer') {
+    this.userService.login(model).subscribe({
+      next: (response) => {
+        if (response.success === true) {
+          if (response.data?.user_type === 'Customer') {
             localStorage.setItem('t_k', response.data?.jwt_token);
             this.storageService.updateItem('userData', response.data);
             this.storageService.updateItem('username', response.data?.username || 'User');
@@ -129,17 +129,21 @@ export class SignInComponent implements OnInit, OnDestroy {
 
             this.modalData ? this.dialogRef.close(response) : this.router.navigate(['/home']);
           } else {
-            this.showSnackbar(response.message || 'Invalid email or password');
+            this.showSnackbar('Invalid email or password');
           }
-        },
-        error: () => {
-          this.showSnackbar('Login error. Please try again.');
+        } else {
+          this.showSnackbar(response.message || 'Invalid email or password');
         }
-      });
-    } else {
-      this.showSnackbar('Invalid email or password');
-    }
+      },
+      error: () => {
+        this.showSnackbar('Login error. Please try again.');
+      }
+    });
+  } else {
+    this.showSnackbar('Invalid email or password');
   }
+}
+
 
   navigateToSignUp(): void {
     this.router.navigate(['/signup']);

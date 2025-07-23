@@ -6,6 +6,7 @@ use CodeIgniter\RESTful\ResourceController;
 use App\Helpers\AuthHelper;
 use App\Models\SupportModel;
 use App\Libraries\AuthService;
+use App\Models\UserModel;
 
 class Support extends ResourceController
 {
@@ -16,91 +17,96 @@ class Support extends ResourceController
     {
         $this->session = \Config\Services::session();
         $this->input = \Config\Services::request();
+        $this->db = \Config\Database::connect();
         $this->supportModel = new SupportModel();
         $this->authService = new AuthService();
-        $this->db = \Config\Database::connect();
+        $this->UserModel = new UserModel();
     }
-
-    public function submitIssue()
+    public function submitIssue() 
 {
+    $input = $this->request->getJSON(true);
     $authHeader = AuthHelper::getAuthorizationToken($this->request);
-    $user = $this->authService->getAuthenticatedUser($authHeader);
+    $authUser = $this->authService->getAuthenticatedUser($authHeader);
+    $isAuthenticated = $authUser && isset($authUser['user_id']);
 
-    if (!$user) {
-        return $this->failUnauthorized('Invalid or missing token.');
-    }
+    $supportId   = $input['support_id'] ?? null;
+    $issue_type  = $input['issue_type'] ?? null;
+    $description = $input['description'] ?? null;
+    $status      = $input['status'] ?? 1;
+    $screenshot  = $input['screenshot'] ?? null;
+    $name        = $input['name'] ?? null;
+    $email       = $input['email'] ?? null;
+    $phone       = $input['phone'] ?? null;
 
-    $userId      = $user['user_id'];
-    $supportId   = $this->request->getPost('support_id');
-    $email       = $this->request->getPost('email');
-    $phone       = $this->request->getPost('phone');
-    $issue_type  = $this->request->getPost('issue_type');
-    $description = $this->request->getPost('description');
-    $status      = $this->request->getPost('status') ?? 1;
-
-    if (empty($email)){
-        return $this->failValidationErrors('Email is required.');
+    $user_id = null;
+    if ($isAuthenticated) {
+        $user_id = $authUser['user_id'];
     }
-    if (empty($issue_type)){
-        return $this->failValidationErrors('Issue type is required.');
-    }
-    if (empty($description)){
-        return $this->failValidationErrors('Description is required.');
-    }
-    $screenshotName = null;
-    $screenshot = $this->request->getFile('screenshot');
-    if ($screenshot && $screenshot->isValid() && !$screenshot->hasMoved()) {
-        $screenshotName = $screenshot->getRandomName();
-        $screenshot->move(FCPATH . 'uploads/screenshots', $screenshotName);
+    if (!$name || !$email || !$phone || !$issue_type || !$description) {
+        return $this->respond([
+            'success' => false,
+            'message' => 'All fields are required',
+        ]);
     }
 
     $data = [
+        'name'        => $name,
         'email'       => $email,
         'phone'       => $phone,
         'issue_type'  => $issue_type,
         'description' => $description,
-        'screenshot'  => $screenshotName ?? '',
         'status'      => $status,
+        'screenshot'  => $screenshot,
     ];
+
+    if ($isAuthenticated) {
+        $data['user_id'] = $user_id;
+    }
 
     if ($supportId) {
         $existing = $this->supportModel->find($supportId);
-        if (!$existing || $existing['status'] == 9) {
-            return $this->failNotFound('Support issue not found or already deleted.');
-        }
-
-        $data['modify_by'] = $userId;
-        $data['modify_on'] = date('Y-m-d H:i:s');
-
-        if ($this->supportModel->update($supportId, $data)) {
-            $updatedData = $this->supportModel->find($supportId); 
+        if (!$existing) {
             return $this->respond([
-                'success' => true,
-                'message' => 'Support issue updated successfully.',
-                'data'    => $updatedData
+                'success' => false,
+                'message' => 'Support issue not found'
             ]);
-        } else {
-            return $this->failServerError('Failed to update support issue.');
         }
-    } else {
-        $data['user_id']    = $userId;
-        $data['created_by'] = $userId;
-        $data['created_on'] = date('Y-m-d H:i:s');
 
-        if ($this->supportModel->insert($data)) {
-            $newSupportId = $this->supportModel->insertID();
-            $createdData = $this->supportModel->find($newSupportId); 
-            return $this->respondCreated([
-                'success' => true,
-                'message' => 'Support issue created successfully.',
-                'data'    => $createdData
-            ]);
-        } else {
-            return $this->failServerError('Failed to create support issue.');
+        $data['modify_on'] = date('Y-m-d H:i:s');
+        if ($isAuthenticated) {
+            $data['modify_by'] = $user_id;
         }
+
+        $this->supportModel->update($supportId, $data);
+        $updated = $this->supportModel->find($supportId);
+        if (!$isAuthenticated && isset($updated['user_id'])) {
+            unset($updated['user_id']);
+        }
+
+        return $this->respond([
+            'success' => true,
+            'message' => 'Support issue updated successfully',
+            'data'    => $updated
+        ]);
+    } else {
+        $data['created_on'] = date('Y-m-d H:i:s');
+        if ($isAuthenticated) {
+            $data['created_by'] = $user_id;
+        }
+
+        $newId   = $this->supportModel->insert($data);
+        $newData = $this->supportModel->find($newId);
+        if (!$isAuthenticated && isset($newData['user_id'])) {
+            unset($newData['user_id']);
+        }
+
+        return $this->respond([
+            'success' => true,
+            'message' => 'Support issue created successfully',
+            'data'    => $newData
+        ]);
     }
 }
-
     public function getAllList()
 {
     // $authHeader = $this->request->getHeaderLine('Authorization');

@@ -5,6 +5,8 @@ import { MatIconModule } from '@angular/material/icon';
 import videojs from 'video.js';
 import type Player from 'video.js/dist/types/player';
 import { CommonService } from '../../../core/services/common.service';
+import { environment } from '../../../../environments/environment';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'js-player',
@@ -13,7 +15,7 @@ import { CommonService } from '../../../core/services/common.service';
   styleUrl: './js-player.component.scss'
 })
 export class JsPlayerComponent {
-  @Input() videoSrc!: string;
+  @Input() videoSrc!: any;
   @Input() controls: boolean = true;
   @Input() autoplay: boolean = true;
   @Input() fullScreen: boolean = false;
@@ -21,10 +23,14 @@ export class JsPlayerComponent {
   @ViewChild('target') target!: ElementRef<HTMLVideoElement>;
   player!: Player;
   timeoutId: any;
-  videoUrl: string = '';
+  blobUrl: any = '';
+  fileUrl: string = environment.fileUrl + 'uploads/videos/';
   validExtensions = ['.mp4', '.m3u8', '.webm', '.ogg', '.mov', '.avi'];
   @HostBinding('class.showClose') showClose = false;
-  constructor(private commonService: CommonService) {
+  constructor(
+    private commonService: CommonService,
+    private sanitizer: DomSanitizer
+  ) {
 
   }
 
@@ -34,8 +40,8 @@ export class JsPlayerComponent {
         const isVideoFormat = this.validExtensions.some(ext => this.videoSrc.toLowerCase().endsWith(ext));
         if (!isVideoFormat)
           this.videoSrc = structuredClone(this.commonService.decryptData(this.videoSrc, 'Abhijith123456789'));
-        // this.videoSrc = structuredClone(this.commonService.decryptData('ctybwYg8CiK2p6u0bclvqqWGjCoP2GBkWBpShqSxtEjbXyOAbEcwakcmcPYcDqC5hSFSS9yxlnRFL+6vdEV26gsCXImfoIYutiIiOHuNpSmLUwghoj/QaBBdaZlDCO4O', 'Abhijith123456789'));
-        this.ConvertToBlob(this.videoSrc)
+        this.ConvertToBlob(this.fileUrl + this.videoSrc)
+        // this.videoSrc = this.sanitizer.bypassSecurityTrustResourceUrl('blob:https://www.netflix.com/dec19f37-7cb5-4243-9685-a50fdbceaeeb')
       }
     }
   }
@@ -43,17 +49,26 @@ export class JsPlayerComponent {
   ngAfterViewInit(): void {
     this.initVideoPlaying();
   }
+  get token(): string | null {
+    return localStorage.getItem('t_k') || sessionStorage.getItem('token');
+  }
   ConvertToBlob(videoSrc: string) {
-    debugger;
-    fetch(videoSrc)
-      .then(response => {
-        if (!response.ok) throw new Error('Video fetch failed');
-        return response.blob(); // 👈 Convert to Blob
-      })
+    fetch(videoSrc + `?token=${'abcd123'}'`, {
+      headers: {
+        Authorization: `Bearer ${this.token}`
+      }
+    }).then(res => res.blob())
       .then(blob => {
+        // fetch(videoSrc)
+        //   .then(response => {
+        //     if (!response.ok) throw new Error('Video fetch failed');
+        //     return response.blob(); // 👈 Convert to Blob
+        //   })
+        //   .then(blob => {
+        debugger;
         const blobUrl = URL.createObjectURL(blob); // 👈 Convert to blob URL
-        this.videoUrl = blobUrl;
-        this.target.nativeElement.src = blobUrl;
+        this.blobUrl = this.sanitizer.bypassSecurityTrustResourceUrl(blobUrl)
+        this.target.nativeElement.src = this.blobUrl?.changingThisBreaksApplicationSecurity;
         this.initVideoPlaying();
       })
       .catch(err => {

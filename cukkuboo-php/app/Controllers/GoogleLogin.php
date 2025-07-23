@@ -90,11 +90,18 @@ class GoogleLogin extends BaseController
         ]);
     }
     $token = $jwt->encode(['user_id' => $activeUser['user_id']]);
-    $this->loginModel->update($activeUser['user_id'], [
-        'jwt_token'  => $token,
-        'last_login' => $now
-    ]);
-    $user = $this->loginModel->find($activeUser['user_id']);
+    $updateData = [
+            'jwt_token'  => $token,
+            'last_login' => $now,
+            'updated_at' => $now
+        ];
+        if (!empty($data['username'])) $updateData['username'] = $data['username'];
+        if (!empty($data['phone']))    $updateData['phone'] = $data['phone'];
+        if (!empty($data['country']))  $updateData['country'] = $data['country'];
+
+        $this->loginModel->update($activeUser['user_id'], $updateData);
+        $user = $this->loginModel->find($activeUser['user_id']);
+
 
     } elseif ($deletedUser) {
         $existingNewUser = $this->loginModel

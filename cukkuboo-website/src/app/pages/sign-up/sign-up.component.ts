@@ -86,6 +86,7 @@ export class SignUpComponent implements OnInit {
   hidePassword = true;
   hideConfirmPassword = true;
   maxDate: Date = new Date();
+  showPasswordHint = false; // 👈 Add this line
 
   public countryCodes = countrycode;
 
@@ -108,16 +109,13 @@ export class SignUpComponent implements OnInit {
         countryCode: ['+91', Validators.required],
         phone: ['', [Validators.required, Validators.pattern(/^\d{6,15}$/)]],
         date_of_birth: ['', [Validators.required, this.ageValidator(18)]],
-        password: ['', [Validators.required, Validators.minLength(8), ValidationService.passwordValidator]],
+        password: ['', [ ValidationService.passwordValidator]],
         confirmPassword: ['', Validators.required]
       },
       { validators: [this.passwordConfirming] }
     );
   }
 
-  /**
-   * 👉 Auto-lowercase the email field on input or paste
-   */
   forceLowerCaseEmail(): void {
     const emailControl = this.signUpForm.get('email');
     const currentValue = emailControl?.value || '';
@@ -140,28 +138,14 @@ export class SignUpComponent implements OnInit {
     };
   }
 
-  passwordMatchValidator(group: AbstractControl): ValidationErrors | null {
+  passwordConfirming(group: AbstractControl): ValidationErrors | null {
     const password = group.get('password')?.value;
-    const confirm = group.get('confirmPassword')?.value;
-    return password === confirm ? null : { passwordMismatch: true };
-  }
-
-  passwordConfirming(group: AbstractControl): null | { [key: string]: boolean } {
-    const passwordControl = group.get('password');
-    const confirmPasswordControl = group.get('confirmPassword');
-    if (!passwordControl || !confirmPasswordControl) {
-      return null;
-    }
-    const password = passwordControl.value;
-    const confirmPassword = confirmPasswordControl.value;
+    const confirmPassword = group.get('confirmPassword')?.value;
     if (password && confirmPassword && password !== confirmPassword) {
-      confirmPasswordControl.setErrors({ passwordsMismatch: true });
+      group.get('confirmPassword')?.setErrors({ passwordsMismatch: true });
       return { passwordsMismatch: true };
-    } else if (!confirmPassword) {
-      confirmPasswordControl.setErrors({ required: true });
-      return { required: true };
     } else {
-      confirmPasswordControl.setErrors(null);
+      group.get('confirmPassword')?.setErrors(null);
       return null;
     }
   }
@@ -197,7 +181,7 @@ export class SignUpComponent implements OnInit {
     const formValue = this.signUpForm.value;
     const formData = {
       ...formValue,
-      phone: `${formValue.countryCode}${formValue.phone}`
+      phone: `${formValue.countryCode}-${formValue.phone}`
     };
 
     this.userService.register(formData).subscribe({

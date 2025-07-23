@@ -83,7 +83,7 @@ export class InterceptorService implements HttpInterceptor {
   openLoginModal() {
     const dialogRef = this.dialog.open(SignInComponent, {
       data: 'movie',
-      width: 'auto', height: 'auto',
+      width: 'auto', height: '90vh',
       panelClass: 'signin-modal'
     });
     dialogRef.afterClosed().subscribe((result: any) => {

@@ -153,3 +153,13 @@
     }
   }
 }
+@media (max-width: 767px) {
+  .gen-info-contain {
+    padding-left: 10px;
+  }
+
+  .gen-info-contain h3,
+  .gen-info-contain ul li {
+    padding-left: 2px; /* slight inner padding to avoid cutoff */
+  }
+}

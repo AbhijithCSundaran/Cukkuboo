@@ -130,4 +130,7 @@ export class HeaderComponent implements OnInit {
       this.closeMenu();
     }
   }
+   goToSubscribe(): void {
+    this.router.navigate(['/subscribe'], { queryParams: { source: 'header' } });
+  }
 }

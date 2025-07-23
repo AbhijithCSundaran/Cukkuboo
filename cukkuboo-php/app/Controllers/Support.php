@@ -35,41 +35,18 @@ class Support extends ResourceController
     $status      = $input['status'] ?? 1;
     $screenshot  = $input['screenshot'] ?? null;
     $name        = $input['name'] ?? null;
-  
-    $email = null;
-    $phone = null;
+    $email       = $input['email'] ?? null;
+    $phone       = $input['phone'] ?? null;
+
     $user_id = null;
-
     if ($isAuthenticated) {
-    $user = $this->UserModel->find($authUser['user_id']);
-    if (!$user) {
-        return $this->respond([
-            'success' => false,
-            'message' => 'Invalid user token'
-        ]);
+        $user_id = $authUser['user_id'];
     }
-
-    $email   = $user['email'];
-    $phone   = $user['phone'];
-    $user_id = $authUser['user_id'];
-
-    if (!$name || !$email || !$phone || !$issue_type || !$description) { 
+    if (!$name || !$email || !$phone || !$issue_type || !$description) {
         return $this->respond([
             'success' => false,
             'message' => 'All fields are required',
         ]);
-    }
-
-    } else {
-        $email = $input['email'] ?? null;
-        $phone = $input['phone'] ?? null;
-
-        if (!$name || !$email || !$phone || !$issue_type || !$description) {
-            return $this->respond([
-                'success' => false,
-                'message' => 'All fields are required',
-            ]);
-        }
     }
 
     $data = [
@@ -82,18 +59,18 @@ class Support extends ResourceController
         'screenshot'  => $screenshot,
     ];
 
-        if ($isAuthenticated) {
-            $data['user_id'] = $user_id;
-        }
+    if ($isAuthenticated) {
+        $data['user_id'] = $user_id;
+    }
 
-        if ($supportId) {
-            $existing = $this->supportModel->find($supportId);
-            if (!$existing) {
-                return $this->respond([
-                    'success' => false,
-                    'message' => 'Support issue not found'
-                ]);
-            }
+    if ($supportId) {
+        $existing = $this->supportModel->find($supportId);
+        if (!$existing) {
+            return $this->respond([
+                'success' => false,
+                'message' => 'Support issue not found'
+            ]);
+        }
 
         $data['modify_on'] = date('Y-m-d H:i:s');
         if ($isAuthenticated) {
@@ -111,7 +88,6 @@ class Support extends ResourceController
             'message' => 'Support issue updated successfully',
             'data'    => $updated
         ]);
-
     } else {
         $data['created_on'] = date('Y-m-d H:i:s');
         if ($isAuthenticated) {

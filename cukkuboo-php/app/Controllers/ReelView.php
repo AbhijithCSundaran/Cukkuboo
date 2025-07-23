@@ -16,6 +16,8 @@ class ReelView extends ResourceController
 
     public function __construct()
     {
+        $this->session = \Config\Services::session();
+        $this->input = \Config\Services::request();
         $this->reelViewModel = new ReelViewModel();
         $this->userModel = new UserModel();
         $this->authService = new AuthService();

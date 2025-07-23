@@ -31,7 +31,7 @@
     </ng-container>
     <ng-container matColumnDef="username">
       <th mat-header-cell *matHeaderCellDef>Name</th>
-      <td mat-cell *matCellDef="let user" class="title">{{ user.username }}</td>
+      <td mat-cell *matCellDef="let user" class="title truncate-text" [matTooltip]="user.username">{{ user.username }}</td>
     </ng-container>
 
     <ng-container matColumnDef="phone">

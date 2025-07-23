@@ -49,24 +49,17 @@
 
         </div>
         <!-- Email -->
-        <!-- <div class="w-50 px-2 pb-3">
-          <mat-form-field appearance="outline" class="w-100">
-            <mat-label>Email</mat-label>
-            <input matInput formControlName="email" type="email" placeholder="Add email" />
-          </mat-form-field>
-        </div> -->
         <div class="w-50 px-2 pb-3">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Email</mat-label>
-            <input matInput formControlName="email" type="email" placeholder="Add email" />
-            <mat-error *ngIf="userForm.get('email')?.hasError('required')">
-              Email is required.
-            </mat-error>
-            <mat-error *ngIf="userForm.get('email')?.hasError('strictEmail')">
-              Please enter a valid email address.
-            </mat-error>
+            <input matInput formControlName="email" type="email" placeholder="Add email"
+              (input)="forceLowerCaseEmail($event)" autocomplete="off"/>
           </mat-form-field>
+          <mat-error>
+            <Validation-Messages [control]="userForm.controls['email']"></Validation-Messages>
+          </mat-error>
         </div>
+        
 
         <!-- Password -->
         <div class="w-50 px-2 pb-3">

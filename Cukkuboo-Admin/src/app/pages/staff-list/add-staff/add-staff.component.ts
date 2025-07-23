@@ -15,24 +15,11 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { AbstractControl, ValidationErrors } from '@angular/forms';
 // Your custom service
 import { StaffService } from '../../../staff.service';
+import { ValidationMessagesComponent } from '../../../core/components/validation-messsage/validaation-message.component';
+import { ValidationService } from '../../../core/services/validation.service';
 
 
-export function strictEmailValidator(control: AbstractControl): ValidationErrors | null {
-  const email = control.value;
 
-  // Skip validation if field is empty — let 'required' handle it
-  if (!email) return null;
-
-  const regex = /^(?!.*\.\.)[a-zA-Z0-9._%+-]+@[a-zA-Z0-9-]+\.[a-zA-Z]{2,6}$/;
-  const knownTLDs = ['com', 'org', 'net', 'in', 'co', 'io'];
-
-  if (!regex.test(email)) return { strictEmail: true };
-
-  const tld = email.split('.').pop()?.toLowerCase();
-  if (!tld || !knownTLDs.includes(tld)) return { strictEmail: true };
-
-  return null;
-}
 
 
 export class CustomDateAdapter extends NativeDateAdapter {
@@ -82,7 +69,8 @@ export const CUSTOM_DATE_FORMATS = {
     MatDatepickerModule,
     MatNativeDateModule,
     MatIconModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    ValidationMessagesComponent
   ],
   templateUrl: './add-staff.component.html',
   styleUrls: ['./add-staff.component.scss'],
@@ -182,8 +170,8 @@ export class AddStaffComponent {
       username: ['', Validators.required],
       phone: ['', [Validators.required, Validators.pattern(/^\d{6,15}$/), Validators.maxLength(15)]],
       countryCode: [this.selectedCountryCode, Validators.required],
-      // email: ['', [Validators.email]],
-      email: ['', [Validators.required, strictEmailValidator]],
+       email: ['', [Validators.required, ValidationService.emailValidator]],
+      
       password: ['', Validators.required],
       status: ['1', Validators.required],
       join_date: [''],
@@ -197,6 +185,24 @@ export class AddStaffComponent {
       }
     });
   }
+
+  forceLowerCaseEmail(event: any): void {
+  const inputElement = event.target;
+  const currentValue: string = inputElement.value;
+  const lowerCaseValue = currentValue.toLowerCase();
+
+  if (currentValue !== lowerCaseValue) {
+    const cursorPosition = inputElement.selectionStart;
+
+    // Set lowercased value
+    inputElement.value = lowerCaseValue;
+    this.staffForm.get('email')?.setValue(lowerCaseValue, { emitEvent: false });
+
+    // Restore cursor position
+    inputElement.setSelectionRange(cursorPosition, cursorPosition);
+  }
+}
+
 
   getStaffById(id: number): void {
     this.staffsevice.getUserById(id).subscribe({
@@ -300,4 +306,5 @@ export class AddStaffComponent {
   goBack(): void {
     this.router.navigate(['/staff-list']);
   }
+  
 }

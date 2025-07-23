@@ -7,7 +7,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material/core';
+import { MatNativeDateModule, DateAdapter, MAT_DATE_FORMATS, NativeDateAdapter } from '@angular/material/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
@@ -23,6 +23,37 @@ import { FileUploadService } from '../../../services/upload/file-upload.service'
 import { environment } from '../../../../environments/environment';
 import { MovieService } from '../../../services/movie.service';
 
+
+export class CustomDateAdapter extends NativeDateAdapter {
+  override format(date: Date, displayFormat: Object): string {
+    if (displayFormat === 'input') {
+      const day = this._to2digit(date.getDate());
+      const month = this._to2digit(date.getMonth() + 1);
+      const year = date.getFullYear();
+      return `${day}-${month}-${year}`;
+    }
+    return super.format(date, displayFormat);
+  }
+
+  private _to2digit(n: number): string {
+    return ('00' + n).slice(-2);
+  }
+}
+
+export const CUSTOM_DATE_FORMATS = {
+  parse: {
+    dateInput: { day: 'numeric', month: 'numeric', year: 'numeric' }
+  },
+  display: {
+    dateInput: 'input',
+    monthYearLabel: { year: 'numeric', month: 'short' },
+    dateA11yLabel: { year: 'numeric', month: 'long', day: 'numeric' },
+    monthYearA11yLabel: { year: 'numeric', month: 'long' }
+  }
+};
+
+
+
 @Component({
   selector: 'app-add-movie-show',
   standalone: true,
@@ -35,7 +66,11 @@ import { MovieService } from '../../../services/movie.service';
 
   ],
   templateUrl: './add-movie-show.component.html',
-  styleUrls: ['./add-movie-show.component.scss']
+  styleUrls: ['./add-movie-show.component.scss'],
+  providers: [
+          { provide: DateAdapter, useClass: CustomDateAdapter },
+          { provide: MAT_DATE_FORMATS, useValue: CUSTOM_DATE_FORMATS }
+        ],
 })
 export class AddMovieShowComponent implements OnInit {
   movieForm!: FormGroup;

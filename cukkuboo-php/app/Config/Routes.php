@@ -39,6 +39,10 @@ $routes->delete('category/categories/(:any)', 'Category::delete/$1');
 
 $routes->post('upload-video', 'Uploads::uploadVideo');
 $routes->post('upload-image', 'Uploads::uploadImage');
+// $routes->get('test-encryption', 'Uploads::testEncryption');
+// $routes->get('stream-video', 'Uploads::streamVideo');
+
+
 
 //Movie details
 
@@ -138,8 +142,16 @@ $routes->get('watch/user', 'WatchLater::getUserWatchLater');
 $routes->delete('watch/delete/(:num)', 'WatchLater::delete/$1');
 $routes->delete('watch/clear-all', 'WatchLater::clearAllHistory');
 
+//Support issues
 $routes->post('support/submit', 'Support::submitIssue');
+$routes->get('support/list', 'Support::getAllList');
+$routes->get('support/listId/(:num)', 'Support::getUserComplaintsById/$1');
+$routes->get('support/user', 'Support::getUserComplaintsById');
+$routes->delete('support/delete/(:num)', 'Support::delete/$1');
 
-
-
+//Terms and conditions
+$routes->post('policy/create', 'Policy::createPolicy');
+$routes->get('policy/listPolicy', 'Policy::getAllPolicy');
+$routes->get('policy/list/(:num)', 'Policy::getPolicyById/$1');
+$routes->delete('policy/delete/(:num)', 'Policy::deletePolicy/$1');
 ?>

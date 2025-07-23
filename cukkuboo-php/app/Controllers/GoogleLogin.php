@@ -18,6 +18,8 @@ class GoogleLogin extends BaseController
 
     public function __construct()
     {
+        $this->session = \Config\Services::session();
+        $this->input = \Config\Services::request();
         $this->loginModel = new LoginModel();
         $this->usersubModel = new UsersubModel();
         $this->subscriptionPlanModel = new SubscriptionPlanModel();
@@ -32,7 +34,7 @@ class GoogleLogin extends BaseController
         return $this->response->setJSON([
             'success' => false,
             'message' => 'Email and Google token are required.',
-            'data' => []
+            'data'    => []
         ]);
     }
 
@@ -47,73 +49,121 @@ class GoogleLogin extends BaseController
         return $this->response->setJSON([
             'success' => false,
             'message' => 'Invalid Google token.',
-            'data' => []
+            'data'    => []
         ]);
     }
 
     $googleUser = json_decode($response->getBody(), true);
 
-    if ($googleUser['email'] !== $email) {
+    if (!isset($googleUser['email']) || $googleUser['email'] !== $email) {
         return $this->response->setJSON([
             'success' => false,
             'message' => 'Token and email do not match.',
-            'data' => []
+            'data'    => []
         ]);
     }
 
-    $user = $this->loginModel->where('email', $email)->first();
     $now = date('Y-m-d H:i:s');
     $jwt = new Jwt();
     $isNew = false;
+    $existingUsers = $this->loginModel->where('email', $email)->orderBy('user_id', 'DESC')->findAll();
 
-    if ($user) {
-        if ($user['auth_type'] !== 'google') {
-            return $this->response->setJSON([
-                'success' => false,
-                'message' => 'This account is registered with manual login. Please use email and password.',
-                'data' => []
-            ]);
+    $activeUser = null;
+    $deletedUser = null;
+
+    foreach ($existingUsers as $existingUser) {
+        if ($activeUser === null && $existingUser['status'] == 1) {
+            $activeUser = $existingUser;
         }
 
-        if ($user['status'] == 2) {
-            return $this->response->setJSON([
-                'success' => false,
-                'message' => 'Your account has been suspended by the admin.',
-                'data' => []
-            ]);
-        } elseif ($user['status'] == 9) {
-            return $this->response->setJSON([
-                'success' => false,
-                'message' => 'Account deleted.',
-                'data' => []
-            ]);
+        if ($deletedUser === null && $existingUser['status'] == 9) {
+            $deletedUser = $existingUser;
         }
-        $token = $jwt->encode(['user_id' => $user['user_id']]);
-        $this->loginModel->update($user['user_id'], [
-            'jwt_token' => $token,
-            'last_login' => $now
+    }
+
+    if ($activeUser) {
+    if ($activeUser['auth_type'] === 'manual') {
+        return $this->response->setJSON([
+            'success' => false,
+            'message' => 'This account is registered with manual login. Please use email and password.',
+            'data'    => []
         ]);
+    }
+    $token = $jwt->encode(['user_id' => $activeUser['user_id']]);
+    $this->loginModel->update($activeUser['user_id'], [
+        'jwt_token'  => $token,
+        'last_login' => $now
+    ]);
+    $user = $this->loginModel->find($activeUser['user_id']);
+
+    } elseif ($deletedUser) {
+        $existingNewUser = $this->loginModel
+            ->where('email', $email)
+            ->where('status', 1)
+            ->orderBy('user_id', 'DESC')
+            ->first();
+
+        if ($existingNewUser) {
+            $token = $jwt->encode(['user_id' => $existingNewUser['user_id']]);
+            $this->loginModel->update($existingNewUser['user_id'], [
+                'jwt_token'  => $token,
+                'last_login' => $now
+            ]);
+            $user = $this->loginModel->find($existingNewUser['user_id']);
+        } else {
+            $username = isset($googleUser['name']) ? $googleUser['name'] : explode('@', $email)[0];
+            $newUserData = [
+                'email'          => $email,
+                'username'       => $username,
+                'password'       => '',
+                'auth_type'      => 'google',
+                'phone'          => '',
+                'user_type'      => 'Customer',
+                'status'         => 1,
+                'subscription'   => 'free',
+                'isBlocked'      => 0,
+                'join_date'      => $now,
+                'date_of_birth'  => null,
+                'country'        => '',
+                'created_at'     => $now,
+                'last_login'     => $now,
+                'updated_at'     => $now
+            ];
+
+            $this->loginModel->insert($newUserData);
+            $userId = $this->loginModel->insertID();
+
+            $token = $jwt->encode(['user_id' => $userId]);
+
+            $this->loginModel->update($userId, [
+                'jwt_token'  => $token,
+                'last_login' => $now,
+                'created_by' => $userId,
+                'updated_by' => $userId,
+                'updated_at' => $now
+            ]);
+
+            $user = $this->loginModel->find($userId);
+            $isNew = true;
+        }
     } else {
-        $userId = null;
-        $now = date('Y-m-d H:i:s');
+        $username = isset($googleUser['name']) ? $googleUser['name'] : explode('@', $email)[0];
         $newUserData = [
             'email'          => $email,
-            'username'       => isset($googleUser['name']) ? $googleUser['name'] : explode('@', $email)[0],
-            'password'       => '', 
+            'username'       => $username,
+            'password'       => '',
             'auth_type'      => 'google',
             'phone'          => '',
             'user_type'      => 'Customer',
             'status'         => 1,
-            'subscription'   => 'free', 
+            'subscription'   => 'free',
             'isBlocked'      => 0,
             'join_date'      => $now,
             'date_of_birth'  => null,
             'country'        => '',
             'created_at'     => $now,
             'last_login'     => $now,
-            'created_by'     => 0,
-            'updated_by'    => 0,
-            'updated_at'    => $now
+            'updated_at'     => $now
         ];
 
         $this->loginModel->insert($newUserData);
@@ -124,12 +174,13 @@ class GoogleLogin extends BaseController
         $this->loginModel->update($userId, [
             'jwt_token'  => $token,
             'last_login' => $now,
-            'modified_at'=> $now
+            'created_by' => $userId,
+            'updated_by' => $userId,
+            'updated_at' => $now
         ]);
 
         $user = $this->loginModel->find($userId);
         $isNew = true;
-
     }
     $subscription = $this->usersubModel
         ->select('user_subscription.*, subscriptionplan.plan_name')
@@ -153,7 +204,6 @@ class GoogleLogin extends BaseController
         'end_date' => null,
         'subscription' => 0
     ];
-
     $unreadCount = $this->notificationModel
         ->where('user_id', $user['user_id'])
         ->where('status', 1)
@@ -162,7 +212,7 @@ class GoogleLogin extends BaseController
     return $this->response->setJSON([
         'success' => true,
         'message' => $isNew ? 'Registration successful via Google.' : 'Google login successful.',
-        'data' => [
+        'data'    => [
             'user_id'      => $user['user_id'],
             'username'     => $user['username'],
             'phone'        => $user['phone'] ?? '',
@@ -170,10 +220,11 @@ class GoogleLogin extends BaseController
             'auth_type'    => $user['auth_type'] ?? 'google',
             'isBlocked'    => $user['status'] == 2,
             'subscription' => $user['subscription'] ?? '',
-            'status'        => $user['status'], 
+            'status'       => $user['status'],
             'user_type'    => $user['user_type'] ?? 'Customer',
-            'createdAt'    => $user['created_at'],
-            'updatedAt'    => $user['updated_at'],
+            'created_by'   => $user['user_id'],
+            'created_at'   => $user['created_at'],
+            'updated_at'   => $user['updated_at'],
             'lastLogin'    => $now,
             'jwt_token'    => $token,
             'notifications' => $unreadCount,

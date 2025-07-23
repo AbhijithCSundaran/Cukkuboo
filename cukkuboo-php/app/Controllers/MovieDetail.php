@@ -388,6 +388,7 @@ public function movieReaction($mov_id)
             ], 400);
     }
 
+    
     // Get total count
     $countBuilder = clone $builder;
     $total = $countBuilder->countAllResults(true);

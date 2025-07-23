@@ -16,6 +16,8 @@ class ReelLike extends ResourceController
 
     public function __construct()
     {
+        $this->session = \Config\Services::session();
+        $this->input = \Config\Services::request();
         $this->reelLikeModel = new ReelLikeModel();
         $this->userModel = new UserModel();
         $this->authService = new AuthService();

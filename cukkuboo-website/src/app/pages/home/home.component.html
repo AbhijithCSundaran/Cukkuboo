@@ -83,7 +83,7 @@
 
             <!-- Trailer Video Player -->
             <js-player *ngIf="selectedItem" class="video_player" (onClose)="onCloseTrailer($event)"
-               [videoSrc]="videoUrl + selectedItem.trailer">
+               [videoSrc]="selectedItem.trailer">
             </js-player>
          </div>
       </div>

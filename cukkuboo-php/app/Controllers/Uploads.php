@@ -188,4 +188,46 @@ class Uploads extends ResourceController
         return $this->response->setStatusCode(500)->setJSON(['error' => 'Failed to move the uploaded image']);
     }
 }
+public function uploadScreenshot()
+{
+    $authHeader = AuthHelper::getAuthorizationToken($this->request);
+    $user = $this->authService->getAuthenticatedUser($authHeader);
+
+    $image = $this->request->getFile('image');
+    if (!$image || !$image->isValid()) {
+        return $this->response->setStatusCode(400)->setJSON([
+            'success' => false,
+            'error' => $image ? $image->getErrorString() : 'No image file uploaded',
+        ]);
+    }
+
+    if (!in_array($image->getMimeType(), ['image/jpeg', 'image/png', 'image/webp'])) {
+        return $this->response->setStatusCode(400)->setJSON([
+            'success' => false,
+            'error' => 'Invalid image format. Only JPEG, PNG, and WEBP are allowed.'
+        ]);
+    }
+
+    $imgName = $image->getRandomName();
+    $targetPath = ROOTPATH . 'uploads/images';
+
+    if (!is_dir($targetPath)) {
+        mkdir($targetPath, 0777, true);
+    }
+
+    if ($image->move($targetPath, $imgName)) {
+        return $this->response->setJSON([
+            'success'   => true,
+            'message'   => 'Image uploaded successfully',
+            'file_name' => $imgName,
+            'path'      => base_url("uploads/images/$imgName"),
+        ]);
+    } else {
+        return $this->response->setStatusCode(500)->setJSON([
+            'success' => false,
+            'error' => 'Failed to move the uploaded image'
+        ]);
+    }
+}
+
 }

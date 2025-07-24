@@ -154,4 +154,12 @@ $routes->post('policy/create', 'Policy::createPolicy');
 $routes->get('policy/listPolicy', 'Policy::getAllPolicy');
 $routes->get('policy/list/(:num)', 'Policy::getPolicyById/$1');
 $routes->delete('policy/delete/(:num)', 'Policy::deletePolicy/$1');
+
+
+//RevenueCat 
+$routes->get('subscription/(:any)', 'RevenueCat::getSubscription/$1');
+$routes->get('stripe/test', 'StripePayment::createCheckoutSession');
+
+
+
 ?>

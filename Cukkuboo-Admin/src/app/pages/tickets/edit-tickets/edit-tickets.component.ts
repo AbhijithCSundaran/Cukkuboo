@@ -4,6 +4,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ValidationService } from '../../../core/services/validation.service';
 import { TicketsService } from '../../../services/tickets.service';
+import { environment } from '../../../../environments/environment';
+
+import countrycode from '.../../../src/assets/json/countrycode.json';
 
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -16,6 +19,7 @@ import { CommonModule } from '@angular/common';
   selector: 'app-edit-ticket',
   templateUrl: './edit-tickets.component.html',
   standalone: true,
+  styleUrls: ['./edit-tickets.component.scss'],
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -24,34 +28,37 @@ import { CommonModule } from '@angular/common';
     MatInputModule,
     MatSelectModule,
   ],
-  styleUrls: ['./edit-tickets.component.scss'],
 })
 export class EditTicketsComponent implements OnInit {
   public ticketForm!: FormGroup;
   public ticketId: number = 0;
-  public screenshotPreview: string | null = null;
-  public showImageModal: boolean = false;
+
+  public countryCodes = countrycode;
   public selectedCountryCode: string = '+91';
 
-  public countryCodes = [
-    { name: 'India', dial_code: '+91', code: 'IN' },
-    { name: 'United States', dial_code: '+1', code: 'US' },
-    { name: 'United Kingdom', dial_code: '+44', code: 'GB' },
-    { name: 'Canada', dial_code: '+1', code: 'CA' },
-    { name: 'Australia', dial_code: '+61', code: 'AU' },
-    { name: 'Germany', dial_code: '+49', code: 'DE' },
-    { name: 'France', dial_code: '+33', code: 'FR' },
-  ];
+  imageUrl = environment.fileUrl + 'uploads/images/';
+  public screenshotUrl: string = '';
 
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
     private snackBar: MatSnackBar,
-    private ticketService: TicketsService,
+    private ticketService: TicketsService
   ) {}
 
   ngOnInit(): void {
+    this.initForm();
+
+    const id = this.route.snapshot.paramMap.get('id');
+    this.ticketId = id ? +id : 0;
+
+    if (this.ticketId > 0) {
+      this.loadTicketData(this.ticketId);
+    }
+  }
+
+  private initForm(): void {
     this.ticketForm = this.fb.group({
       name: ['', Validators.required],
       email: ['', [Validators.required, ValidationService.emailValidator]],
@@ -61,50 +68,45 @@ export class EditTicketsComponent implements OnInit {
       description: ['', Validators.required],
       status: ['1', Validators.required],
     });
+  }
 
-    const id = this.route.snapshot.paramMap.get('id');
-    this.ticketId = id ? +id : 0;
+  private loadTicketData(id: number): void {
+    this.ticketService.getTicketById(id).subscribe({
+      next: (response) => {
+        const ticket = response?.data;
+        if (ticket) {
+          const {
+            name,
+            email,
+            phone,
+            description,
+            status,
+            issue_type,
+            screenshot,
+          } = ticket;
 
-    if (this.ticketId > 0) {
-      this.ticketService.getTicketById(this.ticketId).subscribe({
-        next: (response) => {
-          const ticket = response?.data;
-          if (ticket) {
-            const {
-              name,
-              email,
-              phone,
-              description,
-              status,
-              screenshot,
-              issue_type,
-            } = ticket;
+          const countryCode = this.extractCountryCode(phone);
+          const phoneWithoutCode = phone?.replace(countryCode, '') || '';
 
-            const countryCode = this.extractCountryCode(phone);
-            const phoneWithoutCode = phone?.replace(countryCode, '') || '';
-
-            this.ticketForm.patchValue({
-              name: name || '',
-              email: email || '',
-              countryCode: countryCode || this.selectedCountryCode,
-              phone: phoneWithoutCode,
-              issue_type: issue_type || '',
-              description: description || '',
-              status: status?.toString() || '1',
-            });
-
-            if (screenshot) {
-              this.screenshotPreview = `${this.ticketService['apiUrl']}uploads/support/${screenshot}`;
-            }
-          }
-        },
-        error: () => {
-          this.snackBar.open('Failed to fetch ticket details.', '', {
-            duration: 3000,
+          this.ticketForm.patchValue({
+            name: name || '',
+            email: email || '',
+            countryCode: countryCode || this.selectedCountryCode,
+            phone: phoneWithoutCode,
+            issue_type: issue_type || '',
+            description: description || '',
+            status: status?.toString() || '1',
           });
-        },
-      });
-    }
+
+          this.screenshotUrl = screenshot ? this.imageUrl + screenshot : '';
+        }
+      },
+      error: () => {
+        this.snackBar.open('Failed to fetch ticket details.', '', {
+          duration: 3000,
+        });
+      },
+    });
   }
 
   extractCountryCode(fullPhone: string): string {
@@ -151,13 +153,19 @@ export class EditTicketsComponent implements OnInit {
     });
   }
 
-  openImageModal(): void {
-    this.showImageModal = true;
+  openFullScreen(): void {
+  const img = new Image();
+  img.src = this.screenshotUrl;
+  const newWindow = window.open('');
+  if (newWindow) {
+    newWindow.document.write(`<img src="${img.src}" style="width: 100%; height: auto;" />`);
+    newWindow.document.title = 'Screenshot Preview';
+  } else {
+    this.snackBar.open('Popup blocked! Please allow popups for this site.', '', {
+      duration: 3000,
+    });
   }
-
-  closeImageModal(): void {
-    this.showImageModal = false;
-  }
+}
 
   goBack(): void {
     this.router.navigate(['/tickets']);

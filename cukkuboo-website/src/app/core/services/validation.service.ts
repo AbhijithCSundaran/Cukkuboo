@@ -16,7 +16,7 @@ export class ValidationService {
             'maxlength': `Maximum length ${validatorValue.requiredLength}`,
             'max': `Maximum value is ${validatorValue.max}`,
             'min': `Minimum value is ${validatorValue.min}`,
-            'pattern': `Invalid`
+            'pattern': `Invalid Mobile Number`
         };
         return config[validatorName];
     }

@@ -5,7 +5,7 @@ import {
   Validators,
   ReactiveFormsModule
 } from '@angular/forms';
-import { HttpClient, HttpEvent } from '@angular/common/http';
+import { HttpClient, HttpEventType } from '@angular/common/http';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { CommonModule } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -15,6 +15,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { HelpService } from '../../services/help.service';
 import { FileUploadService } from '../../services/file-upload.service';
 import { StorageService } from '../../core/services/TempStorage/storageService';
+import countrycode from '../../../assets/json/countrycode.json';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-help-center',
@@ -26,7 +28,8 @@ import { StorageService } from '../../core/services/TempStorage/storageService';
     MatInputModule,
     MatSelectModule,
     MatButtonModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatTooltipModule
   ],
   templateUrl: './help-center.component.html',
   styleUrls: ['./help-center.component.scss']
@@ -36,6 +39,7 @@ export class HelpCenterComponent {
   loading = false;
   dragging = false;
   screenshots: File[] = [];
+  public countryCodes = countrycode;
 
   constructor(
     private fb: FormBuilder,
@@ -48,6 +52,7 @@ export class HelpCenterComponent {
     this.helpForm = this.fb.group({
       name: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
+      countryCode: ['+91', Validators.required],
       phone: ['', [Validators.required, Validators.pattern(/^[0-9]{7,15}$/)]],
       issueType: ['', Validators.required],
       description: ['', [Validators.required, Validators.minLength(10)]]
@@ -55,109 +60,128 @@ export class HelpCenterComponent {
 
     const userData = this.storageService.getItem('userData');
     if (userData) {
-      let phone = userData.phone || '';
-      this.helpForm.patchValue({
-        name: userData.username || '',
-        email: userData.email || '',
-        phone: phone
-      });
-    }
-  }
-
-  forceLowerCaseEmail(): void {
-    const emailControl = this.helpForm.get('email');
-    const currentValue = emailControl?.value || '';
-    const lowerCased = currentValue.toLowerCase();
-    if (currentValue !== lowerCased) {
-      emailControl?.setValue(lowerCased, { emitEvent: false });
+      const rawPhone = userData.phone || '';
+      if (rawPhone.includes('-')) {
+        const [code, number] = rawPhone.split('-');
+        this.helpForm.patchValue({
+          name: userData.username || '',
+          email: userData.email || '',
+          countryCode: code || '+91',
+          phone: number || ''
+        });
+      } else {
+        this.helpForm.patchValue({
+          name: userData.username || '',
+          email: userData.email || '',
+          countryCode: userData.countryCode || '+91',
+          phone: rawPhone
+        });
+      }
     }
   }
 
   submitIssue(): void {
     if (this.helpForm.invalid) {
-      this.snackBar.open('Please fill out the form correctly.', '', {
-        duration: 3000,
-        verticalPosition: 'top',
-        panelClass: ['snackbar-error']
-      });
+      this.helpForm.markAllAsTouched();
       return;
     }
 
     this.loading = true;
+    const formData = this.helpForm.value;
 
-    const formData = {
-      name: this.helpForm.value.name,
-      email: this.helpForm.value.email.toLowerCase(),
-      phone: this.helpForm.value.phone,
-      issue_type: this.helpForm.value.issueType,
-      description: this.helpForm.value.description
-    };
+    const submitFinalRequest = (screenshotFileName: string = '') => {
+      const data = {
+        name: formData.name,
+        email: formData.email,
+        phone: `${formData.countryCode}-${formData.phone}`,
+        issue_type: formData.issueType,
+        description: formData.description,
+        screenshot: screenshotFileName
+      };
 
-    this.helpService.submitHelpRequest(formData).subscribe({
-      next: (res) => {
-        if (res?.success) {
-          if (this.screenshots.length > 0) {
-            this.uploadScreenshotsSequentially(this.screenshots);
+      this.helpService.submitHelpRequest(data).subscribe({
+        next: (res) => {
+          if (res?.success) {
+            this.snackBar.open(res.message || 'Issue submitted successfully!', '', {
+              duration: 3000,
+              verticalPosition: 'top',
+              panelClass: ['snackbar-success']
+            });
+            this.helpForm.reset();
+            this.helpForm.patchValue({ countryCode: '+91' });
+            this.screenshots = [];
           } else {
-            this.showSuccessMessage();
+            this.snackBar.open(res?.message || 'Submission failed.', '', {
+              duration: 3000,
+              verticalPosition: 'top',
+              panelClass: ['snackbar-error']
+            });
           }
-        } else {
-          this.snackBar.open(res?.message || 'Submission failed.', '', {
+          this.loading = false;
+        },
+        error: () => {
+          this.snackBar.open('Failed to submit issue.', '', {
             duration: 3000,
             verticalPosition: 'top',
             panelClass: ['snackbar-error']
           });
           this.loading = false;
         }
-      },
-      error: (err) => {
-        console.error('Error submitting issue:', err);
-        this.snackBar.open('Failed to submit issue.', '', {
-          duration: 3000,
-          verticalPosition: 'top',
-          panelClass: ['snackbar-error']
-        });
-        this.loading = false;
-      }
-    });
-  }
+      });
+    };
 
-  uploadScreenshotsSequentially(files: File[], index: number = 0): void {
-    if (index >= files.length) {
-      this.showSuccessMessage();
-      return;
+    if (this.screenshots.length > 0) {
+      const file = this.screenshots[0];
+      this.upload.uploadImage(file).subscribe({
+        next: (event) => {
+          if (event.type === HttpEventType.Response) {
+            const res = event.body as any;
+            if (res?.success && res?.file_name) {
+              submitFinalRequest(res.file_name);
+            } else {
+              this.snackBar.open('Image upload failed.', '', {
+                duration: 3000,
+                verticalPosition: 'top',
+                panelClass: ['snackbar-error']
+              });
+              this.loading = false;
+            }
+          }
+        },
+        error: () => {
+          this.snackBar.open('Error uploading image.', '', {
+            duration: 3000,
+            verticalPosition: 'top',
+            panelClass: ['snackbar-error']
+          });
+          this.loading = false;
+        }
+      });
+    } else {
+      submitFinalRequest();
     }
-
-    this.upload.uploadImage(files[index]).subscribe({
-      next: (event: HttpEvent<any>) => {},
-      error: (err) => {
-        console.error('Error uploading image:', err);
-        this.snackBar.open(`Failed to upload ${files[index].name}`, 'Close', {
-          duration: 3000,
-          panelClass: ['snackbar-error']
-        });
-        this.uploadScreenshotsSequentially(files, index + 1);
-      },
-      complete: () => {
-        this.uploadScreenshotsSequentially(files, index + 1);
-      }
-    });
   }
 
-  showSuccessMessage(): void {
-    this.snackBar.open('Issue submitted successfully!', '', {
-      duration: 3000,
-      verticalPosition: 'top',
-      panelClass: ['snackbar-success']
-    });
-    this.helpForm.reset();
-    this.screenshots = [];
-    this.loading = false;
+  filePreview(file: File): string {
+    return URL.createObjectURL(file);
+  }
+
+  removeScreenshot(file: File): void {
+    this.screenshots = this.screenshots.filter(f => f !== file);
   }
 
   onNumberInput(event: Event): void {
     const input = event.target as HTMLInputElement;
     input.value = input.value.replace(/[^0-9]/g, '');
+    this.helpForm.get('phone')?.setValue(input.value, { emitEvent: false });
+  }
+
+  forceLowerCaseEmail(): void {
+    const emailControl = this.helpForm.get('email');
+    const value = emailControl?.value || '';
+    if (value !== value.toLowerCase()) {
+      emailControl?.setValue(value.toLowerCase(), { emitEvent: false });
+    }
   }
 
   onDragOver(event: DragEvent): void {
@@ -189,7 +213,7 @@ export class HelpCenterComponent {
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
       if (file.type.startsWith('image/')) {
-        this.screenshots.push(file);
+        this.screenshots = [file]; // allow only 1
       } else {
         this.snackBar.open(`Invalid file type: ${file.name}`, 'Close', {
           duration: 2000,

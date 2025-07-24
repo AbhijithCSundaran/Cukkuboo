@@ -7,7 +7,6 @@
   <form [formGroup]="ticketForm">
     <mat-card appearance="outlined" class="form-card">
       <mat-card-content class="d-flex flex-wrap">
-
         <!-- Name -->
         <div class="w-50 px-2 pb-3">
           <label class="display-label">Name</label>
@@ -40,45 +39,45 @@
           <div class="display-value">{{ ticketForm.get('description')?.value }}</div>
         </div>
 
-        <!-- Screenshot -->
-        <div class="w-50 px-2 pb-3">
-          <label class="display-label">Screenshot</label>
-          <div *ngIf="screenshotPreview; else noMedia">
-            <img 
-              [src]="screenshotPreview" 
-              alt="Screenshot" 
-              class="clickable-image"
-              (click)="openImageModal()" 
-            />
+        <!-- Status and Screenshot in same line -->
+        <div class="d-flex w-100 px-2 pb-3 flex-wrap align-items-start">
+
+             <!-- Screenshot Preview-->
+          <div class="w-50  screenshot-wrapper" *ngIf="screenshotUrl">
+            <label class="display-label">Screenshot</label>
+            <div class="display-value screenshot-container">
+              <img
+                [src]="screenshotUrl"
+                alt="Screenshot"
+                class="screenshot-img"
+                (click)="openFullScreen()"
+              />
+              <button class="fullscreen-btn" (click)="openFullScreen()" type="button">
+                Full Screen
+              </button>
+            </div>
           </div>
-          <ng-template #noMedia>
-            <p class="no-media-text">No media</p>
-          </ng-template>
+          <!-- Status Dropdown -->
+          <div class="w-50 ">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Status</mat-label>
+              <mat-select formControlName="status">
+                <mat-option value="1">Pending</mat-option>
+                <mat-option value="2">OnHold</mat-option>
+                <mat-option value="3">Closed</mat-option>
+                <mat-option value="9">Deleted</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+       
         </div>
 
-        <!-- Status -->
-        <div class="w-50 px-2 pb-3">
-          <mat-form-field appearance="outline" class="w-100">
-            <mat-label>Status</mat-label>
-            <mat-select formControlName="status">
-              <mat-option value="1">Pending</mat-option>
-              <mat-option value="2">OnHold</mat-option>
-              <mat-option value="3">Closed</mat-option>
-              <mat-option value="9">Deleted</mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
-
-        <!-- Save -->
+        <!-- Save Button -->
         <div class="save">
           <button mat-raised-button color="primary" class="save-button" (click)="saveTicket()">Save</button>
         </div>
       </mat-card-content>
     </mat-card>
   </form>
-
-  <!-- Fullscreen Image Modal -->
-  <div class="modal-overlay" *ngIf="showImageModal" (click)="closeImageModal()">
-    <img [src]="screenshotPreview" alt="Full Screenshot" class="modal-image" />
-  </div>
 </div>

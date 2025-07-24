@@ -23,24 +23,54 @@ class Support extends ResourceController
         $this->UserModel = new UserModel();
     }
     public function submitIssue() 
-{
-    $input = $this->request->getJSON(true);
+    {
+    $data= $this->request->getJSON(true);
     $authHeader = AuthHelper::getAuthorizationToken($this->request);
-    $authUser = $this->authService->getAuthenticatedUser($authHeader);
-    $isAuthenticated = $authUser && isset($authUser['user_id']);
+    $user = $this->authService->getAuthenticatedUser($authHeader);
+    $isAuthenticated = $user && isset($user['user_id']);
 
-    $supportId   = $input['support_id'] ?? null;
-    $issue_type  = $input['issue_type'] ?? null;
-    $description = $input['description'] ?? null;
-    $status      = $input['status'] ?? 1;
-    $screenshot  = $input['screenshot'] ?? null;
-    $name        = $input['name'] ?? null;
-    $email       = $input['email'] ?? null;
-    $phone       = $input['phone'] ?? null;
+    $supportId   = $data['support_id'] ?? null;
+    $issue_type  = $data['issue_type'] ?? null;
+    $description = $data['description'] ?? null;
+    $status      = $data['status'] ?? null;
+    $screenshot  = $data['screenshot'] ?? null;
+    $name        = $data['name'] ?? null;
+    $email       = $data['email'] ?? null;
+    $phone       = $data['phone'] ?? null;
 
     $user_id = null;
     if ($isAuthenticated) {
-        $user_id = $authUser['user_id'];
+        $user_id = $user['user_id'];
+    }
+    if ($supportId && $status !== null && !$name && !$email && !$phone && !$issue_type && !$description) {
+        $existing = $this->supportModel->find($supportId);
+        if (!$existing) {
+            return $this->respond([
+                'success' => false,
+                'message' => 'Support issue not found'
+            ]);
+        }
+
+        $updateData = [
+            'status' => $status,
+            'modify_on' => date('Y-m-d H:i:s')
+        ];
+
+        if ($isAuthenticated) {
+            $updateData['modify_by'] = $user_id;
+        }
+
+        $this->supportModel->update($supportId, $updateData);
+        $updated = $this->supportModel->find($supportId);
+        if (!$isAuthenticated && isset($updated['user_id'])) {
+            unset($updated['user_id']);
+        }
+
+        return $this->respond([
+            'success' => true,
+            'message' => 'Support issue status updated successfully',
+            'data'    => $updated
+        ]);
     }
     if (!$name || !$email || !$phone || !$issue_type || !$description) {
         return $this->respond([
@@ -55,7 +85,7 @@ class Support extends ResourceController
         'phone'       => $phone,
         'issue_type'  => $issue_type,
         'description' => $description,
-        'status'      => $status,
+        'status'      => ($status === null || $status === '') ? 1 : $status,
         'screenshot'  => $screenshot,
     ];
 
@@ -148,9 +178,9 @@ class Support extends ResourceController
 public function getUserComplaintsById($supportId = null)
 {
     $authHeader = AuthHelper::getAuthorizationToken($this->request);
-    $authUser = $this->authService->getAuthenticatedUser($authHeader);
+    $user = $this->authService->getAuthenticatedUser($authHeader);
 
-    if (!$authUser || !isset($authUser['user_id'])) {
+    if (!$user || !isset($user['user_id'])) {
         return $this->failUnauthorized('Invalid or missing token.');
     }
 
@@ -167,7 +197,7 @@ public function getUserComplaintsById($supportId = null)
             'data' => $complaint
         ]);
     } else {
-        $userId = $authUser['user_id'];
+        $userId = $user['user_id'];
         $complaints = $this->supportModel->getComplaintsByUser($userId);
 
         return $this->respond([

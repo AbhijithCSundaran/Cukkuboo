@@ -143,6 +143,7 @@ $routes->delete('watch/delete/(:num)', 'WatchLater::delete/$1');
 $routes->delete('watch/clear-all', 'WatchLater::clearAllHistory');
 
 //Support issues
+$routes->post('support/uploadImage', 'Uploads::uploadScreenshot');
 $routes->post('support/submit', 'Support::submitIssue');
 $routes->get('support/list', 'Support::getAllList');
 $routes->get('support/listId/(:num)', 'Support::getUserComplaintsById/$1');

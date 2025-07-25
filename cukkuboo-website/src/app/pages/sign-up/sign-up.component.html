@@ -97,9 +97,9 @@
       <mat-icon class="small-eye-icon">{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
     </button>
 
-    <mat-hint *ngIf="showPasswordHint">
+    <!-- <mat-hint *ngIf="showPasswordHint">
       Must be 8+ characters, with uppercase, lowercase, number, and special character.
-    </mat-hint>
+    </mat-hint> -->
 
     <mat-error>
       <Validation-Messages [control]="signUpForm.controls['password']"></Validation-Messages>

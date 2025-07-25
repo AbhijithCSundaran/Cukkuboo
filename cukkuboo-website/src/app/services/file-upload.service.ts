@@ -40,7 +40,7 @@ export class FileUploadService {
     //   reportProgress: true,
     //   observe: 'events'
     // });
-    return this.http.post(this.apiUrl + 'upload-image', formData, {
+    return this.http.post(this.apiUrl + 'support/uploadImage', formData, {
       reportProgress: true,
       observe: 'events',
       headers: this.headers

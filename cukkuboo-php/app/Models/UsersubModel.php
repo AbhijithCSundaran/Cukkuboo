@@ -65,13 +65,18 @@ class UsersubModel extends Model
         'modify_by'  => $modifiedBy
     ]);
 }
+
 public function cancelUserSubscription($userId)
 {
+    $today = date('Y-m-d');
+
     return $this->where('user_id', $userId)
-                ->where('status !=', 9)
+                ->where('status', 1) 
+                ->where('end_date >=', $today) 
                 ->set(['status' => 3]) 
                 ->update();
 }
+
 public function countCurrentMonthSubscribers()
     {
     return $this->where('status', 2) 

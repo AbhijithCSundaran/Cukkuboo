@@ -143,6 +143,7 @@ $routes->delete('watch/delete/(:num)', 'WatchLater::delete/$1');
 $routes->delete('watch/clear-all', 'WatchLater::clearAllHistory');
 
 //Support issues
+$routes->post('support/uploadImage', 'Uploads::uploadScreenshot');
 $routes->post('support/submit', 'Support::submitIssue');
 $routes->get('support/list', 'Support::getAllList');
 $routes->get('support/listId/(:num)', 'Support::getUserComplaintsById/$1');
@@ -154,4 +155,12 @@ $routes->post('policy/create', 'Policy::createPolicy');
 $routes->get('policy/listPolicy', 'Policy::getAllPolicy');
 $routes->get('policy/list/(:num)', 'Policy::getPolicyById/$1');
 $routes->delete('policy/delete/(:num)', 'Policy::deletePolicy/$1');
+
+
+//RevenueCat 
+$routes->get('subscription/(:any)', 'RevenueCat::getSubscription/$1');
+$routes->get('stripe/test', 'StripePayment::createCheckoutSession');
+
+
+
 ?>

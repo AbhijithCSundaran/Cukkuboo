@@ -5,6 +5,7 @@ use CodeIgniter\RESTful\ResourceController;
 use App\Helpers\AuthHelper; 
 use App\Models\MovieDetailsModel;
 use App\Models\UserModel;
+use App\Models\CoreModel;
 use App\Models\UsersubModel;
 use App\Models\SubscriptionPlanModel;
 use App\Libraries\Jwt;
@@ -21,6 +22,7 @@ class MovieDetail extends ResourceController
         $this->input = \Config\Services::request();
         $this->moviedetail = new MovieDetailsModel();
         $this->subscriptionPlanModel = new SubscriptionPlanModel();
+        $this->coreModel = new CoreModel();
         $this->userModel = new UserModel();
         $this->usersubModel = new UsersubModel();
         $this->authService = new AuthService();
@@ -175,6 +177,10 @@ public function getMovieById($id)
     if (!$getmoviesdetails) {
         return $this->failNotFound('Movie not found.');
     }
+    if($getmoviesdetails['video'])
+        $getmoviesdetails['video'] = $this->coreModel->simpleEncrypt($getmoviesdetails['video'],'Abhijith123456789');
+    // if($getmoviesdetails['trailer'])
+    //     $getmoviesdetails['trailer'] = $this->coreModel->simpleEncrypt($getmoviesdetails['trailer'],'Abhijith123456789');
  
    
     if (!$user) {

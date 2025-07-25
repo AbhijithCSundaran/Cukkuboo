@@ -151,7 +151,11 @@ class Reels extends ResourceController
 
     $offset = $pageIndex * $pageSize;
 
-    $builder = $this->reelsModel->where('status !=', 9);
+    if ($user && isset($user['user_type']) && strtolower($user['user_type']) === 'customer') {
+        $builder = $this->reelsModel->where('status', 1); 
+    } else {
+        $builder = $this->reelsModel->where('status !=', 9); 
+    }
 
     if (!empty($search)) {
        

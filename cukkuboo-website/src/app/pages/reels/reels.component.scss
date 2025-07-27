@@ -189,6 +189,17 @@ body {
   color: #dc3545 !important;
 }
 
+
+.reel-wrapper .reel-text .decp.clickable {
+  cursor: pointer;
+
+}
+
+/* Optional: hover effect for interactive desc */
+// .reel-wrapper .reel-text .decp.clickable:hover {
+//   color: #ff4d4d; /* Slight red tint for hover */
+// }
+
 /* Responsive - Tablet */
 @media (max-width: 991px) {
   .reel-wrapper .reel-inner {

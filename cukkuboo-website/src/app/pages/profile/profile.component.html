@@ -37,6 +37,13 @@
                         <button class="btn btn-yes btn-danger text-white btn-sm col-6" (click)="toggleDeleteAccount()">
                             Delete Account
                         </button>
+                        <!-- Only show if it's a Google account -->
+<div class="text-center mt-3" *ngIf="userData?.auth_type === ">
+  <button type="button" class="btn btn-danger" (click)="deleteGoogleAccount()">
+    Delete Google Account
+  </button>
+</div>
+
                     </div>
                 </div>
             </div>

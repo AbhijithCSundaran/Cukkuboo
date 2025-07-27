@@ -110,54 +110,57 @@ export class SignInComponent implements OnInit, OnDestroy {
       panelClass: isSuccess ? ['snackbar-success'] : ['snackbar-error']
     });
   }
-onSubmit(): void {
-  if (this.loginForm.valid) {
-    const model = this.loginForm.value;
 
-    this.userService.login(model).subscribe({
-      next: (response) => {
-        if (response.success === true) {
-          if (response.data?.user_type === 'Customer') {
-            localStorage.setItem('t_k', response.data?.jwt_token);
-            this.storageService.updateItem('userData', response.data);
-            this.storageService.updateItem('username', response.data?.username || 'User');
-            this.storageService.updateItem('token', response.data?.jwt_token || 'token');
-            this.storageService.updateItem(
-              'subscription',
-              SubscriptionStatus[+response.data?.subscription_details?.subscription || 0]
-            );
+  onSubmit(): void {
+    if (this.loginForm.valid) {
+      const model = this.loginForm.value;
 
-            this.modalData ? this.dialogRef.close(response) : this.router.navigate(['/home']);
+      this.userService.login(model).subscribe({
+        next: (response) => {
+          if (response.success === true) {
+            if (response.data?.user_type === 'Customer') {
+              localStorage.setItem('t_k', response.data?.jwt_token);
+              this.storageService.updateItem('userData', response.data);
+              this.storageService.updateItem('username', response.data?.username || 'User');
+              this.storageService.updateItem('token', response.data?.jwt_token || 'token');
+              this.storageService.updateItem(
+                'subscription',
+                SubscriptionStatus[+response.data?.subscription_details?.subscription || 0]
+              );
+
+              this.modalData ? this.dialogRef.close(response) : this.router.navigate(['/home']);
+            } else {
+              this.showSnackbar('Invalid email or password');
+            }
           } else {
-            this.showSnackbar('Invalid email or password');
+            this.showSnackbar(response.message || 'Invalid email or password');
           }
-        } else {
-          this.showSnackbar(response.message || 'Invalid email or password');
+        },
+        error: () => {
+          this.showSnackbar('Login error. Please try again.');
         }
-      },
-      error: () => {
-        this.showSnackbar('Login error. Please try again.');
-      }
-    });
-  } else {
-    this.showSnackbar('Invalid email or password');
+      });
+    } else {
+      this.showSnackbar('Invalid email or password');
+    }
   }
-}
-
 
   navigateToSignUp(): void {
-    this.router.navigate(['/signup']);
+    if (this.modalData && this.dialogRef) {
+      this.dialogRef.close(); // Close modal
+      setTimeout(() => this.router.navigate(['/signup']), 100); // Delay to avoid race condition
+    } else {
+      this.router.navigate(['/signup']);
+    }
   }
 
-goBackToLogin(): void {
-  this.step = 0;
-  this.forgotForm.reset();
-  this.resendCountdown = 0;
-  clearInterval(this.countdownInterval);
-
-  // Re-render the Google Sign-In button after view updates
-  setTimeout(() => this.initializeGoogleSignIn(), 0);
-}
+  goBackToLogin(): void {
+    this.step = 0;
+    this.forgotForm.reset();
+    this.resendCountdown = 0;
+    clearInterval(this.countdownInterval);
+    setTimeout(() => this.initializeGoogleSignIn(), 0);
+  }
 
   startForgotFlow(): void {
     this.step = 1;

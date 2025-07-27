@@ -53,6 +53,8 @@ export class ProfileComponent implements OnInit {
   deleteAccountForm!: FormGroup;
   showSignOutModal: boolean = false;
   public countryCodes = countrycode;
+  userData: any;
+
 
   // public countryCodes = [
   //     { name: 'Afghanistan', dial_code: '+93', code: 'AF' },
@@ -173,7 +175,8 @@ export class ProfileComponent implements OnInit {
 
   loadUserData(): void {
 
-    const data = this.storageService.getItem('userData');
+const data = this.storageService.getItem('userData');
+this.userData = data;
     debugger;
     if (data) {
       this.userId = data.user_id;
@@ -385,4 +388,36 @@ export class ProfileComponent implements OnInit {
     input.value = lowercased;
     this.profileForm.get('email')?.setValue(lowercased);
   }
+
+  deleteGoogleAccount(): void {
+  if (!this.userData?.user_id) return;
+
+  const userId = this.userData.user_id;
+
+  this.userService.deleteGoogleAccount(userId).subscribe({
+    next: () => {
+      this.snackBar.open('Google account deleted successfully.', '', {
+        duration: 3000,
+        verticalPosition: 'top',
+        panelClass: ['snackbar-success']
+      });
+
+      localStorage.clear();
+      this.storageService.updateItem('token', '');
+      this.storageService.updateItem('userData', null);
+      this.storageService.updateItem('username', '');
+
+      this.router.navigate(['/']);
+    },
+    error: (error) => {
+      console.error('Google account delete failed:', error);
+      this.snackBar.open('Failed to delete Google account.', '', {
+        duration: 3000,
+        verticalPosition: 'top',
+        panelClass: ['snackbar-error']
+      });
+    }
+  });
+}
+
 }

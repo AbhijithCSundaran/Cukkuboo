@@ -80,7 +80,7 @@
         [class.dragover]="dragging">
         <p class="text-white mb-2">Drag & drop screenshot here or click to upload (optional)</p>
         <input type="file" (change)="onFileSelect($event)" accept="image/*" hidden #fileInput />
-        <button type="button" class="submit-btn" (click)="fileInput.click()">Choose File</button>
+        <button type="button" class="btn btn-yes" (click)="fileInput.click()">Choose File</button>
 
         <!-- Thumbnail Preview -->
         <div *ngIf="screenshots.length > 0" class="mt-2">
@@ -93,12 +93,12 @@
       </div>
 
       <!-- Buttons -->
-      <div class="d-flex justify-content-end gap-2">
-        <button type="button" class="submit-btn" (click)="goBack()">Back</button>
-        <button type="submit" class="submit-btn" [disabled]="loading">
-          {{ loading ? 'Submitting...' : 'Submit' }}
-        </button>
-      </div>
+ <div class="text-end mt-3">
+  <button type="submit" class="btn btn-yes me-2" [disabled]="loading">
+    {{ loading ? 'Submitting...' : 'Submit' }}
+  </button>
+  <button type="button" class="btn btn-no" (click)="goBack()">Back</button>
+</div>
 
     </form>
   </div>

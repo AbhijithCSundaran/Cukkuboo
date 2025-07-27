@@ -20,6 +20,9 @@
   .help-form {
     display: flex;
     flex-direction: column;
+    background-color: #1c1c1c!important;
+    padding: 2rem;
+    border-radius: 10px;
 
     mat-form-field {
       width: 100%;
@@ -66,27 +69,6 @@
 
     .justify-content-end {
       justify-content: flex-end;
-    }
-
-    .submit-btn {
-      margin-top: 1rem;
-      background-color: #e50914;
-      color: #fff;
-      font-weight: 600;
-      border-radius: 50px;
-      padding: 0.5rem 1.5rem;
-      border: none;
-      transition: background-color 0.3s;
-      cursor: pointer;
-
-      &:hover {
-        background-color: #b00610;
-      }
-
-      &:disabled {
-        background-color: #888;
-        cursor: not-allowed;
-      }
     }
 
     .flex-phone {
@@ -150,5 +132,66 @@
     &:hover {
       text-decoration: underline;
     }
+  }
+}
+
+.btn-yes {
+  background-color: var(--primary-color);
+  color: var(--white-color);
+  font-weight: 600;
+  font-size: 14px;
+  padding: 6px 16px;
+  border-radius: 30px;
+
+  min-width: 120px;
+  box-shadow: none;
+  border: none;
+
+  &:hover {
+    background-color: var(--primarydark-color);
+  }
+
+  &:disabled {
+    background-color: #888;
+    cursor: not-allowed;
+  }
+}
+
+.btn-no {
+  background-color: transparent;
+  border: 1px solid white;
+  font-weight: 600;
+  font-size: 14px;
+  padding: 6px 16px;
+  border-radius: 30px;
+
+  min-width: 120px;
+  text-transform: capitalize;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: var(--primarydark-color);
+    border: none;
+  }
+}
+
+.submit-btn {
+  margin-top: 1rem;
+  background-color: #e50914;
+  color: #fff;
+  font-weight: 600;
+  border-radius: 50px;
+  padding: 0.5rem 1.5rem;
+  border: none;
+  transition: background-color 0.3s;
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--primarydark-color);
+  }
+
+  &:disabled {
+    background-color: #888;
+    cursor: not-allowed;
   }
 }

@@ -282,7 +282,7 @@ export class AddUserComponent implements OnInit {
       this.userService.register(model).subscribe({
         next: (res) => {
           if (res.success === true) {
-            // ✅ Registration successful
+            // Registration successful
             this.snackBar.open(res.message || 'User registered successfully', '', {
               duration: 3000,
               verticalPosition: 'top',
@@ -290,7 +290,7 @@ export class AddUserComponent implements OnInit {
             });
             this.router.navigate(['/user-list']);
           } else if (res.success === false) {
-            // ❌ Registration failed (e.g., user exists)
+            // Registration failed (e.g., user exists)
             if (res.message?.toLowerCase().includes('user already exists')) {
               this.snackBar.open('User already exists.', '', {
                 duration: 3000,

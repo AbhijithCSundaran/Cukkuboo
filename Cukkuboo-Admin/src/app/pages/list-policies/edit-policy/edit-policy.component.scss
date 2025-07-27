@@ -1,0 +1,129 @@
+mat-card {
+  padding-top: 15px;
+  padding-bottom: 13px;
+  background-color: white;
+  border: 1px solid black;
+  border-radius: 8px;
+}
+
+mat-select,
+textarea,
+input {
+  border-radius: 4px;
+}
+
+.button-container {
+  display: flex;
+  gap: 12px;
+  padding: 10px 0;
+}
+
+.save-button {
+  color: white;
+  border-radius: 24px;
+
+
+  height: 36px;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 0 16px;
+  border: none;
+  transition: background-color 0.3s ease;
+  background-color: #c71336!important;
+
+  &:hover {
+    background-color: #e96238 !important;
+  }
+}
+
+.cancel-button {
+  background-color: white;
+  color: black;
+  border-radius: 24px;
+  height: 36px;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 0 16px;
+  box-shadow: 0 2px 6px rgba(255, 23, 68, 0.4);
+  border: none;
+  transition: background-color 0.3s ease;
+  display: flex;
+  align-items: center;
+
+  &:hover {
+    background-color: #ff1744 !important;
+  }
+}
+
+.save {
+  width: 100%;
+  padding: 10px 10px 0px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.eye-toggle-btn {
+  color: #666;
+  transition: color 0.3s ease;
+  background-color: transparent;
+  border: none;
+
+  &:hover {
+    color: #1976d2;
+  }
+
+  mat-icon {
+    font-size: 20px;
+    user-select: none;
+    pointer-events: none;
+  }
+}
+
+/* Layout width helpers */
+.w-50 {
+  width: 50%;
+}
+
+.px-2 {
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+}
+
+.pb-3 {
+  padding-bottom: 1rem;
+}
+
+/* Phone input split */
+.country-code-field {
+  width: 25%;
+}
+
+.phone-number-field {
+  width: 75%;
+}
+
+/* Responsive adjustments */
+@media (max-width: 767px) {
+  .w-50 {
+    width: 100% !important;
+  }
+}
+
+@media (max-width: 575px) {
+  .w-50 {
+    width: 100% !important;
+  }
+
+  .country-code-field {
+    width: 30% !important;
+  }
+
+  .phone-number-field {
+    width: 70% !important;
+  }
+
+   mat-error {
+    font-size: 8px !important;
+  }
+}

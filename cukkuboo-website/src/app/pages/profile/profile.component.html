@@ -34,16 +34,9 @@
                             Change Password
                         </button>
 
-                        <button class="btn btn-yes btn-danger text-white btn-sm col-6" (click)="toggleDeleteAccount()">
+                        <button class="btn btn-yes btn-danger text-white btn-sm col-6" (click)="askToRemoveaccount()">
                             Delete Account
                         </button>
-                        <!-- Only show if it's a Google account -->
-<div class="text-center mt-3" *ngIf="userData?.auth_type === ">
-  <button type="button" class="btn btn-danger" (click)="deleteGoogleAccount()">
-    Delete Google Account
-  </button>
-</div>
-
                     </div>
                 </div>
             </div>
@@ -229,52 +222,55 @@
                         </div>
                     </div>
 
-                    <p class="text-center mb-3">
-                        To Delete your account permanently, Enter your password.
-                    </p>
+                  <p class="text-center mb-3" *ngIf="userData?.auth_type !== 'google'">
+  To Delete your account permanently, Enter your password.
+</p>
 
-                    <form [formGroup]="deleteAccountForm" (ngSubmit)="onDeleteAccount()" class="col-md-8 mx-auto">
-                        <!-- Current Password -->
-                        <mat-form-field appearance="outline" class="col-12 field-space">
-                            <mat-label>Current Password</mat-label>
-                            <input matInput [type]="hideCurrent ? 'password' : 'text'" formControlName="deleteProfile"
-                                placeholder="Enter your current password" id="deleteProfile" />
-                            <button mat-icon-button matSuffix (click)="hideCurrent = !hideCurrent" type="button"
-                                [attr.aria-label]="'Toggle password visibility'" [attr.aria-pressed]="hideCurrent">
-                                <mat-icon class="small-eye-icon">
-                                    {{ hideCurrent ? 'visibility_off' : 'visibility' }}
-                                </mat-icon>
-                            </button>
-                            <mat-error>
-                                <Validation-Messages
-                                    [control]="deleteAccountForm.controls['deleteProfile']"></Validation-Messages>
-                            </mat-error>
-                        </mat-form-field>
-                        <div class="row justify-content-center">
-                            <div class="alert alert-warning  col-12" role="alert">
-                                <h6 class="alert-heading text-center">
-                                    <i class="fa-solid fa-triangle-exclamation"></i> Warning
-                                </h6>
-                                <p class="mb-0 text-white text-center">
-                                    All your data, watch history, and subscriptions will be lost. This action is
-                                    irreversible.
-                                </p>
-                            </div>
-                        </div>
+<form [formGroup]="deleteAccountForm" (ngSubmit)="onDeleteAccount()" class="col-md-8 mx-auto">
+  <!-- Show password input only for non-Google users -->
+  <ng-container *ngIf="userData?.auth_type !== 'google'">
+    <mat-form-field appearance="outline" class="col-12 field-space">
+      <mat-label>Current Password</mat-label>
+      <input matInput [type]="hideCurrent ? 'password' : 'text'" formControlName="deleteProfile"
+        placeholder="Enter your current password" id="deleteProfile" />
+      <button mat-icon-button matSuffix (click)="hideCurrent = !hideCurrent" type="button"
+        [attr.aria-label]="'Toggle password visibility'" [attr.aria-pressed]="hideCurrent">
+        <mat-icon class="small-eye-icon">
+          {{ hideCurrent ? 'visibility_off' : 'visibility' }}
+        </mat-icon>
+      </button>
+      <mat-error>
+        <Validation-Messages [control]="deleteAccountForm.controls['deleteProfile']"></Validation-Messages>
+      </mat-error>
+    </mat-form-field>
+  </ng-container>
 
+  <!-- Warning & Buttons -->
+  <!-- <div class="row justify-content-center">
+    <div class="alert alert-warning col-12" role="alert">
+      <h6 class="alert-heading text-center">
+        <i class="fa-solid fa-triangle-exclamation"></i> Warning
+      </h6>
+      <p class="mb-0 text-white text-center">
+        All your data, watch history, and subscriptions will be lost. This action is irreversible.
+      </p>
+    </div>
+  </div> -->
 
-                        <!-- Buttons -->
-                        <div class="text-center">
-                            <button type="submit" class="btn btn-yes mt-2">Delete</button>
-                            <button type="button" class="btn btn-no ms-2 mt-2" (click)="backToProfile()">Back</button>
-                        </div>
-                    </form>
+  <!-- <div class="text-center">
+<button type="button" class="btn btn-yes mt-2" >Delete</button>
+    <button type="button" class="btn btn-no ms-2 mt-2" (click)="backToProfile()">Back</button>
+  </div> -->
+</form>
+
                 </div>
             </div>
 
 
         </div>
     </div>
+
+    
 </section>
 
 <hr />

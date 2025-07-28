@@ -65,7 +65,7 @@ export class InterceptorService implements HttpInterceptor {
   // openLoginModal(request: HttpRequest<any>, next: HttpHandler) {
   //   this.modalService.openDialog(LoginComponent, { isShowingInModal: true }, (res: any) => {
   //     if (!res?.status) {
-  //       localStorage.clear();
+  //       sessionStorage.clear();
   //       sessionStorage.clear();
   //       this.router.navigateByUrl(`login`);
   //     }

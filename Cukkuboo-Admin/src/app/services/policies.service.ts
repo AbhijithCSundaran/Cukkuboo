@@ -13,7 +13,7 @@ export class PoliciesService {
   constructor(private http: HttpClient) {}
 
   get token() {
-    return localStorage.getItem('token') || sessionStorage.getItem('token');
+    return sessionStorage.getItem('token') || sessionStorage.getItem('token');
   }
 
   get headers() {

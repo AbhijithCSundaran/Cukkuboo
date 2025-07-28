@@ -181,7 +181,7 @@ export class AddUserComponent implements OnInit {
       this.loadUserData(this.UserId);
     }
 
-    const token = localStorage.getItem('token');
+    const token = sessionStorage.getItem('token');
     console.log('Token from localStorage:', token);
   }
 

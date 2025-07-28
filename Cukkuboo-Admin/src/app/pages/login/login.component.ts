@@ -88,7 +88,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
           if (response.success) {
             // console.log(response)
             if (response.data.user_type == 'admin' || response.data.user_type == 'staff') {
-              localStorage.setItem('token', response.data?.jwt_token);
+              sessionStorage.setItem('token', response.data?.jwt_token);
               this.snackBar.open('Login successful', '', {
                 duration: 3000,
                 verticalPosition: 'top',
@@ -156,7 +156,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
 //         model.email === allowedUser.email &&
 //         model.password === allowedUser.password
 //       ) {
-//         localStorage.setItem('jwt', allowedUser.jwt_token);
+//         sessionStorage.setItem('jwt', allowedUser.jwt_token);
 //         this.snackBar.open('Login successful (offline mode)', '', {
 //           duration: 3000,
 //           verticalPosition: 'top',
@@ -181,7 +181,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
 //       next: (response) => {
 //         if (response.status) {
 //           if (response.user.user_type == 'admin') {
-//             localStorage.setItem('jwt', response.user?.jwt_token);
+//             sessionStorage.setItem('jwt', response.user?.jwt_token);
 //             this.snackBar.open('Login successful', '', {
 //               duration: 3000,
 //               verticalPosition: 'top',

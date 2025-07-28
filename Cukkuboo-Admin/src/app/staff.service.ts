@@ -11,7 +11,7 @@ export class StaffService {
 
   // Get token from localStorage/sessionStorage
   get token() {
-    return localStorage.getItem('token') || sessionStorage.getItem('token');
+    return sessionStorage.getItem('token') || sessionStorage.getItem('token');
   }
 
   // Auth headers

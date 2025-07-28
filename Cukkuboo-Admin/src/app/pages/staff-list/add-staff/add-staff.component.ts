@@ -1,310 +1,123 @@
-import { Component } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
-import { CommonModule } from '@angular/common';
+<div class="content-container">
+
+  <div class="header-row">
+    <h2>{{StaffId ? 'Edit Staff' : 'Add Staff'}}</h2>
+    <button class="back-to-list-button" (click)="goBack()">Back to List</button>
+  </div>
+  <div [formGroup]="staffForm">
+    <mat-card appearance="outlined" class="form-card">
+      <mat-card-content class="d-flex flex-wrap">
+
+        <!-- Name -->
+        <div class="w-50 px-2 pb-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Name</mat-label>
+            <input matInput formControlName="username" placeholder="Add name" required>
+          </mat-form-field>
+        </div>
+
+        <!-- Contact -->
+        <!-- <div class="w-50 px-2 pb-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Contact</mat-label>
+            <input matInput formControlName="phone" placeholder="Add contact number" maxlength="15"
+              (input)="onNumberInput($event)">
+          </mat-form-field>
+        </div> -->
+
+      <!-- Mobile Number -->
+<div class="w-50 px-2 pb-3">
+  <div class="d-flex">
+    <!-- Country Code -->
+    <mat-form-field appearance="outline" class="me-1 country-code-field">
+      <mat-label>Code</mat-label>
+      <mat-select formControlName="countryCode">
+        <mat-option *ngFor="let country of countryCodes" [value]="country.dial_code" [matTooltip]="country.name">
+          <small>{{country.id}} ({{ country.dial_code }})</small>
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <!-- Phone Number -->
+    <mat-form-field appearance="outline" class="phone-number-field">
+      <mat-label>Mobile Number</mat-label>
+      <input matInput formControlName="phone" maxlength="15" placeholder="Enter mobile number"
+        (input)="onNumberInput($event)" />
+      <mat-error>
+        <Validation-Messages [control]="staffForm.controls['phone']"></Validation-Messages>
+      </mat-error>
+    </mat-form-field>
+  </div>
+</div>
 
 
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatCardModule } from '@angular/material/card';
-import { MatSelectModule } from '@angular/material/select';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule, DateAdapter, MAT_DATE_FORMATS, NativeDateAdapter } from '@angular/material/core';
-import { MatIconModule } from '@angular/material/icon';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import { AbstractControl, ValidationErrors } from '@angular/forms';
-// Your custom service
-import { StaffService } from '../../../staff.service';
-import { ValidationMessagesComponent } from '../../../core/components/validation-messsage/validaation-message.component';
-import { ValidationService } from '../../../core/services/validation.service';
+       <!-- Email -->
+<div class="w-50 px-2 pb-3">
+  <mat-form-field appearance="outline" class="w-100">
+    <mat-label>Email</mat-label>
+    <input matInput formControlName="email" type="email" placeholder="Add email"
+      (input)="forceLowerCaseEmail($event)" autocomplete="off" />
+    <mat-error>
+      <Validation-Messages [control]="staffForm.controls['email']"></Validation-Messages>
+    </mat-error>
+  </mat-form-field>
+</div>
 
 
+        <!-- Password -->
+        <div class="w-50 px-2 pb-3">
+           <mat-form-field appearance="outline" class="w-100">
+    <mat-label>Password</mat-label>
+    <input matInput
+           [type]="hidePassword ? 'password' : 'text'"
+           formControlName="password"
+           placeholder="Enter password"
+           (focus)="showPasswordHint = true"
+           (blur)="showPasswordHint = false" />
 
+     <button type="button" mat-icon-button matSuffix class="eye-toggle-btn" (click)="togglePasswordVisibility()"
+              [attr.aria-label]="'Toggle password visibility'" [attr.aria-pressed]="!hidePassword">
+              <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+            </button>
 
+    <!-- <mat-hint *ngIf="showPasswordHint">
+      Must be 8+ characters, with uppercase, lowercase, number, and special character.
+    </mat-hint> -->
 
-export class CustomDateAdapter extends NativeDateAdapter {
-  override format(date: Date, displayFormat: Object): string {
-    if (displayFormat === 'input') {
-      const day = this._to2digit(date.getDate());
-      const month = this._to2digit(date.getMonth() + 1);
-      const year = date.getFullYear();
-      return `${day}-${month}-${year}`;
-    }
-    return super.format(date, displayFormat);
-  }
+    <mat-error>
+      <Validation-Messages [control]="staffForm.controls['password']"></Validation-Messages>
+    </mat-error>
+  </mat-form-field>
+        </div>
 
-  private _to2digit(n: number): string {
-    return ('00' + n).slice(-2);
-  }
-}
+        <!-- Status -->
+        <div class="w-50 px-2 pb-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Status</mat-label>
+            <mat-select formControlName="status">
+              <mat-option value="1">Active</mat-option>
+              <mat-option value="2">Inactive</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
 
-export const CUSTOM_DATE_FORMATS = {
-  parse: {
-    dateInput: { day: 'numeric', month: 'numeric', year: 'numeric' }
-  },
-  display: {
-    dateInput: 'input',
-    monthYearLabel: { year: 'numeric', month: 'short' },
-    dateA11yLabel: { year: 'numeric', month: 'long', day: 'numeric' },
-    monthYearA11yLabel: { year: 'numeric', month: 'long' }
-  }
-};
+        <!-- Join Date -->
+        <div class="w-50 px-2 pb-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Join Date</mat-label>
+            <input matInput [matDatepicker]="picker" formControlName="join_date" placeholder="Choose a date"
+              (click)="picker.open()" readonly>
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+        </div>
 
+        <!-- Save Button -->
+        <div class="save">
+          <button class="save-button" mat-raised-button color="primary" (click)="saveStaff()">Save</button>
+        </div>
 
-
-
-
-
-
-@Component({
-  selector: 'app-add-staff',
-  standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatCardModule,
-    MatSelectModule,
-    MatDatepickerModule,
-    MatNativeDateModule,
-    MatIconModule,
-    MatSnackBarModule,
-    ValidationMessagesComponent
-  ],
-  templateUrl: './add-staff.component.html',
-  styleUrls: ['./add-staff.component.scss'],
-   providers: [
-        { provide: DateAdapter, useClass: CustomDateAdapter },
-        { provide: MAT_DATE_FORMATS, useValue: CUSTOM_DATE_FORMATS }
-      ],
-})
-export class AddStaffComponent {
-  public StaffId: number = 0;
-  public staffForm: FormGroup;
-  public hidePassword = true;
-
-
-
-  public countryCodes = [
-    { name: 'Afghanistan', dial_code: '+93', code: 'AF' },
-    { name: 'Albania', dial_code: '+355', code: 'AL' },
-    { name: 'Algeria', dial_code: '+213', code: 'DZ' },
-    { name: 'Andorra', dial_code: '+376', code: 'AD' },
-    { name: 'Angola', dial_code: '+244', code: 'AO' },
-    { name: 'Argentina', dial_code: '+54', code: 'AR' },
-    { name: 'Armenia', dial_code: '+374', code: 'AM' },
-    { name: 'Australia', dial_code: '+61', code: 'AU' },
-    { name: 'Austria', dial_code: '+43', code: 'AT' },
-    { name: 'Azerbaijan', dial_code: '+994', code: 'AZ' },
-    { name: 'Bahamas', dial_code: '+1-242', code: 'BS' },
-    { name: 'Bahrain', dial_code: '+973', code: 'BH' },
-    { name: 'Bangladesh', dial_code: '+880', code: 'BD' },
-    { name: 'Belarus', dial_code: '+375', code: 'BY' },
-    { name: 'Belgium', dial_code: '+32', code: 'BE' },
-    { name: 'Belize', dial_code: '+501', code: 'BZ' },
-    { name: 'Benin', dial_code: '+229', code: 'BJ' },
-    { name: 'Bhutan', dial_code: '+975', code: 'BT' },
-    { name: 'Bolivia', dial_code: '+591', code: 'BO' },
-    { name: 'Bosnia and Herzegovina', dial_code: '+387', code: 'BA' },
-    { name: 'Botswana', dial_code: '+267', code: 'BW' },
-    { name: 'Brazil', dial_code: '+55', code: 'BR' },
-    { name: 'Brunei', dial_code: '+673', code: 'BN' },
-    { name: 'Bulgaria', dial_code: '+359', code: 'BG' },
-    { name: 'Burkina Faso', dial_code: '+226', code: 'BF' },
-    { name: 'Burundi', dial_code: '+257', code: 'BI' },
-    { name: 'Cambodia', dial_code: '+855', code: 'KH' },
-    { name: 'Cameroon', dial_code: '+237', code: 'CM' },
-    { name: 'Canada', dial_code: '+1', code: 'CA' },
-    { name: 'Chad', dial_code: '+235', code: 'TD' },
-    { name: 'Chile', dial_code: '+56', code: 'CL' },
-    { name: 'China', dial_code: '+86', code: 'CN' },
-    { name: 'Colombia', dial_code: '+57', code: 'CO' },
-    { name: 'Costa Rica', dial_code: '+506', code: 'CR' },
-    { name: 'Croatia', dial_code: '+385', code: 'HR' },
-    { name: 'Cuba', dial_code: '+53', code: 'CU' },
-    { name: 'Cyprus', dial_code: '+357', code: 'CY' },
-    { name: 'Czech Republic', dial_code: '+420', code: 'CZ' },
-    { name: 'Denmark', dial_code: '+45', code: 'DK' },
-    { name: 'Djibouti', dial_code: '+253', code: 'DJ' },
-    { name: 'Dominican Republic', dial_code: '+1-809', code: 'DO' },
-    { name: 'Ecuador', dial_code: '+593', code: 'EC' },
-    { name: 'Egypt', dial_code: '+20', code: 'EG' },
-    { name: 'El Salvador', dial_code: '+503', code: 'SV' },
-    { name: 'Estonia', dial_code: '+372', code: 'EE' },
-    { name: 'Ethiopia', dial_code: '+251', code: 'ET' },
-    { name: 'Fiji', dial_code: '+679', code: 'FJ' },
-    { name: 'Finland', dial_code: '+358', code: 'FI' },
-    { name: 'France', dial_code: '+33', code: 'FR' },
-    { name: 'Germany', dial_code: '+49', code: 'DE' },
-    { name: 'Ghana', dial_code: '+233', code: 'GH' },
-    { name: 'Greece', dial_code: '+30', code: 'GR' },
-    { name: 'Guatemala', dial_code: '+502', code: 'GT' },
-    { name: 'Honduras', dial_code: '+504', code: 'HN' },
-    { name: 'Hong Kong', dial_code: '+852', code: 'HK' },
-    { name: 'Hungary', dial_code: '+36', code: 'HU' },
-    { name: 'Iceland', dial_code: '+354', code: 'IS' },
-    { name: 'India', dial_code: '+91', code: 'IN' },
-    { name: 'Indonesia', dial_code: '+62', code: 'ID' },
-    { name: 'Iran', dial_code: '+98', code: 'IR' },
-    { name: 'Iraq', dial_code: '+964', code: 'IQ' },
-    { name: 'Ireland', dial_code: '+353', code: 'IE' },
-    { name: 'Israel', dial_code: '+972', code: 'IL' },
-    { name: 'Italy', dial_code: '+39', code: 'IT' },
-    { name: 'Jamaica', dial_code: '+1-876', code: 'JM' },
-    { name: 'Japan', dial_code: '+81', code: 'JP' },
-    { name: 'Jordan', dial_code: '+962', code: 'JO' },
-
-  ];
-  selectedCountryCode: string = '+91';
-
-  constructor(
-    private router: Router,
-    private route: ActivatedRoute,
-    private fb: FormBuilder,
-    private staffsevice: StaffService,
-    private snackBar: MatSnackBar
-  ) {
-    this.staffForm = this.fb.group({
-      user_id: [0],
-      username: ['', Validators.required],
-      phone: ['', [Validators.required, Validators.pattern(/^\d{6,15}$/), Validators.maxLength(15)]],
-      countryCode: [this.selectedCountryCode, Validators.required],
-       email: ['', [Validators.required, ValidationService.emailValidator]],
-      
-      password: ['', Validators.required],
-      status: ['1', Validators.required],
-      join_date: [''],
-      user_type: ['staff']
-    });
-
-    this.route.params.subscribe((params) => {
-      if (params['id']) {
-        this.StaffId = +params['id'];
-        this.getStaffById(this.StaffId);
-      }
-    });
-  }
-
-  forceLowerCaseEmail(event: any): void {
-  const inputElement = event.target;
-  const currentValue: string = inputElement.value;
-  const lowerCaseValue = currentValue.toLowerCase();
-
-  if (currentValue !== lowerCaseValue) {
-    const cursorPosition = inputElement.selectionStart;
-
-    // Set lowercased value
-    inputElement.value = lowerCaseValue;
-    this.staffForm.get('email')?.setValue(lowerCaseValue, { emitEvent: false });
-
-    // Restore cursor position
-    inputElement.setSelectionRange(cursorPosition, cursorPosition);
-  }
-}
-
-
-  getStaffById(id: number): void {
-    this.staffsevice.getUserById(id).subscribe({
-      next: (res) => {
-        const data = res?.data;
-        if (data) {
-
-           let countryCode = this.selectedCountryCode;
-         let phone = data.phone;
-
-        // Try to match against country code list
-        const matchedCountry = this.countryCodes.find(c => data.phone?.startsWith(c.dial_code));
-        if (matchedCountry) {
-          countryCode = matchedCountry.dial_code;
-          phone = data.phone.replace(matchedCountry.dial_code, '');
-        }
-          this.staffForm.patchValue({
-            user_id: data.user_id || 0,
-            username: data.username || '',
-            phone: phone || '',
-            countryCode: countryCode,
-            email: data.email || '',
-            user_type: data.user_type || 'staff',
-            status: data.status?.toString() || '1',
-            join_date: data.join_date ? new Date(data.join_date) : ''
-          });
-
-          // Make password optional in edit mode
-          const passwordControl = this.staffForm.get('password') as FormControl;
-          passwordControl.setValidators([]);
-          passwordControl.updateValueAndValidity();
-        }
-      },
-      error: (err) => {
-        console.error('Failed to fetch user', err);
-      }
-    });
-  }
-
-  togglePasswordVisibility(): void {
-    this.hidePassword = !this.hidePassword;
-  }
-
-  saveStaff(): void {
-    if (this.staffForm.valid) {
-      const model = this.staffForm.value;
-      // Combine country code + phone
-      model.phone  = `${model.countryCode}${model.phone}`;
-      const payload = {
-        ...model,
-        join_date: this.formatDateOnly(model.join_date)
-      };
-
-      this.staffsevice.register(payload).subscribe({
-        next: (response) => {
-          if (response.success) {
-            const msg = this.StaffId ? 'Staff updated successfully' : 'Staff added successfully';
-            this.snackBar.open(msg, '', {
-              duration: 3000,
-              verticalPosition: 'top',
-              panelClass: ['snackbar-success']
-            });
-            this.router.navigate(['/staff-list']);
-          }
-        },
-        error: (error) => {
-          const msg = error.error?.message || 'Something went wrong';
-          this.snackBar.open(msg, '', {
-            duration: 3000,
-            verticalPosition: 'top',
-            panelClass: ['snackbar-error']
-          });
-        }
-      });
-    } else {
-      this.staffForm.markAllAsTouched();
-      this.snackBar.open('Please fill all required fields.', '', {
-        duration: 3000,
-        verticalPosition: 'top',
-        panelClass: ['snackbar-error']
-      });
-    }
-  }
-
-  formatDateOnly(date: any): string {
-    if (!date) return '';
-    const d = new Date(date);
-    const yyyy = d.getFullYear();
-    const mm = String(d.getMonth() + 1).padStart(2, '0');
-    const dd = String(d.getDate()).padStart(2, '0');
-    return `${yyyy}-${mm}-${dd}`;
-  }
-
-  onNumberInput(event: any): void {
-    const input = event.target;
-    const filteredValue = input.value.replace(/[^0-9]/g, '').slice(0, 15);
-    input.value = filteredValue;
-    this.staffForm.get('phone')?.setValue(filteredValue, { emitEvent: false });
-  }
-
-  goBack(): void {
-    this.router.navigate(['/staff-list']);
-  }
-  
-}
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

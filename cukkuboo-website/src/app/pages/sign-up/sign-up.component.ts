@@ -86,7 +86,7 @@ export class SignUpComponent implements OnInit {
   hidePassword = true;
   hideConfirmPassword = true;
   maxDate: Date = new Date();
-  showPasswordHint = false; // 👈 Add this line
+  showPasswordHint = false; 
 
   public countryCodes = countrycode;
 

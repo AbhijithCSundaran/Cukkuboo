@@ -25,59 +25,68 @@
             <input matInput formControlName="phone" placeholder="Add phone number" maxlength="15" (input)="onNumberInput($event)" />
           </mat-form-field>
         </div> -->
-        <div class="w-50 px-2 pb-3 d-flex">
-          <mat-form-field appearance="outline" class="me-2 country-code-field">
-            <mat-label>Code</mat-label>
-            <mat-select formControlName="countryCode">
-              <mat-option *ngFor="let country of countryCodes" [value]="country.dial_code">
-                ({{ country.dial_code }})
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
+            <!-- Mobile Number -->
+<div class="w-50 px-2 pb-3">
+  <div class="d-flex">
+    <!-- Country Code -->
+    <mat-form-field appearance="outline" class="me-1 country-code-field">
+      <mat-label>Code</mat-label>
+      <mat-select formControlName="countryCode">
+        <mat-option *ngFor="let country of countryCodes" [value]="country.dial_code" [matTooltip]="country.name">
+          <small>{{country.id}} ({{ country.dial_code }})</small>
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
 
-          <mat-form-field appearance="outline" class="phone-number-field">
-            <mat-label>Mobile Number</mat-label>
-            <input matInput formControlName="phone" maxlength="15" placeholder="Enter Mobile Number"
-              (input)="onNumberInput($event)" />
-            <mat-error *ngIf="userForm.get('phone')?.hasError('required')">
-              Mobile number is required
-            </mat-error>
-            <mat-error *ngIf="userForm.get('phone')?.hasError('pattern')">
-              Minimum of 6 digits is required for this field.
-            </mat-error>
-          </mat-form-field>
+    <!-- Phone Number -->
+    <mat-form-field appearance="outline" class="phone-number-field">
+      <mat-label>Mobile Number</mat-label>
+      <input matInput formControlName="phone" maxlength="15" placeholder="Enter mobile number"
+        (input)="onNumberInput($event)" />
+      <mat-error>
+        <Validation-Messages [control]="userForm.controls['phone']"></Validation-Messages>
+      </mat-error>
+    </mat-form-field>
+  </div>
+</div>
+     <div class="w-50 px-2 pb-3">
+  <mat-form-field appearance="outline" class="w-100">
+    <mat-label>Email</mat-label>
+    <input matInput formControlName="email" type="email" placeholder="Add email"
+           (input)="forceLowerCaseEmail($event)" autocomplete="off"/>
 
-        </div>
-        <!-- Email -->
-        <div class="w-50 px-2 pb-3">
-          <mat-form-field appearance="outline" class="w-100">
-            <mat-label>Email</mat-label>
-            <input matInput formControlName="email" type="email" placeholder="Add email"
-              (input)="forceLowerCaseEmail($event)" autocomplete="off"/>
-          </mat-form-field>
-          <mat-error>
-            <Validation-Messages [control]="userForm.controls['email']"></Validation-Messages>
-          </mat-error>
-        </div>
+    <mat-error *ngIf="userForm.get('email')?.invalid && (userForm.get('email')?.dirty || userForm.get('email')?.touched)">
+      <Validation-Messages [control]="userForm.controls['email']"></Validation-Messages>
+    </mat-error>
+  </mat-form-field>
+</div>
+
         
 
         <!-- Password -->
         <div class="w-50 px-2 pb-3">
-          <mat-form-field appearance="outline" class="w-100">
-            <mat-label>Password</mat-label>
-            <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password"
-              placeholder="Enter password" />
-            <button type="button" mat-icon-button matSuffix class="eye-toggle-btn" (click)="togglePasswordVisibility()"
+             <mat-form-field appearance="outline" class="w-100">
+    <mat-label>Password</mat-label>
+    <input matInput
+           [type]="hidePassword ? 'password' : 'text'"
+           formControlName="password"
+           placeholder="Enter password"
+           (focus)="showPasswordHint = true"
+           (blur)="showPasswordHint = false" />
+
+     <button type="button" mat-icon-button matSuffix class="eye-toggle-btn" (click)="togglePasswordVisibility()"
               [attr.aria-label]="'Toggle password visibility'" [attr.aria-pressed]="!hidePassword">
-              <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+              <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
             </button>
-            <mat-error *ngIf="userForm.get('password')?.hasError('required')">
-              Password is required
-            </mat-error>
-            <mat-error *ngIf="userForm.get('password')?.hasError('minlength')">
-              Password must be at least 8 characters
-            </mat-error>
-          </mat-form-field>
+
+    <!-- <mat-hint *ngIf="showPasswordHint">
+      Must be 8+ characters, with uppercase, lowercase, number, and special character.
+    </mat-hint> -->
+
+    <mat-error>
+      <Validation-Messages [control]="userForm.controls['password']"></Validation-Messages>
+    </mat-error>
+  </mat-form-field>
         </div>
 
 

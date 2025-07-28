@@ -8,33 +8,33 @@
     <form [formGroup]="dataForm" (ngSubmit)="saveUser()">
       <mat-card-content class="d-flex flex-wrap">
 
-        <!-- Plan -->
+        <!-- Plan Name -->
         <div class="w-50 px-2 pb-3">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Plan</mat-label>
-            <input matInput placeholder="Enter plan name" formControlName="plan_name">
+            <input matInput placeholder="Enter plan name" formControlName="plan_name" />
             <mat-error>
               <Validation-Messages [control]="dataForm.controls['plan_name']"></Validation-Messages>
             </mat-error>
           </mat-form-field>
         </div>
 
-        <!-- Price -->
+        <!-- Price (supports decimal) -->
         <div class="w-50 px-2 pb-3">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Price</mat-label>
-            <input matInput type="number" placeholder="Enter price" formControlName="price">
+            <input matInput type="number" step="0.01" placeholder="Enter price" formControlName="price" />
             <mat-error>
               <Validation-Messages [control]="dataForm.controls['price']"></Validation-Messages>
             </mat-error>
           </mat-form-field>
         </div>
 
-        <!-- Offer Price -->
+        <!-- Offer Price (supports decimal) -->
         <div class="w-50 px-2 pb-3">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Offer Price</mat-label>
-            <input matInput type="number" placeholder="Enter offer price" formControlName="offer_price">
+            <input matInput type="number" step="0.01" placeholder="Enter offer price" formControlName="offer_price" />
             <mat-error>
               <Validation-Messages [control]="dataForm.controls['offer_price']"></Validation-Messages>
             </mat-error>
@@ -45,7 +45,7 @@
         <div class="w-50 px-2 pb-3">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Period (in days)</mat-label>
-            <input matInput type="text" placeholder="Enter period in days" formControlName="period">
+            <input matInput type="number" min="1" placeholder="Enter period in days" formControlName="period" />
             <mat-error>
               <Validation-Messages [control]="dataForm.controls['period']"></Validation-Messages>
             </mat-error>
@@ -63,10 +63,11 @@
           </mat-form-field>
         </div>
 
-        <!-- Action -->
+        <!-- Submit Button -->
         <div class="action">
           <button class="save-button" mat-raised-button color="primary" type="submit">Save</button>
         </div>
+
       </mat-card-content>
     </form>
   </mat-card>

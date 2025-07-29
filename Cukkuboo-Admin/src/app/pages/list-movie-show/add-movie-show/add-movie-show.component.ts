@@ -157,40 +157,43 @@ export class AddMovieShowComponent implements OnInit {
   loadMovieData(id: number): void {
     this.movieService.getMovieById(id).subscribe({
       next: (response) => {
-        const data = Array.isArray(response?.data) ? response.data[0] : response.data;
-        const isVideoFormat = this.validExtensions.some(ext => (data.video).toLowerCase().endsWith(ext));
-        if (!isVideoFormat)
-          data.video = structuredClone(this.commonService.decryptData(data.video, 'Abhijith123456789'));
-
-        if (data) {
-          this.movieForm.patchValue({
-            mov_id: data.mov_id,
-            title: data.title,
-            description: data.description,
-            category: data.category,
-            genre: data.genre,
-            cast_details: data.cast_details,
-            release_date: data.release_date,
-            age_rating: data.age_rating,
-            access: data.access,
-            status: data.status,
-            video: data.video,
-            trailer: data.trailer,
-            thumbnail: data.thumbnail,
-            banner: data.banner,
-            rating: data.rating,
-            duration: data.duration
-          });
-
-
-          // this.trailerName = data.trailer ? data.trailer.split('/').pop() || '' : '';
-          // this.trailerURL = data.trailer ? this.videoUrl + data.trailer : null;
+        if (response.success) {
+          const data = Array.isArray(response?.data) ? response.data[0] : response.data;
+          if (!data.video)
+            this.router.navigate(['/'])
+          const isVideoFormat = this.validExtensions.some(ext => (data.video).toLowerCase().endsWith(ext));
+          if (!isVideoFormat)
+            data.video = structuredClone(this.commonService.decryptData(data.video, 'Abhijith123456789'));
+          if (data) {
+            this.movieForm.patchValue({
+              mov_id: data.mov_id,
+              title: data.title,
+              description: data.description,
+              category: data.category,
+              genre: data.genre,
+              cast_details: data.cast_details,
+              release_date: data.release_date,
+              age_rating: data.age_rating,
+              access: data.access,
+              status: data.status,
+              video: data.video,
+              trailer: data.trailer,
+              thumbnail: data.thumbnail,
+              banner: data.banner,
+              rating: data.rating,
+              duration: data.duration
+            });
 
 
+            // this.trailerName = data.trailer ? data.trailer.split('/').pop() || '' : '';
+            // this.trailerURL = data.trailer ? this.videoUrl + data.trailer : null;
 
-          this.cdr.detectChanges();
-        } else {
-          console.warn('Movie not found for ID:', id);
+
+
+            this.cdr.detectChanges();
+          } else {
+            console.warn('Movie not found for ID:', id);
+          }
         }
       },
       error: (error) => {

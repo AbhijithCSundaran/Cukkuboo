@@ -50,26 +50,13 @@ export const CUSTOM_DATE_FORMATS = {
 };
 
 
-
-
-
 @Component({
   selector: 'app-add-user',
   standalone: true,
   imports: [
-    FormsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatCardModule,
-    MatSelectModule,
-    MatDatepickerModule,
-    MatNativeDateModule,
-    ReactiveFormsModule,
-    MatSnackBarModule,
-    MatIconModule,
-    CommonModule,
-    ValidationMessagesComponent,
-    MatTooltipModule
+    FormsModule, MatFormFieldModule, MatInputModule, MatCardModule, MatSelectModule,
+    MatDatepickerModule, MatNativeDateModule, ReactiveFormsModule, MatSnackBarModule, MatIconModule,
+    CommonModule, MatTooltipModule, ValidationMessagesComponent,
   ],
   templateUrl: './add-user.component.html',
   styleUrls: ['./add-user.component.scss'],
@@ -118,7 +105,7 @@ export class AddUserComponent implements OnInit {
       date_of_birth: ['', Validators.required],
       status: ['1', Validators.required],
     },
-      { validators: this.passwordValidators }
+      // { validators: this.passwordValidators }
     );
   }
   passwordValidators(group: AbstractControl): ValidationErrors | null {
@@ -211,6 +198,7 @@ export class AddUserComponent implements OnInit {
   }
 
   saveUser(): void {
+    debugger;
     if (this.userForm.valid) {
       const model = this.userForm.value;
       model.email = model.email.toLowerCase();

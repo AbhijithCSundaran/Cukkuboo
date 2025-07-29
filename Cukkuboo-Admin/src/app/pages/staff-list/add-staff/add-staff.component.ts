@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -19,6 +19,7 @@ import { ValidationMessagesComponent } from '../../../core/components/validation
 import { ValidationService } from '../../../core/services/validation.service';
 import countrycode from '../../../../assets/json/countrycode.json';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { CommonService } from '../../../core/services/common.service';
 
 
 
@@ -84,7 +85,7 @@ export const CUSTOM_DATE_FORMATS = {
 })
 export class AddStaffComponent {
   public StaffId: number = 0;
-  public staffForm: FormGroup;
+  public staffForm!: FormGroup;
   public hidePassword = true;
   public countryCodes = countrycode;
   showPasswordHint = false;
@@ -94,23 +95,15 @@ export class AddStaffComponent {
   selectedCountryCode: string = '+91';
 
   constructor(
+    private el: ElementRef,
     private router: Router,
     private route: ActivatedRoute,
     private fb: FormBuilder,
     private staffsevice: StaffService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private commonService: CommonService,
   ) {
-    this.staffForm = this.fb.group({
-      user_id: [0],
-      username: ['', Validators.required],
-      phone: ['', [Validators.required, Validators.pattern(/^\d{6,15}$/), Validators.maxLength(15)]],
-      countryCode: ['+91', Validators.required],
-      email: ['', [Validators.required, ValidationService.emailValidator]],
-      password: ['', [ValidationService.passwordValidator]],
-      status: ['1', Validators.required],
-      join_date: [''],
-      user_type: ['staff']
-    });
+
 
     this.route.params.subscribe((params) => {
       if (params['id']) {
@@ -122,26 +115,26 @@ export class AddStaffComponent {
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
     this.StaffId = id ? +id : 0;
-    this.initUserForm();
+    this.initForm();
     if (this.StaffId) {
       this.getStaffById(this.StaffId);
     }
     const token = sessionStorage.getItem('token');
     console.log('Token from localStorage:', token);
   }
-  initUserForm() {
+  initForm() {
     this.staffForm = this.fb.group({
-      user_id: [this.StaffId],
+      user_id: [0],
       username: ['', Validators.required],
-      password: ['', [ValidationService.passwordValidator]],
-      countryCode: [this.selectedCountryCode, Validators.required],
       phone: ['', [Validators.required, Validators.pattern(/^\d{6,15}$/), Validators.maxLength(15)]],
+      countryCode: ['+91', Validators.required],
       email: ['', [Validators.required, ValidationService.emailValidator]],
-      country: ['', [Validators.pattern(/^[a-zA-Z\s]*$/)]],
-      date_of_birth: ['', Validators.required],
+      password: ['', [ValidationService.passwordValidator]],
       status: ['1', Validators.required],
+      join_date: [''],
+      user_type: ['staff']
     },
-      { validators: this.passwordValidators }
+      // { validators: this.passwordValidators }
     );
   }
   passwordValidators(group: AbstractControl): ValidationErrors | null {
@@ -204,11 +197,11 @@ export class AddStaffComponent {
           });
 
           //  Set validators for password field in edit mode
-          const passwordControl = this.staffForm.get('password') as FormControl;
-          passwordControl.setValidators([
-            Validators.minLength(8)
-          ]);
-          passwordControl.updateValueAndValidity();
+          // const passwordControl = this.staffForm.get('password') as FormControl;
+          // passwordControl.setValidators([
+          //   Validators.minLength(8)
+          // ]);
+          // passwordControl.updateValueAndValidity();
 
         } else {
           console.warn('User not found for ID:', id);
@@ -230,6 +223,7 @@ export class AddStaffComponent {
   }
 
   saveStaff(): void {
+    debugger;
     if (this.staffForm.valid) {
       const model = this.staffForm.value;
       // Combine country code + phone
@@ -261,6 +255,7 @@ export class AddStaffComponent {
         }
       });
     } else {
+      this.commonService.focusInvalidControl(this.staffForm.controls, this.el.nativeElement)
       this.staffForm.markAllAsTouched();
       this.snackBar.open('Please fill all required fields.', '', {
         duration: 3000,

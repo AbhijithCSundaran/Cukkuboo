@@ -138,7 +138,7 @@ export class AddMovieShowComponent implements OnInit {
     });
 
 
-    const token = localStorage.getItem('token');
+    const token = sessionStorage.getItem('token');
     console.log('Token from localStorage:', token);
 
 

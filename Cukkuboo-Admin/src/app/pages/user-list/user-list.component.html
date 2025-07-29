@@ -31,7 +31,7 @@
     </ng-container>
     <ng-container matColumnDef="username">
       <th mat-header-cell *matHeaderCellDef>Name</th>
-      <td mat-cell *matCellDef="let user" class="title truncate-text" [matTooltip]="user.username">{{ user.username }}</td>
+      <td mat-cell *matCellDef="let user" class="title truncate-text" >{{ user.username }}</td>
     </ng-container>
 
     <ng-container matColumnDef="phone">
@@ -39,10 +39,13 @@
       <td mat-cell *matCellDef="let user">{{ user.phone }}</td>
     </ng-container>
 
+  <!-- Email -->
     <ng-container matColumnDef="email">
-      <th mat-header-cell *matHeaderCellDef>Email</th>
-      <td mat-cell *matCellDef="let user">{{ user.email }}</td>
-    </ng-container>
+  <th mat-header-cell *matHeaderCellDef> Email </th>
+  <td mat-cell *matCellDef="let staff" class="title truncate-text" [matTooltip]="staff.email">
+    {{ staff.email }}
+  </td>
+</ng-container>
 
     <!-- <ng-container matColumnDef="country">
           <th mat-header-cell *matHeaderCellDef> Country </th>

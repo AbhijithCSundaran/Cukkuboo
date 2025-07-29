@@ -10,7 +10,7 @@ export class FileUploadService {
   apiUrl: string = environment.apiUrl
   constructor(private http: HttpClient) { }
 
-  get token() { return localStorage.getItem('token') || sessionStorage.getItem('token'); }
+  get token() { return sessionStorage.getItem('token') || sessionStorage.getItem('token'); }
 
   // Set headers including the authorization token
   get headers() {

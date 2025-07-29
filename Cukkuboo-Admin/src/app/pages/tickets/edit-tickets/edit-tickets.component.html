@@ -33,32 +33,19 @@
           <div class="display-value">{{ ticketForm.get('issue_type')?.value }}</div>
         </div>
 
-        <!-- Description -->
-        <div class="w-100 px-2 pb-3">
-          <label class="display-label">Description</label>
-          <div class="display-value">{{ ticketForm.get('description')?.value }}</div>
-        </div>
-
-        <!-- Status and Screenshot in same line -->
+        <!-- Description + Status -->
         <div class="d-flex w-100 px-2 pb-3 flex-wrap align-items-start">
-
-             <!-- Screenshot Preview-->
-          <div class="w-50  screenshot-wrapper" *ngIf="screenshotUrl">
-            <label class="display-label">Screenshot</label>
-            <div class="display-value screenshot-container">
-              <img
-                [src]="screenshotUrl"
-                alt="Screenshot"
-                class="screenshot-img"
-                (click)="openFullScreen()"
-              />
-              <button class="fullscreen-btn" (click)="openFullScreen()" type="button">
-                Full Screen
-              </button>
+          <!-- Description -->
+          <div class="w-50 pe-2">
+            <label class="display-label">Description</label>
+            <div class="display-value small-description">
+              {{ ticketForm.get('description')?.value }}
             </div>
           </div>
-          <!-- Status Dropdown -->
-          <div class="w-50 ">
+
+          <!-- Status -->
+          <div class="w-50 ps-2">
+            <label class="display-label">Status</label>
             <mat-form-field appearance="outline" class="w-100">
               <mat-label>Status</mat-label>
               <mat-select formControlName="status">
@@ -69,8 +56,24 @@
               </mat-select>
             </mat-form-field>
           </div>
+        </div>
 
-       
+        <!-- Screenshot + Status (preserved layout) -->
+        <div class="d-flex w-100 px-2 pb-3 flex-wrap align-items-start">
+          <!-- Screenshot Preview-->
+          <div class="w-50 screenshot-wrapper" *ngIf="screenshotUrl">
+            <label class="display-label">Screenshot</label>
+            <div class="display-value screenshot-container">
+              <img
+                [src]="screenshotUrl"
+                alt="Screenshot"
+                class="screenshot-img"
+                (click)="openFullScreen()" />
+              <button class="fullscreen-btn" (click)="openFullScreen()" type="button" mat-icon-button>
+                <mat-icon fontIcon="fullscreen" style="color: white; font-size: 20px;"></mat-icon>
+              </button>
+            </div>
+          </div>
         </div>
 
         <!-- Save Button -->

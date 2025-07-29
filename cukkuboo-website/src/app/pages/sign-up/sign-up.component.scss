@@ -22,6 +22,9 @@
   background-repeat: no-repeat;
   z-index: -1;
 }
+a {
+  text-decoration: none !important;
+}
 
 
 .gen-register-page-background::before,

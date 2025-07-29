@@ -26,6 +26,10 @@ export const routes: Routes = [
       { path: 'notifications', loadComponent: () => import('./pages/notifications/notifications.component').then((m) => m.NotificationsComponent) },
       { path: 'tickets', loadComponent: () => import('./pages/tickets/tickets.component').then((m) => m.TicketsComponent) },
       { path: 'edit-ticket/:id', loadComponent: () => import('./pages/tickets/edit-tickets/edit-tickets.component').then((m) => m.EditTicketsComponent) },
+      // { path: 'list-policies', loadComponent: () => import('./pages/list-policies/list-policies.component').then((m) => m.ListPoliciesComponent) },
+
+      // { path: 'edit-policy/:id', loadComponent: () => import('./pages/list-policies/edit-policy/edit-policy.component').then((m) => m.EditPolicyComponent) },
+      
       //  {
       //         path: 'reels', children: [
       //           { path: '', loadComponent: () => import('./pages/list-reels/list-reels.component').then((m) => m.ListReelsComponent)},

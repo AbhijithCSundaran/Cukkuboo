@@ -1,9 +1,8 @@
 <section class="help-center-section">
   <div class="container">
-    <h2 class="text-white text-center mb-4">Help and Support</h2>
+    <h2 class="text-white text-center mb-4 fs-1 fs-md-2 fs-sm-3 fs-xs-4">Help and Support</h2>
 
     <form [formGroup]="helpForm" (ngSubmit)="submitIssue()" class="help-form">
-
       <!-- Name -->
       <mat-form-field appearance="outline" class="w-100 mb-3">
         <mat-label>Name</mat-label>
@@ -14,16 +13,11 @@
       <!-- Email -->
       <mat-form-field appearance="outline" class="w-100 mb-3">
         <mat-label>Email Address</mat-label>
-        <input
-          matInput
-          type="email"
-          formControlName="email"
-          placeholder="Enter your email"
-          (input)="forceLowerCaseEmail()" />
+        <input matInput type="email" formControlName="email" placeholder="Enter your email" (input)="forceLowerCaseEmail()" />
         <mat-error>Please enter a valid email address</mat-error>
       </mat-form-field>
 
-      <!-- Country Code and Mobile Number in same line -->
+      <!-- Country Code and Mobile Number -->
       <div class="d-flex mb-3 flex-phone">
         <mat-form-field appearance="outline" class="country-code-field me-2">
           <mat-label>Code</mat-label>
@@ -36,12 +30,7 @@
 
         <mat-form-field appearance="outline" class="phone-field">
           <mat-label>Mobile Number</mat-label>
-          <input
-            matInput
-            formControlName="phone"
-            placeholder="Enter your phone number"
-            maxlength="15"
-            (input)="onNumberInput($event)" />
+          <input matInput formControlName="phone" placeholder="Enter your phone number" maxlength="15" (input)="onNumberInput($event)" />
           <mat-error>Enter a valid phone number</mat-error>
         </mat-form-field>
       </div>
@@ -63,43 +52,40 @@
       <!-- Description -->
       <mat-form-field appearance="outline" class="w-100 mb-3">
         <mat-label>Description</mat-label>
-        <textarea
-          matInput
-          formControlName="description"
-          placeholder="Describe your issue"
-          rows="4"></textarea>
+        <textarea matInput formControlName="description" placeholder="Describe your issue" rows="4"></textarea>
         <mat-error>Description must be at least 10 characters</mat-error>
       </mat-form-field>
 
       <!-- Screenshot Upload -->
-      <div
-        class="upload-box mb-3"
-        (drop)="onFileDrop($event)"
-        (dragover)="onDragOver($event)"
-        (dragleave)="onDragLeave($event)"
-        [class.dragover]="dragging">
-        <p class="text-white mb-2">Drag & drop screenshot here or click to upload (optional)</p>
-        <input type="file" (change)="onFileSelect($event)" accept="image/*" hidden #fileInput />
-        <button type="button" class="submit-btn" (click)="fileInput.click()">Choose File</button>
+      <div class="upload-box mb-3"
+           (drop)="onFileDrop($event)"
+           (dragover)="onDragOver($event)"
+           (dragleave)="onDragLeave($event)"
+           [class.dragover]="dragging">
+        <ng-container *ngIf="screenshots.length === 0">
+          <p class="text-white mb-2">Drag & drop screenshot here or click the button to upload (optional)</p>
+          <button type="button" class="btn btn-yes" (click)="fileInput.click()">Choose File</button>
+        </ng-container>
 
-        <!-- Thumbnail Preview -->
-        <div *ngIf="screenshots.length > 0" class="mt-2">
-          <div *ngFor="let file of screenshots" class="preview">
-            <img [src]="filePreview(file)" [alt]="file.name" height="80" />
-            <p>{{ file.name }}</p>
-            <button type="button" class="remove-btn" (click)="removeScreenshot(file)">Remove</button>
-          </div>
+        <input type="file" (change)="onFileSelect($event)" accept="image/*" hidden #fileInput />
+
+        <!-- Preview with trash icon -->
+        <div *ngIf="screenshots.length > 0" class="mt-2 d-flex align-items-center justify-content-center flex-column preview-selected">
+          <img [src]="filePreview(screenshots[0])" [alt]="screenshots[0].name" height="80" class="mb-2" />
+          <p class="text-white mb-1">{{ screenshots[0].name }}</p>
+          <button type="button" class="icon-trash" (click)="removeScreenshot(screenshots[0])" aria-label="Remove">
+            <i class="fas fa-trash-alt"></i>
+          </button>
         </div>
       </div>
 
       <!-- Buttons -->
-      <div class="d-flex justify-content-end gap-2">
-        <button type="button" class="submit-btn" (click)="goBack()">Back</button>
-        <button type="submit" class="submit-btn" [disabled]="loading">
+      <div class="text-end mt-3">
+        <button type="submit" class="btn btn-yes me-2" [disabled]="loading">
           {{ loading ? 'Submitting...' : 'Submit' }}
         </button>
+        <button type="button" class="btn btn-no" (click)="goBack()">Back</button>
       </div>
-
     </form>
   </div>
 </section>

@@ -38,12 +38,29 @@
           <i [ngClass]="videoStates[i] ? 'fas fa-pause' : 'fas fa-play'"></i>
         </button>
 
-        <!-- Reel Info -->
-        <div class="reel-text ps-3 pe-5" [class.open]="reel.showDesc" (click)="reel.showDesc=!reel.showDesc">
-          <img class="logo reels-icon-logo" src="assets/images/logo.png" alt="streamlab-image" />
-          <div class="title">{{reel.showDesc?reel.title:( reel.title | truncate: 30) }}</div>
-          <div class="decp">{{ reel.showDesc?reel.description:((reel.description | truncate: 40)+'more') }}</div>
-        </div>
+      <!-- Reel Info -->
+<div 
+  class="reel-text ps-3 pe-5" 
+  [class.open]="reel.showDesc" 
+  (click)="reel.description?.length > 40 && (reel.showDesc = !reel.showDesc)">
+  
+  <img class="logo reels-icon-logo" src="assets/images/logo.png" alt="streamlab-image" />
+
+  <div class="title">
+    {{ reel.showDesc ? reel.title : (reel.title | truncate: 30) }}
+  </div>
+
+  <div class="decp" [ngClass]="{ 'clickable': reel.description?.length > 40 }">
+    {{
+      reel.showDesc
+        ? reel.description
+        : (reel.description?.length > 40
+            ? (reel.description | truncate: 40) + 'more'
+            : reel.description)
+    }}
+  </div>
+</div>
+
 
         <!-- Icons: Like, Mute, Share -->
 

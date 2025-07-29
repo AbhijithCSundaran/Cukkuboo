@@ -14,6 +14,7 @@ import { MatInputModule } from '@angular/material/input';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
 import { CommonModule } from '@angular/common';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-edit-ticket',
@@ -27,6 +28,7 @@ import { CommonModule } from '@angular/common';
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
+    MatIconModule
   ],
 })
 export class EditTicketsComponent implements OnInit {
@@ -102,9 +104,7 @@ export class EditTicketsComponent implements OnInit {
         }
       },
       error: () => {
-        this.snackBar.open('Failed to fetch ticket details.', '', {
-          duration: 3000,
-        });
+        this.showSnackbar('Failed to fetch ticket details.', 'error');
       },
     });
   }
@@ -122,7 +122,7 @@ export class EditTicketsComponent implements OnInit {
     const statusControl = this.ticketForm.get('status');
 
     if (!statusControl || statusControl.invalid) {
-      this.snackBar.open('Please select a valid status.', '', { duration: 3000 });
+      this.showSnackbar('Please select a valid status.', 'error');
       return;
     }
 
@@ -134,40 +134,41 @@ export class EditTicketsComponent implements OnInit {
     this.ticketService.editstatus(payload).subscribe({
       next: (response) => {
         if (response?.success) {
-          this.snackBar.open(response.message || 'Ticket updated successfully.', '', {
-            duration: 3000,
-          });
+          this.showSnackbar(response.message || 'Ticket updated successfully.', 'success');
           this.router.navigate(['/tickets']);
         } else {
-          this.snackBar.open(response?.message || 'Failed to update ticket.', '', {
-            duration: 3000,
-          });
+          this.showSnackbar(response?.message || 'Failed to update ticket.', 'error');
         }
       },
       error: (err) => {
-        this.snackBar.open('Error occurred while updating ticket.', '', {
-          duration: 3000,
-        });
+        this.showSnackbar('Error occurred while updating ticket.', 'error');
         console.error(err);
       },
     });
   }
 
   openFullScreen(): void {
-  const img = new Image();
-  img.src = this.screenshotUrl;
-  const newWindow = window.open('');
-  if (newWindow) {
-    newWindow.document.write(`<img src="${img.src}" style="width: 100%; height: auto;" />`);
-    newWindow.document.title = 'Screenshot Preview';
-  } else {
-    this.snackBar.open('Popup blocked! Please allow popups for this site.', '', {
-      duration: 3000,
-    });
+    const img = new Image();
+    img.src = this.screenshotUrl;
+    const newWindow = window.open('');
+    if (newWindow) {
+      newWindow.document.write(`<img src="${img.src}" style="width: 100%; height: auto;" />`);
+      newWindow.document.title = 'Screenshot Preview';
+    } else {
+      this.showSnackbar('Popup blocked! Please allow popups for this site.', 'error');
+    }
   }
-}
 
   goBack(): void {
     this.router.navigate(['/tickets']);
+  }
+
+  //  Snackbar helper method
+  showSnackbar(message: string, type: 'success' | 'error') {
+    this.snackBar.open(message, 'Close', {
+      duration: 3000,
+      verticalPosition: 'top',
+      panelClass: type === 'success' ? 'snackbar-success' : 'snackbar-error',
+    });
   }
 }

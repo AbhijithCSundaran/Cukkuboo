@@ -28,7 +28,7 @@ import { ReelsService } from '../../services/reels.service';
   ]
 })
 export class ListReelsComponent implements OnInit, AfterViewInit {
-  displayedColumns: string[] = ['slNo', 'title', 'access', 'likes', 'views', 'status', 'action'];
+  displayedColumns: string[] = ['slNo', 'title', 'access', 'likes', 'status', 'action'];
   dataSource = new MatTableDataSource<any>([]);
   confirmDeleteReel: any = null;
 

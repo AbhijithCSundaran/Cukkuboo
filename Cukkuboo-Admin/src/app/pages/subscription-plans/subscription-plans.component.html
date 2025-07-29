@@ -25,10 +25,18 @@
       </td>
     </ng-container>
 
-    <ng-container matColumnDef="plan_name">
-      <th mat-header-cell *matHeaderCellDef> Plan </th>
-      <td mat-cell *matCellDef="let plan" class="title"> {{ plan.plan_name }} </td>
-    </ng-container>
+   <ng-container matColumnDef="plan_name">
+  <th mat-header-cell *matHeaderCellDef> Plan </th>
+  <td
+    mat-cell
+    *matCellDef="let plan"
+    class="title truncate-text"
+ 
+  >
+    {{ plan.plan_name }}
+  </td>
+</ng-container>
+
 
 
     <ng-container matColumnDef="period">
@@ -59,7 +67,7 @@
 
 
     <!-- Content -->
-    <ng-container matColumnDef="features">
+    <!-- <ng-container matColumnDef="features">
       <th mat-header-cell *matHeaderCellDef> Features </th>
       <td mat-cell *matCellDef="let plan">
         <div class="justified-text">
@@ -74,7 +82,7 @@
         </a>
       </td>
     </ng-container>
-
+ -->
 
     <ng-container matColumnDef="action">
       <th mat-header-cell *matHeaderCellDef> Action </th>

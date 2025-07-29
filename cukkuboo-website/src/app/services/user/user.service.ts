@@ -53,6 +53,11 @@ export class UserService {
     return this.http.post(`${this.apiUrl}user/delete/${userId}`, body, { headers: this.headers });
   }
 
+  // Google account deletion (no password needed)
+  deleteGoogleAccount(userId: number): Observable<any> {
+    const body = {};
+    return this.http.post(`${this.apiUrl}user/delete/${userId}`, body, { headers: this.headers });
+  }
 
   //  Forgot Password
   forgotPassword(body: any): Observable<any> {

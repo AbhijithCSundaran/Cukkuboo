@@ -21,13 +21,15 @@ input {
 .save-button {
   color: white;
   border-radius: 24px;
+
+
   height: 36px;
   font-size: 14px;
   font-weight: 500;
   padding: 0 16px;
   border: none;
   transition: background-color 0.3s ease;
-  background-color: #c71336;
+  background-color: #c71336!important;
 
   &:hover {
     background-color: #e96238 !important;
@@ -61,6 +63,24 @@ input {
   gap: 12px;
 }
 
+.eye-toggle-btn {
+  color: #666;
+  transition: color 0.3s ease;
+  background-color: transparent;
+  border: none;
+
+  &:hover {
+    color: #1976d2;
+  }
+
+  mat-icon {
+    font-size: 20px;
+    user-select: none;
+    pointer-events: none;
+  }
+}
+
+/* Layout width helpers */
 .w-50 {
   width: 50%;
 }
@@ -74,14 +94,7 @@ input {
   padding-bottom: 1rem;
 }
 
-.pe-2 {
-  padding-right: 0.5rem;
-}
-
-.ps-2 {
-  padding-left: 0.5rem;
-}
-
+/* Phone input split */
 .country-code-field {
   width: 25%;
 }
@@ -90,90 +103,18 @@ input {
   width: 75%;
 }
 
-.display-label {
-  font-weight: 600;
-  margin-bottom: 4px;
-  display: block;
-}
-
-.display-value {
-  padding: 10px;
-  background-color: #f9f9f9;
-  border-radius: 4px;
-  border: 1px solid #ccc;
-  font-size: 14px;
-  line-height: 1.4;
-  color: #333;
-}
-
-/* 📌 Make description smaller with scroll */
-.small-description {
-  max-height: 80px;
-  overflow-y: auto;
-}
-
-/* Screenshot preview */
-.screenshot-wrapper {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-}
-
-.screenshot-container {
-  position: relative;
-  max-width: 220px;
-}
-
-.screenshot-img {
-  width: 100%;
-  height: auto;
-  border-radius: 4px;
-  cursor: pointer;
-  border: 1px solid #ccc;
-}
-
-.fullscreen-btn {
-  position: absolute;
-  bottom: 8px;
-  right: 8px;
-  background: rgba(0, 0, 0, 0.6);
-  border: none;
-  border-radius: 50%;
-  padding: 6px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: background 0.2s ease;
-
-  mat-icon {
-    font-size: 20px;
-    color: white;
-  }
-
-  &:hover {
-    background: rgba(0, 0, 0, 0.8);
-  }
-}
-
 /* Responsive adjustments */
 @media (max-width: 767px) {
   .w-50 {
     width: 100% !important;
   }
-
-  .pe-2,
-  .ps-2 {
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-  }
-
-  .screenshot-container {
-    max-width: 100%;
-  }
 }
 
 @media (max-width: 575px) {
+  .w-50 {
+    width: 100% !important;
+  }
+
   .country-code-field {
     width: 30% !important;
   }
@@ -182,7 +123,7 @@ input {
     width: 70% !important;
   }
 
-  mat-error {
+   mat-error {
     font-size: 8px !important;
   }
 }

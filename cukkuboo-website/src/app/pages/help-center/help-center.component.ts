@@ -107,8 +107,18 @@ export class HelpCenterComponent {
               verticalPosition: 'top',
               panelClass: ['snackbar-success']
             });
-            this.helpForm.reset();
-            this.helpForm.patchValue({ countryCode: '+91' });
+
+            // Clear only issueType and description
+            this.helpForm.get('issueType')?.reset('', { emitEvent: false });
+            this.helpForm.get('description')?.reset('', { emitEvent: false });
+
+            // Mark all controls as untouched (to hide validation errors)
+            Object.keys(this.helpForm.controls).forEach(field => {
+              const control = this.helpForm.get(field);
+              control?.markAsUntouched();
+            });
+
+            // Clear screenshot
             this.screenshots = [];
           } else {
             this.snackBar.open(res?.message || 'Submission failed.', '', {
@@ -117,6 +127,7 @@ export class HelpCenterComponent {
               panelClass: ['snackbar-error']
             });
           }
+
           this.loading = false;
         },
         error: () => {
@@ -213,7 +224,7 @@ export class HelpCenterComponent {
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
       if (file.type.startsWith('image/')) {
-        this.screenshots = [file]; // allow only 1
+        this.screenshots = [file]; // Only 1 allowed
       } else {
         this.snackBar.open(`Invalid file type: ${file.name}`, 'Close', {
           duration: 2000,

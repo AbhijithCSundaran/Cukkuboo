@@ -14,7 +14,7 @@ export class NotificationService {
 
   // Token getter from localStorage or sessionStorage
   get token(): string | null {
-    return localStorage.getItem('token') || sessionStorage.getItem('token');
+    return sessionStorage.getItem('token') || sessionStorage.getItem('token');
   }
 
   // Authorization headers

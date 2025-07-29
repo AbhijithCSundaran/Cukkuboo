@@ -11,7 +11,7 @@ export class PlanService {
   private apiUrl: string = environment.apiUrl;
 
   get token() {
-    return localStorage.getItem('token') || sessionStorage.getItem('token');
+    return sessionStorage.getItem('token') || sessionStorage.getItem('token');
   }
 
   get headers() {

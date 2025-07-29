@@ -61,14 +61,14 @@ export class LoginComponent implements OnInit, AfterViewInit {
   }
 
   login() {
-    if (!this.captchaToken && this.isProd) {
-      this.snackBar.open('Please complete the CAPTCHA', '', {
-        duration: 3000,
-        verticalPosition: 'top',
-        panelClass: ['snackbar-error']
-      });
-      return;
-    }
+    // if (!this.captchaToken && this.isProd) {
+    //   this.snackBar.open('Please complete the CAPTCHA', '', {
+    //     duration: 3000,
+    //     verticalPosition: 'top',
+    //     panelClass: ['snackbar-error']
+    //   });
+    //   return;
+    // }
 
     // if (this.loginForm.invalid) {
     //   this.snackBar.open('Please fill all required fields', '', {

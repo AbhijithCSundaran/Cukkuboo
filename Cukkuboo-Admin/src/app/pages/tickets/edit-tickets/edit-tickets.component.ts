@@ -6,7 +6,7 @@ import { ValidationService } from '../../../core/services/validation.service';
 import { TicketsService } from '../../../services/tickets.service';
 import { environment } from '../../../../environments/environment';
 
-import countrycode from '.../../../src/assets/json/countrycode.json';
+import countrycode from '../../../../assets/json/countrycode.json';
 
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -47,7 +47,7 @@ export class EditTicketsComponent implements OnInit {
     private router: Router,
     private snackBar: MatSnackBar,
     private ticketService: TicketsService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.initForm();

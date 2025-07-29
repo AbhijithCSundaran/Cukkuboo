@@ -305,52 +305,62 @@ export class AddMovieShowComponent implements OnInit {
     }
   }
 
-  onVideoSelected(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    const file = input.files?.[0];
-
-    if (file) {
-      const isMp4 = file.type === 'video/mp4' || file.name.toLowerCase().endsWith('.mp4');
-      if (!isMp4) {
-        this.showSnackbar('Only MP4 video files are allowed for videos.', 'snackbar-error');
-        input.value = '';
-        return;
-      }
-
-      this.videoName = file.name;
-      this.videoURL = URL.createObjectURL(file);
-      this.getVideoDuration(file); // 👈 Get duration before upload
-
-      this.uploadMainVideo(file);
-    }
+ onVideoSelected(event: Event): void {
+  if (this.uploadInProgress) {
+    this.showSnackbar('Please wait for the current upload to finish.', 'snackbar-error');
+    return;
   }
+
+  const input = event.target as HTMLInputElement;
+  const file = input.files?.[0];
+
+  if (file) {
+    const isMp4 = file.type === 'video/mp4' || file.name.toLowerCase().endsWith('.mp4');
+    if (!isMp4) {
+      this.showSnackbar('Only MP4 video files are allowed for videos.', 'snackbar-error');
+      input.value = '';
+      return;
+    }
+
+    this.videoName = file.name;
+    this.videoURL = URL.createObjectURL(file);
+    this.getVideoDuration(file);
+    this.uploadMainVideo(file);
+  }
+}
 
 
   onVideoDragOver(event: DragEvent): void {
     event.preventDefault();
     event.stopPropagation();
   }
-  onVideoDrop(event: DragEvent): void {
-    event.preventDefault();
-    event.stopPropagation();
-    const file = event.dataTransfer?.files?.[0];
+ onVideoDrop(event: DragEvent): void {
+  event.preventDefault();
+  event.stopPropagation();
 
-    if (file) {
-      const isMp4 = file.type === 'video/mp4' || file.name.toLowerCase().endsWith('.mp4');
-      if (!isMp4) {
-        this.showSnackbar('Only MP4 video files are allowed for videos.', 'snackbar-error');
-        return;
-      }
-
-      this.videoName = file.name;
-      this.videoURL = URL.createObjectURL(file);
-      this.movieForm.controls['video'].setValue(this.videoURL);
-
-      this.getVideoDuration(file); // 👈 Get duration before upload
-
-      this.uploadMainVideo(file);
-    }
+  if (this.uploadInProgress) {
+    this.showSnackbar('Please wait for the current upload to finish.', 'snackbar-error');
+    return;
   }
+
+  const file = event.dataTransfer?.files?.[0];
+
+  if (file) {
+    const isMp4 = file.type === 'video/mp4' || file.name.toLowerCase().endsWith('.mp4');
+    if (!isMp4) {
+      this.showSnackbar('Only MP4 video files are allowed for videos.', 'snackbar-error');
+      return;
+    }
+
+    this.videoName = file.name;
+    this.videoURL = URL.createObjectURL(file);
+    this.movieForm.controls['video'].setValue(this.videoURL);
+
+    this.getVideoDuration(file);
+    this.uploadMainVideo(file);
+  }
+}
+
   getVideoDuration(file: File): void {
     const video = document.createElement('video');
     video.preload = 'metadata';
@@ -391,30 +401,32 @@ export class AddMovieShowComponent implements OnInit {
     this.uploadVideo(file, this.movieForm.controls['video'], this.uploadInProgress, "uploadProgress");
   }
 
-  uploadVideo(file: File, control: AbstractControl | null = null, inProgress: boolean = true, progress: string = ''): void {
-    inProgress = true;
-    this.fileUploadService.uploadVideo(file).subscribe({
-      next: (event: HttpEvent<any>) => {
-        if (event.type === HttpEventType.UploadProgress && event.total) {
-          (this as any)[progress] = Math.round((event.loaded / event.total) * 100);
-        } else if (event.type === HttpEventType.Response) {
-          inProgress = false;
-          (this as any)[progress] = 100;
-          this.showSnackbar('Video uploaded successfully!', 'snackbar-success');
-          if (control && event.body?.file_name)
-            control.setValue(event.body?.file_name)
-          this.cdr.detectChanges();
-        }
-        console.log(this.uploadProgress)
-      },
-      error: (err) => {
-        inProgress = false;
-        (this as any)[progress] = 0;
-        console.error('Upload error:', err);
-        this.showSnackbar('Video upload failed.', 'snackbar-error');
+uploadVideo(file: File, control: AbstractControl | null = null, inProgress: boolean = true, progress: string = ''): void {
+  inProgress = true;
+  this.fileUploadService.uploadVideo(file).subscribe({
+    next: (event: HttpEvent<any>) => {
+      if (event.type === HttpEventType.UploadProgress && event.total) {
+        (this as any)[progress] = Math.round((event.loaded / event.total) * 100);
+      } else if (event.type === HttpEventType.Response) {
+            // inProgress = false;
+        this.uploadInProgress = false;
+        (this as any)[progress] = 100;
+        this.showSnackbar('Video uploaded successfully!', 'snackbar-success');
+        if (control && event.body?.file_name)
+          control.setValue(event.body?.file_name);
+        this.cdr.detectChanges();
       }
-    });
-  }
+      console.log(this.uploadProgress)
+    },
+    error: (err) => {
+          // inProgress = false;
+      this.uploadInProgress = false; 
+      (this as any)[progress] = 0;
+      console.error('Upload error:', err);
+      this.showSnackbar('Video upload failed.', 'snackbar-error');
+    }
+  });
+}
 
 
   removeMainVideo(): void {

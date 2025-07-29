@@ -23,7 +23,7 @@ class WatchLater extends ResourceController
     public function add()
 {
     // $authHeader = $this->request->getHeaderLine('Authorization');
-   $authHeader = AuthHelper::getAuthorizationToken($this->request);
+    $authHeader = AuthHelper::getAuthorizationToken($this->request);
     $user = $this->authService->getAuthenticatedUser($authHeader);
     if (!$user) 
             return $this->failUnauthorized('Invalid or missing token.');
@@ -34,7 +34,9 @@ class WatchLater extends ResourceController
             'data' => []
         ]);
     }
-
+    if ($user['status'] != 1) {
+        return $this->failUnauthorized('Token expired. You have been logged out.');
+    }
     $data = $this->request->getJSON(true);
     $movId = $data['mov_id'] ?? null;
 
@@ -75,7 +77,9 @@ public function getlist()
     if (!$user || !isset($user['user_id'])) {
         return $this->failUnauthorized('Invalid or missing token.');
     }
-
+    if ($user['status'] != 1) {
+        return $this->failUnauthorized('Token expired. You have been logged out.');
+    }
     $pageIndex = (int) ($this->request->getGet('pageIndex') ?? 0);
     $pageSize = $this->request->getGet('pageSize');
     $search = trim($this->request->getGet('search') ?? '');
@@ -113,7 +117,9 @@ public function getlist()
     if (!$user) {
         return $this->failUnauthorized('Invalid or missing token.');
     }
-
+    if ($user['status'] != 1) {
+        return $this->failUnauthorized('Token expired. You have been logged out.');
+    }
     $entry = $this->watchLaterModel->getById($id); 
 
     if (!$entry) {
@@ -139,6 +145,9 @@ public function getUserWatchLater($userId = null)
 
     if (!$authUser) {
         return $this->failUnauthorized('Invalid or missing token.');
+    }
+    if ($authUser['status'] != 1) {
+        return $this->failUnauthorized('Token expired. You have been logged out.');
     }
 
     if ($userId === null) {
@@ -168,7 +177,9 @@ public function delete($id = null)
     if (!$user) {
         return $this->failUnauthorized('Invalid or missing token.');
     }
-
+    if ($user['status'] != 1) {
+        return $this->failUnauthorized('Token expired. You have been logged out.');
+    }
     if ($id === null) {
         return $this->failValidationErrors('Watch Later ID is required.');
     }
@@ -194,7 +205,9 @@ public function clearAllHistory()
     if (!$user || !isset($user['user_id'])) {
         return $this->failUnauthorized('Invalid or missing token.');
     }
-
+    if ($user['status'] != 1) {
+        return $this->failUnauthorized('Token expired. You have been logged out.');
+    }
     $userId = $user['user_id'];
 
     $clearedCount = $this->watchLaterModel->hardDeleteAllHistoryByUser($userId);

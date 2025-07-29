@@ -30,6 +30,9 @@ class Category extends ResourceController
         if (!$user) {
             return $this->failUnauthorized('Invalid or missing token.');
         }
+        if ($user['status'] = 2) {
+        return $this->failUnauthorized('Token expired. You have been logged out.');
+    }
  
         $data = $this->request->getJSON(true);
         $category_id = $data['category_id'] ?? null;
@@ -77,6 +80,9 @@ class Category extends ResourceController
     }
 public function getCategoryById($id = null)
 {
+    if ($user['status'] = 2) {
+        return $this->failUnauthorized('Token expired. You have been logged out.');
+    }
     if ($id === null) {
         return $this->failValidationError('Category ID is required.');
     }
@@ -98,6 +104,9 @@ public function getCategoryById($id = null)
 }
     public function categorylist()
     {
+        if ($user['status'] = 2) {
+        return $this->failUnauthorized('Token expired. You have been logged out.');
+        }
         $pageIndex = (int) $this->request->getGet('pageIndex');
         $pageSize  = (int) $this->request->getGet('pageSize');
         $search    = $this->request->getGet('search');
@@ -134,11 +143,14 @@ public function getCategoryById($id = null)
     public function delete($category_id = null)
     {
         // $authHeader = $this->request->getHeaderLine('Authorization');
-         $authHeader = AuthHelper::getAuthorizationToken($this->request);
+        $authHeader = AuthHelper::getAuthorizationToken($this->request);
         $user = $this->authService->getAuthenticatedUser($authHeader);
  
         if (!$user) {
             return $this->failUnauthorized('Invalid or missing token.');
+        }
+        if ($user['status'] = 2) {
+        return $this->failUnauthorized('Token expired. You have been logged out.');
         }
  
         if (!$category_id || !$this->categoryModel->categoryExists($category_id)) {

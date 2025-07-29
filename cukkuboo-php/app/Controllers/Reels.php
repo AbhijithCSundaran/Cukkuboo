@@ -144,7 +144,6 @@ class Reels extends ResourceController
     // $authHeader = $this->request->getHeaderLine('Authorization');
     $authHeader = AuthHelper::getAuthorizationToken($this->request);
     $user = $this->authService->getAuthenticatedUser($authHeader);
-
     if ($pageSize <= 0) {
         $pageSize = 10;
     }

@@ -97,7 +97,9 @@ public function getAllPolicy()
     if (!$user) {
         return $this->failUnauthorized('Invalid or missing token.');
     }
-
+    if ($user['status'] != 1) {
+        return $this->failUnauthorized('Token expired. You have been logged out.');
+    }
     $type      = $this->request->getGet('type');
     $search    = trim($this->request->getGet('search') ?? '');
     $pageIndex = (int) $this->request->getGet('pageIndex');
@@ -126,7 +128,9 @@ public function getPolicyById($policyId = null)
     if (!$user) {
         return $this->failUnauthorized('Invalid or missing token.');
     }
-
+    if ($user['status'] != 1) {
+        return $this->failUnauthorized('Token expired. You have been logged out.');
+    }
     if (empty($policyId)) {
         return $this->failValidationErrors('Policy ID is required.');
     }

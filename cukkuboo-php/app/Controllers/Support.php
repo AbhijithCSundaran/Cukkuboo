@@ -240,7 +240,9 @@ public function getUserComplaintsById($supportId = null)
     if (!$user || !isset($user['user_id'])) {
         return $this->failUnauthorized('Invalid or missing token.');
     }
-
+    if ($user['status'] != 1) {
+        return $this->failUnauthorized('Token expired. You have been logged out.');
+    }
     if ($supportId !== null) {
         $complaint = $this->supportModel->getComplaintById($supportId);
 

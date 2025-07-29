@@ -69,9 +69,9 @@ export const CUSTOM_DATE_FORMATS = {
   templateUrl: './add-movie-show.component.html',
   styleUrls: ['./add-movie-show.component.scss'],
   providers: [
-          { provide: DateAdapter, useClass: CustomDateAdapter },
-          { provide: MAT_DATE_FORMATS, useValue: CUSTOM_DATE_FORMATS }
-        ],
+    { provide: DateAdapter, useClass: CustomDateAdapter },
+    { provide: MAT_DATE_FORMATS, useValue: CUSTOM_DATE_FORMATS }
+  ],
 })
 export class AddMovieShowComponent implements OnInit {
   movieForm!: FormGroup;
@@ -122,10 +122,10 @@ export class AddMovieShowComponent implements OnInit {
       trailer: ['', Validators.required],
       thumbnail: ['', Validators.required],
       banner: ['', Validators.required],
-      genre: ['', ],
+      genre: ['',],
       description: ['', Validators.required],
       cast_details: ['', Validators.required],
-      category: ['', ],
+      category: ['',],
       release_date: ['', Validators.required],
       age_rating: ['', Validators.required],
       access: ['', Validators.required],
@@ -157,7 +157,7 @@ export class AddMovieShowComponent implements OnInit {
     this.movieService.getMovieById(id).subscribe({
       next: (response) => {
         const data = Array.isArray(response?.data) ? response.data[0] : response.data;
-        debugger;
+      
         if (data) {
           this.movieForm.patchValue({
             mov_id: data.mov_id,
@@ -170,8 +170,8 @@ export class AddMovieShowComponent implements OnInit {
             age_rating: data.age_rating,
             access: data.access,
             status: data.status,
-            video: this.commonService.decryptData(data.video),
-            trailer: this.commonService.decryptData(data.trailer),
+            video: data.video ? this.commonService.decryptData(data.video) : '',
+            trailer: data.trailer,
             thumbnail: data.thumbnail,
             banner: data.banner,
             rating: data.rating,
@@ -298,83 +298,83 @@ export class AddMovieShowComponent implements OnInit {
     }
   }
 
-onVideoSelected(event: Event): void {
-  const input = event.target as HTMLInputElement;
-  const file = input.files?.[0];
+  onVideoSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
 
-  if (file) {
-    const isMp4 = file.type === 'video/mp4' || file.name.toLowerCase().endsWith('.mp4');
-    if (!isMp4) {
-      this.showSnackbar('Only MP4 video files are allowed for videos.', 'snackbar-error');
-      input.value = '';
-      return;
+    if (file) {
+      const isMp4 = file.type === 'video/mp4' || file.name.toLowerCase().endsWith('.mp4');
+      if (!isMp4) {
+        this.showSnackbar('Only MP4 video files are allowed for videos.', 'snackbar-error');
+        input.value = '';
+        return;
+      }
+
+      this.videoName = file.name;
+      this.videoURL = URL.createObjectURL(file);
+      this.getVideoDuration(file); // 👈 Get duration before upload
+
+      this.uploadMainVideo(file);
     }
-
-    this.videoName = file.name;
-    this.videoURL = URL.createObjectURL(file);
-    this.getVideoDuration(file); // 👈 Get duration before upload
-
-    this.uploadMainVideo(file);
   }
-}
 
 
   onVideoDragOver(event: DragEvent): void {
     event.preventDefault();
     event.stopPropagation();
   }
-onVideoDrop(event: DragEvent): void {
-  event.preventDefault();
-  event.stopPropagation();
-  const file = event.dataTransfer?.files?.[0];
+  onVideoDrop(event: DragEvent): void {
+    event.preventDefault();
+    event.stopPropagation();
+    const file = event.dataTransfer?.files?.[0];
 
-  if (file) {
-    const isMp4 = file.type === 'video/mp4' || file.name.toLowerCase().endsWith('.mp4');
-    if (!isMp4) {
-      this.showSnackbar('Only MP4 video files are allowed for videos.', 'snackbar-error');
-      return;
+    if (file) {
+      const isMp4 = file.type === 'video/mp4' || file.name.toLowerCase().endsWith('.mp4');
+      if (!isMp4) {
+        this.showSnackbar('Only MP4 video files are allowed for videos.', 'snackbar-error');
+        return;
+      }
+
+      this.videoName = file.name;
+      this.videoURL = URL.createObjectURL(file);
+      this.movieForm.controls['video'].setValue(this.videoURL);
+
+      this.getVideoDuration(file); // 👈 Get duration before upload
+
+      this.uploadMainVideo(file);
     }
-
-    this.videoName = file.name;
-    this.videoURL = URL.createObjectURL(file);
-    this.movieForm.controls['video'].setValue(this.videoURL);
-
-    this.getVideoDuration(file); // 👈 Get duration before upload
-
-    this.uploadMainVideo(file);
   }
-}
-getVideoDuration(file: File): void {
-  const video = document.createElement('video');
-  video.preload = 'metadata';
+  getVideoDuration(file: File): void {
+    const video = document.createElement('video');
+    video.preload = 'metadata';
 
-  video.onloadedmetadata = () => {
-    window.URL.revokeObjectURL(video.src);
-    const durationInSeconds = video.duration;
+    video.onloadedmetadata = () => {
+      window.URL.revokeObjectURL(video.src);
+      const durationInSeconds = video.duration;
 
-    const hours = Math.floor(durationInSeconds / 3600);
-    const minutes = Math.floor((durationInSeconds % 3600) / 60);
-    const seconds = Math.floor(durationInSeconds % 60);
+      const hours = Math.floor(durationInSeconds / 3600);
+      const minutes = Math.floor((durationInSeconds % 3600) / 60);
+      const seconds = Math.floor(durationInSeconds % 60);
 
-    const formattedDuration =
-      hours > 0
-        ? `${hours}h ${minutes}m ${seconds}s`
-        : `${minutes}m ${seconds}s`;
+      const formattedDuration =
+        hours > 0
+          ? `${hours}h ${minutes}m ${seconds}s`
+          : `${minutes}m ${seconds}s`;
 
-    console.log('Video duration:', formattedDuration); // ✅ Console check
+      console.log('Video duration:', formattedDuration); // ✅ Console check
 
-    this.movieForm.controls['duration'].setValue(formattedDuration);
-    this.cdr.detectChanges();
+      this.movieForm.controls['duration'].setValue(formattedDuration);
+      this.cdr.detectChanges();
 
-    console.log('Form duration control value:', this.movieForm.value['duration']); // ✅ Form check
-  };
+      console.log('Form duration control value:', this.movieForm.value['duration']); // ✅ Form check
+    };
 
-  video.onerror = () => {
-    this.showSnackbar('Unable to retrieve video duration.', 'snackbar-error');
-  };
+    video.onerror = () => {
+      this.showSnackbar('Unable to retrieve video duration.', 'snackbar-error');
+    };
 
-  video.src = URL.createObjectURL(file);
-}
+    video.src = URL.createObjectURL(file);
+  }
 
 
   uploadMainVideo(file: File) {
@@ -553,32 +553,32 @@ getVideoDuration(file: File): void {
     this.cdr.detectChanges();
   }
 
-submitMovie() {
-  if (this.movieForm.invalid) {
-    this.movieForm.markAllAsTouched();
-    this.snackBar.open('Please fill all required fields.', '', {
-      duration: 3000,
-      verticalPosition: 'top',
-      panelClass: ['snackbar-error']
-    });
-    return;
-  }
-
-  const model = this.movieForm.value;
-
-  this.movieService.addmovies(model).subscribe({
-    next: (response) => {
-      console.log('Movie save response:', response); 
-      const message = this.isEditMode ? 'Movie updated successfully!' : 'Movie saved successfully!';
-      this.showSnackbar(message, 'snackbar-success');
-      this.router.navigate(['/list-movie-show']);
-    },
-    error: () => {
-      const errorMessage = this.isEditMode ? 'Failed to update movie. Please try again.' : 'Failed to save movie. Please try again.';
-      this.showSnackbar(errorMessage, 'snackbar-error');
+  submitMovie() {
+    if (this.movieForm.invalid) {
+      this.movieForm.markAllAsTouched();
+      this.snackBar.open('Please fill all required fields.', '', {
+        duration: 3000,
+        verticalPosition: 'top',
+        panelClass: ['snackbar-error']
+      });
+      return;
     }
-  });
-}
+
+    const model = this.movieForm.value;
+
+    this.movieService.addmovies(model).subscribe({
+      next: (response) => {
+        console.log('Movie save response:', response);
+        const message = this.isEditMode ? 'Movie updated successfully!' : 'Movie saved successfully!';
+        this.showSnackbar(message, 'snackbar-success');
+        this.router.navigate(['/list-movie-show']);
+      },
+      error: () => {
+        const errorMessage = this.isEditMode ? 'Failed to update movie. Please try again.' : 'Failed to save movie. Please try again.';
+        this.showSnackbar(errorMessage, 'snackbar-error');
+      }
+    });
+  }
 
 
 

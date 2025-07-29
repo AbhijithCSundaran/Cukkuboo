@@ -127,7 +127,9 @@ class SubscriptionPlan extends ResourceController
         if (!$user) {
             return $this->failUnauthorized('Invalid or missing token.');
         }
- 
+        if ($user['status'] != 1) {
+        return $this->failUnauthorized('Token expired. You have been logged out.');
+        }
         $plan = $this->subscriptionPlanModel->getPlanById($id);
         if (!$plan) {
             return $this->failNotFound('Plan not found.');
@@ -149,7 +151,7 @@ class SubscriptionPlan extends ResourceController
     if (!$user) {
         return $this->failUnauthorized('Invalid or missing token.');
     }
-
+    
     $status = 9;
 
     $deleted = $this->subscriptionPlanModel->deletePlanById($status, (int)$id, $user['user_id']);

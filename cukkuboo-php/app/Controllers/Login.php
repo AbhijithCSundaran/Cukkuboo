@@ -29,42 +29,6 @@ class Login extends BaseController
     public function loginFun()
 {
     $data = $this->request->getJSON(true);
-    $now = date('Y-m-d H:i:s');
-    if (!empty($data['token'])) {
-        try {
-            $jwt = new Jwt();
-            $decoded = $jwt->decode($data['token']);
-            $user = $this->loginModel->find($decoded['user_id']);
-
-            if (!$user || $user['status'] != 1) {
-                return $this->response->setStatusCode(401)->setJSON([
-                    'success' => false,
-                    'message' => 'Token expired or user inactive.',
-                    'data' => []
-                ]);
-            }
-
-            return $this->response->setJSON([
-                'success' => true,
-                'message' => 'Token valid. User is still active.',
-                'data' => [
-                    'user_id' => $user['user_id'],
-                    'username' => $user['username'],
-                    'email' => $user['email'],
-                    'status' => $user['status'],
-                    'auth_type' => $user['auth_type'],
-                    'jwt_token' => $data['token']
-                ]
-            ]);
-        } catch (\Exception $e) {
-            return $this->response->setStatusCode(401)->setJSON([
-                'success' => false,
-                'message' => 'Invalid token.',
-                'data' => []
-            ]);
-        }
-    }
-
     if (!isset($data['email']) || !isset($data['password'])) {
         return $this->response->setJSON([
             'success' => false,
@@ -182,7 +146,7 @@ class Login extends BaseController
     $this->loginModel->update($user['user_id'], $updateData);
         return $this->response->setJSON([
             'success' => true,
-            'message' => 'Login successful (type 1)',
+            'message' => 'Login successful',
             'data' => [
             'user_id' =>  $user['user_id'],
             'username' => $user['username'],
@@ -210,7 +174,7 @@ class Login extends BaseController
     $this->loginModel->update($user['user_id'], $updateData);
     return $this->response->setJSON([
         'success' => true,
-        'message' => 'Login successful (type 2)',
+        'message' => 'Login successful',
         'data' => [
             'user_id' =>  $user['user_id'],
             'username' => $user['username'],

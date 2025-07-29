@@ -7,6 +7,11 @@ use App\Helpers\AuthHelper;
 use App\Models\SupportModel;
 use App\Libraries\AuthService;
 use App\Models\UserModel;
+// require 'public/mailer/Exception.php';
+// require 'public/mailer/PHPMailer.php';
+// require 'public/mailer/SMTP.php';
+// use PHPMailer\PHPMailer\PHPMailer;
+// use PHPMailer\PHPMailer\Exception;
 
 class Support extends ResourceController
 {
@@ -129,7 +134,7 @@ class Support extends ResourceController
         if (!$isAuthenticated && isset($newData['user_id'])) {
             unset($newData['user_id']);
         }
-
+        // $this->sendComplaintEmail($data);
         return $this->respond([
             'success' => true,
             'message' => 'Support issue created successfully',
@@ -137,6 +142,58 @@ class Support extends ResourceController
         ]);
     }
 }
+// public function sendComplaintEmail($data)
+// {
+//     try {
+//         $mail = new PHPMailer(true);
+//         $mail->isSMTP();
+//         $mail->Host       = 'mail.smartlounge.online';
+//         $mail->SMTPAuth   = true;
+//         $mail->Username   = 'no-reply@smartlounge.online';
+//         $mail->Password   = 'JujjmH9WkpL7AgP4TgHe';  
+//         $mail->SMTPSecure = 'ssl';
+//         $mail->Port       = 465;
+
+//         $mail->setFrom('no-reply@smartlounge.online', 'Support System');
+//         $mail->addAddress('mufeedahidaya@gmail.com', 'Admin'); 
+//         $mail->isHTML(true);
+//         $mail->Subject = 'New Support Complaint Submitted';
+//         $body = "
+//             <p><strong>Name:</strong> {$data['name']}</p>
+//             <p><strong>Email:</strong> {$data['email']}</p>
+//             <p><strong>Phone:</strong> {$data['phone']}</p>
+//             <p><strong>Issue Type:</strong> {$data['issue_type']}</p>
+//             <p><strong>Description:</strong><br>{$data['description']}</p>
+//         ";
+//         if (!empty($data['screenshot'])) {
+//             $fileName = $data['screenshot'];
+//             $imagePath = ROOTPATH . 'uploads/images/' . $fileName;
+
+//             if (file_exists($imagePath)) {
+//                 $cid = 'screenshot_cid';
+//                 $mail->addEmbeddedImage($imagePath, $cid, $fileName);
+//                 $body .= "<p><strong>Screenshot:</strong><br><img src='cid:$cid' style='max-width:500px;'></p>";
+//             } else {
+//                 $body .= "<p><strong>Screenshot:</strong> <em>File not found on server.</em></p>";
+//             }
+//         }
+
+//         $mail->Body = $body;
+//         $mail->send(); 
+
+//         // return $this->response->setJSON([
+//         //     'success' => true,
+//         //     'message' => 'Complaint email sent to admin.'
+//         // ]);
+
+//     } catch (\Exception $e) {
+//         return $this->response->setJSON([
+//             'success' => false,
+//             'message' => 'Mail error: ' . $mail->ErrorInfo
+//         ]);
+//     }
+// }
+
     public function getAllList()
 {
     // $authHeader = $this->request->getHeaderLine('Authorization');
@@ -183,7 +240,9 @@ public function getUserComplaintsById($supportId = null)
     if (!$user || !isset($user['user_id'])) {
         return $this->failUnauthorized('Invalid or missing token.');
     }
-
+    if ($user['status'] != 1) {
+        return $this->failUnauthorized('Token expired. You have been logged out.');
+    }
     if ($supportId !== null) {
         $complaint = $this->supportModel->getComplaintById($supportId);
 
@@ -233,6 +292,5 @@ public function delete($supportId= null)
 
     return $this->failServerError("Failed to delete complaint with ID $supportId.");
     }
-    
 
 }

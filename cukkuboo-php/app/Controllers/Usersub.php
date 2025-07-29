@@ -34,7 +34,9 @@ class Usersub extends ResourceController
     if (!$user || !isset($user['user_id'])) {
         return $this->failUnauthorized('Unauthorized user.');
     }
-
+    if ($user['status'] != 1) {
+        return $this->failUnauthorized('Token expired. You have been logged out.');
+    }
     $userId = $user['user_id'];
     $planId = $data['subscriptionplan_id'] ?? null;
 
@@ -132,10 +134,7 @@ class Usersub extends ResourceController
         'message' => $msg,
         'data'    => $payload
     ]);
-}
-
-
- 
+} 
   public function getSubscriptionById($id = null)
 {
     $authUser = $this->authService->getAuthenticatedUser(
@@ -145,7 +144,9 @@ class Usersub extends ResourceController
     if (!$authUser || !isset($authUser['user_id'])) {
         return $this->failUnauthorized('Invalid or missing token.');
     }
-
+    if ($authUser['status'] != 1) {
+        return $this->failUnauthorized('Token expired. You have been logged out.');
+    }
     $userId = $authUser['user_id'];
 
     if ($id !== null) {
@@ -210,6 +211,9 @@ public function getUserSubscriptions()
 
     if (!$authuser) {
         return $this->failUnauthorized('Invalid or missing token.');
+    }
+    if ($authuser['status'] != 1) {
+        return $this->failUnauthorized('Token expired. You have been logged out.');
     }
 
     $pageIndex = (int) $this->request->getGet('pageIndex');
@@ -287,6 +291,9 @@ public function deleteSubscription($id = null)
     if (!$user) {
         return $this->failUnauthorized('Invalid or missing token.');
     }
+    if ($user['status'] != 1) {
+        return $this->failUnauthorized('Token expired. You have been logged out.');
+    }
 
     $record = $this->usersubModel->find($id);
     if (!$record) {
@@ -318,7 +325,9 @@ public function cancelSubscription()
     if (!$user) {
         return $this->failUnauthorized('Invalid or missing token.');
     }
-
+    if ($user['status'] != 1) {
+        return $this->failUnauthorized('Token expired. You have been logged out.');
+    }
     $userId = $user['user_id'];
     $this->usersubModel->cancelUserSubscription($userId);
     $this->userModel->setUserSubscription($userId);
@@ -375,6 +384,9 @@ public function cancelSubscription()
     if (!$authUser || !isset($authUser['user_id'])) {
         return $this->failUnauthorized('Invalid or missing token.');
     }
+    if ($authUser['status'] != 1) {
+        return $this->failUnauthorized('Token expired. You have been logged out.');
+    }
     // $userId = $authUser['user_id'];
     $transactions = $this->usersubModel->getTransactions();
 
@@ -401,6 +413,9 @@ public function cancelSubscription()
 
     if (!$user || !isset($user['user_id'])) {
         return $this->failUnauthorized('Invalid or missing token.');
+    }
+    if ($user['status'] != 1) {
+        return $this->failUnauthorized('Token expired. You have been logged out.');
     }
 
     $userId = $user['user_id'];
@@ -452,7 +467,9 @@ public function getExpiredSubscriptions()
     if (!$user || !isset($user['user_id'])) {
         return $this->failUnauthorized('Invalid or missing token.');
     }
-
+    if ($user['status'] != 1) {
+        return $this->failUnauthorized('Token expired. You have been logged out.');
+    }
     $userId = $user['user_id'];
     $subs = $this->usersubModel
         ->where('user_id', $userId)

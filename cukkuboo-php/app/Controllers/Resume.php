@@ -31,7 +31,9 @@ class Resume extends ResourceController
                 'message' => 'Unauthorized user.'
             ]);
         }
-
+        if ($user['status'] != 1) {
+        return $this->failUnauthorized('Token expired. You have been logged out.');
+    }
         $data = $this->request->getJSON(true);
         $movId = $data['mov_id'] ?? null;
         $duration = $data['duration'] ?? null;
@@ -60,7 +62,9 @@ class Resume extends ResourceController
     if (!$user || !isset($user['user_id'])) {
         return $this->respond(['success' => false, 'message' => 'Unauthorized user.']);
     }
-
+    if ($user['status'] != 1) {
+        return $this->failUnauthorized('Token expired. You have been logged out.');
+    }
     $pageIndex = (int) $this->request->getGet('pageIndex');
     $pageSize  = (int) $this->request->getGet('pageSize');
     $search    = trim($this->request->getGet('search') ?? '');
@@ -98,7 +102,9 @@ class Resume extends ResourceController
     if (!$user || !isset($user['user_id'])) {
         return $this->respond(['success' => false, 'message' => 'Unauthorized user.']);
     }
-
+    if ($user['status'] != 1) {
+        return $this->failUnauthorized('Token expired. You have been logged out.');
+    }
     $userId = $user['user_id'];
     $data = $this->resumeModel->getHistoryById($id);
 
@@ -121,7 +127,9 @@ public function getUserHistory()
     if (!$authUser) {
         return $this->failUnauthorized('Invalid or missing token.');
     }
-
+    if ($user['status'] != 1) {
+        return $this->failUnauthorized('Token expired. You have been logged out.');
+    }
     $userId = $authUser['user_id'];
 
     $history = $this->resumeModel->getCompletedHistory($userId); 
@@ -145,7 +153,9 @@ public function deleteById($Id)
     if (!$user || !isset($user['user_id'])) {
         return $this->respond(['success' => false, 'message' => 'Unauthorized user.']);
     }
-
+    if ($user['status'] != 1) {
+        return $this->failUnauthorized('Token expired. You have been logged out.');
+    }
     $deleted = $this->resumeModel->softDeleteById($Id);
 
     if ($deleted) {

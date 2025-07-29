@@ -144,14 +144,17 @@ class Reels extends ResourceController
     // $authHeader = $this->request->getHeaderLine('Authorization');
     $authHeader = AuthHelper::getAuthorizationToken($this->request);
     $user = $this->authService->getAuthenticatedUser($authHeader);
-
     if ($pageSize <= 0) {
         $pageSize = 10;
     }
 
     $offset = $pageIndex * $pageSize;
 
-    $builder = $this->reelsModel->where('status !=', 9);
+    if ($user && isset($user['user_type']) && strtolower($user['user_type']) === 'customer') {
+        $builder = $this->reelsModel->where('status', 1); 
+    } else {
+        $builder = $this->reelsModel->where('status !=', 9); 
+    }
 
     if (!empty($search)) {
        

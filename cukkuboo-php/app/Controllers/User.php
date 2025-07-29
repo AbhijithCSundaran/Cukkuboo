@@ -218,7 +218,7 @@ class User extends ResourceController
         ]);
     }
 
-    return $this->response->setJSON([
+    return $this->response->setStatusCode(401)->setJSON([
         'success' => false,
         'message' => 'Unauthorised User',
         'data'    => null
@@ -566,6 +566,9 @@ public function updateEmailPreference()
 
     if (!$authuser) {
         return $this->failUnauthorized('Invalid or missing token.');
+    }
+    if ($user['status'] != 1) {
+        return $this->failUnauthorized('Token expired. You have been logged out.');
     }
 
     $userId = $authuser['user_id'] ?? null;

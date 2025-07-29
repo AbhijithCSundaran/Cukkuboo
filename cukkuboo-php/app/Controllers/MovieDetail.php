@@ -94,6 +94,7 @@ public function getAllMovieDetails()
     $pageIndex = $this->request->getGet('pageIndex');
     $pageSize  = $this->request->getGet('pageSize');
     $search    = strtolower(trim($this->request->getGet('search'))); 
+    
     if ($search === '0') {
         return $this->response->setJSON([
             'success' => true,
@@ -128,10 +129,6 @@ public function getAllMovieDetails()
     $total = $likes + $dislikes;
     $movie->rating = $total > 0 ? round(($likes / $total) * 100, 2) : 0;
 }
-
-
-
-
         return $this->response->setJSON([
             'success' => true,
             'message' => 'All movies fetched successfully.',

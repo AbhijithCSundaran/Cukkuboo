@@ -32,7 +32,9 @@ class VideoView extends ResourceController
     if (!$user) {
         return $this->failUnauthorized('Invalid or missing token.');
     }
-
+    if ($user['status'] != 1) {
+        return $this->failUnauthorized('Token expired. You have been logged out.');
+    }
     $data = $this->request->getJSON(true);
     $movieId = $data['mov_id'] ?? null;
 

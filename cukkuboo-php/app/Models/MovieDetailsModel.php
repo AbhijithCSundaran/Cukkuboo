@@ -32,6 +32,7 @@ public function getAllMoviesDetails() {
     // )->getResult();
  
 }
+
 // public function getMovieDetailsById($id){
 //      return $this->db->query('select * from movies_details where mov_id="'.$id.'"')->getRowArray();
  

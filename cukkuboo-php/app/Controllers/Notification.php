@@ -83,6 +83,9 @@ class Notification extends ResourceController
     if (!$user) {
         return $this->failUnauthorized('Invalid or missing token.');
     }
+    if ($user['status'] != 1) {
+        return $this->failUnauthorized('Token expired. You have been logged out.');
+    }
 
     $pageIndex = (int) $this->request->getGet('pageIndex');
     $pageSize  = (int) $this->request->getGet('pageSize');
@@ -140,6 +143,9 @@ class Notification extends ResourceController
 
     if (!$user) {
         return $this->failUnauthorized('Invalid or missing token.');
+    }
+    if ($user['status'] != 1) {
+        return $this->failUnauthorized('Token expired. You have been logged out.');
     }
 
     $userId = $user['user_id'];
@@ -202,6 +208,9 @@ class Notification extends ResourceController
     if (!$authUser) {
         return $this->failUnauthorized('Invalid or missing token.');
     }
+    if ($authUser['status'] != 1) {
+        return $this->failUnauthorized('Token expired. You have been logged out.');
+    }
 
     if ($userId === null) {
         $userId = $authUser['user_id'];
@@ -234,6 +243,9 @@ public function getNotificationById($notificationId = null)
 
     if (!$authUser) {
         return $this->failUnauthorized('Invalid or missing token.');
+    }
+    if ($authUser['status'] != 1) {
+        return $this->failUnauthorized('Token expired. You have been logged out.');
     }
 
     if ($notificationId === null) {

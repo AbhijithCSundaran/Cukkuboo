@@ -22,6 +22,7 @@ import { HttpClient, HttpEvent, HttpEventType } from '@angular/common/http';
 import { FileUploadService } from '../../../services/upload/file-upload.service';
 import { environment } from '../../../../environments/environment';
 import { MovieService } from '../../../services/movie.service';
+import { CommonService } from '../../../core/services/common.service';
 
 
 export class CustomDateAdapter extends NativeDateAdapter {
@@ -109,7 +110,7 @@ export class AddMovieShowComponent implements OnInit {
     private route: ActivatedRoute, private fb: FormBuilder,
     private fileUploadService: FileUploadService,
     private movieService: MovieService,
-    private http: HttpClient,
+    private commonService: CommonService,
   ) { }
 
 
@@ -155,8 +156,6 @@ export class AddMovieShowComponent implements OnInit {
   loadMovieData(id: number): void {
     this.movieService.getMovieById(id).subscribe({
       next: (response) => {
-        console.log('prefill API response:', response);
-
         const data = Array.isArray(response?.data) ? response.data[0] : response.data;
         debugger;
         if (data) {
@@ -171,8 +170,8 @@ export class AddMovieShowComponent implements OnInit {
             age_rating: data.age_rating,
             access: data.access,
             status: data.status,
-            video: data.video,
-            trailer: data.trailer,
+            video: this.commonService.decryptData(data.video),
+            trailer: this.commonService.decryptData(data.trailer),
             thumbnail: data.thumbnail,
             banner: data.banner,
             rating: data.rating,

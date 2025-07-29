@@ -1,6 +1,5 @@
 import { DatePipe } from '@angular/common';
 import { Injectable } from '@angular/core';
-import { PopupNotificationService } from './../../shared/services/popup-notification/popup-notification.service';
 import * as CryptoJS from 'crypto-js';
 
 @Injectable({
@@ -12,7 +11,6 @@ export class CommonService {
     private Pipe = new DatePipe('en-US');
 
     constructor(
-        private popupNotiService: PopupNotificationService,
     ) {
     }
     //#region "functions"
@@ -136,7 +134,7 @@ export class CommonService {
             }
         }
         if (count == 0) {
-            this.popupNotiService.showMessage('Form not valid.', 'warning')
+            alert('Form not valid.')
         }
         return count;
     }
@@ -160,7 +158,7 @@ export class CommonService {
         }
         return obj;
     }
-    
+
     remove_char(Model: any, char = '_', All = true) {
         var model: any = {}
         for (let obj in Model) {
@@ -330,7 +328,7 @@ export class CommonService {
         return atob(reversedData)
     }
 
-    decryptData(encryptedBase64: string, key: string): string {
+    decryptData(encryptedBase64: string, key: string = 'Abhijith123456789'): string {
         // Convert Base64 string to WordArray
         const encryptedData = CryptoJS.enc.Base64.parse(encryptedBase64);
 

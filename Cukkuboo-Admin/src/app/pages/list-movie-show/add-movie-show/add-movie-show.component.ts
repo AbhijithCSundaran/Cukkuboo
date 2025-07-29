@@ -153,11 +153,15 @@ export class AddMovieShowComponent implements OnInit {
 
 
 
+  validExtensions = ['.mp4', '.m3u8', '.webm', '.ogg', '.mov', '.avi'];
   loadMovieData(id: number): void {
     this.movieService.getMovieById(id).subscribe({
       next: (response) => {
         const data = Array.isArray(response?.data) ? response.data[0] : response.data;
-      
+        const isVideoFormat = this.validExtensions.some(ext => (data.video).toLowerCase().endsWith(ext));
+        if (!isVideoFormat)
+          data.video = structuredClone(this.commonService.decryptData(data.video, 'Abhijith123456789'));
+
         if (data) {
           this.movieForm.patchValue({
             mov_id: data.mov_id,
@@ -170,7 +174,7 @@ export class AddMovieShowComponent implements OnInit {
             age_rating: data.age_rating,
             access: data.access,
             status: data.status,
-            video: data.video ? this.commonService.decryptData(data.video) : '',
+            video: data.video,
             trailer: data.trailer,
             thumbnail: data.thumbnail,
             banner: data.banner,

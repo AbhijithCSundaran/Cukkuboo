@@ -235,3 +235,9 @@
     justify-content: center;
   }
 }
+.truncate-text {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  max-width: 150px;
+}

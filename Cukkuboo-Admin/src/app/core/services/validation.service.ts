@@ -12,7 +12,7 @@ export class ValidationService {
             'invalidPhoneNo': 'Invalid phone number',
             'invalidPassword': 'Password must be at least 8 characters and include uppercase, lowercase, numbers, and special characters',
             'passwordsMismatch': 'Passwords Mismatch',
-            // 'minlength': `Minimum length ${validatorValue.requiredLength}`,
+            'minlength': `Minimum length ${validatorValue.requiredLength}`,
             'maxlength': `Maximum length ${validatorValue.requiredLength}`,
             'max': `Maximum value is ${validatorValue.max}`,
             'min': `Minimum value is ${validatorValue.min}`,

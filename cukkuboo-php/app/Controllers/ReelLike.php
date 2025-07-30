@@ -32,9 +32,7 @@ class ReelLike extends ResourceController
         if (!$user) {
             return $this->failUnauthorized('Invalid or missing token.');
         }
-        if ($user['status'] != 1) {
-        return $this->failUnauthorized('Token expired. You have been logged out.');
-    }
+
         $data = $this->request->getJSON(true);
         $userId = $user['user_id']; 
         $reelId = $data['reels_id'] ?? null;

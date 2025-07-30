@@ -48,6 +48,7 @@ $routes->post('upload-image', 'Uploads::uploadImage');
 
 $routes->post('movie/store', 'MovieDetail::store');
 $routes->get('movie/moviedetails','MovieDetail::getAllMovieDetails');
+$routes->get('movie/activemovie','MovieDetail::getMovieDetails');
 $routes->get('getmovie/(:any)', 'MovieDetail::getMovieById/$1');
 $routes->delete('movie/delete/(:any)','MovieDetail::deleteMovieDetails/$1');
 $routes->get('movies/latest', 'MovieDetail::getLatestMovies');
@@ -89,6 +90,7 @@ $routes->delete('subscriptionplan/delete/(:num)', 'SubscriptionPlan::delete/$1')
 
 $routes->post('reels/add', 'Reels::addReel');
 $routes->get('reels/details', 'Reels::getAllReels');
+$routes->get('reels/activereels', 'Reels::getActiveReels');
 $routes->get('reels/get/(:any)', 'Reels::getReelById/$1');
 $routes->delete('reels/delete/(:any)', 'Reels::deleteReel/$1');
 

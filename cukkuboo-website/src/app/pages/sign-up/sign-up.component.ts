@@ -86,7 +86,7 @@ export class SignUpComponent implements OnInit {
   hidePassword = true;
   hideConfirmPassword = true;
   maxDate: Date = new Date();
-  showPasswordHint = false; 
+  showPasswordHint = false;
 
   public countryCodes = countrycode;
 
@@ -95,7 +95,7 @@ export class SignUpComponent implements OnInit {
     private userService: UserService,
     private snackBar: MatSnackBar,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     const today = new Date();
@@ -109,8 +109,8 @@ export class SignUpComponent implements OnInit {
         countryCode: ['+91', Validators.required],
         phone: ['', [Validators.required, Validators.pattern(/^\d{6,15}$/)]],
         date_of_birth: ['', [Validators.required, this.ageValidator(18)]],
-        password: ['', [ ValidationService.passwordValidator]],
-        confirmPassword: ['', Validators.required]
+        password: ['', [Validators.required, ValidationService.passwordValidator]],
+        confirmPassword: ['', Validators.required,ValidationService.passwordValidator]
       },
       { validators: [this.passwordConfirming] }
     );

@@ -98,8 +98,8 @@ export class AddUserComponent implements OnInit {
       user_id: [0],
       username: ['', Validators.required],
       password: ['', [Validators.required, ValidationService.passwordValidator, Validators.minLength(8)]],
-      countryCode: [this.selectedCountryCode, Validators.required],
-      phone: ['', [Validators.required, Validators.pattern(/^\d{6,15}$/), Validators.maxLength(15)]],
+      countryCode: [this.selectedCountryCode],
+      phone: ['', [ Validators.pattern(/^\d{6,15}$/), Validators.maxLength(15)]],
       email: ['', [Validators.required, ValidationService.emailValidator]],
       country: ['', [Validators.pattern(/^[a-zA-Z\s]*$/)]],
       date_of_birth: ['', Validators.required],
@@ -198,7 +198,7 @@ export class AddUserComponent implements OnInit {
   }
 
   saveUser(): void {
-    debugger;
+   
     if (this.userForm.valid) {
       const model = this.userForm.value;
       model.email = model.email.toLowerCase();

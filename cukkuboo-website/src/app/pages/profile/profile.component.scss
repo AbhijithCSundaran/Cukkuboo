@@ -22,7 +22,16 @@ input.form-control:focus {
     border-color: #e50916;
     box-shadow: none;
 }
-
+.truncate-username {
+  display: inline-block;
+  max-width: 150px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.black{
+  background-color: #000;
+}
 .icon-style {
        font-size: 36px;
     border: 2px solid white;

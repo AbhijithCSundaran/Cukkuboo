@@ -17,7 +17,15 @@
   font-family: var(--title-fonts);
   font-weight: 600;
   font-size: 1rem;
+
+  max-width: 120px; // Adjust as needed
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: inline-block;
+  vertical-align: middle;
 }
+
 
 // =======================
 // Notification Icon & Dropdown

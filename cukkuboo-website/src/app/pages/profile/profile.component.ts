@@ -18,7 +18,7 @@ import { MatOptionModule } from '@angular/material/core';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmationDialogComponent } from '../../core/components/confirmation-dialog/confirmation-dialog.component';
-
+import{WarningAlertComponent}from'../../warning-alert/warning-alert.component';
 import countrycode from '../../../assets/json/countrycode.json';
 
 @Component({
@@ -95,7 +95,7 @@ export class ProfileComponent implements OnInit {
 
     this.changePasswordForm = this.fb.group({
       currentPassword: ['', Validators.required],
-      newPassword: ['', [Validators.required, Validators.minLength(8), ValidationService.passwordValidator]],
+      newPassword:  ['', [Validators.required, ValidationService.passwordValidator, Validators.minLength(8)]],
       confirmPassword: ['', Validators.required]
     });
 
@@ -233,7 +233,7 @@ export class ProfileComponent implements OnInit {
       this.userService.changePassword(model).subscribe({
         next: (res) => {
           if (res.success === 'true') {
-            this.snackBar.open(res.msg, '', {
+          this.snackBar.open('Password changed successfully', '', {
               duration: 3000,
               verticalPosition: 'top',
               panelClass: ['snackbar-success']
@@ -241,7 +241,7 @@ export class ProfileComponent implements OnInit {
             this.backToProfile();
             this.changePasswordForm.reset();
           } else {
-            this.snackBar.open(res.msg, '', {
+          this.snackBar.open('Password update failed.', '', {
               duration: 3000,
               verticalPosition: 'top',
               panelClass: ['snackbar-error']
@@ -265,57 +265,59 @@ export class ProfileComponent implements OnInit {
     }
   }
 
-  onDeleteAccount(): void {
-    const userId = this.userId;
-    const authType = this.userData?.auth_type;
+ onDeleteAccount(): void {
+  const userId = this.userId;
+  const authType = this.userData?.auth_type;
 
-    if (authType === 'google') {
-      this.userService.deleteGoogleAccount(userId!).subscribe({
-        next: (res: any) => {
-          if (res?.success) {
-            this.handleSuccessfulDeletion();
-          } else {
-            this.snackBar.open(res?.msg || 'Failed to delete account.', '', {
-              duration: 3000,
-              verticalPosition: 'top',
-              panelClass: ['snackbar-error']
-            });
-          }
-        },
-        error: () => {
-          this.snackBar.open('Failed to delete account.', '', {
+  if (authType === 'google') {
+    // Call Google account deletion directly (no password)
+    this.userService.deleteGoogleAccount(userId!).subscribe({
+      next: (res: any) => {
+        if (res?.success) {
+          this.handleSuccessfulDeletion();
+        } else {
+          this.snackBar.open('Account deletion failed.', '', {
             duration: 3000,
             verticalPosition: 'top',
             panelClass: ['snackbar-error']
           });
         }
-      });
-    } else {
-      const password = this.deleteAccountForm.get('deleteProfile')?.value;
-      if (!password) return;
+      },
+      error: () => {
+        this.snackBar.open('Failed to delete Google account.', '', {
+          duration: 3000,
+          verticalPosition: 'top',
+          panelClass: ['snackbar-error']
+        });
+      }
+    });
+  } else {
+    const password = this.deleteAccountForm.get('deleteProfile')?.value;
+    if (!password) return;
 
-      this.userService.deleteAccount(password.trim(), userId!).subscribe({
-        next: (res: any) => {
-          if (res?.success) {
-            this.handleSuccessfulDeletion();
-          } else {
-            this.snackBar.open('Incorrect Password', '', {
-              duration: 3000,
-              verticalPosition: 'top',
-              panelClass: ['snackbar-error']
-            });
-          }
-        },
-        error: () => {
-          this.snackBar.open('Failed to delete account.', '', {
+    this.userService.deleteAccount(password.trim(), userId!).subscribe({
+      next: (res: any) => {
+        if (res?.success) {
+          this.handleSuccessfulDeletion();
+        } else {
+          this.snackBar.open('Incorrect Password', '', {
             duration: 3000,
             verticalPosition: 'top',
             panelClass: ['snackbar-error']
           });
         }
-      });
-    }
+      },
+      error: () => {
+        this.snackBar.open('Failed to delete account.', '', {
+          duration: 3000,
+          verticalPosition: 'top',
+          panelClass: ['snackbar-error']
+        });
+      }
+    });
   }
+}
+
 
   handleSuccessfulDeletion(): void {
     this.snackBar.open('Account deleted successfully.', '', {
@@ -340,10 +342,10 @@ export class ProfileComponent implements OnInit {
   }
 
 askToRemoveaccount(): void {
-  const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+  const dialogRef = this.dialog.open(WarningAlertComponent , {
     data: {
       message: `
-       <div class="row justify-content-center">
+       <div class="row justify-content-center black">
     <div class="alert alert-warning col-12" role="alert">
       <h6 class="alert-heading text-center">
         <i class="fa-solid fa-triangle-exclamation"></i> Warning
@@ -351,9 +353,11 @@ askToRemoveaccount(): void {
       <p class="mb-0 text-white text-center">
         All your data, watch history, and subscriptions will be lost. This action is irreversible.
       </p>
+      <p  class="mb-0 text-white text-center"> Do you want to continue?</p>
     </div>
   </div>
      
+  
       `,
       disableClose: true
     }
@@ -380,6 +384,27 @@ askToRemoveaccount(): void {
       this.onDeleteAccount();
     }
   });
+}
+handleDeleteClick(): void {
+  if (this.userData?.auth_type === 'google') {
+    this.askToRemoveaccount(); // Direct confirmation for Google users
+  } else {
+    this.showProfileInfo = false;
+    this.showChangePassword = false;
+    this.ShowDeleteAccount = true; // Show password form for manual users
+  }
+}
+
+onSubmitDeleteForm(): void {
+  if (this.deleteAccountForm.valid) {
+    this.askToRemoveaccount(); // Show final confirmation dialog
+  } else {
+    this.snackBar.open('Please enter your password.', '', {
+      duration: 3000,
+      verticalPosition: 'top',
+      panelClass: ['snackbar-error']
+    });
+  }
 }
 
 

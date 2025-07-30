@@ -4,6 +4,7 @@ namespace App\Controllers;
 use CodeIgniter\RESTful\ResourceController;
 use App\Helpers\AuthHelper; 
 use App\Models\ReelsModel;
+use App\Models\ReelViewModel;
 use App\Models\UserModel;
 use App\Libraries\Jwt;
 use App\Libraries\AuthService;
@@ -14,7 +15,9 @@ class Reels extends ResourceController
     {
         $this->session = \Config\Services::session();
         $this->input = \Config\Services::request();
+        $this->db = \Config\Database::connect();
         $this->reelsModel = new ReelsModel();
+        $this->reelViewModel = new ReelViewModel();
         $this->UserModel = new UserModel();	
         $this->authService = new AuthService();
     }
@@ -149,12 +152,7 @@ class Reels extends ResourceController
     }
 
     $offset = $pageIndex * $pageSize;
-
-    if ($user && isset($user['user_type']) && strtolower($user['user_type']) === 'customer') {
-        $builder = $this->reelsModel->where('status', 1); 
-    } else {
-        $builder = $this->reelsModel->where('status !=', 9); 
-    }
+    $builder = $this->reelsModel->where('status !=', 9);
 
     if (!empty($search)) {
        
@@ -186,6 +184,73 @@ class Reels extends ResourceController
         $user_id = $user['user_id'];
         foreach ($reels as &$reel) {
             $reel['is_liked_by_user'] = $this->reelsModel->isLikedByUser($reel['reels_id'], $user_id);
+            $isViewed = $this->db->table('reel_view')
+                                 ->where('reels_id', $reel['reels_id'])
+                                 ->where('user_id', $user_id)
+                                 ->countAllResults();
+
+            $reel['is_viewed'] = $isViewed > 0 ? true : false;
+        }
+    }
+
+    return $this->response->setJSON([
+        'success' => true,
+        'message' => 'Reels fetched successfully.',
+        'data'    => $reels,
+        'total'   => $total
+    ]);
+}
+public function getActiveReels()
+{
+    $pageIndex = (int) $this->request->getGet('pageIndex');
+    $pageSize  = (int) $this->request->getGet('pageSize');
+    $search    = $this->request->getGet('search');
+    // $authHeader = $this->request->getHeaderLine('Authorization');
+    $authHeader = AuthHelper::getAuthorizationToken($this->request);
+    $user = $this->authService->getAuthenticatedUser($authHeader);
+    if ($pageSize <= 0) {
+        $pageSize = 10;
+    }
+
+    $offset = $pageIndex * $pageSize;
+    $builder = $this->reelsModel->where('status', 1);
+
+    if (!empty($search)) {
+       
+        $search = strtolower(trim(preg_replace('/\s+/', ' ', $search)));
+        $accessMap = [
+            'free' => '1',
+            'premium' => '2'
+        ];
+        $accessValue = $accessMap[$search] ?? null;
+
+        $builder->groupStart()
+            ->like('title', $search, 'both');
+
+        if ($accessValue !== null) {
+            $builder->orWhere('access', $accessValue);
+        }
+
+        $builder->groupEnd();
+    }
+
+    $total = $builder->countAllResults(false);
+
+    $reels = $builder->orderBy('created_on', 'DESC')
+                     ->findAll($pageSize, $offset);
+
+    shuffle($reels);
+
+    if ($user) {
+        $user_id = $user['user_id'];
+        foreach ($reels as &$reel) {
+            $reel['is_liked_by_user'] = $this->reelsModel->isLikedByUser($reel['reels_id'], $user_id);
+            $isViewed = $this->db->table('reel_view')
+                                 ->where('reels_id', $reel['reels_id'])
+                                 ->where('user_id', $user_id)
+                                 ->countAllResults();
+
+            $reel['is_viewed'] = $isViewed > 0 ? true : false;
         }
     }
 

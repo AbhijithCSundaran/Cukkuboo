@@ -41,9 +41,9 @@ class ReelView extends ResourceController
     if (!$reelId || $status != 1) {
         return $this->failValidationError('Invalid or missing data');
     }
-    if ($user['status'] != 1) {
-        return $this->failUnauthorized('Token expired. You have been logged out.');
-    }
+    // if ($user['status'] != 1) {
+    //     return $this->failUnauthorized('Token expired. You have been logged out.');
+    // }
     $existing = $this->reelViewModel->getUserReelView($userId, $reelId);
 
     if (!$existing) {

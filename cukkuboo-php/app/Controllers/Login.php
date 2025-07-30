@@ -43,6 +43,18 @@ class Login extends BaseController
     ->first();
 
     if (!$user) {
+        $googleUser = $this->loginModel
+        ->where('email', $data['email'])
+        ->where('auth_type', 'google')
+        ->first();
+
+    if ($googleUser) {
+        return $this->response->setStatusCode(200)->setJSON([
+            'success' => false,
+            'message' => 'Login failed. This account is linked with Google. Please sign in using Google.',
+            'data' => []
+        ]);
+    }
         $suspendedUser = $this->loginModel
             ->where('email', $data['email'])
             ->where('status', 2)

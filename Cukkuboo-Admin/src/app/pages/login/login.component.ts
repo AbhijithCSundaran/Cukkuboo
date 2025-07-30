@@ -45,7 +45,8 @@ export class LoginComponent implements OnInit, AfterViewInit {
     setTimeout(() => {
       if ((window as any).grecaptcha) {
         (window as any).grecaptcha.render('recaptcha-container', {
-          sitekey: '6LeoL5UpAAAAABy-sNgzr_XHc2vWl2Kpr45VHWey',
+          // sitekey: '6LeoL5UpAAAAABy-sNgzr_XHc2vWl2Kpr45VHWey',
+          sitekey: '6LeTEZQrAAAAABMSKaw_Kgattono8-NNRex90ikt',
           callback: (response: any) => {
             this.captchaToken = response;
           },
@@ -61,23 +62,15 @@ export class LoginComponent implements OnInit, AfterViewInit {
   }
 
   login() {
-    // if (!this.captchaToken && this.isProd) {
-    //   this.snackBar.open('Please complete the CAPTCHA', '', {
-    //     duration: 3000,
-    //     verticalPosition: 'top',
-    //     panelClass: ['snackbar-error']
-    //   });
-    //   return;
-    // }
+    if (!this.captchaToken && this.isProd) {
+      this.snackBar.open('Please complete the CAPTCHA', '', {
+        duration: 3000,
+        verticalPosition: 'top',
+        panelClass: ['snackbar-error']
+      });
+      return;
+    }
 
-    // if (this.loginForm.invalid) {
-    //   this.snackBar.open('Please fill all required fields', '', {
-    //     duration: 3000,
-    //     verticalPosition: 'top',
-    //     panelClass: ['snackbar-error']
-    //   });
-    //   return;
-    // }
    
     if (this.loginForm.valid) {
       var model = this.loginForm.value

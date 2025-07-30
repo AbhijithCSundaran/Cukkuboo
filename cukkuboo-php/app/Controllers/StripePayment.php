@@ -14,7 +14,7 @@ class StripePayment extends ResourceController
 
     public function createCheckoutSession()
     {
-       \Stripe\Stripe::setApiKey($this->secretKey);
+       \Stripe\Stripe::setApiKey('sk_test_'+$this->secretKey);
 
         $json = $this->request->getJSON();
         $priceId = $json->price_id; // RevenueCat uses Stripe Price ID

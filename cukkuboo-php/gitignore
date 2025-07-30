@@ -1,7 +1,7 @@
 # Composer dependencies
+vendor/
 /vendor
 /vendor/
-vendor/
 /composer.lock
 
 # Node modules (if using npm)

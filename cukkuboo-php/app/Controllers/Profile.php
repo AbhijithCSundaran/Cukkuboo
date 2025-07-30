@@ -146,7 +146,7 @@ class Profile extends BaseController
 			curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
 			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
 			$response = curl_exec($ch);
-			print_r($response);
+			// print_r($response);
 			if($response) {
 				return $this->response->setJSON([
 					'success' => true,

@@ -173,6 +173,7 @@ export class ProfileComponent implements OnInit {
             duration: 3000,
             verticalPosition: 'top',
             panelClass: ['snackbar-error']
+            
           });
         }
       });
@@ -272,7 +273,10 @@ export class ProfileComponent implements OnInit {
         duration: 3000,
         verticalPosition: 'top',
         panelClass: ['snackbar-error']
+        
+        
       });
+      
     }
   }
 

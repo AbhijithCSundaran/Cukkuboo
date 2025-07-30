@@ -95,9 +95,9 @@ export class AddUserComponent implements OnInit {
   }
   initUserForm() {
     this.userForm = this.fb.group({
-      user_id: [this.UserId],
+      user_id: [0],
       username: ['', Validators.required],
-      password: ['', [ValidationService.passwordValidator]],
+      password: ['', [Validators.required, ValidationService.passwordValidator, Validators.minLength(8)]],
       countryCode: [this.selectedCountryCode, Validators.required],
       phone: ['', [Validators.required, Validators.pattern(/^\d{6,15}$/), Validators.maxLength(15)]],
       email: ['', [Validators.required, ValidationService.emailValidator]],
@@ -108,15 +108,15 @@ export class AddUserComponent implements OnInit {
       // { validators: this.passwordValidators }
     );
   }
-  passwordValidators(group: AbstractControl): ValidationErrors | null {
-    if (!group.value.user_id) {
-      group.get('password')?.setValidators([Validators.required, ValidationService.passwordValidator]);
-      return { required: true };
-    } else {
-      group.get('password')?.setValidators(ValidationService.passwordValidator);
-      return null;
-    }
-  }
+  // passwordValidators(group: AbstractControl): ValidationErrors | null {
+  //   if (!group.value.user_id) {
+  //     group.get('password')?.setValidators([Validators.required, ValidationService.passwordValidator]);
+  //     return { required: true };
+  //   } else {
+  //     group.get('password')?.setValidators(ValidationService.passwordValidator);
+  //     return null;
+  //   }
+  // }
   forceLowerCaseEmail(event: any): void {
     const inputElement = event.target;
     const currentValue: string = inputElement.value;
@@ -173,7 +173,7 @@ export class AddUserComponent implements OnInit {
           //  Set validators for password field in edit mode
           const passwordControl = this.userForm.get('password') as FormControl;
           passwordControl.setValidators([
-            Validators.minLength(8)
+            Validators.minLength(8), ValidationService.passwordValidator
           ]);
           passwordControl.updateValueAndValidity();
 

@@ -10,7 +10,7 @@ class StripePayment extends ResourceController
 {
     use ResponseTrait;
 
-    private $secretKey = 'sk_test_xxxxx'; // Your Stripe secret key
+    private $secretKey = 'sk_test_xxxxx';
 
     public function createCheckoutSession()
     {

@@ -162,13 +162,85 @@ public function getAllMovieDetails()
         'total'   => $total
     ]);
 }
+public function getMovieDetails()
+{
+    $pageIndex = $this->request->getGet('pageIndex');
+    $pageSize  = $this->request->getGet('pageSize');
+    $search    = strtolower(trim($this->request->getGet('search'))); 
+    
+    if ($search === '0') {
+        return $this->response->setJSON([
+            'success' => true,
+            'message' => 'No results found for the search term.',
+            'data'    => [],
+            'total'   => 0
+        ]);
+    }
+
+    $builder = $this->moviedetail->builder(); 
+    $builder->where('status', 1);
+    if ($search !== '') {
+        $searchWildcard = '%' . str_replace(' ', '%', $search) . '%';
+        if ($search === 'free') {
+            $builder->where('access', 1);
+        } elseif ($search === 'premium') {
+            $builder->where('access', 2);
+        } else {
+            $searchWildcard = '%' . str_replace(' ', '%', $search) . '%';
+            $builder->groupStart()
+                ->like('LOWER(title)', $searchWildcard)
+                ->orLike('LOWER(cast_details)', $searchWildcard)
+                ->groupEnd();
+        }
+    }
+
+    if (!is_numeric($pageIndex) || !is_numeric($pageSize) || $pageIndex < 0 || $pageSize <= 0) {
+        $movies = $builder->orderBy('created_on', 'DESC')->get()->getResult();
+    foreach ($movies as $movie) {
+    $likes = $movie->likes ?? 0;
+    $dislikes = $movie->dislikes ?? 0;
+    $total = $likes + $dislikes;
+    $movie->rating = $total > 0 ? round(($likes / $total) * 100, 2) : 0;
+}
+        return $this->response->setJSON([
+            'success' => true,
+            'message' => 'All movies fetched successfully.',
+            'data'    => $movies,
+            'total'   => count($movies)
+        ]);
+    }
+
+    $pageIndex = (int)$pageIndex;
+    $pageSize  = (int)$pageSize;
+    $offset    = $pageIndex * $pageSize;
+    $countBuilder = clone $builder;
+    $total = $countBuilder->countAllResults(false);
+    if ($search !== '' && $total === 0) {
+        return $this->response->setJSON([
+            'success' => true,
+            'message' => 'No results found for the search term.',
+            'data'    => [],
+            'total'   => 0
+        ]);
+    }
+    $movies = $builder
+        ->orderBy('created_on', 'DESC')
+        ->get($pageSize, $offset)
+        ->getResult();
+
+    return $this->response->setJSON([
+        'success' => true,
+        'message' => 'Paginated movies fetched successfully.',
+        'data'    => $movies,
+        'total'   => $total
+    ]);
+}
 
 public function getMovieById($id)
 {
     // $authHeader = $this->request->getHeaderLine('Authorization');
     $authHeader = AuthHelper::getAuthorizationToken($this->request);
     $user = $this->authService->getAuthenticatedUser($authHeader);
- 
     $getmoviesdetails = $this->moviedetail->getMovieDetailsById($id);
  
     if (!$getmoviesdetails) {
@@ -266,7 +338,6 @@ public function movieReaction($mov_id)
     $authHeader = AuthHelper::getAuthorizationToken($this->request);
     $user = $this->authService->getAuthenticatedUser($authHeader);
     if (!$user) return $this->failUnauthorized('Invalid or missing token.');
-
     $user_id = $user['user_id'];
 
     $data = $this->request->getJSON(true);
@@ -341,7 +412,7 @@ public function movieReaction($mov_id)
 
     $offset = $pageIndex * $pageSize;
 
-    $builder = $this->db->table('movies_details')->where('status !=', 9);
+    $builder = $this->db->table('movies_details')->where('status', 1);
 
     // Optional search
     // Optional search - strictly check only title, even if search is "0"
@@ -558,7 +629,6 @@ public function latestMovies()
     if (!$user) {
         return $this->failUnauthorized('Invalid or missing token.');
     }
-
     $pageIndex = (int) $this->request->getGet('pageIndex') ?? 0;
     $pageSize = (int) $this->request->getGet('pageSize') ?? 10;
     $search    = $this->request->getGet('search');
@@ -635,11 +705,10 @@ public function getUserHomeData()
 {
     $authHeader = AuthHelper::getAuthorizationToken($this->request);
     $user = $this->authService->getAuthenticatedUser($authHeader);
-
     $hasUnread = false;
     if ($user) {
         $userId = $user['user_id'];
-        $notificationModel = new \App\Models\NotificationModel();
+        $notificationModel = new NotificationModel();
         $hasUnread = $notificationModel->hasUnreadNotifications($userId);
     }
 

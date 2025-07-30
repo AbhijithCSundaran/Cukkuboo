@@ -244,9 +244,9 @@ public function getNotificationById($notificationId = null)
     if (!$authUser) {
         return $this->failUnauthorized('Invalid or missing token.');
     }
-    if ($authUser['status'] != 1) {
-        return $this->failUnauthorized('Token expired. You have been logged out.');
-    }
+    // if ($authUser['status'] != 1) {
+    //     return $this->failUnauthorized('Token expired. You have been logged out.');
+    // }
 
     if ($notificationId === null) {
         return $this->failValidationErrors('Notification ID is required.');

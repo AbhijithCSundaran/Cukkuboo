@@ -196,6 +196,13 @@ export class ProfileComponent implements OnInit {
     this.showProfileInfo = false;
     this.ShowDeleteAccount = false;
     this.showChangePassword = true;
+
+
+     // Reset password visibility
+  this.hideCurrent = true;
+  this.hideNew = true;
+  this.hideConfirm = true;
+
   }
 
   backToProfile(): void {
@@ -203,6 +210,10 @@ export class ProfileComponent implements OnInit {
     this.showChangePassword = false;
     this.ShowDeleteAccount = false;
     localStorage.setItem('activeTab', 'profile');
+
+    this.hideCurrent = true;
+  this.hideNew = true;
+  this.hideConfirm = true;
   }
 
   toggleDeleteAccount(): void {

@@ -129,7 +129,7 @@ export class AddStaffComponent {
       phone: ['', [Validators.required, Validators.pattern(/^\d{6,15}$/), Validators.maxLength(15)]],
       countryCode: ['+91', Validators.required],
       email: ['', [Validators.required, ValidationService.emailValidator]],
-      password: ['', [ValidationService.passwordValidator]],
+      password: ['', [Validators.required, ValidationService.passwordValidator, Validators.minLength(8)]],
       status: ['1', Validators.required],
       join_date: [''],
       user_type: ['staff']
@@ -137,15 +137,15 @@ export class AddStaffComponent {
       // { validators: this.passwordValidators }
     );
   }
-  passwordValidators(group: AbstractControl): ValidationErrors | null {
-    if (!group.value.user_id) {
-      group.get('password')?.setValidators([Validators.required, ValidationService.passwordValidator]);
-      return { required: true };
-    } else {
-      group.get('password')?.setValidators(ValidationService.passwordValidator);
-      return null;
-    }
-  }
+  // passwordValidators(group: AbstractControl): ValidationErrors | null {
+  //   if (!group.value.user_id) {
+  //     group.get('password')?.setValidators([Validators.required, ValidationService.passwordValidator]);
+  //     return { required: true };
+  //   } else {
+  //     group.get('password')?.setValidators(ValidationService.passwordValidator);
+  //     return null;
+  //   }
+  // }
 
   forceLowerCaseEmail(event: any): void {
     const inputElement = event.target;
@@ -197,11 +197,11 @@ export class AddStaffComponent {
           });
 
           //  Set validators for password field in edit mode
-          // const passwordControl = this.staffForm.get('password') as FormControl;
-          // passwordControl.setValidators([
-          //   Validators.minLength(8)
-          // ]);
-          // passwordControl.updateValueAndValidity();
+          const passwordControl = this.staffForm.get('password') as FormControl;
+          passwordControl.setValidators([
+            Validators.minLength(8), ValidationService.passwordValidator
+          ]);
+          passwordControl.updateValueAndValidity();
 
         } else {
           console.warn('User not found for ID:', id);
@@ -223,7 +223,6 @@ export class AddStaffComponent {
   }
 
   saveStaff(): void {
-    debugger;
     if (this.staffForm.valid) {
       const model = this.staffForm.value;
       // Combine country code + phone

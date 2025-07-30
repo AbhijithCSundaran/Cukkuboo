@@ -1,0 +1,10 @@
+CRITICAL - 2025-07-25 09:42:58 --> ErrorException: Attempt to read property "price_id" on null
+[Method: GET, Route: stripe/test]
+in APPPATH\Controllers\StripePayment.php on line 22.
+ 1 APPPATH\Controllers\StripePayment.php(22): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Attempt to read property "price_id" on null', 'C:\\xampp\\htdocs\\Cukkuboo\\cukkuboo-php\\app\\Controllers\\StripePayment.php', 22)
+ 2 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\StripePayment->createCheckoutSession()
+ 3 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\StripePayment))
+ 4 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 5 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+ 6 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 7 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))

@@ -1,0 +1,24 @@
+# Composer dependencies
+
+vendor/
+/vendor
+/vendor/
+/composer.lock
+
+# Node modules (if using npm)
+/Composer
+/node_modules
+
+# Log files and cache
+/writable/cache/*
+/writable/logs/*
+/writable/session/*
+/writable/uploads/*
+/writable/debugbar/*
+
+# CodeIgniter 3 specific
+/application/logs/*
+/application/cache/*
+!application/logs/index.html
+!application/cache/index.html
+*.log

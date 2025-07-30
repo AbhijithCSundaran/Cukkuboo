@@ -43,18 +43,18 @@ class Login extends BaseController
     ->first();
 
     if (!$user) {
-        $googleUser = $this->loginModel
-        ->where('email', $data['email'])
-        ->where('auth_type', 'google')
-        ->first();
+    //     $googleUser = $this->loginModel
+    //     ->where('email', $data['email'])
+    //     ->where('auth_type', 'google')
+    //     ->first();
 
-    if ($googleUser) {
-        return $this->response->setStatusCode(200)->setJSON([
-            'success' => false,
-            'message' => 'Login failed. This account is linked with Google. Please sign in using Google.',
-            'data' => []
-        ]);
-    }
+    // if ($googleUser) {
+    //     return $this->response->setStatusCode(200)->setJSON([
+    //         'success' => false,
+    //         'message' => 'Login failed. This account is linked with Google. Please sign in using Google.',
+    //         'data' => []
+    //     ]);
+    // }
         $suspendedUser = $this->loginModel
             ->where('email', $data['email'])
             ->where('status', 2)
@@ -85,6 +85,13 @@ class Login extends BaseController
             'data' => []
         ]);
     }
+    if ($user['auth_type'] === 'google') {
+    return $this->response->setStatusCode(200)->setJSON([
+        'success' => false,
+        'message' => 'Login failed. If you signed up with Google, please use the Google Sign-In button.',
+        'data' => []
+    ]);
+}
     if (!password_verify($data['password'], $user['password'])) {
         return $this->response->setStatusCode(200)->setJSON([
             'success' => false,

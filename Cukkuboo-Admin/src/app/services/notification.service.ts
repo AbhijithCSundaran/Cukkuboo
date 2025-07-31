@@ -14,7 +14,7 @@ export class NotificationService {
 
   // Token getter from localStorage or sessionStorage
   get token(): string | null {
-    return localStorage.getItem('token') || sessionStorage.getItem('token');
+    return sessionStorage.getItem('token') || sessionStorage.getItem('token');
   }
 
   // Authorization headers
@@ -27,7 +27,7 @@ export class NotificationService {
 
 
   getNotifications(pageIndex: number = 0, pageSize: number = 10, searchText: string = ''): Observable<any> {
-    const url = `${this.apiUrl}notification/list?pageIndex=${pageIndex}&pageSize=${pageSize}&searchText=${encodeURIComponent(searchText)}`;
+    const url = `${this.apiUrl}notification/list?pageIndex=${pageIndex}&pageSize=${pageSize}&search=${encodeURIComponent(searchText)}`;
     return this.http.get(url, { headers: this.headers });
   }
 }

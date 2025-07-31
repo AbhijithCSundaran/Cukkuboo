@@ -26,10 +26,39 @@ export class MovieService {
   //     { headers: this.headers });
   // }
 
-  listMovies(pageIndex: number = 0, pageSize: number = 20, searchText: string = ''): Observable<any> {
-    const params = { pageIndex: pageIndex.toString(), pageSize: pageSize.toString(), search: searchText };
+  // listMovies(pageIndex: number = 0, pageSize: number = 20, searchText: string = '', type: string = ''): Observable<any> {
+    // if (!type) {
+    // const params = { pageIndex: pageIndex.toString(), pageSize: pageSize.toString(), search: searchText, type: type, };
+    // return this.http.get(this.apiUrl + 'movies/list', { headers: this.headers, params });
+    // }
+    // else {
+    //   const params = { type: type, page: pageIndex, limit: pageSize, search: searchText };
+    //   return this.http.get(this.apiUrl + 'movies/list', { headers: this.headers, params });
+    // }
+
+
+  // }
+
+  listMovies(pageIndex: number = 0, pageSize: number = 20, searchText: string = '', type: string = ''): Observable<any> {
+  if (!type) {
+    
+    const params = {
+      pageIndex: pageIndex.toString(),
+      pageSize: pageSize.toString(),
+      search: searchText
+    };
     return this.http.get(this.apiUrl + 'movie/moviedetails', { headers: this.headers, params });
+  } else {
+    // Use /movies/list when type is present 
+    const params = {
+      pageIndex: pageIndex.toString(),
+      pageSize: pageSize.toString(),
+      search: searchText,
+      type: type
+    };
+    return this.http.get(this.apiUrl + 'movie/activemovie', { headers: this.headers, params });
   }
+}
 
   getrelatedMovies(id: number, pageIndex: number = 0, pageSize: number = 20): Observable<any> {
     const params = { pageIndex: pageIndex.toString(), pageSize: pageSize.toString() };
@@ -46,85 +75,83 @@ export class MovieService {
     });
   }
 
-saveHistory(model: any): Observable<any> {
-  const body = model;
-  return this.http.post(this.apiUrl + 'savehistory/save', body, { headers: this.headers });
-}  
+  saveHistory(model: any): Observable<any> {
+    const body = model;
+    return this.http.post(this.apiUrl + 'savehistory/save', body, { headers: this.headers });
+  }
 
-getHistory(pageIndex: number = 0, pageSize: number = 10, searchText: string = ''): Observable<any> {
-  const params = {
-    page: pageIndex.toString(),
-    size: pageSize.toString(),
-    search: searchText
-  };
-  return this.http.get(this.apiUrl + 'savehistory/user', { headers: this.headers, params });
-}
+  getHistory(pageIndex: number = 0, pageSize: number = 10, searchText: string = ''): Observable<any> {
+    const params = { page: pageIndex.toString(), size: pageSize.toString(), search: searchText };
+    return this.http.get(this.apiUrl + 'savehistory/user', { headers: this.headers, params });
+  }
 
 
-deleteHistoryItem(historyId: number): Observable<any> {
-  return this.http.delete(this.apiUrl + 'savehistory/delete/' + historyId, {
-    headers: this.headers
-  });
-}
+  deleteHistoryItem(historyId: number): Observable<any> {
+    return this.http.delete(this.apiUrl + 'savehistory/delete/' + historyId, {
+      headers: this.headers
+    });
+  }
 
-clearAllHistory(): Observable<any> {
-  return this.http.delete(this.apiUrl + 'savehistory/clear-all', { headers: this.headers });
-}
+  clearAllHistory(): Observable<any> {
+    return this.http.delete(this.apiUrl + 'savehistory/clear-all', { headers: this.headers });
+  }
 
-saveWatchlater(model: any): Observable<any> {
-  const body = model;
-  return this.http.post(this.apiUrl + 'watch/save', body, { headers: this.headers });
-}
+  saveWatchlater(model: any): Observable<any> {
+    const body = model;
+    return this.http.post(this.apiUrl + 'watch/save', body, { headers: this.headers });
+  }
 
-getWatchLaterList(pageIndex: number = 0, pageSize: number = 10, searchText: string = ''): Observable<any> {
-  const params = {
-    page: pageIndex.toString(),
-    size: pageSize.toString(),
-    search: searchText
-  };
-  return this.http.get(this.apiUrl + 'watch/user', { headers: this.headers, params });
-}
-
-
-deleteWatchLater(watchId: number): Observable<any> {
-  return this.http.delete(this.apiUrl + 'watch/delete/' + watchId, { headers: this.headers });
-}
+  getWatchLaterList(pageIndex: number = 0, pageSize: number = 10, searchText: string = ''): Observable<any> {
+    const params = {
+      page: pageIndex.toString(),
+      size: pageSize.toString(),
+      search: searchText
+    };
+    return this.http.get(this.apiUrl + 'watch/user', { headers: this.headers, params });
+  }
 
 
-clearAllWatchLater(): Observable<any> {
-  return this.http.delete(this.apiUrl + 'watch/clear-all', { headers: this.headers });
-}
+  deleteWatchLater(watchId: number): Observable<any> {
+    return this.http.delete(this.apiUrl + 'watch/delete/' + watchId, { headers: this.headers });
+  }
 
 
-getReelsData(pageIndex: number = 0, pageSize: number = 10, searchText: string = ''): Observable<any> {
-  const params = {
-    pageIndex: pageIndex.toString(),
-    pageSize: pageSize.toString(),
-    search: searchText
-  };
-
-  return this.http.get(this.apiUrl + 'reels/details', {
-    headers: this.headers,
-    params
-  });
-}
+  clearAllWatchLater(): Observable<any> {
+    return this.http.delete(this.apiUrl + 'watch/clear-all', { headers: this.headers });
+  }
 
 
+  getReelsData(pageIndex: number = 0, pageSize: number = 10, searchText: string = ''): Observable<any> {
+    const params = { pageIndex: pageIndex.toString(), pageSize: pageSize.toString(), search: searchText };
+    return this.http.get(this.apiUrl + 'reels/activereels', { headers: this.headers, params });
+  }
+  getReelById(id: string): Observable<any> {
+    return this.http.get(this.apiUrl + 'reels/get/' + id, { headers: this.headers });
+  }
+
+  likeReel(model: any): Observable<any> {
+    const body = model;
+    return this.http.post(this.apiUrl + 'reellike/like', body, { headers: this.headers });
+  }
 
 
-likeReel(model: any): Observable<any> {
-  const body = model;
-  return this.http.post(this.apiUrl + 'reellike/like', body, { headers: this.headers });
-}
+  viewReel(): Observable<any> {
+    return this.http.post(`${this.apiUrl}reelview/view`, {
+      headers: this.headers
+    });
+  }
 
 
+  movieReaction(movieId: number, status: number): Observable<any> {
+    return this.http.post(`${this.apiUrl}movie/movieReaction/${movieId}`, { status }, {
+      headers: this.headers
+    });
+  }
 
-
-viewReel(): Observable<any> {
-  return this.http.post(`${this.apiUrl}reelview/view`, {
-    headers: this.headers
-  });
-}
-
+  viewVideo(model: any): Observable<any> {
+    return this.http.post(this.apiUrl + 'video/videoview', model, {
+      headers: this.headers
+    });
+  }
 
 }

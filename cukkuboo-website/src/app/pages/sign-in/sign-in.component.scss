@@ -1,36 +1,52 @@
-
-section.position-relative {
+.sign_wrpr {
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
-  padding: 0; 
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding: 0;
   position: relative;
+
+  &.popup {
+    min-height: auto;
+  }
 }
 
+.clickable-logo {
+  cursor: pointer;
+
+  img {
+    max-width: 60px;
+  }
+}
 
 .gen-login-page-background {
   position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   height: 100%;
   width: 100%;
-
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   z-index: -1;
 }
 
-
 .gen-login-page-background::before {
   content: "";
   position: absolute;
-  top: 0; left: 0;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
   background: linear-gradient(90deg, rgba(10, 14, 23, 0.1) 0%, rgba(10, 14, 23, 0.3) 100%);
   z-index: 1;
+}
+a {
+  text-decoration: none !important;
 }
 
 .container {
@@ -38,25 +54,21 @@ section.position-relative {
   z-index: 2;
 }
 
-
 .login-box {
-  background-color: rgba(255, 255, 255, 0.9); 
+  background-color: rgba(255, 255, 255, 0.9);
   padding: 2rem;
   border-radius: 12px;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
 }
-
 
 h4 {
   font-size: 1.25rem;
   margin-bottom: 1rem;
 }
 
-
 mat-form-field {
   margin-bottom: 1rem;
 }
-
 
 .red-button {
   background-color: var(--primary-color);
@@ -66,14 +78,14 @@ mat-form-field {
   padding: 6px 16px;
   border-radius: 30px;
   text-transform: uppercase;
-  min-width: auto;
+  min-width: 120px;
   box-shadow: none;
+  border: none;
 }
 
 .red-button:hover {
   background-color: var(--primarydark-color);
 }
-
 
 .signup-link {
   font-size: 0.875rem;
@@ -87,13 +99,218 @@ mat-form-field {
 }
 
 .small-eye-icon {
-  font-size: 16px;
-  width: 16px;
-  height: 16px;
-  line-height: 16px;
+  font-size: 18px;
+  line-height: 18px;
+  width: 18px;
+  height: 18px;
 }
 
-
-*, ::after, ::before {
+*,
+::after,
+::before {
   box-sizing: border-box;
+}
+
+.instruction-text {
+  font-size: 0.95rem;
+  color: #ffffff;
+  opacity: 0.85;
+}
+
+.resend-link {
+  font-size: 0.875rem;
+  color: var(--primary-color);
+  text-decoration: underline;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  line-height: 1.5;
+}
+
+.text-muted {
+  font-size: 0.875rem;
+  color: #ccc !important;
+}
+
+.reset-heading {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  color: var(--white-color);
+}
+
+.reset-subtext {
+  font-size: 0.95rem;
+  color: #ccc;
+  margin-bottom: 1rem;
+}
+
+.red-email {
+  color: var(--primary-color);
+  font-weight: bold;
+}
+
+/* Countdown section */
+.otp-countdown-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 12px;
+  min-height: 24px;
+  /* Ensures equal height even when switching */
+}
+
+.countdown-text {
+  font-size: 0.875rem;
+  color: #ffffff;
+  display: inline-flex;
+  align-items: center;
+  line-height: 1.5;
+}
+
+.red-countdown {
+  color: var(--primary-color);
+  font-weight: 700; // optional: consistent with <strong>
+  vertical-align: baseline; // 🔧 Fixes alignment issue
+  font-size: inherit; // ensures it matches the parent
+  line-height: inherit; // match parent line height
+}
+
+.red-countdown {
+  position: relative;
+  top: 1px; // tweak this up or down (1px to -1px) to align perfectly
+}
+
+#googleSignInBtn {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: flex-start;
+
+  div {
+    width: 100% !important;
+  }
+}
+
+.or-separator {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  color: #999;
+  font-size: 14px;
+}
+
+.or-separator::before,
+.or-separator::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid #ccc;
+}
+
+.or-separator:not(:empty)::before {
+  margin-right: .75em;
+}
+
+.or-separator:not(:empty)::after {
+  margin-left: .75em;
+}
+
+.sign_wrpr.popup {
+  padding: 0.5rem !important;
+  min-height: auto;
+  overflow: visible;
+  font-size: 0.8rem !important;
+
+  // Logo
+  .clickable-logo {
+    display: none;
+
+    img {
+      max-width: 36px !important; // smaller logo
+      height: auto;
+    }
+  }
+
+  // Heading
+  h4,
+  .reset-heading {
+    font-size: 1rem !important;
+    // margin: 0.25rem 0 0.5rem !important; // reduced top space
+  }
+
+  Form fields
+  mat-form-field {
+    margin-bottom: 6px !important;
+    font-size: 1 rem !important;
+    width: 100%;
+
+    .mat-form-field-wrapper {
+      padding-bottom: 2px !important;
+    }
+
+    .mat-form-field-infix {
+      padding: 0.2rem 0 !important;
+      min-height: 28px !important; // reduce height
+    }
+
+    .mat-input-element {
+      font-size: 1rem !important;
+      padding: 0.2rem 0.4rem !important;
+    }
+  }
+
+  mat-form-field[_ngcontent-ng-c998379010] {
+    margin-bottom: 0rem !important;
+  }
+
+  // Sign In button
+  .red-button {
+    font-size: 12px !important;
+    padding: 4px 8px !important;
+    min-width: 100px !important;
+    margin-top: 1px !important; // reduce space above
+  }
+
+  // Google Sign-in
+  #googleSignInBtn {
+    margin-top: 0rem !important;
+    transform: scale(0.85) !important; // shrink button
+    transform-origin: left;
+  }
+
+  // Others
+  .or-separator {
+    font-size: 10px !important;
+    margin: 0rem 0 !important;
+  }
+
+  .instruction-text,
+  .reset-subtext,
+  .red-link,
+  .signup-link,
+  .resend-link,
+  .text-muted,
+  .countdown-text {
+    font-size: 0.7rem !important;
+  }
+
+  .mat-icon-button {
+    width: 28px !important;
+    height: 28px !important;
+  }
+
+  .small-eye-icon {
+    font-size: 12px !important;
+    width: 12px !important;
+    height: 12px !important;
+  }
+
+  // .login-box {
+  //   padding: 0.55rem !important;
+  //   border-radius: 6px !important;
+  //   box-shadow: 0 0 10px rgba(0, 0, 0, 0.12);
+  // }
+
+  // #pms_login {
+  //   padding-top: 0;
+  // }
 }

@@ -23,18 +23,18 @@ html {
     }
 }
 
-.snackbar-error {
+.snackbar-error,.snackbar-danger {
     .mdc-snackbar__surface.mat-mdc-snackbar-surface {
         border: 1px solid #c20000;
-        background-color: #ffebee;
+        background-color: #ffe5e9;
         color: #c20000;
     }
 }
 .snackbar-warn {
     .mdc-snackbar__surface.mat-mdc-snackbar-surface {
-        border: 1px solid #f08400;
-        background-color: #ffebee;
-        color: #f08400;
+        border: 1px solid #bd5500;
+        background-color: #fff0d9;
+        color: #bd5500;
     }
 }
 
@@ -60,6 +60,9 @@ html {
 
 
 .mat-mdc-dialog-container.mdc-dialog {
-    max-height: 80vh;
+    max-height: 90vh;
     overflow-y: auto;
+}
+.mat-datepicker-content {
+    padding-bottom: 7px!important;
 }

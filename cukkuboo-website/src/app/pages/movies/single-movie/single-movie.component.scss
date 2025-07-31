@@ -1,20 +1,23 @@
+/* SECTION PADDING */
 .gen-section-padding-3 {
   padding: 12px 0px 90px 0px;
 }
 
+/* PLAY MOVIE TEXT */
 .play-movie {
   color: white;
   font-size: 23px;
 }
 
+/* MOVIE TITLE IN BANNER */
 .gen-banner-movies.single .gen-movie-info h3 {
   font-size: 45px;
   font-weight: 600;
   line-height: 1.2;
   color: #fff;
-  text-transform: uppercase;
 }
 
+/* PLAY BUTTON CONTAINER */
 .gen-btn-container a.playBut {
   display: flex;
   align-items: center;
@@ -23,30 +26,61 @@
   color: white;
 }
 
+/* PLAY ICON SIZE */
 .gen-btn-container a.playBut svg {
   width: 40px;
   height: 40px;
 }
 
+/* MOVIE CARD TITLES */
 .gen-more-like .gen-movie-info h3 a {
   cursor: pointer;
   text-decoration: none;
   color: #fff;
 }
 
-.gen-movie-info h3 a {
-  cursor: pointer;
-}
-
+/* BANNER PLAY BUTTON */
 .gen-banner-movies .playBut {
   cursor: pointer;
 }
 
-.gen-movie-info a:hover {
-  color: red !important;
+/* ==== REACTION BUTTONS (Like, Dislike, Share, Watch Later) ==== */
+.reaction-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 6px 14px;
+  font-size: 15px;
+  height: 40px;
+  background: transparent;
+  border: 1px solid var(--primary-color);
+  color: var(--primary-color);
+  white-space: nowrap;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  border-radius: 4px;
 }
 
-/* ✅ Responsive Fix for Metadata Pairs */
+.reaction-button i {
+  font-size: 16px;
+}
+
+/* WATCH LATER (BOOKMARK) BUTTON */
+.bookmark-button {
+  padding: 6px 14px;
+}
+
+.bookmark-button i {
+  font-size: 18px;
+}
+
+.bookmark-button .label,
+.reaction-button span {
+  display: inline;
+}
+
+/* ==== EXTRA INFO SECTION (Updated) ==== */
 .gen-extra-data ul {
   padding: 0;
   margin: 0;
@@ -57,15 +91,27 @@
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
-  margin-bottom: 8px;
-  font-size: 15px;
+  margin-bottom: 10px;
+  font-size: 16px;
   color: #fff;
+  line-height: 1.5;
 }
 
 .gen-extra-data li.meta-pair strong {
   white-space: nowrap;
+  font-weight: 600;
+  font-size: 16px;
+  color: #ffffff;
 }
 
+.gen-extra-data li.meta-pair span {
+  word-break: break-word;
+  flex: 1;
+  font-size: 16px;
+  color: #e0e0e0;
+}
+
+/* ==== RESPONSIVE TWEAKS ==== */
 @media (max-width: 767px) {
   .play-movie {
     font-size: 18px;
@@ -83,9 +129,32 @@
   .gen-extra-data li.meta-pair {
     flex-direction: row;
     align-items: baseline;
+    font-size: 15px;
+  }
+
+  .gen-extra-data li.meta-pair strong {
+    font-size: 15px;
   }
 
   .gen-extra-data li.meta-pair span {
-    word-break: break-word;
+    font-size: 15px;
+  }
+
+  .reaction-button {
+    font-size: 14px;
+    height: 38px;
+    padding: 5px 10px;
+    min-width: auto;
+  }
+
+  /* Hide long label on bookmark for smaller screens */
+  .bookmark-button .label {
+    display: none;
   }
 }
+.gen-single-meta-holder {
+    margin-top: 0.5rem; /* Add space below the title */
+
+  margin-bottom: 4rem; /* Adjust this value as needed */
+}
+

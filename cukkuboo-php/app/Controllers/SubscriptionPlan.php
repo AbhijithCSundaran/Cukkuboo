@@ -3,6 +3,7 @@
 namespace App\Controllers;
  
 use CodeIgniter\RESTful\ResourceController;
+use App\Helpers\AuthHelper; 
 use App\Models\SubscriptionPlanModel;
 use App\Libraries\AuthService;
  
@@ -13,6 +14,8 @@ class SubscriptionPlan extends ResourceController
  
     public function __construct()
     {
+        $this->session = \Config\Services::session();
+        $this->input = \Config\Services::request();
         $this->subscriptionPlanModel = new SubscriptionPlanModel();
         $this->authService = new AuthService();
     }
@@ -22,7 +25,8 @@ class SubscriptionPlan extends ResourceController
     $data = $this->request->getJSON(true);
     $id = isset($data['subscriptionplan_id']) ? (int)$data['subscriptionplan_id'] : null;
  
-    $authHeader = $this->request->getHeaderLine('Authorization');
+    // $authHeader = $this->request->getHeaderLine('Authorization');
+   $authHeader = AuthHelper::getAuthorizationToken($this->request);
     $user = $this->authService->getAuthenticatedUser($authHeader);
  
     if (!$user) {
@@ -82,7 +86,8 @@ class SubscriptionPlan extends ResourceController
         $pageSize = (int)$this->request->getGet('pageSize') ?? 10;
         $search = $this->request->getGet('search');
  
-        // $authHeader = $this->request->getHeaderLine('Authorization');
+        
+        // $authHeader = AuthHelper::getAuthorizationToken($this->request);
         // $user = $this->authService->getAuthenticatedUser($authHeader);
  
         // if (!$user) {
@@ -115,13 +120,16 @@ class SubscriptionPlan extends ResourceController
  
     public function get($id)
     {
-        $authHeader = $this->request->getHeaderLine('Authorization');
+        // $authHeader = $this->request->getHeaderLine('Authorization');
+        $authHeader = AuthHelper::getAuthorizationToken($this->request);
         $user = $this->authService->getAuthenticatedUser($authHeader);
  
         if (!$user) {
             return $this->failUnauthorized('Invalid or missing token.');
         }
- 
+        if ($user['status'] != 1) {
+        return $this->failUnauthorized('Token expired. You have been logged out.');
+        }
         $plan = $this->subscriptionPlanModel->getPlanById($id);
         if (!$plan) {
             return $this->failNotFound('Plan not found.');
@@ -136,13 +144,14 @@ class SubscriptionPlan extends ResourceController
  
     public function delete($id = null)
     {
-    $authHeader = $this->request->getHeaderLine('Authorization');
+    // $authHeader = $this->request->getHeaderLine('Authorization');
+    $authHeader = AuthHelper::getAuthorizationToken($this->request);
     $user = $this->authService->getAuthenticatedUser($authHeader);
 
     if (!$user) {
         return $this->failUnauthorized('Invalid or missing token.');
     }
-
+    
     $status = 9;
 
     $deleted = $this->subscriptionPlanModel->deletePlanById($status, (int)$id, $user['user_id']);

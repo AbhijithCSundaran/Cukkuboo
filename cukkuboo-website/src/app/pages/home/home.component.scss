@@ -50,38 +50,6 @@
   color: #fff;
 }
 
-.fullscreen-loader {
-  position: relative;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: rgb(0, 0, 0);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 9999;
-}
-
-.spinner {
-  border: 8px solid #f3f3f3;
-  border-top: 8px solid #ff3d00;
-  border-radius: 50%;
-  width: 60px;
-  height: 60px;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
 .gen-movie-info h3,
 .gen-movie-info h3 a {
   cursor: pointer;
@@ -115,7 +83,7 @@
   color: white;
   font-size: 23px;
   font-weight: 500;
-//   text-transform: uppercase;
+  //   text-transform: uppercase;
 }
 
 .gen-btn-container a.playBut:hover svg {
@@ -140,9 +108,11 @@
     font-size: 28px;
   }
 }
+
 .gen-btn-container a.playBut:hover .play-movie {
   text-decoration: none;
 }
+
 .gen-banner-movies .playBut {
   cursor: pointer;
 }
@@ -159,9 +129,7 @@
   width: 40px;
   height: 40px;
 }
-.text-justify{
-  text-align: justify;
-}
+
 // .caro-style-1{
 //   overflow: none !important;
 //   padding-left: 0px !important;
@@ -170,3 +138,34 @@
 // .owl-item{
 //   margin-right: 154px !important;
 // }
+.gen-button {
+  &.view_more {
+    @media(max-width:991px) {
+      padding: 7px;
+      text-transform:capitalize ;
+      line-height: 1;
+      background: transparent;
+      color: var(--primary-color);
+    }
+
+    @media(max-width:991px) {
+      font-size: 12px;
+    }
+  }
+}
+@media (max-width: 767px) {
+  .gen-info-contain {
+    padding-left: 10px;
+  }
+
+  .gen-info-contain h3,
+  .gen-info-contain ul li {
+    padding-left: 2px; 
+  }
+}
+.text-light {
+  color: #ccc !important;
+}
+.text-center {
+  text-align: center;
+}

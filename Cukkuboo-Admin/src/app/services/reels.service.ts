@@ -11,7 +11,7 @@ export class ReelsService {
 
    private apiUrl: string = environment.apiUrl;
     // Retrieve the access token from localStorage or sessionStorage
-    get token() { return localStorage.getItem('token') || sessionStorage.getItem('token'); }
+    get token() { return sessionStorage.getItem('token') || sessionStorage.getItem('token'); }
   
     // Set headers including the authorization token
     get headers() {
@@ -26,7 +26,7 @@ export class ReelsService {
 
    listReels(pageIndex: number = 0, pageSize: number = 10, searchText: string = ''): Observable<any> {
     // const body = model;
-    return this.http.get(this.apiUrl + 'reels/details?pageIndex=' + pageIndex + '&pageSize=' + pageSize + '&searchText=' + searchText,
+    return this.http.get(this.apiUrl + 'reels/details?pageIndex=' + pageIndex + '&pageSize=' + pageSize + '&search=' + searchText,
       { headers: this.headers });
   }
   addReels(model: any): Observable<any> {

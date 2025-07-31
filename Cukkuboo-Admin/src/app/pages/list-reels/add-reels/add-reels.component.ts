@@ -10,7 +10,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material/core';
+import { MatNativeDateModule, DateAdapter, MAT_DATE_FORMATS, NativeDateAdapter } from '@angular/material/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
@@ -19,6 +19,35 @@ import { ValidationMessagesComponent } from '../../../core/components/validation
 import { ReelsService } from '../../../services/reels.service';
 import { FileUploadService } from '../../../services/upload/file-upload.service';
 import { environment } from '../../../../environments/environment';
+
+export class CustomDateAdapter extends NativeDateAdapter {
+  override format(date: Date, displayFormat: Object): string {
+    if (displayFormat === 'input') {
+      const day = this._to2digit(date.getDate());
+      const month = this._to2digit(date.getMonth() + 1);
+      const year = date.getFullYear();
+      return `${day}-${month}-${year}`;
+    }
+    return super.format(date, displayFormat);
+  }
+
+  private _to2digit(n: number): string {
+    return ('00' + n).slice(-2);
+  }
+}
+
+export const CUSTOM_DATE_FORMATS = {
+  parse: {
+    dateInput: { day: 'numeric', month: 'numeric', year: 'numeric' }
+  },
+  display: {
+    dateInput: 'input',
+    monthYearLabel: { year: 'numeric', month: 'short' },
+    dateA11yLabel: { year: 'numeric', month: 'long', day: 'numeric' },
+    monthYearA11yLabel: { year: 'numeric', month: 'long' }
+  }
+};
+
 
 @Component({
   selector: 'app-add-reels',
@@ -38,7 +67,11 @@ import { environment } from '../../../../environments/environment';
     ValidationMessagesComponent
   ],
   templateUrl: './add-reels.component.html',
-  styleUrls: ['./add-reels.component.scss']
+  styleUrls: ['./add-reels.component.scss'],
+  providers: [
+          { provide: DateAdapter, useClass: CustomDateAdapter },
+          { provide: MAT_DATE_FORMATS, useValue: CUSTOM_DATE_FORMATS }
+        ],
 })
 export class AddReelsComponent implements OnInit {
   reelForm!: FormGroup;
@@ -55,8 +88,8 @@ export class AddReelsComponent implements OnInit {
   uploadError = '';
   isDragging = false;
 
-  videoUrl: string = environment.apiUrl + 'uploads/videos/';
-  imgUrl: string = environment.apiUrl + 'uploads/images/';
+  videoUrl: string = environment.fileUrl + 'uploads/videos/';
+  imgUrl: string = environment.fileUrl + 'uploads/images/';
 
   @ViewChild('reelInput') reelInput!: ElementRef<HTMLInputElement>;
   @ViewChild('thumbnailInput') thumbnailInput!: ElementRef<HTMLInputElement>;
@@ -144,6 +177,9 @@ export class AddReelsComponent implements OnInit {
     this.uploadError = '';
     this.selectedReelFile = file;
 
+
+
+    
     this.fileUploadService.uploadVideo(file).subscribe({
       next: (event: HttpEvent<any>) => {
         if (event.type === HttpEventType.UploadProgress && event.total) {
@@ -299,30 +335,55 @@ export class AddReelsComponent implements OnInit {
     }
   }
 
-  saveReel(): void {
-    if (this.reelForm.invalid || !this.reelForm.value['video']) {
-      this.reelForm.markAllAsTouched();
-      console.warn('Form is invalid or video file not selected');
-      return;
-    }
-
-    const model = this.reelForm.value;
-    this.uploadInProgress = true;
-
-    this.reelsService.addReels(model).subscribe({
-      next: (response) => {
-        this.uploadInProgress = false;
-        this.uploadProgress = 100;
-        this.showSnackbar('Reel saved successfully!', 'snackbar-success');
-        this.router.navigate(['/reels']);
-      },
-      error: (err) => {
-        this.uploadInProgress = false;
-        this.uploadError = 'Upload failed. Please try again.';
-        this.showSnackbar('Failed to save reel. Please try again.', 'snackbar-error');
-      }
+saveReel(): void {
+  if (this.reelForm.invalid || !this.reelForm.value['video']) {
+    this.reelForm.markAllAsTouched();
+    this.snackBar.open('Please fill all required fields.', '', {
+      duration: 3000,
+      verticalPosition: 'top',
+      panelClass: ['snackbar-error']
     });
+    return;
   }
+
+  const model = this.reelForm.value;
+  this.uploadInProgress = true;
+
+  this.reelsService.addReels(model).subscribe({
+    next: (response) => {
+      this.uploadInProgress = false;
+      this.uploadProgress = 100;
+      
+      const message = this.isEditMode
+        ? 'Reel updated successfully!'
+        : 'Reel saved successfully!';
+
+      this.snackBar.open(message, '', {
+        duration: 3000,
+        verticalPosition: 'top',
+        panelClass: ['snackbar-success']
+      });
+
+      this.router.navigate(['/reels']);
+    },
+    error: (err) => {
+      this.uploadInProgress = false;
+      this.uploadError = 'Upload failed. Please try again.';
+      
+      const message = this.isEditMode
+        ? 'Failed to update reel. Please try again.'
+        : 'Failed to save reel. Please try again.';
+
+      this.snackBar.open(message, '', {
+        duration: 3000,
+        verticalPosition: 'top',
+        panelClass: ['snackbar-error']
+      });
+    }
+  });
+}
+
+
 
   goBack(): void {
     history.back();

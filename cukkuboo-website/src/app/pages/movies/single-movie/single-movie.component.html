@@ -1,7 +1,9 @@
+
 @if(movieData) {
 <!-- Banner Section -->
 <section class="p-0 gen-banner-movies single">
-  <div class="item p-5 position-relative" [ngStyle]="{ 'background-image': 'url(' + imageUrl + movieData.banner + ')' }">
+  <div class="item p-5 position-relative"
+    [ngStyle]="{ 'background-image': 'url(' + imageUrl + movieData.banner + ')' }">
     <div class="position-relative d-flex align-items-center h-100">
       <div class="col-12 col-xl-8">
         <div class="gen-movie-info">
@@ -21,7 +23,8 @@
             </a>
           </div>
 
-          <div class="mt-2 mt-sm-0 ms-sm-3 gen-btn-container d-block d-xl-none" (click)="playVideo(movieData.trailer)">
+          <div class="mt-2 mt-sm-0 ms-sm-3 gen-btn-container d-block d-xl-none"
+            (click)="playVideo(movieData.trailer,true)">
             <a class="gen-button gen-button-outline py-2 px-3">
               <i class="fas fa-play"></i><span class="text">Watch Trailer</span>
             </a>
@@ -32,7 +35,7 @@
       <div class="col-xl-4 d-none d-xl-flex">
         <div class="gen-front-image mx-auto">
           <img [src]="imageUrl + movieData.thumbnail" alt="carousel-image" />
-          <a class="playBut popup-youtube popup-vimeo popup-gmaps" (click)="playVideo(movieData.trailer)">
+          <a class="playBut popup-youtube popup-vimeo popup-gmaps" (click)="playVideo(movieData.trailer,true)">
             <svg xmlns="http://www.w3.org/2000/svg" width="213.7px" height="213.7px" viewBox="0 0 213.7 213.7">
               <polygon class="triangle" fill="none" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"
                 stroke-miterlimit="10" points="73.5,62.5 148.5,105.8 73.5,149.1"></polygon>
@@ -46,35 +49,64 @@
     </div>
 
     <js-player *ngIf="selectedVideo" class="video_player" (onClose)="selectedVideo = ''"
-      [videoSrc]="videoUrl + selectedVideo">
+      [videoSrc]="selectedVideo">
     </js-player>
   </div>
 </section>
 
 <!-- Movie Info Section -->
-<section class="py-0 px-5 gen-single-movie">
+<section class="py-0 px-3 px-sm-4 px-md-5 gen-single-movie">
   <div class="gen-single-movie-wrapper style-1">
     <div class="gen-single-movie-info">
-      <h2><a class="gen-title">{{ movieData.title }}</a></h2>
+<h2 class="gen-title">{{ movieData.title }}</h2>
 
       <div class="gen-single-meta-holder">
         <ul>
           <li class="gen-sen-rating">{{ movieData.age_rating === '2' ? '16+' : '18+' }}</li>
-          <li><i class="fas fa-eye"></i><span>{{ movieData.views || 0 }} Views</span></li>
+        <li>
+  <i class="fas fa-eye"></i>
+  <span>{{ formatNumber(movieData.views || 0) }} Views</span>
+</li>
+
+          <li>
+            <i class="fas fa-star text-warning"></i>
+            <span class="ms-1">{{ movieData.rating || '0' }}/5</span>
+          </li>
         </ul>
       </div>
 
-      <div class="w-100 d-flex flex-wrap gap-2 my-3">
-        <button class="gen-button gen-button-outline py-1 px-3" (click)="toggleWatchLater()">
-          <i [class]="movieData.is_in_watch_later ? 'fas fa-clock' : 'far fa-clock'"></i>
-          {{ movieData.is_in_watch_later ? 'Remove from Watch Later' : 'Watch Later' }}
-        </button>
-        <button class="gen-button gen-button-outline py-1 px-3" (click)="shareMovie()">
-          <i class="fas fa-share-alt"></i> Share
-        </button>
-      </div>
+    <!-- Action Buttons (Like, Dislike, Share, Watch Later) -->
+<div class="w-100 d-flex flex-wrap gap-2 my-3 align-items-center">
+  <!-- Like Button -->
+  <button class="reaction-button" (click)="toggleMovieReaction(1)">
+    <i [class]="movieData.is_liked_by_user ? 'fas fa-thumbs-up text-danger' : 'far fa-thumbs-up'"></i>
+<span *ngIf="movieData.likes !== undefined">{{ formatNumber(movieData.likes) }}</span>
+  </button>
 
-      <p>{{ movieData.description }}</p>
+ <!-- Dislike Button (Count hidden) -->
+
+<button class="reaction-button" (click)="toggleMovieReaction(2)">
+  <i [class]="movieData.is_disliked_by_user ? 'fas fa-thumbs-down text-danger' : 'far fa-thumbs-down'"></i>
+  <span *ngIf="movieData.dislikes !== undefined">{{ formatNumber(movieData.dislikes) }}</span>
+</button>
+
+
+  <!-- Share Button -->
+  <button class="reaction-button" (click)="copyUrlToClipboard()">
+    <i class="fas fa-share-alt"></i>
+    <span>Share</span>
+  </button>
+
+  <!-- Watch Later Button -->
+  <button class="reaction-button bookmark-button" (click)="toggleWatchLater()">
+    <i [class]="movieData?.watch_later_id ? 'fas fa-bookmark' : 'far fa-bookmark'"></i>
+    <span class="label">
+      {{ movieData?.watch_later_id ? 'Remove from Watch Later' : 'Add to Watch Later' }}
+    </span>
+  </button>
+</div>
+
+      <p class="text-justify">{{ movieData.description }}</p>
 
       <div class="gen-after-excerpt">
         <div class="gen-extra-data">
@@ -84,25 +116,18 @@
             <li class="meta-pair"><strong>Released on:</strong><span>{{ movieData.release_date | date:'dd/MM/yyyy' }}</span></li>
           </ul>
         </div>
-
-        <div class="gen-socail-share">
-          <ul class="social-inner">
-            <li><a href="https://www.facebook.com/" class="facebook" target="_blank"><i class="fab fa-facebook-f"></i></a></li>
-            <li><a href="https://www.instagram.com/" class="instagram" target="_blank"><i class="fab fa-instagram"></i></a></li>
-          </ul>
-        </div>
       </div>
     </div>
   </div>
 </section>
 
 <!-- Suggested Movies Section -->
-<section class="px-5 pt-0 pb-3">
+<!-- <section class="px-3 px-sm-4 px-md-5 pt-0 pb-3">
   <div class="gen-more-like">
     <h5 class="gen-more-title mb-3">More Like This</h5>
     @if(suggetionList.length){
-    <div class="row col-12 mb-3">
-      <div class="col-xl-3 col-lg-4 col-md-6 mb-2" *ngFor="let movie of suggetionList">
+    <div class="d-flex flex-wrap gx-2 col-12 movie-class mb-3">
+      <div class="col-6 col-sm-4 col-md-3 col-xxl-2 mb-2 px-1 px-md-2" *ngFor="let movie of suggetionList">
         <div class="gen-carousel-movies-style-3 movie-grid h-100 style-3" [routerLink]="['/movies', movie.mov_id]">
           <div class="gen-movie-contain h-100 d-flex flex-column">
             <div class="gen-movie-img">
@@ -132,5 +157,45 @@
     }
   </div>
   <div *ngIf="!stopInfiniteScroll" infiniteScroll (scrolled)="onScroll()" style="height: 1px;"></div>
+</section> -->
+
+<!-- Suggested Movies Section -->
+<section class="px-3 px-sm-4 px-md-5 pt-0 pb-3">
+  <div class="gen-more-like">
+    <h5 class="gen-more-title mb-3">More Like This</h5>
+    @if(suggetionList.length){
+    <div class="d-flex flex-wrap gx-2 col-12 movie-class mb-3">
+      <div class="col-6 col-sm-4 col-md-3 col-xxl-2 mb-2 px-1 px-md-2" *ngFor="let movie of suggetionList">
+        <div class="gen-carousel-movies-style-3 movie-grid h-100 style-3" [routerLink]="['/movies', movie.mov_id]">
+          <div class="gen-movie-contain h-100 d-flex flex-column">
+            <div class="gen-movie-img">
+              <img [src]="imageUrl + movie.thumbnail" alt="{{ movie.title }} thumbnail" />
+              <div class="gen-movie-action">
+                <a [routerLink]="['/movies', movie.mov_id]" [queryParams]="{ 'ap': 1 }" class="gen-button playBut">
+                  <i class="fa fa-play"></i>
+                </a>
+              </div>
+            </div>
+            <div class="gen-info-contain">
+              <div class="gen-movie-info">
+                <h3><a>{{ movie.title }}</a></h3>
+              </div>
+              <div class="gen-movie-meta-holder">
+                <ul>
+                  <li>{{ movie.duration || '0m 0s' }}</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    }@else {
+<div class="d-flex justify-content-center align-items-center py-3 w-100">
+  <p class="m-0 text-white">No related movies...</p>
+</div>
+    }
+  </div>
+  <div *ngIf="!stopInfiniteScroll" infiniteScroll (scrolled)="onScroll()" style="height: 1px;"></div>
 </section>
-}
+} 

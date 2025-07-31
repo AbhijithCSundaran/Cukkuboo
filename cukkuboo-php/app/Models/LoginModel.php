@@ -19,12 +19,16 @@ class LoginModel extends Model
         'password',
         'phone',
         'join_date',
+        'status',
+        'user_type',
         'subscription',
         'created_at',
         'updated_at',
         'last_login',
+        'created_by',
         'jwt_token',
-        'fcm_token'
+        'fcm_token',
+        'auth_type'
     ];
 
     // Optional: Clear all jwt_tokens

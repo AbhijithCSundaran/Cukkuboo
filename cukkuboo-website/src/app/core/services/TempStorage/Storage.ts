@@ -5,4 +5,5 @@ export const storage: StorageList[] = [
     { name: 'username', value: '' },
     { name: 'token', value: '' },
     { name: 'subscription', value: '' },
+    { name: 'movieId', value: 0 },
 ]

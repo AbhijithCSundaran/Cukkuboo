@@ -34,28 +34,32 @@ class WatchLaterModel extends Model
             'modify_on'   => date('Y-m-d H:i:s')
         ]);
     }
-    public function fetchList($search = '', $offset = 0, $limit = null)
-    {
-        $builder = $this->db->table('watch_later wl')
-            ->select('wl.*, m.title, m.thumbnail,m.banner')
-            ->join('movies_details m', 'm.mov_id = wl.mov_id', 'left')
-            ->where('wl.status !=', 9);
+    public function getPaginatedList($pageIndex = 0, $pageSize = 10, $search = '')
+{
+    $builder = $this->db->table('watch_later wl')
+        ->select('wl.*, m.title, m.thumbnail, m.banner')
+        ->join('movies_details m', 'm.mov_id = wl.mov_id', 'left')
+        ->where('wl.status !=', 9);
 
-        if (!empty($search)) {
-            $builder->like('m.title', $search);
-        }
-
-        if ($limit !== null) {
-            $builder->limit($limit, $offset);
-        }
-
-        return $builder->orderBy('wl.watch_later_id', 'DESC')->get()->getResult();
+    if (!empty($search)) {
+        $builder->like('m.title', $search);
     }
+    $totalBuilder = clone $builder;
+    $total = $totalBuilder->countAllResults();
+    $builder->orderBy('wl.watch_later_id', 'DESC')
+            ->limit($pageSize, $pageIndex * $pageSize);
 
-    
-    public function countTotal($search = '')
+    $data = $builder->get()->getResult();
+
+    return ['total' => $total, 'data' => $data];
+}
+
+
+    public function getAllList($search = '')
     {
+        
         $builder = $this->db->table('watch_later wl')
+            ->select('wl.*, m.title, m.thumbnail, m.banner')
             ->join('movies_details m', 'm.mov_id = wl.mov_id', 'left')
             ->where('wl.status !=', 9);
 
@@ -63,7 +67,8 @@ class WatchLaterModel extends Model
             $builder->like('m.title', $search);
         }
 
-        return $builder->countAllResults();
+        $data = $builder->orderBy('wl.watch_later_id', 'DESC')->get()->getResult();
+        return ['total' => count($data), 'data' => $data];
     }
 
     public function getById($watchLaterId)

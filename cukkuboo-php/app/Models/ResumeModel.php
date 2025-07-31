@@ -45,7 +45,7 @@ class ResumeModel extends Model
     if (!empty($search)) {
         $builder->like('movies_details.title', $search);
     }
-
+    $builder->orderBy('resume_history.resume_id', 'DESC');
     return $builder;
 }
 
@@ -65,7 +65,7 @@ public function getCompletedHistory($userId)
                     ->join('movies_details', 'movies_details.mov_id = resume_history.mov_id', 'left') 
                     ->where('resume_history.user_id', $userId)
                     ->where('resume_history.status !=', 9) 
-                    ->orderBy('resume_history.created_by', 'DESC')
+                    ->orderBy('resume_history.created_on', 'DESC')
                     ->findAll();
     }
 public function softDeleteById($id)

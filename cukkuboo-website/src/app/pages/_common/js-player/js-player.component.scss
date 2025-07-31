@@ -37,3 +37,23 @@
         }
     }
 }
+::ng-deep .video-js {
+  position: relative !important;
+}
+
+::ng-deep .vjs-big-play-button {
+  border-radius: 50% !important;
+  width: 70px !important;
+  height: 70px !important;
+  line-height: 70px !important;
+  font-size: 2em;
+  background-color: rgba(0, 0, 0, 0.5) !important;
+  border: none;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 0px!important;
+}

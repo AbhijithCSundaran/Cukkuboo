@@ -1,16 +1,17 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { MovieService } from '../../services/movie.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatCardModule } from '@angular/material/card';
 import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
-import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
-import { MatSort, MatSortModule } from '@angular/material/sort';
-import { MovieService } from '../../services/movie.service';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-list-movie-show',
@@ -24,14 +25,22 @@ import { MatInputModule } from '@angular/material/input';
     MatIconModule,
     CommonModule,
     MatPaginatorModule,
-    MatSortModule,
     MatFormFieldModule,
     MatInputModule,
     MatSnackBarModule
   ]
 })
 export class ListMovieShowComponent implements OnInit {
-  displayedColumns: string[] = ['slNo', 'title', 'genre', 'category', 'status', 'action'];
+  displayedColumns: string[] = [
+    'slNo',
+    'title',
+    'access',
+    'likes',
+    'dislikes',
+    'views',
+    'status',
+    'action'
+  ];
   dataSource = new MatTableDataSource<any>([]);
   confirmDeleteMovie: any = null;
 
@@ -55,14 +64,12 @@ export class ListMovieShowComponent implements OnInit {
   onPageChange(event: PageEvent): void {
     this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
-    console.log('Page Change:', event);
     this.listMovies(this.pageIndex, this.pageSize, this.searchText);
   }
 
   listMovies(pageIndex: number = 0, pageSize: number = 10, search: string = ''): void {
     this.movieService.listmovies(pageIndex, pageSize, search).subscribe({
       next: (response) => {
-        console.log('API response from listmovies():', response);
         this.dataSource.data = response?.data || [];
         this.totalItems = response?.total || 0;
       },
@@ -82,23 +89,6 @@ export class ListMovieShowComponent implements OnInit {
     this.listMovies(this.pageIndex, this.pageSize, this.searchText);
   }
 
-  getGenreName(code: string): string {
-    switch (code) {
-      case '1': return 'Action';
-      case '2': return 'Drama';
-      case '3': return 'Comedy';
-      default: return 'Other';
-    }
-  }
-
-  getCategoryName(code: string): string {
-    switch (code) {
-      case '1': return 'Movie';
-      case '2': return 'Show';
-      default: return 'Other';
-    }
-  }
-
   modalDeleteMovie(movie: any): void {
     this.confirmDeleteMovie = movie;
   }
@@ -114,7 +104,8 @@ export class ListMovieShowComponent implements OnInit {
     this.movieService.deleteMovies(movie.mov_id).subscribe({
       next: () => {
         this.dataSource.data = this.dataSource.data.filter(m => m.mov_id !== movie.mov_id);
-        this.totalItems--; // optional: update count without refetch
+        this.totalItems--;
+        this.listMovies(this.pageIndex, this.pageSize, this.searchText);
         this.showSnackbar('Movie deleted successfully!', 'snackbar-success');
       },
       error: (err) => {

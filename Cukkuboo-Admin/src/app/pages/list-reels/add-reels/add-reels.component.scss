@@ -140,26 +140,47 @@ input {
  
 
 
-.save-button {
+// .save-button {
  
+//   color: white;
+//   border-radius: 24px;
+//   height: 36px;
+//   font-size: 14px;
+//   font-weight: 500;
+//   padding: 0 16px;
+ 
+//   border: none;
+//   transition: background-color 0.3s ease;
+ 
+//   background-color: #c71336;
+ 
+//   &:hover {
+//       background-color: #e96238 !important;
+//     }
+// }
+ 
+ .save {
+  width: 100%;
+  padding: 10px 10px 0px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+.save-button {
   color: white;
   border-radius: 24px;
   height: 36px;
   font-size: 14px;
   font-weight: 500;
   padding: 0 16px;
- 
   border: none;
   transition: background-color 0.3s ease;
- 
   background-color: #c71336;
- 
+
   &:hover {
-      background-color: #e96238 !important;
-    }
+    background-color: #e96238 !important;
+  }
 }
- 
- 
  
  
 .trash-button {
@@ -508,9 +529,9 @@ input {
     display: block;
     padding: 0px 8px;
 }
-  .save-button {
-    font-size: 12px;
-  }
+  // .save-button {
+  //   font-size: 12px;
+  // }
  
   .drag-drop-zone {
     padding: 10px;
@@ -607,11 +628,13 @@ input {
     padding: 15px;
   }
 
-  .save-button {
-    font-size: 13px;
-    padding: 8px 12px;
-    width: 100%;
-  }
+  // .save-button {
+  //   font-size: 13px;
+  //   padding: 8px 12px;
+  //   width: 100%;
+  // }
+
+ 
 }
 
 @media (max-width: 320px) {
@@ -689,9 +712,9 @@ input {
     gap: 8px;
   }
 
-  .save-button {
-    font-size: 12px;
-  }
+  // .save-button {
+  //   font-size: 12px;
+  // }
 
   .drag-drop-zone {
     padding: 10px;

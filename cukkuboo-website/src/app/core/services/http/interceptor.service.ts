@@ -3,6 +3,8 @@ import { HttpEvent, HttpInterceptor, HttpHandler, HttpRequest, HttpResponse, Htt
 import { Observable, of, throwError } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
 import { Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { SignInComponent } from '../../../pages/sign-in/sign-in.component';
 @Injectable({
   providedIn: 'root'
 })
@@ -11,7 +13,7 @@ export class InterceptorService implements HttpInterceptor {
   constructor(
     private injector: Injector,
     private router: Router,
-    // private modalService: ModalService
+    private dialog: MatDialog
   ) { }
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const excludedUrls = [
@@ -53,7 +55,10 @@ export class InterceptorService implements HttpInterceptor {
     if (err.status === 0 || err.status === 401 || err.status === 403) {
       console.clear()
       console.log(err.message)
-      // this.openLoginModal(request, next);
+      const url = location.href;
+      if (!url.includes('signup') && !url.includes('signin'))
+        this.openLoginModal();
+      localStorage.clear();
       // this.storageService.updateItem("JWT", "ua");
       // if you've caught / handled the error, you don't want to rethrow it unless you also want downstream consumers to have to handle it as well.
       return of(err.message); // or EMPTY may be appropriate here
@@ -75,6 +80,23 @@ export class InterceptorService implements HttpInterceptor {
   //     }
   //   },)
   // }
+  openLoginModal() {
+    const dialogRef = this.dialog.open(SignInComponent, {
+      data: 'movie',
+      width: 'auto', height: '90vh',
+      panelClass: 'signin-modal'
+    });
+    dialogRef.afterClosed().subscribe((result: any) => {
+      if (result) {
+        // window.location.reload();
+        window.location.reload();
+      }
+      else {
+        this.router.navigate(['/signin']);
+      }
+      this.dialog.closeAll();
+    });
+  }
 
 }
 

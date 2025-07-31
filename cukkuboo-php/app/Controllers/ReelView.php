@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use CodeIgniter\RESTful\ResourceController;
+use App\Helpers\AuthHelper; 
 use App\Models\ReelViewModel;
 use App\Models\UserModel;
 use App\Libraries\AuthService;
@@ -15,6 +16,8 @@ class ReelView extends ResourceController
 
     public function __construct()
     {
+        $this->session = \Config\Services::session();
+        $this->input = \Config\Services::request();
         $this->reelViewModel = new ReelViewModel();
         $this->userModel = new UserModel();
         $this->authService = new AuthService();
@@ -22,7 +25,8 @@ class ReelView extends ResourceController
 
     public function viewReel()
 {
-    $authHeader = $this->request->getHeaderLine('Authorization');
+    // $authHeader = $this->request->getHeaderLine('Authorization');
+   $authHeader = AuthHelper::getAuthorizationToken($this->request);
     $user = $this->authService->getAuthenticatedUser($authHeader);
 
     if (!$user) {
@@ -37,7 +41,9 @@ class ReelView extends ResourceController
     if (!$reelId || $status != 1) {
         return $this->failValidationError('Invalid or missing data');
     }
-
+    // if ($user['status'] != 1) {
+    //     return $this->failUnauthorized('Token expired. You have been logged out.');
+    // }
     $existing = $this->reelViewModel->getUserReelView($userId, $reelId);
 
     if (!$existing) {

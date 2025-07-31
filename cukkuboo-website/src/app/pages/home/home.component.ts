@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { CarouselModule, OwlOptions } from 'ngx-owl-carousel-o';
 import { MovieService } from '../../services/movie.service';
 import { environment } from '../../../environments/environment';
@@ -20,11 +20,14 @@ export class HomeComponent implements OnInit {
   HomeData: any;
   bannerData: any;
   listSections: any[] = [];
-  videoUrl = environment.apiUrl + 'uploads/videos/';
-  imageUrl = environment.apiUrl + 'uploads/images/';
+  videoUrl = environment.fileUrl + 'uploads/videos/';
+  imageUrl = environment.fileUrl + 'uploads/images/';
 
   selectedItem: any;
-  constructor(private movieService: MovieService) { }
+  constructor(
+    private movieService: MovieService,
+    private router: Router,
+  ) { }
 
   ngOnInit(): void {
     this.movieService.getHomeData().subscribe({
@@ -43,7 +46,9 @@ export class HomeComponent implements OnInit {
 
         }
       },
-      error: (err) => console.error('Error loading home data:', err)
+      error: (err) => {
+        console.error('Error loading home data:', err)
+     }
     });
   }
 
@@ -77,4 +82,13 @@ export class HomeComponent implements OnInit {
     this.selectedItem = null;
     this.customOptions1.autoplay = true;
   }
+  gotoMovies(item: any) {
+    const type = item.heading.replace(/movies?/i, '').replace(/watched/i, 'viewed').trim().toLowerCase().replace(/\s+/g, '_')
+    this.router.navigate(['/movies'], { queryParams: { typ: type } });
+  }
+
+  hasListMovies(): boolean {
+  return this.listSections?.some(section => section.data?.length > 0);
+}
+
 }

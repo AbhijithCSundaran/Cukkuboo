@@ -1,0 +1,36 @@
+<div class="content-container">
+  <div class="header-row">
+    <h2>Edit Policy</h2>
+    <button class="back-to-list-button" [routerLink]="['/list-policies']">Back to List</button>
+  </div>
+
+  <form [formGroup]="policyForm">
+    <mat-card appearance="outlined" class="form-card">
+      <mat-card-content>
+
+        <!-- Policy Title -->
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Policy Title</mat-label>
+          <input matInput formControlName="title" placeholder="Enter policy title">
+          <mat-error *ngIf="policyForm.get('title')?.hasError('required')">
+            Policy title is required
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Policy Description -->
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Policy Description</mat-label>
+          <textarea matInput formControlName="content" rows="10" placeholder="Enter policy description"></textarea>
+          <mat-error *ngIf="policyForm.get('content')?.hasError('required')">
+            Policy description is required
+          </mat-error>
+        </mat-form-field>
+
+        <div class="save">
+          <button class="save-button" color="primary" (click)="savePolicy()">Save</button>
+        </div>
+
+      </mat-card-content>
+    </mat-card>
+  </form>
+</div>

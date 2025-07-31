@@ -1,0 +1,109 @@
+<div class="content-container">
+  <div class="header-row">
+    <h2>Tickets List</h2>
+  </div>
+
+  <div class="width-50 search-bar-wrapper">
+    <mat-form-field class="custom-search" appearance="outline">
+      <mat-icon matPrefix>search</mat-icon>
+      <input matInput placeholder="Search" (keyup)="applyGlobalFilter($event)" />
+    </mat-form-field>
+  </div>
+
+  <table mat-table [dataSource]="dataSource" class="mat-elevation-z2 custom-table">
+    <!-- Sl. No -->
+    <ng-container matColumnDef="slNo">
+      <th mat-header-cell *matHeaderCellDef>Sl. No.</th>
+      <td mat-cell *matCellDef="let row; let i = index">
+        {{ pageIndex * pageSize + i + 1 }}
+      </td>
+    </ng-container>
+
+    <!-- Name -->
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef>Name</th>
+      <td mat-cell *matCellDef="let user" class="title truncate-text" [matTooltip]="user.name">
+        {{ user.name }}
+      </td>
+    </ng-container>
+
+    <!-- Email -->
+    <ng-container matColumnDef="email">
+      <th mat-header-cell *matHeaderCellDef>Email</th>
+      <td mat-cell *matCellDef="let user">{{ user.email }}</td>
+    </ng-container>
+
+    <!-- Contact Number -->
+    <ng-container matColumnDef="phone">
+      <th mat-header-cell *matHeaderCellDef>Contact Number</th>
+      <td mat-cell *matCellDef="let user">{{ user.phone }}</td>
+    </ng-container>
+
+    <!-- Status -->
+    <ng-container matColumnDef="status">
+      <th mat-header-cell *matHeaderCellDef>Status</th>
+      <td mat-cell *matCellDef="let user">
+        <span
+          class="badge"
+          [ngClass]="{
+            'badge-pending': user.status == 1,
+            'badge-onhold': user.status == 2,
+            'badge-closed': user.status == 3,
+            'badge-deleted': user.status == 9
+          }"
+        >
+          {{
+            user.status == 1
+              ? 'Pending'
+              : user.status == 2
+              ? 'OnHold'
+              : user.status == 3
+              ? 'Closed'
+              : user.status == 9
+              ? 'Deleted'
+              : 'Unknown'
+          }}
+        </span>
+      </td>
+    </ng-container>
+
+    <!-- Action -->
+    <ng-container matColumnDef="action">
+      <th mat-header-cell *matHeaderCellDef>Action</th>
+      <td mat-cell *matCellDef="let user">
+        <mat-icon class="icon" [routerLink]="['/edit-ticket', user.support_id]">edit</mat-icon>
+        <mat-icon class="icon" (click)="openDeleteModal(user.support_id, user.name)">delete</mat-icon>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+
+  <div class="no-data" *ngIf="dataSource.data.length === 0">No Tickets found.</div>
+
+  <div class="pagination-wrapper">
+    <mat-paginator
+      class="pagination"
+      [pageSizeOptions]="[10, 20, 50]"
+      [length]="totalItems"
+      [pageIndex]="pageIndex"
+      [pageSize]="pageSize"
+      showFirstLastButtons
+    ></mat-paginator>
+  </div>
+
+  <!-- Delete Confirmation Modal -->
+  <div class="modal" [class.show]="confirmDeleteUserId !== null">
+    <div class="modal-content">
+      <p>
+        Are you sure you want to delete
+        <span class="highlight">"{{ confirmDeleteUserName }}"</span>?
+      </p>
+      <div class="modal-actions">
+        <button class="btn-yes" (click)="confirmDelete()">Delete</button>
+        <button class="btn-no" (click)="cancelDelete()">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>

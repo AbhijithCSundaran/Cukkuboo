@@ -32,6 +32,7 @@ public function getAllMoviesDetails() {
     // )->getResult();
  
 }
+
 // public function getMovieDetailsById($id){
 //      return $this->db->query('select * from movies_details where mov_id="'.$id.'"')->getRowArray();
  
@@ -53,7 +54,8 @@ public function deleteMovieDetailsById($status, $mov_id)
            
   public function getFeaturedMovies()
 {
-    $results = $this->where('status', 1)
+    $results = $this->select('*, likes, dislikes')
+                     ->where('status', 1)
                     ->where('release_date <=', date('Y-m-d'))
                     ->orderBy('rating', 'DESC')
                     ->limit(5)
@@ -68,7 +70,8 @@ public function deleteMovieDetailsById($status, $mov_id)
  
     public function getTrendingMovies()
 {
-    $results = $this->where('status', 1)
+    $results = $this->select('*, likes, dislikes')
+                    ->where('status', 1)
                     ->where('release_date <=', date('Y-m-d'))
                     ->orderBy('rating', 'DESC')
                     ->limit(5)
@@ -106,7 +109,7 @@ public function countAllMovies()
      return $this->db->table($this->table)
                     ->where('status', 1)
                    ->where('release_date <=', date('Y-m-d'))
-                     ->orderBy('created_on', 'DESC')
+                     ->orderBy('release_date', 'DESC')
                      ->limit(10)
                     ->get()
                    ->getResultArray();
@@ -295,6 +298,7 @@ public function getWatchLaterId($user_id, $mov_id)
     return $result ? $result->watch_later_id : null;
 }
  
+
  
 }
  

@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { MatTableModule, MatTableDataSource } from '@angular/material/table';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
-import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
@@ -21,7 +20,6 @@ import { ReelsService } from '../../services/reels.service';
     RouterModule,
     MatTableModule,
     MatPaginatorModule,
-    MatSortModule,
     MatFormFieldModule,
     MatInputModule,
     MatIconModule,
@@ -30,12 +28,11 @@ import { ReelsService } from '../../services/reels.service';
   ]
 })
 export class ListReelsComponent implements OnInit, AfterViewInit {
-  displayedColumns: string[] = ['slNo', 'title', 'access', 'likes', 'views', 'status', 'action'];
+  displayedColumns: string[] = ['slNo', 'title', 'access', 'likes', 'status', 'action'];
   dataSource = new MatTableDataSource<any>([]);
   confirmDeleteReel: any = null;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
-  @ViewChild(MatSort) sort!: MatSort;
 
   pageIndex: number = 0;
   pageSize: number = 10;
@@ -53,11 +50,6 @@ export class ListReelsComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.sort.sortChange.subscribe(() => {
-      this.pageIndex = 0;
-      this.listReels(this.pageIndex, this.pageSize, this.searchText);
-    });
-
     this.paginator.page.subscribe(() => {
       this.pageIndex = this.paginator.pageIndex;
       this.pageSize = this.paginator.pageSize;
@@ -68,7 +60,6 @@ export class ListReelsComponent implements OnInit, AfterViewInit {
   listReels(pageIndex: number = 0, pageSize: number = 10, search: string = ''): void {
     this.reelsService.listReels(pageIndex, pageSize, search).subscribe({
       next: (response) => {
-        console.log('API response from listReels():', response);
         this.dataSource.data = response?.data || [];
         this.totalItems = response?.total || 0;
       },
@@ -86,10 +77,6 @@ export class ListReelsComponent implements OnInit, AfterViewInit {
     this.listReels(this.pageIndex, this.pageSize, this.searchText);
   }
 
-  addNewReel(): void {
-    this.router.navigate(['/add-reel']);
-  }
-
   modalDeleteReel(reel: any): void {
     this.confirmDeleteReel = reel;
   }
@@ -102,12 +89,10 @@ export class ListReelsComponent implements OnInit, AfterViewInit {
     const reel = this.confirmDeleteReel;
     if (!reel) return;
 
-    console.log('Deleting reel with id:', reel.reels_id);
-
     this.reelsService.deleteReels(reel.reels_id).subscribe({
       next: () => {
-        console.log('Delete successful, updating dataSource');
         this.dataSource.data = this.dataSource.data.filter(r => r.reels_id !== reel.reels_id);
+        this.listReels(this.pageIndex, this.pageSize, this.searchText);
         this.showSnackbar('Reel deleted successfully!', 'snackbar-success');
       },
       error: (err) => {

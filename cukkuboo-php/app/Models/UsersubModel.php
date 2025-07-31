@@ -57,9 +57,6 @@ class UsersubModel extends Model
                     ->whereIn('status', [1, 2, 3])
                     ->findAll();
     }
-
-
-   
     public function DeleteSubscriptionById($status, $id, $modifiedBy = null)
 {
     return $this->update($id, [
@@ -68,13 +65,18 @@ class UsersubModel extends Model
         'modify_by'  => $modifiedBy
     ]);
 }
+
 public function cancelUserSubscription($userId)
 {
+    $today = date('Y-m-d');
+
     return $this->where('user_id', $userId)
-                ->where('status !=', 9)
+                ->where('status', 1) 
+                ->where('end_date >=', $today) 
                 ->set(['status' => 3]) 
                 ->update();
 }
+
 public function countCurrentMonthSubscribers()
     {
     return $this->where('status', 2) 
@@ -94,12 +96,15 @@ public function currentTotalRevenue()
 }
 public function getTransactions()
 {
-    return $this->whereNotIn('status', [3, 9])
-                ->where('MONTH(created_on)', date('m'))
-                ->where('YEAR(created_on)', date('Y'))
-                ->orderBy('created_on', 'DESC')
-                ->findAll();
+    return $this->select('user_subscription.*, user.username')
+                ->join('user', 'user.user_id = user_subscription.user_id', 'left')
+                ->whereNotIn('user_subscription.status', [3, 9])
+                ->where('MONTH(user_subscription.created_on)', date('m'))
+                ->where('YEAR(user_subscription.created_on)', date('Y'))
+                ->orderBy('user_subscription.created_on', 'DESC')
+                ->findAll(10, 0);
 }
+
 
    
 }

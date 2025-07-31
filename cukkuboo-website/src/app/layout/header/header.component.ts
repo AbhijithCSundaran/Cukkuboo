@@ -3,10 +3,11 @@ import { Router } from '@angular/router';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { StorageService } from '../../core/services/TempStorage/storageService';
-import { Subject, takeUntil } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { UserService } from '../../services/user/user.service';
 import { NotificationService } from '../../services/notification.service';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmationDialogComponent } from '../../core/components/confirmation-dialog/confirmation-dialog.component';
 
 @Component({
   selector: 'app-header',
@@ -19,12 +20,10 @@ export class HeaderComponent implements OnInit {
   username: string = '';
   isSignedIn: boolean = false;
   showUserDropdown: boolean = false;
-  subscription: string = '';
+  userData: any = null;
 
   notifications: any[] = [];
-  hasUnreadNotification: boolean = true;
-
-  showSignOutModal: boolean = false;
+  hasUnreadNotification: boolean = false;
 
   private _menuOpen = false;
   get menuOpen(): boolean {
@@ -35,7 +34,6 @@ export class HeaderComponent implements OnInit {
     document.body.classList.toggle('sidebar-open', value);
   }
 
-  private _unsubscribeAll: Subject<void> = new Subject<void>();
 
   constructor(
     private storageService: StorageService,
@@ -43,11 +41,12 @@ export class HeaderComponent implements OnInit {
     private snackBar: MatSnackBar,
     private userService: UserService,
     private notificationService: NotificationService,
-    private router: Router
+    private router: Router,
+    private dialog: MatDialog,
   ) {
-    this.storageService.onUpdateItem
-      .pipe(takeUntil(this._unsubscribeAll))
-      .subscribe(() => this.checkAuthAndLoadNotifications());
+    this.storageService.onUpdateItem.subscribe(() => {
+      this.checkAuthAndLoadNotifications();
+    });
   }
 
   ngOnInit(): void {
@@ -57,14 +56,16 @@ export class HeaderComponent implements OnInit {
   checkAuthAndLoadNotifications(): void {
     const token = this.storageService.getItem('token');
     this.username = this.storageService.getItem('username');
-    this.subscription = (this.storageService.getItem('subscription') || '').toLowerCase();
+    this.userData = this.storageService.getItem('userData')
     this.isSignedIn = !!token;
+    if (this.userData?.notifications)
+      this.hasUnreadNotification = true;
   }
 
   goToNotifications(): void {
     // this.closeMenu();
-        this.router.navigate(['/notifications']);
-        this.hasUnreadNotification = false;
+    this.router.navigate(['/notifications']);
+    this.hasUnreadNotification = false;
 
     // this.notificationService.markAllAsRead().subscribe({
     //   next: () => {
@@ -77,22 +78,26 @@ export class HeaderComponent implements OnInit {
     // });
   }
 
- 
-  openSignOutModal(): void {
-    this.showSignOutModal = true;
-  }
 
-  cancelSignOut(): void {
-    this.showSignOutModal = false;
-  }
 
+  askToSignout() {
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      data: { message: `Are you sure you want to <b>sign out</b>?` },
+    });
+    dialogRef.afterClosed().subscribe((result: any) => {
+      if (result) {
+        this.confirmSignOut();
+      }
+    })
+  }
   confirmSignOut(): void {
-    this.showSignOutModal = false;
-
     this.userService.logout().subscribe({
       next: () => {
         localStorage.clear();
         this.storageService.updateItem('token', '');
+        this.storageService.updateItem('userData', null);
+        this.storageService.updateItem('username', '');
+        this.storageService.updateItem('subscription', '');
         this.snackBar.open('Signed out successfully', '', {
           duration: 3000,
           verticalPosition: 'top',
@@ -124,5 +129,8 @@ export class HeaderComponent implements OnInit {
     if (!clickedInside) {
       this.closeMenu();
     }
+  }
+   goToSubscribe(): void {
+    this.router.navigate(['/subscribe'], { queryParams: { source: 'header' } });
   }
 }

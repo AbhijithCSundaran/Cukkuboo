@@ -2,7 +2,9 @@
 
 namespace App\Controllers;
 use CodeIgniter\RESTful\ResourceController;
+use App\Helpers\AuthHelper; 
 use App\Models\NotificationModel;
+use App\Models\UserModel;
 use App\Libraries\AuthService;
 
 class Notification extends ResourceController
@@ -12,92 +14,115 @@ class Notification extends ResourceController
 
     public function __construct()
     {
+        $this->session = \Config\Services::session();
+        $this->input = \Config\Services::request();
         $this->notificationModel = new NotificationModel();
+        $this->UserModel = new UserModel();
         $this->authService = new AuthService();
     }
 
     public function createOrUpdate()
-    {
-        $authHeader = $this->request->getHeaderLine('Authorization');
-        $user = $this->authService->getAuthenticatedUser($authHeader);
-        if(!$user){ 
-            return $this->failUnauthorized('Invalid or missing token.');
-        }
-        $notificationModel = new \App\Models\NotificationModel();
-        $data = $this->request->getJSON(true);
-        $notificationId = $data['notification_id'] ?? null;
-
-        $notificationData = [
-            'user_id'     => $user['user_id'],
-            'title'     => $data['title'] ?? '',
-            'content'     => $data['content'] ?? '',
-            'status'      => $data['status'] ?? 1,
-        ];
-
-        if ($notificationId) {
-            $notificationData['modify_by'] = $user['user_id'];
-            $notificationData['modify_on'] = date('Y-m-d H:i:s');
-
-            $updated = $this->notificationModel->update($notificationId, $notificationData);
-            return $this->respond([
-                'success' => true,
-                'message' => $updated ? 'Notification updated' : 'Update failed',
-                'data' => $notificationData
-            ]);
-        } else {
-            $notificationData['created_by'] = $user['user_id'];
-            $notificationData['created_on'] = date('Y-m-d H:i:s');
-
-            $id = $this->notificationModel->insert($notificationData);
-            return $this->respond([
-                'success' => true,
-                'message' => 'Notification created',
-                'data' => $notificationData
-            ]);
-        }
+{
+    // $authHeader = $this->request->getHeaderLine('Authorization');
+    $authHeader = AuthHelper::getAuthorizationToken($this->request);
+    $user = $this->authService->getAuthenticatedUser($authHeader);
+    if (!$user) {
+        return $this->failUnauthorized('Invalid or missing token.');
     }
+
+    $notificationModel = new NotificationModel();
+    $userModel = new UserModel(); 
+
+    $data = $this->request->getJSON(true);
+    $notificationId = $data['notification_id'] ?? null;
+
+    // $notificationData = [
+    //     'user_id'   => $user['user_id'],
+    //     'title'     => $data['title'] ?? '',
+    //     'content'   => $data['content'] ?? '',
+    //     'status'    => $data['status'] ?? 1,
+    // ];
+    $notificationData = [
+    'user_id'       => $user['user_id'],   
+    'title'         => $data['title'] ?? '',
+    'message'       => $data['message'] ?? '',  
+    'type'          => 'global',  
+    'target'        => in_array($data['target'] ?? '', ['all', 'premium', 'free']) ? $data['target'] : 'all',
+    'is_scheduled'  => !empty($data['is_scheduled']) ? true : false,
+    'scheduled_time'=> !empty($data['scheduled_time']) ? $data['scheduled_time'] : null,
+    'status'        => 1,
+];
+
+
+    if ($notificationId) {
+        $notificationData['modify_by'] = $user['user_id'];
+        $notificationData['modify_on'] = date('Y-m-d H:i:s');
+
+        $updated = $notificationModel->update($notificationId, $notificationData);
+        $notificationData['notification_id'] = $notificationId;
+        $notificationData['name'] = $user['username'] ?? '';
+
+        return $this->respond([
+            'success' => true,
+            'message' => $updated ? 'Notification updated' : 'Update failed',
+            'data' => $notificationData
+        ]);
+    } else {
+        $notificationData['created_by'] = $user['user_id'];
+        $notificationData['created_on'] = date('Y-m-d H:i:s');
+        $notificationData['status'] = 1;
+
+        $insertedId = $notificationModel->insert($notificationData);
+        $notificationData['notification_id'] = $insertedId;
+        $notificationData['name'] = $user['username'] ?? '';
+
+        return $this->respond([
+            'success' => true,
+            'message' => 'Notification created',
+            'data' => $notificationData
+        ]);
+    }
+}
+
 
     public function getAllNotifications()
 {
-    $authHeader = $this->request->getHeaderLine('Authorization');
+    // $authHeader = $this->request->getHeaderLine('Authorization');
+    $authHeader = AuthHelper::getAuthorizationToken($this->request);
     $user = $this->authService->getAuthenticatedUser($authHeader);
 
     if (!$user) {
         return $this->failUnauthorized('Invalid or missing token.');
     }
+    if ($user['status'] != 1) {
+        return $this->failUnauthorized('Token expired. You have been logged out.');
+    }
 
     $pageIndex = (int) $this->request->getGet('pageIndex');
     $pageSize  = (int) $this->request->getGet('pageSize');
     $search    = $this->request->getGet('search');
+
     if ($pageSize <= 0) {
         $pageSize = 10;
     }
 
     $offset = $pageIndex * $pageSize;
-    $builder = $this->notificationModel->where('status !=', 9);
-    if (!empty($search)) {
-        $builder->groupStart()
-            ->like('title', $search)
-            ->orLike('content', $search)
-            ->groupEnd();
-    }
-    $total = $builder->countAllResults(false);
-
-    $notifications = $builder->orderBy('created_on', 'DESC')->findAll($pageSize, $offset);
-                            
+    $notificationsModel = new notificationModel();
+    $data = $notificationsModel->getUserNotifications($pageSize, $offset, $search);
 
     return $this->respond([
-        'success'   => true,
-        'message'   => 'Notifications fetched successfully.',
-        'data'      => $notifications,
-        'total'     => $total
+        'success' => true,
+        'message' => 'Notifications fetched successfully.',
+        'data'    => $data['notifications'],
+        'total'   => $data['total']
     ]);
 }
 
 
     public function delete($notification_id = null)
     {
-    $authHeader = $this->request->getHeaderLine('Authorization');
+    // $authHeader = $this->request->getHeaderLine('Authorization');
+     $authHeader = AuthHelper::getAuthorizationToken($this->request);
     $user = $this->authService->getAuthenticatedUser($authHeader);
 
     if (!$user) {
@@ -123,11 +148,15 @@ class Notification extends ResourceController
 
    public function markAllAsReadOrUnread()
 {
-    $authHeader = $this->request->getHeaderLine('Authorization');
+    // $authHeader = $this->request->getHeaderLine('Authorization');
+    $authHeader = AuthHelper::getAuthorizationToken($this->request);
     $user = $this->authService->getAuthenticatedUser($authHeader);
 
     if (!$user) {
         return $this->failUnauthorized('Invalid or missing token.');
+    }
+    if ($user['status'] != 1) {
+        return $this->failUnauthorized('Token expired. You have been logged out.');
     }
 
     $userId = $user['user_id'];
@@ -182,11 +211,16 @@ class Notification extends ResourceController
 
     public function getUserNotifications($userId = null)
 {
-    $authHeader = $this->request->getHeaderLine('Authorization');
+    // $authHeader = $this->request->getHeaderLine('Authorization');
+    // $authUser = $this->authService->getAuthenticatedUser($authHeader);
+     $authHeader = AuthHelper::getAuthorizationToken($this->request);
     $authUser = $this->authService->getAuthenticatedUser($authHeader);
 
     if (!$authUser) {
         return $this->failUnauthorized('Invalid or missing token.');
+    }
+    if ($authUser['status'] != 1) {
+        return $this->failUnauthorized('Token expired. You have been logged out.');
     }
 
     if ($userId === null) {
@@ -200,45 +234,30 @@ class Notification extends ResourceController
     $pageIndex = (int) $this->request->getGet('pageIndex') ?? 0;
     $pageSize  = (int) $this->request->getGet('pageSize') ?? 10;
     $search    = trim($this->request->getGet('search') ?? '');
-    $offset    = $pageIndex * $pageSize;
-
-    // Query builder
-    $builder = $this->notificationModel
-        ->where('user_id', $userId)
-        ->where('status !=', 9);
-
-    if (!empty($search)) {
-        $builder->groupStart()
-                ->like('title', $search)
-                ->orLike('content', $search)
-                ->groupEnd();
-    }
-
-
-    $total = $builder->countAllResults(false);
-
-    $notifications = $builder
-        ->orderBy('notification_id', 'DESC')
-        ->limit($pageSize, $offset)
-        ->findAll();
+    $result = $this->notificationModel->getUserNotificationsbyToken($userId, $pageIndex, $pageSize, $search);
 
     return $this->respond([
         'success' => true,
         'message' => 'Notifications fetched successfully.',
-        'total' => $total,
-        'data' => $notifications
+        'total' => $result['total'],
+        'data' => $result['data']
     ]);
 }
 
 
+
 public function getNotificationById($notificationId = null)
 {
-    $authHeader = $this->request->getHeaderLine('Authorization');
+    // $authHeader = $this->request->getHeaderLine('Authorization');
+    $authHeader = AuthHelper::getAuthorizationToken($this->request);
     $authUser = $this->authService->getAuthenticatedUser($authHeader);
 
     if (!$authUser) {
         return $this->failUnauthorized('Invalid or missing token.');
     }
+    // if ($authUser['status'] != 1) {
+    //     return $this->failUnauthorized('Token expired. You have been logged out.');
+    // }
 
     if ($notificationId === null) {
         return $this->failValidationErrors('Notification ID is required.');
@@ -257,5 +276,32 @@ public function getNotificationById($notificationId = null)
     ]);
 }
 
+public function sendDueNotifications()
+{
+    $dueNotifications = $this->notificationModel->where('is_scheduled', true)
+                                                ->where('scheduled_time <=', date('Y-m-d H:i:s'))
+                                                ->where('sent', 0)
+                                                ->findAll();
+
+    foreach ($dueNotifications as $notification) {
+        $this->sendNotificationToTargetUsers($notification);
+        $this->notificationModel->update($notification['id'], ['sent' => 1]);
+    }
+
+    return $this->respond(['message' => 'Scheduled notifications sent.']);
+}
+
+protected function sendNotificationToTargetUsers($notification)
+{
+    $target = $notification['target'];
+    if ($target === 'all') {
+        $users = $this->UserModel->findAll();
+    } else {
+        $users = $this->UserModel->where('subscription', strtolower($target))->findAll();
+    }
+
+    $userIds = array_column($users, 'user_id');
+
+}
 
 }

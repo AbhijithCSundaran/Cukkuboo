@@ -26,7 +26,8 @@ class UserModel extends Model
         'updated_by',
         'updated_at',
         'date_of_birth',
-        'email_preference'
+        'email_preference',
+        'auth_type',
     ];
 
 
@@ -50,14 +51,45 @@ class UserModel extends Model
     }
 
     public function deleteUserById($status, $user_id)
-    {
-        return $this->where('user_id', $user_id)->set(['status' => $status])->update();
+{
+    $userDeleted = $this->update($user_id, [
+        'status' => $status,
+        'jwt_token' => null
+    ]);
+    $this->db->table('user_subscription')
+        ->where('user_id', $user_id)
+        ->update(['status' => $status]);
+    $this->db->table('watch_history')
+        ->where('user_id', $user_id)
+        ->update(['status' => $status]);
+
+    $this->db->table('watch_later')
+        ->where('user_id', $user_id)
+        ->update(['status' => $status]);
+    $this->db->table('notification')
+        ->where('user_id', $user_id)
+        ->update(['status' => $status]);
+    $this->db->table('resume_history')
+        ->where('user_id', $user_id)
+        ->update(['status' => $status]);
+    return true;
     }
+
     
     public function getUserById($userId)
     {
-        return $this->find($userId);
+    return $this->select('*') 
+                ->where('user_id', $userId)
+                ->first();
     }
+
+    public function checkExistingActiveUser($field, $value)
+    {
+    return $this->where($field, $value)
+                ->where('status !=', 9)
+                ->first();
+    }
+
 
     public function findUserByToken($token)
     {
@@ -75,9 +107,33 @@ class UserModel extends Model
         return $this->where('status', 1)->countAllResults();
     }
     public function deleteById($status, $userId)
-    {
-        return $this->update($userId, ['status' => $status]);
+{
+    $userDeleted = $this->update($userId, [
+        'status' => $status,
+        'jwt_token' => null
+    ]);
+    if (!$userDeleted) {
+        return false;
     }
+    $this->db->table('user_subscription')
+        ->where('user_id', $userId)
+        ->update(['status' => $status]);
+    $this->db->table('watch_history')
+        ->where('user_id', $userId)
+        ->update(['status' => $status]);
+
+    $this->db->table('watch_later')
+        ->where('user_id', $userId)
+        ->update(['status' => $status]);
+    $this->db->table('notification')
+        ->where('user_id', $userId)
+        ->update(['status' => $status]);
+    $this->db->table('resume_history')
+        ->where('user_id', $userId)
+        ->update(['status' => $status]);
+    return true;
+}
+
 
     // -----------------------------------Password changing-----------------------//
     public function changePassword($userId, $oldPassword, $newPassword)
@@ -88,12 +144,10 @@ class UserModel extends Model
         return ['status' => 0, 'msg' => 'User not found.'];
     }
 
-    
     if (!password_verify($oldPassword, $user['password'])) {
         return ['status' => 0, 'msg' => 'Old password does not match.'];
     }
 
-   
     if (password_verify($newPassword, $user['password'])) {
         return ['status' => 0, 'msg' => 'Please use a new password different from the old one.'];
     }
@@ -101,8 +155,8 @@ class UserModel extends Model
     $hashedPassword = password_hash($newPassword, PASSWORD_BCRYPT);
 
     $data = [
-        'password'    => $hashedPassword,
-        'updated_at'  => date('Y-m-d H:i:s')
+        'password'   => $hashedPassword,
+        'updated_at' => date('Y-m-d H:i:s'),
     ];
 
     if ($this->update($userId, $data)) {
@@ -111,11 +165,19 @@ class UserModel extends Model
         return ['status' => 0, 'msg' => 'Could not update the password. Please try again.'];
     }
 }
-    public function setUserSubscription($userId)
-    {
-        return $this->where('user_id', $userId)
-                    ->set(['subscription' => 'free'])
-                    ->update();
-    }
 
+    public function setUserSubscription($userId)
+{
+    return $this->where('user_id', $userId)
+                ->set([
+                    'subscription' => 'Cancelled',
+                    'updated_at'  => date('Y-m-d H:i:s')
+                ])
+                ->update();
+}
+public function updateSubscriptionStatus($userId, $status)
+{
+    return $this->update($userId, ['subscription' => $status]);
+}
+    
 }

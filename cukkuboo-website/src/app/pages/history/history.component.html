@@ -1,100 +1,70 @@
-<div class="container-fluid py-4" style="background-color: #000; min-height: 100vh;">
-  <!-- Header -->
-  <div class="container mb-4 text-white d-flex justify-content-between align-items-center">
-    <h4 class="mb-0">Watch History</h4>
-    <button *ngIf="historyList.length" class="btn btn-danger btn-sm" (click)="openClearAllModal()">
-      Clear All History
-    </button>
-  </div>
-
-  <!-- Watch History Grid -->
+<!-- Breadcrumb -->
+<div class="gen-breadcrumb" [ngStyle]="{ 'background-image': 'url(' + randomBanner + ')' }">
   <div class="container">
-    <div *ngIf="historyList.length; else noHistory" class="row g-3">
-      <div *ngFor="let item of historyList; index as i" class="col-lg-3 col-md-6 col-12">
-        <div class="card bg-dark text-white border-0 shadow-sm h-100">
-          <!-- Thumbnail -->
-          <div class="position-relative">
-            <img
-              [src]="item.thumbnail"
-              class="card-img-top"
-              alt="{{ item.title }}"
-              style="height: 150px; object-fit: cover;"
-            />
-            <div class="position-absolute bottom-0 start-0 w-100 px-2 py-1 bg-black bg-opacity-75 text-white small">
-              Watched on: <strong>{{ item.completed_at | date: 'shortDate' }}</strong>
-            </div>
+    <div class="row align-items-center">
+      <div class="col-lg-12">
+        <nav aria-label="breadcrumb">
+          <div class="gen-breadcrumb-title">
+            <h1>Watch History</h1>
           </div>
-
-          <!-- Card Body -->
-          <div class="card-body p-2 d-flex flex-column">
-            <h6 class="card-title text-truncate mb-2" title="{{ item.title }}">{{ item.title }}</h6>
-            <div class="d-flex justify-content-between mt-auto">
-              <a
-                [routerLink]="['/movies', item.mov_id]"
-                [queryParams]="{ ap: 1 }"
-                class="btn btn-danger btn-sm px-3 py-1 d-flex align-items-center gap-2"
-              >
-                <i class="fas fa-play"></i> Play
-              </a>
-              <button class="btn btn-outline-light btn-sm px-3 py-1" (click)="openDeleteModal(item, i)">
-                <i class="fas fa-trash-alt"></i>
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- No History Fallback -->
-    <ng-template #noHistory>
-      <div class="text-center text-secondary mt-5">
-        <i class="fas fa-history fa-3x mb-3"></i>
-        <p class="lead">No watch history available.</p>
-      </div>
-    </ng-template>
-
-    <!-- Pagination -->
-    <div *ngIf="totalItems > pageSize" class="d-flex justify-content-center mt-4">
-      <nav>
-        <ul class="pagination pagination-sm mb-0">
-          <li class="page-item" [class.disabled]="pageIndex === 0">
-            <button class="page-link" (click)="prevPage()">Previous</button>
-          </li>
-          <li class="page-item disabled">
-            <span class="page-link">
-              Page {{ pageIndex + 1 }} of {{ totalPages() }}
-            </span>
-          </li>
-          <li class="page-item" [class.disabled]="(pageIndex + 1) * pageSize >= totalItems">
-            <button class="page-link" (click)="nextPage()">Next</button>
-          </li>
-        </ul>
-      </nav>
-    </div>
-  </div>
-
-  <!-- Delete Confirmation Modal -->
-  <div class="modal" [class.show]="showDeleteModal">
-    <div class="modal-content">
-      <p>
-        Are you sure you want to remove
-        <span class="highlight">"{{ itemToDelete?.title }}"</span> from history?
-      </p>
-      <div class="modal-actions">
-        <button class="btn-yes" (click)="confirmDelete()">Delete</button>
-        <button class="btn-no" (click)="cancelDelete()">Cancel</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Clear All Confirmation Modal -->
-  <div class="modal" [class.show]="showClearAllModal">
-    <div class="modal-content">
-      <p>Are you sure you want to <span class="highlight">clear all</span> history items?</p>
-      <div class="modal-actions">
-        <button class="btn-yes" (click)="confirmClearAll()">Clear</button>
-        <button class="btn-no" (click)="cancelClearAll()">Cancel</button>
+        </nav>
       </div>
     </div>
   </div>
 </div>
+
+<!-- Clear All Button -->
+<section class="search-section pb-2">
+  <div class="col-12 d-flex justify-content-end mr-2 mt-0 mb-4">
+    <button *ngIf="historyList.length" class="btn btn-danger btn-sm me-3" (click)="askToClearAll()">
+      Clear All
+    </button>
+  </div>
+
+  <!-- Movie Grid -->
+  <div class="col-12 d-flex flex-column">
+    @if(historyList.length){
+    <div class="d-flex flex-wrap col-12 movie-class">
+    <div *ngFor="let item of historyList; index as i" class="col-xl-3 col-lg-4 col-md-6 px-2 mb-4">
+  <div class="gen-carousel-movies-style-3 movie-grid style-3 h-100">
+    <div class="gen-movie-contain h-100 d-flex flex-column">
+      <div class="gen-movie-img position-relative">
+        <img [src]="imageUrl + item.thumbnail" alt="{{ item.title }} thumbnail" />
+        <div class="gen-movie-action">
+          <a [routerLink]="['/movies', item.mov_id]" [queryParams]="{ ap: 1 }" class="gen-button playBut">
+            <i class="fa fa-play"></i>
+          </a>
+        </div>
+        <div class="position-absolute bottom-0 start-0 w-100 px-2 py-1 bg-black bg-opacity-75 text-white small">
+Watched on: <strong>{{ item.created_on | date: 'dd MM yyyy' }}</strong>
+        </div>
+      </div>
+      <div class="gen-info-contain">
+        <div class="gen-movie-info d-flex justify-content-between align-items-center">
+          <h3 class="mb-0">
+            <a [routerLink]="['/movies', item.mov_id]" [queryParams]="{ ap: 1 }" class="text-white">
+              {{ item.title }}
+            </a>
+          </h3>
+          <button class="btn btn-sm btn-outline-light" (click)="askToRemoveItem(item, i)">
+            <i class="fas fa-trash-alt"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    </div>
+
+    <!-- Infinite Scroll -->
+    <div *ngIf="!stopInfiniteScroll" infiniteScroll (scrolled)="onScroll()" style="height: 1px"></div>
+
+    }@else{
+    <div class="text-center text-secondary mt-5">
+      <i class="fas fa-history fa-3x mb-3"></i>
+      <p class="lead">No watch history available.</p>
+    </div>
+    }
+  </div>
+</section>

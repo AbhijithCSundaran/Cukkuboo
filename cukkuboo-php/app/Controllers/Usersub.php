@@ -6,6 +6,7 @@ use App\Models\UsersubModel;
 use App\Models\UserModel;
 use App\Models\SubscriptionPlanModel;
 use CodeIgniter\RESTful\ResourceController;
+use App\Helpers\AuthHelper; 
 use App\Libraries\Jwt;
 use App\Libraries\AuthService;
 class Usersub extends ResourceController
@@ -23,16 +24,19 @@ class Usersub extends ResourceController
         $this->userModel = new UserModel();
     }
 
- public function autoSubscribe()
+ public function createSubscribe()
 {
     $data = $this->request->getJSON(true);
-    $authHeader = $this->request->getHeaderLine('Authorization');
+    // $authHeader = $this->request->getHeaderLine('Authorization');
+    $authHeader = AuthHelper::getAuthorizationToken($this->request);
     $user = $this->authService->getAuthenticatedUser($authHeader);
 
     if (!$user || !isset($user['user_id'])) {
         return $this->failUnauthorized('Unauthorized user.');
     }
-
+    if ($user['status'] != 1) {
+        return $this->failUnauthorized('Token expired. You have been logged out.');
+    }
     $userId = $user['user_id'];
     $planId = $data['subscriptionplan_id'] ?? null;
 
@@ -40,28 +44,55 @@ class Usersub extends ResourceController
         return $this->failValidationErrors('subscriptionplan_id is required.');
     }
 
+    $today = date('Y-m-d');
+    $expiredSubscriptions = $this->usersubModel
+        ->where('user_id', $userId)
+        ->where('status', '1')
+        ->where('end_date <', $today)
+        ->findAll();
+
+    if (!empty($expiredSubscriptions)) {
+        foreach ($expiredSubscriptions as $expiredSub) {
+            $this->usersubModel->update($expiredSub['user_subscription_id'], ['status' => 2]);
+        }
+       
+        // $this->userModel->update($userId, ['subscription' => 'expired']);
+    }
+    $activeSub = $this->usersubModel
+        ->where('user_id', $userId)
+        ->where('status', '1')
+        ->where('end_date >=', $today)
+        ->first();
+
+    if ($activeSub) {
+    $this->userModel->updateSubscriptionStatus($userId, 'Premium');
+    } else {
+        $this->userModel->updateSubscriptionStatus($userId, 'Expired');
+    }
+
+    if ($activeSub) {
+        return $this->respond([
+            'success' => false,
+            'message' => 'You already have an active subscription. You cannot subscribe to a new plan until it expires.',
+            'data'    => []
+        ]);
+    }
     $plan = $this->subscriptionPlanModel->getPlanById($planId);
     if (!$plan || (isset($plan['status']) && $plan['status'] == 9)) {
         return $this->failNotFound('This subscription plan has been deleted or is not available.');
     }
 
-    $planName  = $plan['plan_name'];
-    $price = (float) ($plan['discount_price'] ?? 0); 
-    $startDate = date('Y-m-d');
-
+    $planName = $plan['plan_name'];
+    $price = (float) ($plan['discount_price'] ?? 0);
+    $startDate = $today;
     try {
         $start = new \DateTime($startDate);
         $end = clone $start;
-        $end = $end->add(new \DateInterval("P{$plan['period']}D"));
+        $end->add(new \DateInterval("P{$plan['period']}D"));
         $endDate = $end->format('Y-m-d');
     } catch (\Exception $e) {
         return $this->failValidationErrors('Invalid plan period.');
     }
-
-    
-    $status = 2;
-    $planType = 'Premium';
-
     $payload = [
         'user_id'             => $userId,
         'subscriptionplan_id' => $planId,
@@ -69,17 +100,18 @@ class Usersub extends ResourceController
         'price'               => $price,
         'start_date'          => $startDate,
         'end_date'            => $endDate,
-        'status'              => $status,
+        'status'              => 1,
         'created_on'          => date('Y-m-d H:i:s'),
         'created_by'          => $userId,
         'modify_on'           => date('Y-m-d H:i:s'),
         'modify_by'           => $userId
     ];
-
-    $existing = $this->usersubModel
-        ->where('user_id', $userId)
-        ->where('subscriptionplan_id', $planId)
-        ->first();
+    $existing = null;
+    if (isset($data['user_subscription_id'])) {
+        $existing = $this->usersubModel
+            ->where('user_subscription_id', $data['user_subscription_id'])
+            ->first();
+    }
 
     if ($existing) {
         $this->usersubModel->update($existing['user_subscription_id'], $payload);
@@ -87,21 +119,22 @@ class Usersub extends ResourceController
         $msg = 'Subscription updated successfully.';
     } else {
         $id = $this->usersubModel->insert($payload);
+        if (!$id) {
+            return $this->failServerError('Failed to create new subscription.');
+        }
         $payload['user_subscription_id'] = $id;
         $msg = 'Subscription added successfully.';
     }
-    $this->userModel->update($userId, ['subscription' => 'premium']);
-   
-    $payload['plan_type'] = $planType;
+    $this->userModel->update($userId, ['subscription' => 'Premium']);
+    $payload['start_date'] = date('d F Y', strtotime($payload['start_date']));
+    $payload['end_date']   = date('d F Y', strtotime($payload['end_date']));
 
     return $this->respond([
         'success' => true,
         'message' => $msg,
         'data'    => $payload
     ]);
-}
-
-
+} 
   public function getSubscriptionById($id = null)
 {
     $authUser = $this->authService->getAuthenticatedUser(
@@ -111,21 +144,22 @@ class Usersub extends ResourceController
     if (!$authUser || !isset($authUser['user_id'])) {
         return $this->failUnauthorized('Invalid or missing token.');
     }
-
+    if ($authUser['status'] != 1) {
+        return $this->failUnauthorized('Token expired. You have been logged out.');
+    }
     $userId = $authUser['user_id'];
 
     if ($id !== null) {
         $subscription = $this->usersubModel->getUserSubscriptionById($userId, $id);
-
-        if (!$subscription) {
+        if (!$subscription || $subscription['status'] == 9) {
             return $this->respond([
                 'success' => false,
                 'message' => 'Subscription not found or unauthorized access.',
                 'data'    => []
             ]);
         }
-
-        $subscription['plan_type'] = $this->mapPlanType($subscription['status']);
+        $subscription['start_date'] = date('d F Y', strtotime($subscription['start_date']));
+        $subscription['end_date'] = date('d F Y', strtotime($subscription['end_date']));
 
         return $this->respond([
             'success' => true,
@@ -143,47 +177,68 @@ class Usersub extends ResourceController
             'data'    => []
         ]);
     }
+    $filteredSubscriptions = [];
+    foreach ($subscriptions as $sub) {
+        if ($sub['status'] != 9) {
+            $sub['start_date'] = date('d F Y', strtotime($sub['start_date']));
+            $sub['end_date'] = date('d F Y', strtotime($sub['end_date']));
+            $filteredSubscriptions[] = $sub;
+        }
+    }
 
-    foreach ($subscriptions as &$sub) {
-        $sub['plan_type'] = $this->mapPlanType($sub['status']);
+    if (empty($filteredSubscriptions)) {
+        return $this->respond([
+            'success' => false,
+            'message' => 'No active subscriptions found.',
+            'data'    => []
+        ]);
     }
 
     return $this->respond([
         'success' => true,
         'message' => 'Subscriptions fetched successfully.',
-        'data'    => $subscriptions
+        'data'    => $filteredSubscriptions
     ]);
 }
 
-private function mapPlanType($status)
-{
-    return match ((int) $status) {
-        1 => 'Free',
-        2 => 'Premium',
-        3 => 'Cancelled',
-        default => 'Unknown'
-    };
-}
 
 
 public function getUserSubscriptions()
 {
-    $authHeader = $this->request->getHeaderLine('Authorization');
+    // $authHeader = $this->request->getHeaderLine('Authorization');
+    $authHeader = AuthHelper::getAuthorizationToken($this->request);
     $authuser = $this->authService->getAuthenticatedUser($authHeader);
 
     if (!$authuser) {
         return $this->failUnauthorized('Invalid or missing token.');
     }
+    if ($authuser['status'] != 1) {
+        return $this->failUnauthorized('Token expired. You have been logged out.');
+    }
 
     $pageIndex = (int) $this->request->getGet('pageIndex');
     $pageSize  = (int) $this->request->getGet('pageSize');
     $search    = $this->request->getGet('search');
-
+    $fromDate  = $this->request->getGet('fromDate'); 
+    $toDate    = $this->request->getGet('toDate');
     if ($pageSize <= 0) {
         $pageSize = 10;
     }
 
     $offset = $pageIndex * $pageSize;
+    if (!empty($fromDate) && !$this->isValidDate($fromDate)) {
+    return $this->failValidationErrors('Enter a valid fromDate (YYYY-MM-DD).');
+    }
+
+    if (!empty($toDate) && !$this->isValidDate($toDate)) {
+        return $this->failValidationErrors('Enter a valid toDate (YYYY-MM-DD).');
+    }
+
+    if (!empty($fromDate) && !empty($toDate)) {
+        if ($fromDate > $toDate) {
+            return $this->failValidationErrors('fromDate cannot be later than toDate.');
+        }
+    }
 
     $userSubModel = new UsersubModel();
     $builder = $userSubModel->select('user_subscription.*, user.username')
@@ -198,6 +253,12 @@ public function getUserSubscriptions()
                 ->orLike('user_subscription.start_date', $search)
                 ->groupEnd();
     }
+     if (!empty($fromDate)) {
+        $builder->where('user_subscription.created_on >=', $fromDate . ' 00:00:00');
+    }
+    if (!empty($toDate)) {
+        $builder->where('user_subscription.created_on <=', $toDate . ' 23:59:59');
+    }
     $total = $builder->countAllResults(false);
 
     $subscriptions = $builder->orderBy('user_subscription.user_subscription_id', 'DESC')
@@ -208,7 +269,8 @@ public function getUserSubscriptions()
         $sub['status'] = 2;
     }
 
-    $sub['plan_type'] = ($sub['status'] == 1) ? 'Free' : 'Premium';
+    $sub['plan_type'] = ($sub['status'] == 1) ? 'Premium' : (($sub['status'] == 2) ? 'Expired' : (($sub['status'] == 3) ? 'Cancelled' : 'Unknown'));
+
 }
 
 
@@ -223,10 +285,14 @@ public function getUserSubscriptions()
 
 public function deleteSubscription($id = null)
 {
-    $authHeader = $this->request->getHeaderLine('Authorization');
+    // $authHeader = $this->request->getHeaderLine('Authorization');
+    $authHeader = AuthHelper::getAuthorizationToken($this->request);
     $user = $this->authService->getAuthenticatedUser($authHeader);
     if (!$user) {
         return $this->failUnauthorized('Invalid or missing token.');
+    }
+    if ($user['status'] != 1) {
+        return $this->failUnauthorized('Token expired. You have been logged out.');
     }
 
     $record = $this->usersubModel->find($id);
@@ -238,6 +304,7 @@ public function deleteSubscription($id = null)
     $deleted = $this->usersubModel->DeleteSubscriptionById($status, $id, $user['user_id']);
 
     if ($deleted) {
+        $this->userModel->update($user['user_id'], ['subscription' => 'deleted']);
         return $this->respond([
             'success'  => true,
             'message' => "Subscription with ID $id marked as deleted successfully.",
@@ -251,13 +318,16 @@ public function deleteSubscription($id = null)
 }
 public function cancelSubscription()
 {
-    $authHeader = $this->request->getHeaderLine('Authorization');
+    // $authHeader = $this->request->getHeaderLine('Authorization');
+    $authHeader = AuthHelper::getAuthorizationToken($this->request);
     $user = $this->authService->getAuthenticatedUser($authHeader);
 
     if (!$user) {
         return $this->failUnauthorized('Invalid or missing token.');
     }
-
+    if ($user['status'] != 1) {
+        return $this->failUnauthorized('Token expired. You have been logged out.');
+    }
     $userId = $user['user_id'];
     $this->usersubModel->cancelUserSubscription($userId);
     $this->userModel->setUserSubscription($userId);
@@ -267,13 +337,14 @@ public function cancelSubscription()
         'message' => 'Subscription cancelled successfully.',
         'data' => [
             'user_id' => $userId,
-            'subscription' => 'cancel'
+            'subscription' => 'Cancelled'
         ]
     ]);
 }
     public function countSubscribers()
     {
-        $authHeader = $this->request->getHeaderLine('Authorization');
+        // $authHeader = $this->request->getHeaderLine('Authorization');
+        $authHeader = AuthHelper::getAuthorizationToken($this->request);
         $authuser = $this->authService->getAuthenticatedUser($authHeader);
         if (!$authuser) 
             return $this->failUnauthorized('Invalid or missing token.');
@@ -288,7 +359,8 @@ public function cancelSubscription()
     }
     public function countRevenue()
     {
-        $authHeader = $this->request->getHeaderLine('Authorization');
+        // $authHeader = $this->request->getHeaderLine('Authorization');
+        $authHeader = AuthHelper::getAuthorizationToken($this->request);
         $authUser = $this->authService->getAuthenticatedUser($authHeader);
 
         if (!$authUser) {
@@ -305,11 +377,15 @@ public function cancelSubscription()
     }
     public function listTransactions()
 {
-    $authHeader = $this->request->getHeaderLine('Authorization');
+    // $authHeader = $this->request->getHeaderLine('Authorization');
+    $authHeader = AuthHelper::getAuthorizationToken($this->request);
     $authUser = $this->authService->getAuthenticatedUser($authHeader);
 
     if (!$authUser || !isset($authUser['user_id'])) {
         return $this->failUnauthorized('Invalid or missing token.');
+    }
+    if ($authUser['status'] != 1) {
+        return $this->failUnauthorized('Token expired. You have been logged out.');
     }
     // $userId = $authUser['user_id'];
     $transactions = $this->usersubModel->getTransactions();
@@ -327,6 +403,113 @@ public function cancelSubscription()
         'message' => 'Transactions fetched successfully.',
         'data'    => $transactions
     ]);
+}
+
+   public function getActiveSubscription()
+{
+    // $authHeader = $this->request->getHeaderLine('Authorization');
+    $authHeader = AuthHelper::getAuthorizationToken($this->request);
+    $user = $this->authService->getAuthenticatedUser($authHeader);
+
+    if (!$user || !isset($user['user_id'])) {
+        return $this->failUnauthorized('Invalid or missing token.');
+    }
+    if ($user['status'] != 1) {
+        return $this->failUnauthorized('Token expired. You have been logged out.');
+    }
+
+    $userId = $user['user_id'];
+    $today = date('Y-m-d');
+
+    $activeSubs = $this->usersubModel
+        ->where('user_id', $userId)
+        ->where('status', '1')  // Active
+        ->where('end_date >=', $today)
+        ->first();
+
+    if (!$activeSubs) {
+        return $this->respond([
+            'success' => false,
+            'message' => 'No active subscription found.',
+            'data'    => []
+        ]);
+    }
+
+    $endDate = new \DateTime($activeSubs['end_date']);
+    $todayDate = new \DateTime($today);
+    $daysRemaining = $todayDate->diff($endDate)->format('%a');
+
+    $formatted = [
+        'subscription_id' => $activeSubs['user_subscription_id'],
+        'plan_name'       => $activeSubs['plan_name'],
+        'price'           => $activeSubs['price'],
+        'start_date'      => $activeSubs['start_date'],
+        'end_date'        => $activeSubs['end_date'],
+        'status'          => 'active',
+        'purchased_on'    => $activeSubs['created_on'],
+        'days_remaining'  => (int)$daysRemaining
+    ];
+
+    return $this->respond([
+        'success' => true,
+        'message' => 'Active subscription fetched successfully.',
+        'data' => $formatted
+    ]);
+}
+
+
+public function getExpiredSubscriptions()
+{
+    // $authHeader = $this->request->getHeaderLine('Authorization');
+    $authHeader = AuthHelper::getAuthorizationToken($this->request);
+    $user = $this->authService->getAuthenticatedUser($authHeader);
+
+    if (!$user || !isset($user['user_id'])) {
+        return $this->failUnauthorized('Invalid or missing token.');
+    }
+    if ($user['status'] != 1) {
+        return $this->failUnauthorized('Token expired. You have been logged out.');
+    }
+    $userId = $user['user_id'];
+    $subs = $this->usersubModel
+        ->where('user_id', $userId)
+        ->whereIn('status', [2, 3])  // 2 = expired, 3 = cancelled
+        ->findAll();
+
+    if (empty($subs)) {
+        return $this->respond([
+            'success' => true,
+            'message' => 'No expired or cancelled subscriptions found.',
+            'data'    => []
+        ]);
+    }
+
+    $formatted = array_map(function ($sub) {
+        $statusText = ($sub['status'] == 2) ? 'expired' : 'cancelled';
+        $reason = ($sub['status'] == 3) ? 'cancelled by user' : 'natural expiry';
+
+        return [
+            'subscription_id' => $sub['user_subscription_id'],
+            'plan_name'       => $sub['plan_name'],
+            'price'           => $sub['price'],
+            'start_date'      => $sub['start_date'],
+            'end_date'        => $sub['end_date'],
+            'status'          => $statusText,
+            'reason'          => $reason,
+            'purchased_on'    => $sub['created_on']
+        ];
+    }, $subs);
+
+    return $this->respond([
+        'success' => true,
+        'message' => 'Expired and cancelled subscriptions fetched successfully.',
+        'data'    => $formatted
+    ]);
+}
+private function isValidDate($date, $format = 'Y-m-d')
+{
+    $d = \DateTime::createFromFormat($format, $date);
+    return $d && $d->format($format) === $date;
 }
 
 }

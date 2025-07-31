@@ -15,7 +15,9 @@ interface Notification {
   content: string;
   status: 'read' | 'unread';
   user_id: string;
+  username: string; 
   created_on: string;
+  expanded?: boolean;
 }
 
 @Component({
@@ -33,7 +35,7 @@ interface Notification {
   styleUrls: ['./notifications.component.scss']
 })
 export class NotificationsComponent implements OnInit, AfterViewInit {
-  displayedColumns: string[] = ['slNo', 'title', 'content', 'user_id', 'created_on', 'status'];
+  displayedColumns: string[] = ['slNo', 'title', 'content', 'username', 'created_on', 'status'];
   dataSource = new MatTableDataSource<Notification>([]);
   totalItems = 0;
   pageIndex = 0;
@@ -49,7 +51,6 @@ export class NotificationsComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.dataSource.paginator = this.paginator;
     this.paginator.page.subscribe(() => {
       this.pageIndex = this.paginator.pageIndex;
       this.pageSize = this.paginator.pageSize;
@@ -75,7 +76,9 @@ export class NotificationsComponent implements OnInit, AfterViewInit {
             content: item.content,
             status: item.status === '1' ? 'read' : 'unread',
             user_id: item.user_id,
-            created_on: item.created_on
+            username: item.username || 'Unknown', // fallback if not present
+            created_on: item.created_on,
+            expanded: false
           }));
 
           this.dataSource.data = mappedData;
@@ -91,5 +94,9 @@ export class NotificationsComponent implements OnInit, AfterViewInit {
         this.totalItems = 0;
       }
     });
+  }
+
+  toggleContent(row: Notification): void {
+    row.expanded = !row.expanded;
   }
 }

@@ -1,6 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { Injectable } from '@angular/core';
-import { PopupNotificationService } from '../../shared/services/popup-notification/popup-notification.service';
+import * as CryptoJS from 'crypto-js';
 
 @Injectable({
     providedIn: 'root'
@@ -11,7 +11,6 @@ export class CommonService {
     private Pipe = new DatePipe('en-US');
 
     constructor(
-        private popupNotiService: PopupNotificationService,
     ) {
     }
     //#region "functions"
@@ -135,7 +134,7 @@ export class CommonService {
             }
         }
         if (count == 0) {
-            this.popupNotiService.showMessage('Form not valid.', 'warning')
+            alert('Form not valid.')
         }
         return count;
     }
@@ -159,7 +158,7 @@ export class CommonService {
         }
         return obj;
     }
-    
+
     remove_char(Model: any, char = '_', All = true) {
         var model: any = {}
         for (let obj in Model) {
@@ -302,6 +301,14 @@ export class CommonService {
     }
 
 
+    EncodeId(id: number, key = 2996077): string {
+        const xor = id ^ key;
+        return btoa(xor.toString());
+    }
+    DecodeId(encoded: string, key = 2996077): number {
+        const xor = parseInt(atob(encoded), 10);
+        return xor ^ key;
+    }
     Encode(data: any): any {
         data = btoa(data)
         data = data.replace(/K/g, "6Y7YvCoyZVGQlovv");
@@ -327,6 +334,46 @@ export class CommonService {
         reversedData = reversedData.replace(/sgmyzcc1Eiy9xI73/g, "ey");
         atob(reversedData)
         return atob(reversedData)
+    }
+
+    decryptData(encryptedBase64: string, key: string): string {
+        // Convert Base64 string to WordArray
+        const encryptedData = CryptoJS.enc.Base64.parse(encryptedBase64);
+
+        // Extract IV (first 16 bytes = 4 words)
+        const iv = CryptoJS.lib.WordArray.create(encryptedData.words.slice(0, 4), 16);
+
+        // Extract HMAC (next 32 bytes = 8 words)
+        const hmac = CryptoJS.lib.WordArray.create(encryptedData.words.slice(4, 12), 32);
+
+        // Ciphertext starts after 12 words (IV + HMAC)
+        const ciphertext = CryptoJS.lib.WordArray.create(encryptedData.words.slice(12), encryptedData.sigBytes - 48);
+
+        // Generate SHA256-based key
+        const hashedKey = CryptoJS.SHA256(key);
+
+        // Verify HMAC
+        const computedHmac = CryptoJS.HmacSHA256(ciphertext, hashedKey);
+        const encodedHmac = CryptoJS.enc.Base64.stringify(hmac);
+        const encodedComputedHmac = CryptoJS.enc.Base64.stringify(computedHmac);
+
+        if (encodedHmac.substring(0, 43) !== encodedComputedHmac.substring(0, 43)) {
+            throw new Error('HMAC verification failed');
+        }
+
+        // Wrap ciphertext in CipherParams object
+        const cipherParams = CryptoJS.lib.CipherParams.create({
+            ciphertext: ciphertext
+        });
+
+        // Decrypt
+        const decrypted = CryptoJS.AES.decrypt(cipherParams, hashedKey, {
+            iv: iv,
+            mode: CryptoJS.mode.CBC,
+            padding: CryptoJS.pad.Pkcs7
+        });
+
+        return decrypted.toString(CryptoJS.enc.Utf8);
     }
 
 }

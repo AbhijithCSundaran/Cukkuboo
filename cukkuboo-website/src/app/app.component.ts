@@ -1,10 +1,11 @@
 import { Component, HostListener } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { NavigationCancel, NavigationEnd, NavigationError, NavigationStart, Router, RouterOutlet } from '@angular/router';
 import { StorageService } from './core/services/TempStorage/storageService';
 import devtools from 'devtools-detect';
 import { CommonModule } from '@angular/common';
 import { environment } from '../environments/environment';
 import { UserService } from './services/user/user.service';
+import { SubscriptionStatus } from './model/enum';
 
 @Component({
   selector: 'app-root',
@@ -16,13 +17,34 @@ export class AppComponent {
   title = 'cukkuboo-website';
   isProd: boolean = environment.production;
   devToolIsOpen: boolean = false;
+  showloader: boolean = true;
+  userLoaded: boolean = true;
+  isInitial: boolean = true;
   constructor(
     private storageService: StorageService,
     private userService: UserService,
+    private router: Router,
   ) {
+
+
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationStart) {
+        this.showloader = true;
+      } else if (
+        event instanceof NavigationEnd ||
+        event instanceof NavigationCancel ||
+        event instanceof NavigationError
+      ) {
+        setTimeout(() => {
+          this.showloader = false;
+          this.isInitial = false;
+        }, this.isInitial ? 1000 : 500);
+      }
+    });
     const token = localStorage.getItem('t_k');
     const name = localStorage.getItem('u_n');
-    if (token){
+    if (token) {
+      this.userLoaded = false;
       this.storageService.updateItem('token', token);
       this.loadUserData();
     }
@@ -71,7 +93,6 @@ export class AppComponent {
   detectDebugger() {
     const check = () => {
       const start = performance.now();
-      debugger;
       const end = performance.now();
       if (end - start > 100) {
         this.devToolIsOpen = true;
@@ -85,12 +106,16 @@ export class AppComponent {
     this.userService.getProfile().subscribe({
       next: (response) => {
         if (response.success) {
-          const data = response.data;
-          this.storageService.updateItem('userData', data);
+          this.storageService.updateItem('userData', response.data);
+          this.storageService.updateItem('username', response.data?.username || 'User');
+          this.storageService.updateItem('token', response.data?.jwt_token || 'token');
+          this.storageService.updateItem('subscription', SubscriptionStatus[Number(response.data?.subscription_details?.subscription) || 0]);
         }
+        this.userLoaded = true;
       },
 
       error: (err) => {
+        this.userLoaded = true;
         console.error('Error fetching profile', err);
       }
     });

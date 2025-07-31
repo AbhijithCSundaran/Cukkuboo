@@ -3,11 +3,13 @@ import { CommonModule } from '@angular/common';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { NotificationService } from '../../services/notification.service';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmationDialogComponent } from '../../core/components/confirmation-dialog/confirmation-dialog.component';
 
 @Component({
   selector: 'app-notifications',
   standalone: true,
-  imports: [CommonModule,MatSnackBarModule],
+  imports: [CommonModule, MatSnackBarModule],
   templateUrl: './notifications.component.html',
   styleUrls: ['./notifications.component.scss']
 })
@@ -21,14 +23,11 @@ export class NotificationsComponent implements OnInit {
   isLoadingDetail = false;
   isMarkingAll = false;
 
-  // Modal
-  showDeleteModal = false;
-  notificationToDelete: any = null;
-
   constructor(
     private notificationService: NotificationService,
-    private snackBar: MatSnackBar
-  ) {}
+    private snackBar: MatSnackBar,
+    private dialog: MatDialog,
+  ) { }
 
   ngOnInit() {
     this.loadNotifications();
@@ -71,79 +70,70 @@ export class NotificationsComponent implements OnInit {
       });
   }
 
-  markAllAsRead() {
-    if (this.isMarkingAll) return;
-    this.isMarkingAll = true;
+markAllAsRead() {
+  if (this.isMarkingAll) return;
+  this.isMarkingAll = true;
 
-    this.notificationService.markAllAsRead().subscribe({
-      next: () => {
-        this.notifications.forEach((n) => (n.read = true));
-        this.isMarkingAll = false;
-        this.snackBar.open('All notifications marked as read.', '', {
-          duration: 3000,
-          verticalPosition: 'top',
-          horizontalPosition: 'center',
-          panelClass: ['snackbar-success']
-        });
+  this.notificationService.markAllAsRead().subscribe({
+    next: () => {
+      this.notifications.forEach((n) => {
+        n.read = true;
+        n.status = 2; 
+      });
+      this.isMarkingAll = false;
+      this.snackBar.open('All notifications marked as read.', '', {
+        duration: 3000,
+        verticalPosition: 'top',
+        horizontalPosition: 'center',
+        panelClass: ['snackbar-success']
+      });
+    },
+    error: () => {
+      this.isMarkingAll = false;
+      this.snackBar.open('Failed to mark all as read.', '', {
+        duration: 3000,
+        verticalPosition: 'top',
+        horizontalPosition: 'center',
+        panelClass: ['snackbar-error']
+      });
+    }
+  });
+}
+
+  askToRemoveItem(item: any, index: number) {
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      data: {
+        message: `<p>Are you sure you want to delete <span>"${item?.title}"</span>?</p>`
       },
-      error: () => {
-        this.isMarkingAll = false;
-        this.snackBar.open('Failed to mark all as read.', '', {
-          duration: 3000,
-          verticalPosition: 'top',
-          horizontalPosition: 'center',
-          panelClass: ['snackbar-danger']
-        });
-      }
     });
+    dialogRef.afterClosed().subscribe((result: any) => {
+      if (result) {
+        this.confirmDelete(item, index);
+      }
+    })
   }
 
-  openDeleteModal(notification: any) {
-    this.notificationToDelete = notification;
-    this.showDeleteModal = true;
-  }
-
-  cancelDelete() {
-    this.notificationToDelete = null;
-    this.showDeleteModal = false;
-  }
-
-  confirmDelete() {
-    const notification = this.notificationToDelete;
-    if (!notification) return;
-
+  confirmDelete(item: any, index: number) {
+    if (!item) return;
     this.notificationService
-      .deleteNotification(notification.notification_id)
-      .subscribe({
+      .deleteNotification(item.notification_id).subscribe({
         next: () => {
-          this.notifications = this.notifications.filter(
-            (n) => n.notification_id !== notification.notification_id
-          );
-          if (
-            this.selectedNotification?.notification_id ===
-            notification.notification_id
-          ) {
-            this.selectedNotification = null;
-          }
-
+          this.notifications.splice(index, 1);
           this.snackBar.open('Notification removed successfully', '', {
             duration: 3000,
             verticalPosition: 'top',
             horizontalPosition: 'center',
             panelClass: ['snackbar-success']
           });
-
-          this.cancelDelete();
         },
         error: () => {
           this.snackBar.open('Failed to remove notification', '', {
             duration: 3000,
             verticalPosition: 'top',
             horizontalPosition: 'center',
-            panelClass: ['snackbar-danger']
+            panelClass: ['snackbar-error']
           });
 
-          this.cancelDelete();
         }
       });
   }

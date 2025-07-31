@@ -15,21 +15,73 @@ class NotificationModel extends Model
     protected $allowedFields = [
         'user_id',
         'title',
-        'content',
+        'message',
+        'type',         
+        'target', 
         'status',
+        'is_sheduled',
+        'sheduled_time',
         'created_by',
         'created_on',
         'modify_by',
         'modify_on',
     ];
  
-    public function getUserNotifications($userId)
+    public function getUserNotifications($limit, $offset, $search = null)
     {
-        return $this->where('user_id', $userId)
-                    ->where('status !=', 9)
-                    ->orderBy('created_on', 'DESC')
-                    ->findAll();
+        $builder = $this->db->table($this->table);
+        $builder->select('notification.*, user.username');
+         $builder->join('user', 'user.user_id = notification.created_by', 'left');
+
+        $builder->where('notification.status !=', 9);
+
+        if (!empty($search)) {
+            $builder->groupStart()
+                    ->like('notification.title', $search)
+                    ->orLike('notification.content', $search)
+                    ->orLike('user.username', $search)
+                    ->groupEnd();
+        }
+
+        $total = $builder->countAllResults(false);
+
+        $notifications = $builder->orderBy('notification.created_on', 'DESC')
+                                 ->limit($limit, $offset)
+                                 ->get()
+                                 ->getResultArray();
+
+        return [
+            'notifications' => $notifications,
+            'total'         => $total
+        ];
     }
+    public function getUserNotificationsbyToken($userId, $pageIndex = 0, $pageSize = 10, $search = '')
+{
+    $offset = $pageIndex * $pageSize;
+
+    $builder = $this->where('user_id', $userId)
+                    ->where('status !=', 9);
+
+    if (!empty($search)) {
+        $builder->groupStart()
+                ->like('title', $search)
+                ->orLike('content', $search)
+                ->groupEnd();
+    }
+
+    $total = $builder->countAllResults(false);
+
+    $data = $builder->orderBy('created_on', 'DESC')
+                    ->limit($pageSize, $offset)
+                    ->findAll();
+
+    return [
+        'total' => $total,
+        'data' => $data
+    ];
+}
+
+    
    public function getByUserId($userId)
     {
         return $this->where('user_id', $userId)

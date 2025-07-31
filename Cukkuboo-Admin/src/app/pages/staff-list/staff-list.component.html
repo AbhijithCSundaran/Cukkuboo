@@ -18,14 +18,14 @@
     <ng-container matColumnDef="slNo">
       <th mat-header-cell *matHeaderCellDef> Sl. No. </th>
       <td mat-cell *matCellDef="let row; let i = index">
-        {{ i + 1 + pageIndex * pageSize }}
+        {{ pageIndex * pageSize + i + 1 }}
       </td>
     </ng-container>
 
     <!-- Username -->
     <ng-container matColumnDef="username">
       <th mat-header-cell *matHeaderCellDef> Username </th>
-      <td mat-cell *matCellDef="let staff" class="title">
+      <td mat-cell *matCellDef="let staff" class="title truncate-text" [matTooltip]="staff.username">
         {{ staff.username }}
       </td>
     </ng-container>
@@ -38,13 +38,16 @@
 
     <!-- Email -->
     <ng-container matColumnDef="email">
-      <th mat-header-cell *matHeaderCellDef> Email </th>
-      <td mat-cell *matCellDef="let staff"> {{ staff.email }} </td>
-    </ng-container>
+  <th mat-header-cell *matHeaderCellDef> Email </th>
+  <td mat-cell *matCellDef="let staff" class=" truncate-text" [matTooltip]="staff.email">
+    {{ staff.email }}
+  </td>
+</ng-container>
+
 
     <!-- Phone -->
     <ng-container matColumnDef="phone">
-      <th mat-header-cell *matHeaderCellDef> Phone </th>
+      <th mat-header-cell *matHeaderCellDef> Mobile Number </th>
       <td mat-cell *matCellDef="let staff"> {{ staff.phone }} </td>
     </ng-container>
 
@@ -91,13 +94,14 @@
     No Staff found.
   </div>
 
-  <div class="pagination-wrapper">
+    <div class="pagination-wrapper">
     <mat-paginator
       class="pagination"
-      [length]="totalItems"
-      [pageSize]="pageSize"
       [pageSizeOptions]="[10, 20, 50]"
-      (page)="onPageChange($event)"
+      [length]="totalItems"
+      [pageIndex]="pageIndex"
+      [pageSize]="pageSize"
+
       showFirstLastButtons
     ></mat-paginator>
   </div>

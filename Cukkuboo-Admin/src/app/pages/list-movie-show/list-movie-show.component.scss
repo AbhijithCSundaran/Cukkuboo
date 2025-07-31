@@ -1,7 +1,3 @@
-
-
- 
-
 .filter-icon {
   cursor: pointer;
   font-size: 18px;
@@ -9,18 +5,17 @@
   margin-left: 8px;
   user-select: none;
 }
+
 .search-bar-wrapper {
   display: flex;
   justify-content: flex-end;
   margin-bottom: 3rem;
-   height: 10px;
-  
+  height: 10px;
 }
 
 .custom-search {
   width: 250px;
   height: 10px;
- 
 
   .mat-form-field-wrapper {
     background-color: rgba(0, 0, 0, 0.05);
@@ -31,7 +26,6 @@
 
   .mat-form-field-flex {
     padding: 4px 0;
-    
   }
 
   .mat-input-element {
@@ -63,8 +57,6 @@
   .mat-paginator-container {
     flex-wrap: wrap;
     justify-content: center;
-    
-    
   }
 
   .mat-paginator-range-actions,
@@ -83,17 +75,85 @@
   }
 }
 
+.title {
+  text-transform: capitalize;
+}
 
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 9999;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.85);
+  justify-content: center;
+  align-items: center;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
 
+.modal.show {
+  display: flex;
+}
 
-/*  Media Queries  */
+.modal-content {
+  background-color: transparent;
+  padding: 25px 30px;
+  border-radius: 12px;
+  max-width: 320px;
+  text-align: center;
+  color: #fff;
+  border: 2px solid #7d2725;
+}
+
+.modal-content p {
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: space-around;
+}
+
+.modal-actions button {
+  cursor: pointer;
+  border-radius: 6px;
+  padding: 8px 22px;
+  font-weight: 600;
+  font-size: 14px;
+  border: none;
+  transition: background-color 0.3s ease;
+  min-width: 90px;
+}
+
+.btn-yes {
+  background-color: #e53935;
+  color: white;
+}
+
+.btn-yes:hover {
+  background-color: #7d2725;
+}
+
+.btn-no {
+  background-color: #333;
+  color: white;
+  border: 2px solid #e53935;
+}
+
+.btn-no:hover {
+  background-color: #e53935;
+  color: white;
+}
+
+/* Responsive Media Queries */
 
 @media (max-width: 1200px) {
   .header-row h2 {
     font-size: 22px;
   }
-
-  
 }
 
 @media (max-width: 1024px) {
@@ -102,7 +162,12 @@
     align-items: flex-start;
   }
 
-  
+  .add-button {
+    font-size: 13px;
+    padding: 0 14px;
+    width: 75px;
+    justify-content: center;
+  }
 }
 
 @media (max-width: 991px) {
@@ -124,8 +189,25 @@
     }
   }
 
+  .add-button {
+    font-size: 12px;
+    padding: 0 12px;
+    height: 34px;
+    width: 75px;
+    justify-content: center;
+  }
+
   .pagination {
     font-size: 12px;
+  }
+
+  th.mat-column-likes,
+  td.mat-column-likes,
+  th.mat-column-dislikes,
+  td.mat-column-dislikes,
+  th.mat-column-views,
+  td.mat-column-views {
+    display: none !important;
   }
 }
 
@@ -135,22 +217,49 @@
     align-items: flex-start;
   }
 
-  
+  .header-row h2 {
+    font-size: 18px;
+  }
+
+  .custom-table {
+    font-size: 12px;
+
+    th,
+    td {
+      font-size: 12px;
+      padding: 6px;
+    }
+  }
+
   .custom-table input[matInput] {
     font-size: 12px;
     padding: 3px 6px;
   }
 
+  .custom-search .mat-input-element {
+    font-size: 12px;
+  }
+
   th.mat-column-slNo,
   td.mat-column-slNo,
-  th.mat-column-genre,
-  td.mat-column-genre,
-  th.mat-column-category,
-  td.mat-column-category {
+  th.mat-column-status,
+  td.mat-column-status,
+  th.mat-column-likes,
+  td.mat-column-likes,
+  th.mat-column-dislikes,
+  td.mat-column-dislikes,
+  th.mat-column-views,
+  td.mat-column-views,
+  th.mat-column-access,
+  td.mat-column-access {
     display: none !important;
   }
 
-   .pagination {
+  .pagination-wrapper {
+    font-size: 12px;
+  }
+
+  .pagination {
     font-size: 12px;
 
     .mat-paginator-container {
@@ -168,50 +277,35 @@
       width: 100px;
     }
   }
+
+  .add-button {
+    font-size: 12px;
+    padding: 0 12px;
+    height: 34px;
+    width: 75px;
+    justify-content: center;
+  }
+
+  .modal-content p {
+    font-size: 16px;
+  }
+
+  .modal-actions button {
+    font-size: 12px;
+    padding: 6px 18px;
+    min-width: 80px;
+  }
 }
 
 @media (max-width: 320px) {
   .header-row h2 {
-    font-size: 18px;
+    font-size: 16px;
   }
 
   .custom-table {
-    font-size: 12px;
+    font-size: 11px;
   }
-}
 
-/* Responsive New Button */
-@media (max-width: 1024px) {
-  .add-button {
-    font-size: 13px;
-    padding: 0 14px;
-    width: 75px;
-    justify-content: center;
-  }
-  
-}
-
-@media (max-width: 767px) {
-  .add-button {
-    font-size: 12px;
-    padding: 0 12px;
-    height: 34px;
-    width: 75px;
-    justify-content: center;
-  }
-}
-
-@media (max-width: 575px) {
-  .add-button {
-    font-size: 12px;
-    padding: 0 12px;
-    height: 34px;
-    width: 75px;
-    justify-content: center;
-  }
-}
-
-@media (max-width: 320px) {
   .add-button {
     font-size: 13px;
     height: 36px;
@@ -219,75 +313,20 @@
     width: 75px;
     justify-content: center;
   }
+
+  .modal-content p {
+    font-size: 14px;
+  }
+
+  .modal-actions button {
+    font-size: 11px;
+    padding: 5px 15px;
+    min-width: 70px;
+  }
 }
-.modal {
-  display: none;
-  position: fixed;
-  z-index: 9999;
-  left: 0; top: 0; width: 100%; height: 100%;
-  background-color: rgba(0, 0, 0, 0.85); /* dark overlay */
-  justify-content: center;
-  align-items: center;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-.modal.show {
-  display: flex;
-}
-
-.modal-content {
-  background-color: transparent;
-  padding: 25px 30px;
-  border-radius: 12px;
-  max-width: 320px;
-  text-align: center;
-
-  color: #fff;
-  border: 2px solid #7d2725;
-}
-
-.modal-content p {
-  font-size: 18px;
-  margin-bottom: 20px;
-}
-
-
-
-.modal-actions {
-  display: flex;
-  justify-content: space-around;
-}
-
-.modal-actions button {
-  cursor: pointer;
-  border-radius: 6px;
-  padding: 8px 22px;
-  font-weight: 600;
-  font-size: 14px;
-  border: none;
-  transition: background-color 0.3s ease;
-  min-width: 90px;
-}
-
-.btn-yes {
-  background-color:  #e53935;
-  color: white;
-}
-
-.btn-yes:hover {
-  background-color: #7d2725;
-}
-
-.btn-no {
-  background-color: #333; 
-  color: white;
-  border: 2px solid #e53935;
-}
-
-.btn-no:hover {
-  background-color: #e53935; 
-  color: white;
-}
-.title{
-  text-transform: capitalize;
+.truncate-text {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  max-width: 150px;
 }

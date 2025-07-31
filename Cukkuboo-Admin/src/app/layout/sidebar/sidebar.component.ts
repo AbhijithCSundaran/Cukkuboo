@@ -32,10 +32,10 @@ export class SidebarComponent {
 
   isMobileView = window.innerWidth <= 1024;
 
-@HostListener('window:resize', ['$event'])
-onResize(event: any) {
-  this.isMobileView = event.target.innerWidth <= 1024;
-}
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    this.isMobileView = event.target.innerWidth <= 1024;
+  }
 
 
   menuItems: MenuItem[] = [
@@ -44,15 +44,15 @@ onResize(event: any) {
       name: 'Content Management',
       icon: 'fa-film',
       subItems: [
-        {name:'List Movie/Show ',path:'/list-movie-show'},
-     
-        { name: 'Categories', path: '/categories' },
-        { name: 'Genres', path: '/genres' },
-        { name: 'Reels', path: '/reels' }
-        
+        { name: 'List Movie/Show ', path: '/list-movie-show' },
 
-       
-      
+        // { name: 'Categories', path: '/categories' },
+        // { name: 'Genres', path: '/genres' },
+        { name: 'Reels', path: '/reels' }
+
+
+
+
       ],
     },
     {
@@ -70,12 +70,17 @@ onResize(event: any) {
         { name: 'Staff List', path: '/staff-list' },
       ],
     },
-    { name: 'Reports & Analytics', icon: 'fa-chart-bar', path: '/reports' },
-    { name: 'Notifications', icon: 'fa-bell', path: '/notifications' },
-    { name: 'Settings', icon: 'fa-sliders-h', subItems: [
-      { name: 'Subscription Plans', path: '/subscription-plans' },
-     
-    ], },
+    // { name: 'Reports & Analytics', icon: 'fa-chart-bar', path: '/reports' },
+    // { name: 'Notifications', icon: 'fa-bell', path: '/notifications' },
+    { name: 'Tickets', icon: 'fa fa-tags', path: '/tickets' },
+    {
+      name: 'Settings', icon: 'fa-sliders-h', subItems: [
+        { name: 'Subscription Plans', path: '/subscription-plans' },
+        //  { name: 'Legal Policies', path: '/list-policies' },
+
+
+      ],
+    },
   ];
 
   toggleSidebar() {
@@ -86,7 +91,7 @@ onResize(event: any) {
 
   onMenuItemClick(menuItem: MenuItem, event: MouseEvent) {
     event.stopPropagation();
-    if (this.isCollapsed) return; 
+    if (this.isCollapsed) return;
 
     menuItem.showSubmenu = !menuItem.showSubmenu;
     this.menuItems.forEach((item) => {
@@ -124,5 +129,5 @@ onResize(event: any) {
     this.closeAllSubmenus();
     this.itemSelected.emit();
   }
-  
+
 }

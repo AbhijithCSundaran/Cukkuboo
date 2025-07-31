@@ -1,19 +1,32 @@
-# Composer dependencies
+.DS_Store
+
+application/cache/*
+!application/cache/index.html
+
+application/logs/*
+!application/logs/index.html
+
+!application/*.htaccess
+
+composer.lock
+tests/mocks/database/ci_test.sqlite
+
+user_guide_src/build/*
+user_guide_src/cilexer/build/*
+user_guide_src/cilexer/dist/*
+user_guide_src/cilexer/pycilexer.egg-info/*
 /vendor/
 
-# Node modules (if using npm)
-node_modules/
+# IDE Files
+# ----------------------------
+/nbproject/
+.idea/*
 
-# Log files and cache
-/writable/cache/*
-/writable/logs/*
-/writable/session/*
-/writable/uploads/*
-/writable/debugbar/*
-
-# CodeIgniter 3 specific
-/application/logs/*
-/application/cache/*
-!application/logs/index.html
-!application/cache/index.html
-*.log
+## Sublime Text cache files
+*.tmlanguage.cache
+*.tmPreferences.cache
+*.stTheme.cache
+*.sublime-workspace
+*.sublime-project
+/tests/tests/
+/tests/results/

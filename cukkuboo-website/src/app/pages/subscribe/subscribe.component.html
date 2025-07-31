@@ -1,6 +1,6 @@
 <!-- Plan Description -->
 <div class="container mt-3">
-  <div class="card" style="width: 40rem; border: none">
+<div class="card" style="max-width: 100%; border: none">
     <h5 class="card-header card-head">All Plans</h5>
     <div class="card-body ca-body">
       <ul class="list-unstyled">
@@ -15,8 +15,9 @@
 
 <!-- Subscription Plans -->
 <div class="container mt-2">
-  <h5 class="p-1">Choose a plan for becoming PRIME member</h5>
+  <h5 class="p-1">Unlock exclusive benefits—select your PRIME membership plan today!</h5>
   <div class="row justify-content-center mt-3">
+    @if(plans.length){
     <div class="col-md-4 p-3" *ngFor="let plan of plans">
       <div class="card plan-card">
         <div class="card-header d-flex justify-content-between align-items-center">
@@ -26,56 +27,18 @@
         <div class="card-body">
           <div class="d-flex justify-content-between align-items-center">
             <div>
-              <span class="fw-bold price-text">₹{{ plan.discount_price }}</span>
-              <span class="text-white ms-2 text-decoration-line-through">₹{{ plan.price }}</span>
+             <span class="fw-bold price-text">${{ plan.discount_price }}</span>
+<span class="text-white ms-2 text-decoration-line-through">${{ plan.price }}</span>
+
             </div>
-            <a class="btn btn-subscribe btn-sm" (click)="subscribeToPlan(plan)">Subscribe</a>
+            <a class="btn btn-subscribe btn-sm" (click)="askToSubscribe(plan)">Subscribe</a>
           </div>
         </div>
       </div>
     </div>
-  </div>
-</div>
-
-<!-- Subscription Modal -->
-<div class="modal" [class.show]="showSubscriptionModal">
-  <div class="modal-content">
-    <!-- Left-aligned title -->
-    <h5 class="text-danger mb-3 text-start">Subscribe to {{ selectedPlan?.plan_name }}</h5>
-
-    <!-- Duration and Prices -->
-    <div class="d-flex justify-content-between align-items-center mb-3">
-      <span class="text-white">{{ selectedPlan?.period }} Days</span>
-      <span>
-        <span class="text-white text-decoration-line-through me-2">
-          ₹{{ selectedPlan?.price }}
-        </span>
-        <span class="fw-bold text-white">₹{{ selectedPlan?.discount_price }}</span>
-      </span>
-    </div>
-
-    <!-- Checkbox -->
-    <div class="fa-checkbox-row single" (click)="acknowledged = !acknowledged">
-      <i [ngClass]="acknowledged ? 'fa-solid fa-square-check' : 'fa-regular fa-square'"></i>
-      <span class="checkbox-label">
-        By proceeding, I acknowledge that I have read and agree to the
-        <a [routerLink]="['/terms-of-use']" (click)="$event.stopPropagation()">Terms of Use</a>
-        and
-        <a [routerLink]="['/privacy-policy']" (click)="$event.stopPropagation()">Privacy Policy</a>,
-        and I confirm that I am 18 years of age or older.
-      </span>
-    </div>
-
-    <!-- Modal Buttons -->
-    <div class="modal-actions">
-      <button
-        class="btn-yes"
-        [disabled]="!acknowledged"
-        (click)="confirmSubscription()"
-      >
-        Pay Now
-      </button>
-      <button class="btn-no" (click)="closeSubscriptionModal()">Cancel</button>
-    </div>
+    <div *ngIf="!stopInfiniteScroll" infiniteScroll (scrolled)="onScroll($event)" style="height: 1px"></div>
+    }@else {
+        <p class="px-3">No Plans available for you now!</p>
+    }
   </div>
 </div>

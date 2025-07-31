@@ -9,23 +9,25 @@ import { filter } from 'rxjs';
   styleUrl: './footer.component.scss'
 })
 export class FooterComponent {
-  // constructor(private router: Router, private route: ActivatedRoute) {
-  //   this.router.events
-  //     .pipe(filter(event => event instanceof NavigationEnd))
-  //     .subscribe(() => {
-  //       setTimeout(() => {
-  //         this.scrollTo();
-  //       }, 0);
-  //     });
+  constructor(private router: Router, private route: ActivatedRoute) {
+    this.router.events.pipe(filter(event => event instanceof NavigationEnd))
+      .subscribe(() => {
+        setTimeout(() => {
+          // this.scrollTo();
+          window.scrollTo({ top: 0 });
+        }, 1000);
+      });
 
-  //   this.route.queryParams.subscribe(() => {
-  //     this.scrollTo();
-  //   });
+    this.route.queryParams.subscribe(() => {
+      // this.scrollTo();
+      window.scrollTo({ top: 0 });
+    });
 
-  //   this.route.params.subscribe(() => {
-  //     this.scrollTo();
-  //   });
-  // }
+    this.route.params.subscribe(() => {
+      // this.scrollTo();
+      window.scrollTo({ top: 0 });
+    });
+  }
 
   scrollTo(top: number = 0) {
     window.scrollTo({ top: top, behavior: 'smooth' });

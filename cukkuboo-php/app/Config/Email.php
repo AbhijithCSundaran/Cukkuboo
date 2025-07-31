@@ -125,11 +125,11 @@ class Email extends BaseConfig
 
     public string $protocol   = 'smtp';
     public string $SMTPHost   = 'smtp.gmail.com';
-    public string $SMTPUser   = 'mufeedahidaya@gmail.com';
-    public string $SMTPPass   = 'hhaeqrobsrwvsvwt'; // 🔒 Use app password here
-    public int    $SMTPPort   = 587;
+    public string $SMTPUser   = 'no-reply@smartlounge.online';
+    public string $SMTPPass   = 'JujjmH9WkpL7AgP4TgHe'; // 🔒 Use app password here
+    public int    $SMTPPort   = 465;
     public int    $SMTPTimeout = 10;
-    public string $SMTPCrypto = 'tls';
+    public string $SMTPCrypto = 'ssl';
 
     public string $mailType   = 'html';
     public string $charset    = 'UTF-8';

@@ -15,16 +15,56 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material/core';
-
+import {
+  MatNativeDateModule,
+  DateAdapter,
+  MAT_DATE_FORMATS,
+  NativeDateAdapter
+} from '@angular/material/core';
+import { MatSelectModule } from '@angular/material/select';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { UserService } from '../../services/user/user.service';
 import { ValidationMessagesComponent } from '../../core/components/validation-messsage/validaation-message.component';
+import { ValidationService } from '../../core/services/validation.service';
+import countrycode from '../../../assets/json/countrycode.json';
+
+export class CustomDateAdapter extends NativeDateAdapter {
+  override format(date: Date, displayFormat: Object): string {
+    if (displayFormat === 'input') {
+      const day = this._to2digit(date.getDate());
+      const month = this._to2digit(date.getMonth() + 1);
+      const year = date.getFullYear();
+      return `${day}-${month}-${year}`;
+    }
+    return super.format(date, displayFormat);
+  }
+
+  private _to2digit(n: number): string {
+    return ('00' + n).slice(-2);
+  }
+}
+
+export const CUSTOM_DATE_FORMATS = {
+  parse: {
+    dateInput: { day: 'numeric', month: 'numeric', year: 'numeric' }
+  },
+  display: {
+    dateInput: 'input',
+    monthYearLabel: { year: 'numeric', month: 'short' },
+    dateA11yLabel: { year: 'numeric', month: 'long', day: 'numeric' },
+    monthYearA11yLabel: { year: 'numeric', month: 'long' }
+  }
+};
 
 @Component({
   selector: 'app-sign-up',
   standalone: true,
   templateUrl: './sign-up.component.html',
   styleUrls: ['./sign-up.component.scss'],
+  providers: [
+    { provide: DateAdapter, useClass: CustomDateAdapter },
+    { provide: MAT_DATE_FORMATS, useValue: CUSTOM_DATE_FORMATS }
+  ],
   imports: [
     CommonModule,
     RouterModule,
@@ -36,6 +76,8 @@ import { ValidationMessagesComponent } from '../../core/components/validation-me
     MatSnackBarModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    MatSelectModule,
+    MatTooltipModule,
     ValidationMessagesComponent
   ]
 })
@@ -44,13 +86,16 @@ export class SignUpComponent implements OnInit {
   hidePassword = true;
   hideConfirmPassword = true;
   maxDate: Date = new Date();
+  showPasswordHint = false;
+
+  public countryCodes = countrycode;
 
   constructor(
     private fb: FormBuilder,
     private userService: UserService,
     private snackBar: MatSnackBar,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     const today = new Date();
@@ -60,22 +105,26 @@ export class SignUpComponent implements OnInit {
     this.signUpForm = this.fb.group(
       {
         username: ['', Validators.required],
-        email: ['', [Validators.required, Validators.email]],
-        phone: ['', [
-          Validators.required,
-          Validators.pattern(/^\+?[\d\-]{6,14}$/) // 7–15 chars, + and -
-        ]],
+        email: ['', [Validators.required, ValidationService.emailValidator]],
+        countryCode: ['+91', Validators.required],
+        phone: ['', [Validators.required, Validators.pattern(/^\d{6,15}$/)]],
         date_of_birth: ['', [Validators.required, this.ageValidator(18)]],
-        password: ['', [Validators.required, Validators.minLength(8)]],
-        confirmPassword: ['', Validators.required]
+        password: ['', [Validators.required, ValidationService.passwordValidator]],
+        confirmPassword: ['', [Validators.required, ValidationService.passwordValidator]]
       },
-      { validators: [this.passwordMatchValidator] }
+      // { validators: [this.passwordConfirming] }
     );
   }
 
-  /**
-   * Validator to check if user is at least minAge
-   */
+  forceLowerCaseEmail(): void {
+    const emailControl = this.signUpForm.get('email');
+    const currentValue = emailControl?.value || '';
+    const lowerCased = currentValue.toLowerCase();
+    if (currentValue !== lowerCased) {
+      emailControl?.setValue(lowerCased, { emitEvent: false });
+    }
+  }
+
   ageValidator(minAge: number) {
     return (control: AbstractControl): ValidationErrors | null => {
       const dob = new Date(control.value);
@@ -89,32 +138,28 @@ export class SignUpComponent implements OnInit {
     };
   }
 
-  /**
-   * Validator to check if password and confirmPassword match
-   */
-  passwordMatchValidator(group: AbstractControl): ValidationErrors | null {
+  passwordConfirming(group: AbstractControl): ValidationErrors | null {
     const password = group.get('password')?.value;
-    const confirm = group.get('confirmPassword')?.value;
-    return password === confirm ? null : { passwordMismatch: true };
+    const confirmPassword = group.get('confirmPassword')?.value;
+    if (password && confirmPassword && password !== confirmPassword) {
+      group.get('confirmPassword')?.setErrors({ passwordsMismatch: true });
+      return { passwordsMismatch: true };
+    } else {
+      group.get('confirmPassword')?.setErrors(null);
+      return null;
+    }
   }
 
-  /**
-   * Restrict mobile number to +, -, and digits only
-   */
   onNumberInput(event: any): void {
     const input = event.target;
-    const filteredValue = input.value.replace(/[^\d+\-]/g, '').slice(0, 15);
+    const filteredValue = input.value.replace(/[^\d]/g, '').slice(0, 15);
     input.value = filteredValue;
     this.signUpForm.get('phone')?.setValue(filteredValue, { emitEvent: false });
   }
 
-  /**
-   * Submit registration form
-   */
   onSubmit(): void {
     this.signUpForm.markAllAsTouched();
 
-    // Form-level error: password mismatch
     if (this.signUpForm.hasError('passwordMismatch')) {
       this.snackBar.open('Password and Confirm Password do not match.', '', {
         duration: 3000,
@@ -124,7 +169,6 @@ export class SignUpComponent implements OnInit {
       return;
     }
 
-    // Any other field-level error
     if (this.signUpForm.invalid) {
       this.snackBar.open('Please fill all required fields correctly.', '', {
         duration: 3000,
@@ -134,7 +178,11 @@ export class SignUpComponent implements OnInit {
       return;
     }
 
-    const formData = this.signUpForm.value;
+    const formValue = this.signUpForm.value;
+    const formData = {
+      ...formValue,
+      phone: `${formValue.countryCode}-${formValue.phone}`
+    };
 
     this.userService.register(formData).subscribe({
       next: (response) => {

@@ -8,6 +8,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { UserService } from '../../services/user.service';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-user-list',
@@ -22,11 +23,12 @@ import { UserService } from '../../services/user.service';
     MatIconModule,
     MatFormFieldModule,
     MatInputModule,
+    MatTooltipModule
   ]
 })
 export class UserListComponent implements OnInit, AfterViewInit {
   displayedColumns: string[] = [
-    'slNo', 'username', 'phone', 'email', 'country', 'status', 'subscription', 'action'
+    'slNo', 'username', 'phone', 'email', 'status', 'subscription', 'action'
   ];
   dataSource = new MatTableDataSource<any>([]);
   confirmDeleteUserId: number | null = null;
@@ -63,6 +65,7 @@ export class UserListComponent implements OnInit, AfterViewInit {
         if (response.success) {
           this.dataSource.data = response?.data || [];
           this.totalItems = response?.total || 0;
+          
         }
       },
       error: (error) => {

@@ -18,12 +18,15 @@
       color: #fff;
     }
      &-canceled {
-    background-color: #9e9e9e; // ✅ gray for canceled
+    background-color: #9e9e9e; // 
     color: #fff;
   }
     
   }
 
+  .pr-2{
+    padding-right:10px;
+  }
 
 .add-button {
   background-color: #c71336; 
@@ -196,6 +199,11 @@ th.mat-column-slNo,
     width: 75px;
     justify-content: center;
   }
+
+
+  .hide-mobile{
+    display: none;
+  }
 }
 
 @media (max-width: 320px) {
@@ -206,4 +214,10 @@ th.mat-column-slNo,
     width: 75px;
     justify-content: center;
   }
+}
+.truncate-text {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  max-width: 150px;
 }

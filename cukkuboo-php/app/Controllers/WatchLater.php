@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use CodeIgniter\RESTful\ResourceController;
+use App\Helpers\AuthHelper; 
 use App\Models\WatchLaterModel;
 use App\Libraries\AuthService;
 
@@ -13,104 +14,112 @@ class WatchLater extends ResourceController
 
     public function __construct()
     {
+        $this->session = \Config\Services::session();
+        $this->input = \Config\Services::request();
         $this->watchLaterModel = new WatchLaterModel();
         $this->authService = new AuthService();
     }
 
     public function add()
-    {
-        $authHeader = $this->request->getHeaderLine('Authorization');
-        $user = $this->authService->getAuthenticatedUser($authHeader);
-        if (!$user) 
+{
+    // $authHeader = $this->request->getHeaderLine('Authorization');
+    $authHeader = AuthHelper::getAuthorizationToken($this->request);
+    $user = $this->authService->getAuthenticatedUser($authHeader);
+    if (!$user) 
             return $this->failUnauthorized('Invalid or missing token.');
-        if (!$user || !isset($user['user_id'])) {
-            return $this->respond([
-                'success' => false,
-                'message' => 'Unauthorized user.',
-                'data'=>[]
-            ]);
-        }
-
-        $data = $this->request->getJSON(true);
-        $movId = $data['mov_id'] ?? null;
-
-        if (!$movId) {
-            return $this->respond([
-                'success' => false,
-                'message' => 'Movie ID is required.'
-            ]);
-        }
-
-        $added = $this->watchLaterModel->addToWatchLater($user['user_id'], $movId);
-
+    if (!$user || !isset($user['user_id'])) {
         return $this->respond([
-            'success' => $added ? true : false,
-            'message' => $added ? 'Movie added to Watch Later.' : 'Movie already in Watch Later.',
-            'data'=>$data
+            'success' => false,
+            'message' => 'Unauthorized user.',
+            'data' => []
         ]);
     }
+    if ($user['status'] != 1) {
+        return $this->failUnauthorized('Token expired. You have been logged out.');
+    }
+    $data = $this->request->getJSON(true);
+    $movId = $data['mov_id'] ?? null;
+
+    if (!$movId) {
+        return $this->respond([
+            'success' => false,
+            'message' => 'Movie ID is required.',
+            'data' => []
+        ]);
+    }
+
+    $insertId = $this->watchLaterModel->addToWatchLater($user['user_id'], $movId);
+
+    if (!$insertId) {
+        return $this->respond([
+            'success' => false,
+            'message' => 'Movie already in Watch Later.',
+            'data' => []
+        ]);
+    }
+
+    return $this->respond([
+        'success' => true,
+        'message' => 'Movie added to Watch Later.',
+        'data' => [
+            'watch_later_id' => $insertId,
+            'mov_id' => $movId
+        ]
+    ]);
+}
+
 public function getlist()
 {
-    $authHeader = $this->request->getHeaderLine('Authorization');
+    // $authHeader = $this->request->getHeaderLine('Authorization');
+    $authHeader = AuthHelper::getAuthorizationToken($this->request);
     $user = $this->authService->getAuthenticatedUser($authHeader);
 
     if (!$user || !isset($user['user_id'])) {
         return $this->failUnauthorized('Invalid or missing token.');
     }
-
+    if ($user['status'] != 1) {
+        return $this->failUnauthorized('Token expired. You have been logged out.');
+    }
     $pageIndex = (int) ($this->request->getGet('pageIndex') ?? 0);
     $pageSize = $this->request->getGet('pageSize');
     $search = trim($this->request->getGet('search') ?? '');
 
     $isFullList = ($pageSize === null || $pageSize == -1);
 
-    if (!$isFullList) {
+    $watchLaterModel = new watchLaterModel();
+
+    if ($isFullList) {
+        $result = $watchLaterModel->getAllList($search);
+    } else {
         $pageSize = (int) $pageSize;
         if ($pageSize <= 0) {
             $pageSize = 10;
         }
-        $offset = $pageIndex * $pageSize;
+
+        $result = $watchLaterModel->getPaginatedList($pageIndex, $pageSize, $search);
     }
-
-    $db = \Config\Database::connect();
-    $builder = $db->table('watch_later wl')
-        ->select('wl.*, m.title, m.thumbnail,m.banner')
-        ->join('movies_details m', 'm.mov_id = wl.mov_id', 'left')
-        ->where('wl.status !=', 9);  
-
-    if (!empty($search)) {
-        $builder->like('m.title', $search);
-    }
-    $totalBuilder = clone $builder;
-    $total = $totalBuilder->countAllResults(false);
-
-    if (!$isFullList) {
-        $builder->limit($pageSize, $offset);
-    }
-
-    $data = $builder
-        ->orderBy('wl.watch_later_id', 'DESC')
-        ->get()
-        ->getResult();
 
     return $this->respond([
         'success' => true,
         'message' => 'Watch Later list fetched successfully.',
-        'total' => $total,
-        'data' => $data
+        'total'   => $result['total'],
+        'data'    => $result['data']
     ]);
 }
 
 
  public function getById($id)
 {
-    $authHeader = $this->request->getHeaderLine('Authorization');
+    // $authHeader = $this->request->getHeaderLine('Authorization');
+    $authHeader = AuthHelper::getAuthorizationToken($this->request);
     $user = $this->authService->getAuthenticatedUser($authHeader);
 
     if (!$user) {
         return $this->failUnauthorized('Invalid or missing token.');
     }
-
+    if ($user['status'] != 1) {
+        return $this->failUnauthorized('Token expired. You have been logged out.');
+    }
     $entry = $this->watchLaterModel->getById($id); 
 
     if (!$entry) {
@@ -130,11 +139,15 @@ public function getlist()
 
 public function getUserWatchLater($userId = null)
 {
-    $authHeader = $this->request->getHeaderLine('Authorization');
+    // $authHeader = $this->request->getHeaderLine('Authorization');
+   $authHeader = AuthHelper::getAuthorizationToken($this->request);
     $authUser = $this->authService->getAuthenticatedUser($authHeader);
 
     if (!$authUser) {
         return $this->failUnauthorized('Invalid or missing token.');
+    }
+    if ($authUser['status'] != 1) {
+        return $this->failUnauthorized('Token expired. You have been logged out.');
     }
 
     if ($userId === null) {
@@ -157,13 +170,16 @@ public function getUserWatchLater($userId = null)
 }
 public function delete($id = null)
 {
-    $authHeader = $this->request->getHeaderLine('Authorization');
+    // $authHeader = $this->request->getHeaderLine('Authorization');
+    $authHeader = AuthHelper::getAuthorizationToken($this->request);
     $user = $this->authService->getAuthenticatedUser($authHeader);
     
     if (!$user) {
         return $this->failUnauthorized('Invalid or missing token.');
     }
-
+    if ($user['status'] != 1) {
+        return $this->failUnauthorized('Token expired. You have been logged out.');
+    }
     if ($id === null) {
         return $this->failValidationErrors('Watch Later ID is required.');
     }
@@ -182,13 +198,16 @@ public function delete($id = null)
 }
 public function clearAllHistory()
 {
-    $authHeader = $this->request->getHeaderLine('Authorization');
+    // $authHeader = $this->request->getHeaderLine('Authorization');
+    $authHeader = AuthHelper::getAuthorizationToken($this->request);
     $user = $this->authService->getAuthenticatedUser($authHeader);
 
     if (!$user || !isset($user['user_id'])) {
         return $this->failUnauthorized('Invalid or missing token.');
     }
-
+    if ($user['status'] != 1) {
+        return $this->failUnauthorized('Token expired. You have been logged out.');
+    }
     $userId = $user['user_id'];
 
     $clearedCount = $this->watchLaterModel->hardDeleteAllHistoryByUser($userId);

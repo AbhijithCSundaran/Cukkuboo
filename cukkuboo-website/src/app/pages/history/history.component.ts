@@ -4,91 +4,101 @@ import { RouterModule } from '@angular/router';
 import { MovieService } from '../../services/movie.service';
 import { environment } from '../../../environments/environment';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-
-interface HistoryItem {
-  save_history_id: number;
-  mov_id: string;
-  title: string;
-  description: string;
-  thumbnail: string;
-  completed_at: string;
-}
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmationDialogComponent } from '../../core/components/confirmation-dialog/confirmation-dialog.component';
+import { InfiniteScrollDirective } from '../../core/directives/infinite-scroll/infinite-scroll.directive';
 
 @Component({
   selector: 'app-history',
   standalone: true,
-  imports: [CommonModule, RouterModule, MatSnackBarModule],
+  imports: [CommonModule, RouterModule, MatSnackBarModule, InfiniteScrollDirective],
   templateUrl: './history.component.html',
   styleUrls: ['./history.component.scss']
 })
 export class HistoryComponent implements OnInit {
-  historyList: HistoryItem[] = [];
-  imageUrl: string = environment.apiUrl + 'uploads/images/';
+  historyList: any[] = [];
+  imageUrl: string = environment.fileUrl + 'uploads/images/';
   pageIndex: number = 0;
   pageSize: number = 8;
   totalItems: number = 0;
-
-  showDeleteModal: boolean = false;
-  showClearAllModal: boolean = false;
-  itemToDelete: HistoryItem | null = null;
-  itemToDeleteIndex: number = -1;
+  stopInfiniteScroll: boolean = false;
+  isLoading: boolean = false;
+    randomBanner: string = 'assets/images/background/movie_banner.jpg';
 
   constructor(
     private movieService: MovieService,
-    private snackBar: MatSnackBar
-  ) {}
+    private snackBar: MatSnackBar,
+    private dialog: MatDialog,
+  ) { }
 
   ngOnInit(): void {
     this.fetchHistory();
   }
 
-  fetchHistory(): void {
+ fetchHistory(): void {
+    this.isLoading = true;
     this.movieService.getHistory(this.pageIndex, this.pageSize).subscribe({
       next: (res) => {
+        this.isLoading = false;
         if (res?.success && Array.isArray(res.data)) {
-          this.historyList = res.data.map((item: any) => ({
-            save_history_id: item.save_history_id,
-            mov_id: item.mov_id,
-            title: item.title,
-            description: item.description,
-            thumbnail: this.imageUrl + item.thumbnail,
-            completed_at: item.completed_at
-          }));
-          this.totalItems = res.total || 0;
+          if (this.pageIndex === 0) {
+            this.historyList = res.data;
+
+            //  random banner
+            const banners = res.data.map((m: any) => m.banner).filter((b: string) => !!b);
+            if (banners.length) {
+              const randomIndex = Math.floor(Math.random() * banners.length);
+              this.randomBanner = this.imageUrl + banners[randomIndex];
+            }
+          } else {
+            this.historyList = [...this.historyList, ...res.data];
+          }
+
+          this.totalItems = res.total || this.historyList.length;
+          if (!res.data.length || this.historyList.length >= this.totalItems) {
+            this.stopInfiniteScroll = true;
+          }
         } else {
-          this.historyList = [];
-          this.totalItems = 0;
+          this.stopInfiniteScroll = true;
         }
       },
       error: (err) => {
         console.error('History fetch error:', err);
-        this.historyList = [];
-        this.totalItems = 0;
+        this.isLoading = false;
+        this.stopInfiniteScroll = true;
+        this.randomBanner = 'assets/images/background/movie_banner.jpg';
       }
     });
   }
 
-  openDeleteModal(item: HistoryItem, index: number): void {
-    this.itemToDelete = item;
-    this.itemToDeleteIndex = index;
-    this.showDeleteModal = true;
+  onScroll(): void {
+    if (!this.stopInfiniteScroll && !this.isLoading) {
+      this.pageIndex++;
+      this.fetchHistory();
+    }
   }
 
-  cancelDelete(): void {
-    this.itemToDelete = null;
-    this.itemToDeleteIndex = -1;
-    this.showDeleteModal = false;
+  askToRemoveItem(item: any, index: number) {
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      data: {
+        message: `<p>Are you sure you want to remove <span>"${item?.title}"</span> from history?</p>`
+      },
+    });
+    dialogRef.afterClosed().subscribe((result: any) => {
+      if (result) {
+        this.confirmDelete(item, index);
+      }
+    })
   }
 
-  confirmDelete(): void {
-    if (!this.itemToDelete) return;
-
-    this.movieService.deleteHistoryItem(this.itemToDelete.save_history_id).subscribe({
+  confirmDelete(item: any, index: number): void {
+    if (!item) return;
+    this.movieService.deleteHistoryItem(item.watch_history_id).subscribe({
       next: (res) => {
         if (res?.success) {
-          this.historyList.splice(this.itemToDeleteIndex, 1);
+          this.historyList.splice(index, 1);
           this.totalItems--;
-          this.snackBar.open('Item deleted from history', '', {
+          this.snackBar.open('Item removed from Watch History successfully', '', {
             duration: 3000,
             verticalPosition: 'top',
             horizontalPosition: 'center',
@@ -99,29 +109,30 @@ export class HistoryComponent implements OnInit {
             duration: 3000,
             verticalPosition: 'top',
             horizontalPosition: 'center',
-            panelClass: ['snackbar-danger']
+            panelClass: ['snackbar-error']
           });
         }
-        this.cancelDelete();
       },
       error: () => {
         this.snackBar.open('Error deleting item', '', {
           duration: 3000,
           verticalPosition: 'top',
           horizontalPosition: 'center',
-          panelClass: ['snackbar-danger']
+          panelClass: ['snackbar-error']
         });
-        this.cancelDelete();
       }
     });
   }
 
-  openClearAllModal(): void {
-    this.showClearAllModal = true;
-  }
-
-  cancelClearAll(): void {
-    this.showClearAllModal = false;
+  askToClearAll() {
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      data: { message: `<p>Are you sure you want to <span>clear all</span> items from Watch History?</p>` },
+    });
+    dialogRef.afterClosed().subscribe((result: any) => {
+      if (result) {
+        this.confirmClearAll();
+      }
+    })
   }
 
   confirmClearAll(): void {
@@ -129,7 +140,9 @@ export class HistoryComponent implements OnInit {
       next: (res) => {
         if (res?.success && res?.data?.cleared) {
           this.historyList = [];
+          this.pageIndex = 0;
           this.totalItems = 0;
+          this.stopInfiniteScroll = false;
           this.snackBar.open(res.message || 'All history cleared.', '', {
             duration: 3000,
             verticalPosition: 'top',
@@ -141,36 +154,18 @@ export class HistoryComponent implements OnInit {
             duration: 3000,
             verticalPosition: 'top',
             horizontalPosition: 'center',
-            panelClass: ['snackbar-danger']
+            panelClass: ['snackbar-error']
           });
         }
-        this.cancelClearAll();
       },
       error: () => {
         this.snackBar.open('Something went wrong', '', {
           duration: 3000,
           verticalPosition: 'top',
           horizontalPosition: 'center',
-          panelClass: ['snackbar-danger']
+          panelClass: ['snackbar-error']
         });
-        this.cancelClearAll();
       }
     });
-  }
-
-  nextPage(): void {
-    if ((this.pageIndex + 1) * this.pageSize >= this.totalItems) return;
-    this.pageIndex++;
-    this.fetchHistory();
-  }
-
-  prevPage(): void {
-    if (this.pageIndex === 0) return;
-    this.pageIndex--;
-    this.fetchHistory();
-  }
-
-  totalPages(): number {
-    return Math.ceil(this.totalItems / this.pageSize);
   }
 }

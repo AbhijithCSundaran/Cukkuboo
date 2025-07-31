@@ -1,21 +1,24 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatCardModule } from '@angular/material/card';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
-import { CommonModule } from '@angular/common';
 import { ValidationMessagesComponent } from '../../../core/components/validation-messsage/validaation-message.component';
 import { ValidationService } from '../../../core/services/validation.service';
 import { PlanService } from '../../../services/plan.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-add-subscription-plan',
   standalone: true,
+  templateUrl: './add-subscription-plan.component.html',
+  styleUrl: './add-subscription-plan.component.scss',
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -26,9 +29,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
     MatDatepickerModule,
     MatNativeDateModule,
     ValidationMessagesComponent
-  ],
-  templateUrl: './add-subscription-plan.component.html',
-  styleUrl: './add-subscription-plan.component.scss'
+  ]
 })
 export class AddSubscriptionPlanComponent implements OnInit {
   isEditMode = false;
@@ -36,9 +37,9 @@ export class AddSubscriptionPlanComponent implements OnInit {
   dataForm!: FormGroup;
 
   constructor(
+    private fb: FormBuilder,
     private router: Router,
     private route: ActivatedRoute,
-    private fb: FormBuilder,
     private planService: PlanService,
     private snackBar: MatSnackBar
   ) {}
@@ -48,103 +49,82 @@ export class AddSubscriptionPlanComponent implements OnInit {
       subscriptionplan_id: [''],
       plan_name: ['', Validators.required],
       price: [null, [Validators.required, Validators.min(0), ValidationService.floatValidator]],
-      discount_price: [null, [Validators.min(0), ValidationService.floatValidator]],
-period: [null, [Validators.required, Validators.min(1)]],
+      offer_price: [null, [Validators.min(0), ValidationService.floatValidator]],
+      period: [null, [Validators.required, Validators.min(1)]],
       features: ['', Validators.required]
     });
 
     this.subscriptionPlanId = this.route.snapshot.paramMap.get('id');
     if (this.subscriptionPlanId) {
       this.isEditMode = true;
-this.loadSubscriptionPlanData(Number(this.subscriptionPlanId));
+      this.loadSubscriptionPlanData(Number(this.subscriptionPlanId));
     }
   }
 
-loadSubscriptionPlanData(id: number): void {
-  this.planService.getPlanById(id).subscribe({
-    next: (response) => {
-      console.log('Prefill API response:', response);
+  loadSubscriptionPlanData(id: number): void {
+    this.planService.getPlanById(id).subscribe({
+      next: (response) => {
+        const data = Array.isArray(response?.data) ? response.data[0] : response.data;
+        if (!data) {
+          this.showSnackbar('No plan data found.', 'snackbar-error');
+          return;
+        }
 
-      const data = Array.isArray(response?.data) ? response.data[0] : response.data;
-      if (!data) {
-        this.showSnackbar('No plan data found.', 'snackbar-error');
-        return;
+        this.dataForm.patchValue({
+          subscriptionplan_id: +data.subscriptionplan_id,
+          plan_name: data.plan_name,
+          price: +data.price,
+          offer_price: +data.discount_price,
+          period: +data.period,
+          features: data.features
+        });
+      },
+      error: (err) => {
+        console.error('Error loading plan:', err);
+        this.showSnackbar('Failed to load plan data.', 'snackbar-error');
       }
-
-  this.dataForm.patchValue({
-  subscriptionplan_id: +data.subscriptionplan_id,
-  plan_name: data.plan_name,
-  price: +data.price, // Convert to number
-  discount_price: +data.discount_price, // Convert to number
- period: data.period?.toString(),
-   features: data.features
-});
-
-    },
-    error: (err) => {
-      console.error('Error fetching plan by ID:', err);
-      this.showSnackbar('Failed to load plan data.', 'snackbar-error');
-    }
-  });
-}
-
-  // saveUser(): void {
-  //   if (this.dataForm.invalid) {
-  //     this.dataForm.markAllAsTouched();
-  //     return;
-  //   }
-
-  //   const planData = this.dataForm.value;
-
-  //   // In edit mode, ensure subscriptionplan_id is included
-  //   if (this.isEditMode && this.subscriptionPlanId) {
-  //     planData.subscriptionplan_id = this.subscriptionPlanId;
-  //   }
-
-  //   this.planService.addPlan(planData).subscribe({
-  //     next: () => {
-  //       const msg = this.isEditMode ? 'Plan updated successfully!' : 'Plan saved successfully!';
-  //       this.showSnackbar(msg, 'snackbar-success');
-  //       this.router.navigate(['/subscription-plans']);
-  //     },
-  //     error: (error) => {
-  //       console.error('Error saving plan:', error);
-  //       this.showSnackbar('Failed to save plan. Please try again.', 'snackbar-error');
-  //     }
-  //   });
-  // }
-
+    });
+  }
 
   saveUser(): void {
-  if (this.dataForm.invalid) {
-    this.dataForm.markAllAsTouched();
-    return;
-  }
-
-  const planData = this.dataForm.value;
-
-  if (this.isEditMode && this.subscriptionPlanId) {
-    planData.subscriptionplan_id = this.subscriptionPlanId;
-  }
-
-
-
-  this.planService.addPlan(planData).subscribe({
-    next: (response) => {
-      console.log('Plan saved successfully. API response:', response); 
-
-      const msg = this.isEditMode ? 'Plan updated successfully!' : 'Plan saved successfully!';
-      this.showSnackbar(msg, 'snackbar-success');
-      this.router.navigate(['/subscription-plans']);
-    },
-    error: (error) => {
-      console.error('Error saving plan:', error);
-      this.showSnackbar('Failed to save plan. Please try again.', 'snackbar-error');
+    if (this.dataForm.invalid) {
+      this.dataForm.markAllAsTouched();
+      this.snackBar.open('Please fill all required fields.', '', {
+        duration: 3000,
+        verticalPosition: 'top',
+        panelClass: ['snackbar-error']
+      });
+      return;
     }
-  });
-}
 
-  showSnackbar(message: string, panelClass: string = 'snackbar-default'): void {
+    const planData = this.dataForm.value;
+    const originalPrice = parseFloat(planData.price);
+    const offerPrice = parseFloat(planData.offer_price);
+
+    if (offerPrice && offerPrice >= originalPrice) {
+      this.showSnackbar('Offer price must be less than the actual price.', 'snackbar-error');
+      return;
+    }
+
+    planData.discount_price = offerPrice;
+    if (this.isEditMode && this.subscriptionPlanId) {
+      planData.subscriptionplan_id = this.subscriptionPlanId;
+    }
+
+    this.planService.addPlan(planData).subscribe({
+      next: () => {
+        const msg = this.isEditMode ? 'Plan updated successfully!' : 'Plan saved successfully!';
+        this.showSnackbar(msg, 'snackbar-success');
+        this.router.navigate(['/subscription-plans']);
+      },
+      error: (error) => {
+        console.error('Error saving plan:', error);
+        this.showSnackbar('Failed to save plan. Please try again.', 'snackbar-error');
+      }
+    });
+  }
+
+  showSnackbar(message: string, panelClass: string): void {
     this.snackBar.open(message, 'Close', {
       duration: 3000,
       verticalPosition: 'top',

@@ -11,9 +11,8 @@ $routes->get('/', 'Home::index');
 
 $routes->post('login/login', 'Login::loginFun',['filter' => 'cors']);
 $routes->post('login/logout', 'Login::logout');
-$routes->post('login/forgot-password', 'Login::sendOtp');
-$routes->post('login/reset-password', 'Login::resetPassword');
 $routes->post('user/change-password', 'User::changePassword');
+$routes->post('login/google-login', 'GoogleLogin::googleLogin');
 //User 
 
 $routes->post('user/register','User::registerFun');
@@ -23,6 +22,11 @@ $routes->get('user/profile', 'User::getUserDetailsById');
 $routes->get('user/list', 'User::getUserList');
 $routes->get('staff/list', 'User::getStaffList');
 $routes->post('user/email-preference', 'User::updateEmailPreference');
+
+//forgot password
+$routes->get('user/profile-index', 'Profile::index');
+$routes->post('user/forgot-password', 'Profile::resetPassword');
+$routes->post('user/delete-user', 'Profile::removeUser');
 
 //Category
 
@@ -35,11 +39,16 @@ $routes->delete('category/categories/(:any)', 'Category::delete/$1');
 
 $routes->post('upload-video', 'Uploads::uploadVideo');
 $routes->post('upload-image', 'Uploads::uploadImage');
+// $routes->get('test-encryption', 'Uploads::testEncryption');
+// $routes->get('stream-video', 'Uploads::streamVideo');
+
+
 
 //Movie details
 
 $routes->post('movie/store', 'MovieDetail::store');
 $routes->get('movie/moviedetails','MovieDetail::getAllMovieDetails');
+$routes->get('movie/activemovie','MovieDetail::getMovieDetails');
 $routes->get('getmovie/(:any)', 'MovieDetail::getMovieById/$1');
 $routes->delete('movie/delete/(:any)','MovieDetail::deleteMovieDetails/$1');
 $routes->get('movies/latest', 'MovieDetail::getLatestMovies');
@@ -81,16 +90,20 @@ $routes->delete('subscriptionplan/delete/(:num)', 'SubscriptionPlan::delete/$1')
 
 $routes->post('reels/add', 'Reels::addReel');
 $routes->get('reels/details', 'Reels::getAllReels');
+$routes->get('reels/activereels', 'Reels::getActiveReels');
 $routes->get('reels/get/(:any)', 'Reels::getReelById/$1');
 $routes->delete('reels/delete/(:any)', 'Reels::deleteReel/$1');
 
 //User subscription
-$routes->post('usersub/save', 'Usersub::autoSubscribe');
+$routes->post('usersub/save', 'Usersub::createSubscribe');
 $routes->get('usersub/details', 'Usersub::getUserSubscriptions');
 $routes->get('usersub/get/(:num)', 'Usersub::getSubscriptionById/$1');
 $routes->get('usersub/get', 'Usersub::getSubscriptionById');
 $routes->delete('usersub/delete/(:num)', 'Usersub::deleteSubscription/$1');
 $routes->delete('usersub/cancelSubscription', 'Usersub::cancelSubscription');
+$routes->get('usersub/active', 'Usersub::getActiveSubscription');
+$routes->get('usersub/history', 'Usersub::getExpiredSubscriptions');
+
 //Reels like and views
 
 $routes->post('reellike/like', 'ReelLike::reelLike');
@@ -130,5 +143,26 @@ $routes->get('watch/get/(:num)', 'WatchLater::getById/$1');
 $routes->get('watch/user', 'WatchLater::getUserWatchLater');
 $routes->delete('watch/delete/(:num)', 'WatchLater::delete/$1');
 $routes->delete('watch/clear-all', 'WatchLater::clearAllHistory');
+
+//Support issues
+$routes->post('support/uploadImage', 'Uploads::uploadScreenshot');
+$routes->post('support/submit', 'Support::submitIssue');
+$routes->get('support/list', 'Support::getAllList');
+$routes->get('support/listId/(:num)', 'Support::getUserComplaintsById/$1');
+$routes->get('support/user', 'Support::getUserComplaintsById');
+$routes->delete('support/delete/(:num)', 'Support::delete/$1');
+
+//Terms and conditions
+$routes->post('policy/create', 'Policy::createPolicy');
+$routes->get('policy/listPolicy', 'Policy::getAllPolicy');
+$routes->get('policy/list/(:num)', 'Policy::getPolicyById/$1');
+$routes->delete('policy/delete/(:num)', 'Policy::deletePolicy/$1');
+
+
+//RevenueCat 
+$routes->get('subscription/(:any)', 'RevenueCat::getSubscription/$1');
+$routes->post('stripe/test', 'StripePayment::createCheckoutSession');
+
+
 
 ?>

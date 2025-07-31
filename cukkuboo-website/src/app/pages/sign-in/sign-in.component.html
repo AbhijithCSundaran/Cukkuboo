@@ -1,60 +1,184 @@
-<section class="position-relative pb-0">
-  <div class="gen-login-page-background" style="background-image: url('assets/images/background/movie_banner.jpg')"></div>
+<section class="position-relative pb-0 sign_wrpr" [class.popup]="modalData">
+  <div class="gen-login-page-background" style="background-image: url('assets/images/background/movie_banner.jpg')">
+  </div>
 
-  <div class="container">
-    <div class="row">
+  <div [ngClass]="modalData ? 'container-fluid m-0 p-0' : 'container'">
       <div class="col-lg-12">
         <div class="text-center">
-          <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" id="pms_login">
+          <form [formGroup]="step === 0 ? loginForm : forgotForm" (ngSubmit)="step === 0 ? onSubmit() : null" id="pms_login">
             <!-- Logo -->
-            <div class="text-center mb-3" routerLink="/">
-              <img src="assets/images/logo-collapsed.png" alt="Logo" style="max-width: 60px;" />
+            <div class="text-center mb-3 clickable-logo" routerLink="/">
+              <img src="assets/images/logo-collapsed.png" alt="Logo" />
             </div>
 
-            <h4 class="text-start">Sign In</h4>
+            <!-- Headings -->
+            <h4 class="text-start">
+              {{
+                step === 0
+                  ? 'Sign In' + (modalData ? ' To Continue' : '')
+                  : step === 1
+                  ? 'Forgot Password'
+                  : step === 2
+                  ? 'Enter OTP'
+                  : 'Reset Password'
+              }}
+            </h4>
 
-            <!-- Email Field -->
-            <mat-form-field appearance="outline" class="w-100">
-              <mat-label>Email Address</mat-label>
-              <input matInput formControlName="email" placeholder="Enter your email" id="user_login"
-                class="input_text" />
-              <mat-error>
-                <Validation-Messages [control]="loginForm.controls['email']"></Validation-Messages>
-              </mat-error>
-            </mat-form-field>
+            <!-- Step 0: Login -->
+            <ng-container *ngIf="step === 0">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Email Address</mat-label>
+                <input
+                  matInput
+                  formControlName="email"
+                  placeholder="Enter your email"
+                  (input)="forceLowerCase('login')"
+                  (paste)="forceLowerCase('login')"
+                />
+                <mat-error>
+                  <Validation-Messages [control]="loginForm.controls['email']"></Validation-Messages>
+                </mat-error>
+              </mat-form-field>
 
-            <!-- Password  -->
-            <mat-form-field appearance="outline" class="w-100">
-              <mat-label>Password</mat-label>
-              <input matInput [type]="hide ? 'password' : 'text'" formControlName="password"
-                placeholder="Enter your password" id="user_pass" />
-              <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
-                [attr.aria-pressed]="hide" type="button">
-                <mat-icon class="small-eye-icon">{{ hide ? 'visibility_off' : 'visibility' }}</mat-icon>
-              </button>
-              <mat-error>
-                <Validation-Messages [control]="loginForm.controls['password']"></Validation-Messages>
-              </mat-error>
-            </mat-form-field>
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Password</mat-label>
+                <input
+                  matInput
+                  [type]="hide ? 'password' : 'text'"
+                  formControlName="password"
+                  placeholder="Enter your password"
+                />
+                <button mat-icon-button matSuffix (click)="hide = !hide" type="button">
+                  <mat-icon class="small-eye-icon">{{ hide ? 'visibility_off' : 'visibility' }}</mat-icon>
+                </button>
+                <mat-error>
+                  <Validation-Messages [control]="loginForm.controls['password']"></Validation-Messages>
+                </mat-error>
+              </mat-form-field>
 
-            <!-- Remember Me Checkbox -->
-            <!-- <div class="login-remember">
-              <mat-checkbox formControlName="rememberMe">Remember Me</mat-checkbox>
-            </div> -->
+              <div class="text-start mt-1">
+                <button type="submit" class="red-button">Sign-In</button>
+              </div>
 
-            <!-- Submit Button -->
-            <div class="text-start mt-3">
-              <button type="submit" class="red-button">Sign-In</button>
-            </div>
+              <div class="text-start mt-2">
+                <a (click)="startForgotFlow()" class="red-link">Forgot Password?</a>
+              </div>
 
-            <!-- Sign In Link -->
-            <div class="text-start mt-2">
-              <span class="me-2">Don't have an account?</span>
-              <a (click)="navigateToSignUp()" class="signup-link red-link">Sign Up</a>
-            </div>
+              <div class="or-separator mt-2">
+                <span>or</span>
+              </div>
+
+              <div class="text-center mt-1 col-12 d-flex">
+                <div id="googleSignInBtn" class=""></div>
+              </div>
+
+              <div class="text-start mt-2">
+                <span class="me-2">Don't have an account?</span>
+                <a (click)="navigateToSignUp()" class="signup-link red-link">Sign Up</a>
+              </div>
+            </ng-container>
+
+            <!-- Step 1: Enter Email -->
+            <ng-container *ngIf="step === 1">
+              <p class="instruction-text mb-3">
+               Enter your registered email to receive a password reset OTP.
+              </p>
+
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Email Address</mat-label>
+                <input
+                  matInput
+                  formControlName="email"
+                  placeholder="Enter your email"
+                  (input)="forceLowerCase('forgot')"
+                  (paste)="forceLowerCase('forgot')"
+                />
+              </mat-form-field>
+
+              <button type="button" class="red-button w-100 mt-2" (click)="sendEmail()">Send OTP</button>
+
+              <div class="text-start mt-2">
+                <a (click)="goBackToLogin()" class="red-link">Back to Login</a>
+              </div>
+            </ng-container>
+
+            <!-- Step 2: Enter OTP -->
+            <ng-container *ngIf="step === 2">
+              <p class="instruction-text mb-3">
+                Enter the 6-digit code sent to <strong class="red-email">{{ emailUsed }}</strong>
+              </p>
+
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>OTP Verification</mat-label>
+                <input
+                  matInput
+                  formControlName="otp"
+                  maxlength="6"
+                  (keypress)="allowOnlyNumbers($event)"
+                  autocomplete="one-time-code"
+                />
+              </mat-form-field>
+
+              <button type="button" class="red-button w-100 mt-2" (click)="submitOtp()">Verify OTP</button>
+
+              <div class="otp-countdown-wrapper mb-2 pt-2">
+                <div class="countdown-content">
+                  <p *ngIf="resendCountdown > 0" class="countdown-text">
+                    Resend OTP in <strong class="red-countdown">{{ resendCountdown }}s</strong>
+                  </p>
+                  <a *ngIf="resendCountdown === 0" class="resend-link" (click)="resendOtp()">Resend OTP</a>
+                </div>
+              </div>
+
+              <div class="text-start mt-2">
+                <a (click)="goBackToLogin()" class="red-link">Back to Login</a>
+              </div>
+            </ng-container>
+
+            <!-- Step 3: Reset Password -->
+            <ng-container *ngIf="step === 3">
+              <div class="text-start mb-3">
+                <p class="reset-subtext">Create a new password for your account.</p>
+              </div>
+
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>New Password</mat-label>
+                <input
+                  matInput
+                  [type]="hideNewPassword ? 'password' : 'text'"
+                  formControlName="new_password"
+                />
+                <button mat-icon-button matSuffix type="button" (click)="hideNewPassword = !hideNewPassword">
+                  <mat-icon class="small-eye-icon">{{ hideNewPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+                </button>
+                <mat-error>
+                  <Validation-Messages [control]="forgotForm.controls['new_password']"></Validation-Messages>
+                </mat-error>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Confirm Password</mat-label>
+                <input
+                  matInput
+                  [type]="hideConfirmPassword ? 'password' : 'text'"
+                  formControlName="confirm_password"
+                />
+                <button mat-icon-button matSuffix type="button" (click)="hideConfirmPassword = !hideConfirmPassword">
+                  <mat-icon class="small-eye-icon">{{ hideConfirmPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+                </button>
+                <mat-error>
+                  <Validation-Messages [control]="forgotForm.controls['confirm_password']"></Validation-Messages>
+                </mat-error>
+              </mat-form-field>
+
+              <button type="button" class="red-button w-100 mt-2" (click)="resetPassword()">Reset Password</button>
+
+              <div class="text-start mt-2">
+                <a (click)="goBackToLogin()" class="red-link">Back to Login</a>
+              </div>
+            </ng-container>
           </form>
         </div>
       </div>
-    </div>
   </div>
 </section>

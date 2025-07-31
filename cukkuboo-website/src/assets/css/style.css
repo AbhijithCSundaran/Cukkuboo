@@ -106,7 +106,7 @@ h6 {
     font-family: var(--title-fonts);
     color: var(--white-color);
     font-style: normal;
-    text-transform: capitalize;
+    /* text-transform: capitalize; */
     font-weight: 600;
     margin: 0;
     letter-spacing: 0.02em;
@@ -380,7 +380,7 @@ section,
 
 .gen-section-padding-2 {
     /* padding: 90px 0px 60px 0px; */
-        padding: 30px 0px 30px 0px;
+    padding: 30px 0px 30px 0px;
 }
 
 .gen-section-padding-3 {
@@ -406,18 +406,12 @@ Container
 ===========================================*/
 
 .container {
-    max-width: 1710px;
+    max-width: 96%;
 }
 
 @media (max-width: 1699px) {
     .container {
         max-width: 95%;
-    }
-}
-
-@media (max-width: 1199px) {
-    .container {
-        max-width: 960px;
     }
 }
 
@@ -497,9 +491,10 @@ Back to Top
 /*================================================
 Button Core
 ================================================*/
+/* ,
+[type="submit"] */
 input[type="button"],
-[type="reset"],
-[type="submit"] {
+[type="reset"] {
     padding: 12px 30px;
     font-family: var(--title-fonts);
     font-size: 16px;
@@ -616,10 +611,17 @@ input[type="button"],
     color: var(--primary-color);
 }
 
-.gen-button.gen-button-outline:hover {
+/* .gen-button.gen-button-outline:hover {
     color: var(--blue-color);
     border: 1px solid var(--blue-color);
-}
+} */
+
+/* @media (max-width: 1023px) {
+    .gen-button.gen-button-outline:hover {
+        color: initial;
+        border: initial;
+    }
+} */
 
 /*================================================
 Single Tv Show
@@ -988,7 +990,7 @@ Login, Register
     background: var(--dark-color);
     position: relative;
     z-index: 9;
-    width: 750px;
+    width: 100%;
     display: inline-block;
     text-align: left;
 }
@@ -2077,8 +2079,9 @@ Breadcrum
     text-align: center;
     position: relative;
     background-attachment: fixed !important;
-    background-size: contain !important;
+    background-size: cover;
     background-position: center;
+    background-repeat: repeat-x;
 }
 
 .gen-breadcrumb:before {
@@ -2098,10 +2101,13 @@ Breadcrum
 }
 
 .gen-breadcrumb .gen-breadcrumb-title h1 {
-    font-size: 56px;
-    line-height: 64px;
-    margin-bottom: 15px;
+    font-size: 2.5rem;
+    line-height: 1;
     color: var(--white-color);
+    font-weight: bold;
+    text-shadow: 0 0px 18px rgba(0, 0, 0, 0.7);
+    margin: 0;
+    text-transform: uppercase;
 }
 
 .gen-breadcrumb-container .breadcrumb {
@@ -2158,11 +2164,12 @@ Breadcrum
 @media (max-width: 1023px) {
     .gen-breadcrumb {
         text-align: center;
+        padding: 50px 0;
+
     }
 
     .gen-breadcrumb .gen-breadcrumb-title h1 {
-        font-size: 42px;
-        line-height: 50px;
+        font-size: 2rem;
     }
 
     .gen-breadcrumb-container .breadcrumb {
@@ -2175,9 +2182,13 @@ Breadcrum
 }
 
 @media (max-width: 767px) {
+    .gen-breadcrumb {
+        padding: 30px 0;
+
+    }
+
     .gen-breadcrumb .gen-breadcrumb-title h1 {
-        font-size: 34px;
-        line-height: 42px;
+        font-size: 1.5rem;
     }
 
     .gen-breadcrumb-container .breadcrumb li,
@@ -2676,7 +2687,7 @@ header#gen-header.gen-header-default .gen-menu-search-block {
 
 .gen-account-holder {
     position: relative;
-    margin-right: 30px;
+    /* margin-right: 30px; */
     /* line-height: 90px; */
 }
 
@@ -3263,7 +3274,7 @@ footer#gen-footer .widget ul.menu li a,
 footer#gen-footer .gen-widget-menu .gen-service li a {
     position: relative;
     border: none;
-    padding: 5px 0 5px 15px;
+    padding: 5px 0;
     display: inline-block;
     width: 100%;
 }
@@ -3273,7 +3284,7 @@ footer#gen-footer .gen-widget-menu .gen-service li a:hover {
     color: var(--primary-color);
 }
 
-footer#gen-footer .widget ul.menu li a:before {
+/* footer#gen-footer .widget ul.menu li a:before {
     content: "";
     position: absolute;
     top: 0;
@@ -3287,7 +3298,7 @@ footer#gen-footer .widget ul.menu li a:before {
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
     border-radius: 5px;
-}
+} */
 
 footer#gen-footer .wp-calendar-nav .wp-calendar-nav-prev,
 footer#gen-footer .wp-calendar-nav .wp-calendar-nav-next {
@@ -4365,7 +4376,7 @@ Carousel Movies
 
 /*===== Carousel Movies 2 =====*/
 .gen-carousel-movies-style-2 {
-    margin-bottom: 30px;
+    /* margin-bottom: 30px; */
     display: inline-block;
     width: 100%;
 }
@@ -4663,8 +4674,8 @@ Carousel Movies
     flex-direction: column;
     justify-content: center;
     width: 100%;
-    /* padding: 15px; */
-    padding: 0px 20px;
+    padding: 10px 20px 15px;
+    line-height: 1;
     background: var(--black-color);
 }
 
@@ -4680,7 +4691,7 @@ Carousel Movies
 
 .gen-carousel-movies-style-3 .gen-movie-contain .gen-movie-info h3 {
     font-size: 20px;
-    line-height: 28px;
+    line-height: 1.1;
     font-weight: 400;
     text-overflow: ellipsis;
     overflow: hidden;
@@ -5212,6 +5223,12 @@ Banner
     background-repeat: no-repeat !important;
 }
 
+@media (max-width: 991px) {
+    .gen-banner-movies .item {
+        height: calc(100vh - 150px);
+    }
+}
+
 /* .gen-banner-movies.single .item {
     height: calc(90vh - 90px);
 } */
@@ -5409,6 +5426,10 @@ Banner
         font-size: 54px;
         line-height: 62px;
     }
+
+    .gen-carousel-movies-style-3 .gen-movie-contain .gen-movie-info h3 {
+        font-size: 18px;
+    }
 }
 
 @media (max-width: 1365px) {
@@ -5435,6 +5456,9 @@ Banner
     .gen-banner-movies .owl-carousel .owl-nav {
         display: none;
     }
+    .gen-carousel-movies-style-3 .gen-movie-contain .gen-movie-info h3 {
+        font-size: 16px;
+    }
 }
 
 @media (max-width: 979px) {
@@ -5447,6 +5471,9 @@ Banner
     .gen-banner-movies .gen-movie-contain .gen-movie-info h3 {
         font-size: 40px;
         line-height: 48px;
+    }
+    .gen-carousel-movies-style-3 .gen-movie-contain .gen-movie-info h3 {
+        font-size: 14px;
     }
 
     .gen-banner-movies .gen-movie-contain .gen-movie-meta-holder p,
@@ -5527,7 +5554,7 @@ Banner 2
 .gen-movie-contain-style-2 .gen-movie-info h3 {
     font-size: 62px;
     line-height: 70px;
-    text-transform: uppercase;
+    /* text-transform: uppercase; */
 }
 
 .gen-movie-contain-style-2 .gen-movie-meta-holder ul.gen-meta-after-title {
@@ -6311,4 +6338,5 @@ Icon-Box
         height: auto;
     }
 }
+
 /*===========================================================================================================*/

@@ -4,31 +4,23 @@
     <div class="notifications-list">
       <div class="header">
         <span class="heading">Notifications</span>
-        <button
-          *ngIf="notifications.length > 0"
-          class="mark-toggle"
-          (click)="markAllAsRead()"
-          [disabled]="isMarkingAll"
-        >
+        <button *ngIf="notifications.length > 0" class="mark-toggle" (click)="markAllAsRead()"
+          [disabled]="isMarkingAll">
           {{ isMarkingAll ? 'Marking…' : 'Mark All as Read' }}
         </button>
       </div>
 
       <div class="scrollable-list">
-        <div *ngFor="let notification of notifications" 
-             class="notification-item"
-             [class.active]="notification.notification_id === selectedNotification?.notification_id"
-             [class.read]="notification.read"
-             (click)="selectNotification(notification)">
+        <div *ngFor="let notification of notifications;let i=index" class="notification-item position-relative"
+          [class.active]="notification.notification_id === selectedNotification?.notification_id"
+          [class.unread]="notification.status == 1" (click)="selectNotification(notification)">
           <div class="title-wrapper">
             <div class="title">{{ notification.title }}</div>
-            <span *ngIf="notification.status == 1" class="dot"></span>
+            <!-- <span *ngIf="notification.status == 1" class="dot"></span> -->
           </div>
           <div class="date">{{ notification.date | date: 'short' }}</div>
           <div class="action-buttons">
-            <button class="delete-btn"
-                    (click)="openDeleteModal(notification); $event.stopPropagation()"
-                    title="Delete">
+            <button class="delete-btn" (click)="askToRemoveItem(notification,i);" title="Delete">
               <i class="fas fa-trash"></i>
             </button>
           </div>
@@ -59,18 +51,4 @@
       <p>No notifications found</p>
     </div>
   </ng-template>
-
-  <!-- Delete Confirmation Modal -->
-  <div class="modal" [class.show]="showDeleteModal">
-    <div class="modal-content">
-      <p>
-        Are you sure you want to delete
-        <span class="highlight">"{{ notificationToDelete?.title }}"</span>?
-      </p>
-      <div class="modal-actions">
-        <button class="btn-yes" (click)="confirmDelete()">Delete</button>
-        <button class="btn-no" (click)="cancelDelete()">Cancel</button>
-      </div>
-    </div>
-  </div>
 </div>

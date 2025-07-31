@@ -245,3 +245,9 @@ body.sidebar-open {
 .gen-button:hover .gen-button-text {
   color: white !important;
 }
+@media (max-width: 575px) {
+  .logo {
+    max-width: 120px; 
+    height: auto;
+  }
+}

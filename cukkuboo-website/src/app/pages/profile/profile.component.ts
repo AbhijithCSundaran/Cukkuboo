@@ -198,6 +198,8 @@ export class ProfileComponent implements OnInit {
     this.ShowDeleteAccount = false;
     this.showChangePassword = true;
 
+      // Reset form values and validation states
+  this.changePasswordForm.reset();
 
      // Reset password visibility
   this.hideCurrent = true;

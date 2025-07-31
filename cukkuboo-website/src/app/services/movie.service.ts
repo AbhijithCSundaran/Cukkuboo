@@ -47,7 +47,7 @@ export class MovieService {
       pageSize: pageSize.toString(),
       search: searchText
     };
-    return this.http.get(this.apiUrl + 'movie/moviedetails', { headers: this.headers, params });
+    return this.http.get(this.apiUrl + 'movie/activemovie', { headers: this.headers, params });
   } else {
     // Use /movies/list when type is present 
     const params = {
@@ -56,7 +56,7 @@ export class MovieService {
       search: searchText,
       type: type
     };
-    return this.http.get(this.apiUrl + 'movie/activemovie', { headers: this.headers, params });
+    return this.http.get(this.apiUrl + 'movies/list', { headers: this.headers, params });
   }
 }
 

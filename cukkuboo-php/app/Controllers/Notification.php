@@ -36,12 +36,23 @@ class Notification extends ResourceController
     $data = $this->request->getJSON(true);
     $notificationId = $data['notification_id'] ?? null;
 
+    // $notificationData = [
+    //     'user_id'   => $user['user_id'],
+    //     'title'     => $data['title'] ?? '',
+    //     'content'   => $data['content'] ?? '',
+    //     'status'    => $data['status'] ?? 1,
+    // ];
     $notificationData = [
-        'user_id'   => $user['user_id'],
-        'title'     => $data['title'] ?? '',
-        'content'   => $data['content'] ?? '',
-        'status'    => $data['status'] ?? 1,
-    ];
+    'user_id'       => $user['user_id'],   
+    'title'         => $data['title'] ?? '',
+    'message'       => $data['message'] ?? '',  
+    'type'          => 'global',  
+    'target'        => in_array($data['target'] ?? '', ['all', 'premium', 'free']) ? $data['target'] : 'all',
+    'is_scheduled'  => !empty($data['is_scheduled']) ? true : false,
+    'scheduled_time'=> !empty($data['scheduled_time']) ? $data['scheduled_time'] : null,
+    'status'        => 1,
+];
+
 
     if ($notificationId) {
         $notificationData['modify_by'] = $user['user_id'];
@@ -265,5 +276,32 @@ public function getNotificationById($notificationId = null)
     ]);
 }
 
+public function sendDueNotifications()
+{
+    $dueNotifications = $this->notificationModel->where('is_scheduled', true)
+                                                ->where('scheduled_time <=', date('Y-m-d H:i:s'))
+                                                ->where('sent', 0)
+                                                ->findAll();
+
+    foreach ($dueNotifications as $notification) {
+        $this->sendNotificationToTargetUsers($notification);
+        $this->notificationModel->update($notification['id'], ['sent' => 1]);
+    }
+
+    return $this->respond(['message' => 'Scheduled notifications sent.']);
+}
+
+protected function sendNotificationToTargetUsers($notification)
+{
+    $target = $notification['target'];
+    if ($target === 'all') {
+        $users = $this->UserModel->findAll();
+    } else {
+        $users = $this->UserModel->where('subscription', strtolower($target))->findAll();
+    }
+
+    $userIds = array_column($users, 'user_id');
+
+}
 
 }

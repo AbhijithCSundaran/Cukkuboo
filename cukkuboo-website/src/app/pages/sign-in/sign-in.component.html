@@ -52,7 +52,7 @@
                   <mat-icon class="small-eye-icon">{{ hide ? 'visibility_off' : 'visibility' }}</mat-icon>
                 </button>
                 <mat-error>
-                  <Validation-Messages [control]="loginForm.controls['password']"></Validation-Messages>
+                  <Validation-Messages    [control]="loginForm.controls['password']"></Validation-Messages>
                 </mat-error>
               </mat-form-field>
 
@@ -152,7 +152,7 @@
                   <mat-icon class="small-eye-icon">{{ hideNewPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
                 </button>
                 <mat-error>
-                  <Validation-Messages [control]="forgotForm.controls['new_password']"></Validation-Messages>
+                  <Validation-Messages class="validation"  [control]="forgotForm.controls['new_password']"></Validation-Messages>
                 </mat-error>
               </mat-form-field>
 

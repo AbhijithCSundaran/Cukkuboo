@@ -10,6 +10,7 @@ import { environment } from '../../environments/environment';
 export class SubscriptionService {
 
   private apiUrl: string = environment.apiUrl;
+  
 
   constructor(private http: HttpClient) { }
 
@@ -52,6 +53,10 @@ export class SubscriptionService {
   getSubscriptionHistory(pageIndex: number = 0, pageSize: number = 10,) {
     const params = { pageIndex: pageIndex, pageSize: pageSize };
     return this.http.get(`${this.apiUrl}usersub/history`, { headers: this.headers, params });
+  }
+
+   createStripeCheckout(priceId: string) {
+    return this.http.post<any>(`${this.apiUrl}/stripe/test`, { price_id: priceId });
   }
 
 

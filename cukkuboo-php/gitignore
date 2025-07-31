@@ -1,12 +1,12 @@
 # Composer dependencies
-vendor/
-/vendor
-/vendor/
 /composer.lock
 
 # Node modules (if using npm)
 /Composer
 /node_modules
+/vendor
+/vendor/
+vendor/
 
 # Log files and cache
 /writable/cache/*

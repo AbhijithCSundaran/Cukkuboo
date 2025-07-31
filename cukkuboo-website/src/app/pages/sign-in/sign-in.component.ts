@@ -84,8 +84,8 @@ export class SignInComponent implements OnInit, OnDestroy {
     this.forgotForm = this.fb.group({
       email: ['', [Validators.required, Validators.email, ValidationService.emailValidator]],
       otp: [''],
-      new_password: ['', [Validators.required, Validators.minLength(8), ValidationService.passwordValidator]],
-      confirm_password: ['', [Validators.required, Validators.minLength(8)]]
+      new_password: ['', [Validators.required, ValidationService.passwordValidator]],
+      confirm_password: ['', [Validators.required,ValidationService.passwordValidator]]
     });
   }
 
@@ -283,6 +283,7 @@ export class SignInComponent implements OnInit, OnDestroy {
           this.showSnackbar('Password reset successful. Please login.', true);
           this.step = 0;
           this.loginForm.patchValue({ email: this.emailUsed });
+          setTimeout(() => this.initializeGoogleSignIn(), 0);
         } else {
           this.showSnackbar(response.message || 'Failed to reset password');
         }

@@ -110,7 +110,7 @@ export class SignUpComponent implements OnInit {
         phone: ['', [Validators.required, Validators.pattern(/^\d{6,15}$/)]],
         date_of_birth: ['', [Validators.required, this.ageValidator(18)]],
         password: ['', [Validators.required, ValidationService.passwordValidator]],
-        confirmPassword: ['', [Validators.required, ValidationService.passwordValidator]]
+        confirmPassword: ['', [Validators.required, ]]
       },
       // { validators: [this.passwordConfirming] }
     );

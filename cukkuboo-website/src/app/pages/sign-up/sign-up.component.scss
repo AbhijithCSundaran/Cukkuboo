@@ -58,6 +58,12 @@ a {
     width: 95%;
   }
 }
+//  @media(max-width:575px) {
+// .validation-padding {
+//   display: block; 
+//   padding-bottom: 100px;
+// }
+//  }
 
 
 h4 {
@@ -120,4 +126,47 @@ mat-form-field {
 
 .clickable-logo {
   cursor: pointer;
+}
+
+/* Extra space only for password validation message */
+// .password-field mat-form-field {
+//   margin-bottom: 1.75rem; // add extra space to avoid overlap
+// }
+
+// .password-field mat-error {
+//   font-size: 12px;
+//   line-height: 1.3;
+//   min-height: 16px;
+//   display: block;
+//   margin-top: 2px;
+// }
+
+/* Reduce size on small screens if needed */
+@media (max-width: 575px) {
+  .password-field mat-error {
+    font-size: 10px;
+    line-height: 1.1;
+  }
+
+  .password-field mat-form-field {
+    margin-bottom: 1.5rem;
+  }
+}
+@media (max-width: 1200px) {
+  .password-field mat-error {
+    font-size: 12px;
+    line-height: 1;
+  }
+}
+@media (max-width: 1024px) {
+  .password-field mat-error {
+    font-size: 12px;
+    line-height: 1;
+  }
+}
+@media (max-width: 991px) {
+  .password-field mat-error {
+    font-size: 10px;
+    line-height: 1;
+  }
 }

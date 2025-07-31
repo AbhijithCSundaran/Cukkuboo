@@ -82,8 +82,8 @@
 
               
 
-           <!-- Password -->
-<li class="pms-field mb-0 mb-sm-1 mb-md-3">
+<!-- Password -->
+<li class="pms-field password-field mb-0 mb-sm-1 mb-md-3">
   <mat-form-field appearance="outline" class="w-100">
     <mat-label>Password</mat-label>
     <input matInput
@@ -97,18 +97,15 @@
       <mat-icon class="small-eye-icon">{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
     </button>
 
-    <!-- <mat-hint *ngIf="showPasswordHint">
-      Must be 8+ characters, with uppercase, lowercase, number, and special character.
-    </mat-hint> -->
-
     <mat-error>
       <Validation-Messages [control]="signUpForm.controls['password']"></Validation-Messages>
     </mat-error>
   </mat-form-field>
 </li>
 
+
               <!-- Confirm Password -->
-              <li class="pms-field mb-0 mb-sm-1 mb-md-3">
+              <li class="pms-field mb-0 mb-sm-1 mb-md-3 space">
                 <mat-form-field appearance="outline" class="w-100">
                   <mat-label>Confirm Password</mat-label>
                   <input matInput [type]="hideConfirmPassword ? 'password' : 'text'" formControlName="confirmPassword"
@@ -131,7 +128,7 @@
               </li>
             </ul>
 
-            <div class="text-start mt-3">
+            <div class="text-start mt-3 ">
               <button type="submit" class="red-button">Sign-up</button>
             </div>
 

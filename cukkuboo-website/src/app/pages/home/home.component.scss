@@ -160,6 +160,12 @@
 
   .gen-info-contain h3,
   .gen-info-contain ul li {
-    padding-left: 2px; /* slight inner padding to avoid cutoff */
+    padding-left: 2px; 
   }
+}
+.text-light {
+  color: #ccc !important;
+}
+.text-center {
+  text-align: center;
 }

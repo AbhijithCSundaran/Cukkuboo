@@ -56,7 +56,7 @@ export class MovieService {
       search: searchText,
       type: type
     };
-    return this.http.get(this.apiUrl + 'movies/list', { headers: this.headers, params });
+    return this.http.get(this.apiUrl + 'movie/activemovie', { headers: this.headers, params });
   }
 }
 
@@ -123,7 +123,7 @@ export class MovieService {
 
   getReelsData(pageIndex: number = 0, pageSize: number = 10, searchText: string = ''): Observable<any> {
     const params = { pageIndex: pageIndex.toString(), pageSize: pageSize.toString(), search: searchText };
-    return this.http.get(this.apiUrl + 'reels/details', { headers: this.headers, params });
+    return this.http.get(this.apiUrl + 'reels/activereels', { headers: this.headers, params });
   }
   getReelById(id: string): Observable<any> {
     return this.http.get(this.apiUrl + 'reels/get/' + id, { headers: this.headers });

@@ -31,7 +31,7 @@
                     </div>
 
                     <!-- Change Password Button -->
-                    <div class="d-flex justify-content-between mt-4 gap-2">
+                    <div class="d-flex  mt-4 gap-2">
                         <span matTooltip="Password change not allowed for Google sign-in users"
                             [matTooltipDisabled]="userData?.auth_type !== 'google'">
                             <button class="btn btn-yes text-white btn-sm" (click)="toggleChangePassword()"
@@ -269,5 +269,3 @@
 
 
 </section>
-
-<hr />

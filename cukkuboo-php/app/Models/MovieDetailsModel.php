@@ -109,7 +109,7 @@ public function countAllMovies()
      return $this->db->table($this->table)
                     ->where('status', 1)
                    ->where('release_date <=', date('Y-m-d'))
-                     ->orderBy('created_on', 'DESC')
+                     ->orderBy('release_date', 'DESC')
                      ->limit(10)
                     ->get()
                    ->getResultArray();

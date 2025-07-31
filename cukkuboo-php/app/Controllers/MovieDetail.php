@@ -8,6 +8,7 @@ use App\Models\UserModel;
 use App\Models\CoreModel;
 use App\Models\UsersubModel;
 use App\Models\SubscriptionPlanModel;
+use App\Models\NotificationModel;
 use App\Libraries\Jwt;
 use App\Libraries\AuthService;
  
@@ -22,6 +23,7 @@ class MovieDetail extends ResourceController
         $this->input = \Config\Services::request();
         $this->moviedetail = new MovieDetailsModel();
         $this->subscriptionPlanModel = new SubscriptionPlanModel();
+        $this->notificationModel = new NotificationModel();
         $this->coreModel = new CoreModel();
         $this->userModel = new UserModel();
         $this->usersubModel = new UsersubModel();

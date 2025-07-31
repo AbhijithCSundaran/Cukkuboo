@@ -15,8 +15,7 @@
         "ext-mbstring": "*",
         "firebase/php-jwt": "^6.11",
         "laminas/laminas-escaper": "^2.14",
-        "psr/log": "^3.0",
-        "stripe/stripe-php": "*"
+        "psr/log": "^3.0"
     },
     "require-dev": {
         "codeigniter/coding-standard": "^1.7",

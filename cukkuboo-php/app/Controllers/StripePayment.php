@@ -9,11 +9,11 @@ require_once(ROOTPATH . 'vendor/autoload.php');
 class StripePayment extends ResourceController
 {
     use ResponseTrait;
-    private $secretKey = '51RoHBFAO6Wc6MO0EwsWQr4sxpFlpmr6EPeOfR90BQOEPkAh2aXnIc6ltQugl2Aa49tBgUqWB78EYBkbAtnthQzs900bzR4RWsD';//
+    private $secretKey = 'sk_test_';//
 
     public function createCheckoutSession()
     {
-       \Stripe\Stripe::setApiKey('sk_test_'+$this->secretKey);
+       \Stripe\Stripe::setApiKey($this->secretKey);
 
         $json = $this->request->getJSON();
         $priceId = $json->price_id; // RevenueCat uses Stripe Price ID

@@ -2375,7 +2375,7 @@ header#gen-header .gen-bottom-header .navbar .navbar-nav li a:focus,
 header#gen-header .gen-bottom-header .navbar .navbar-nav li a:hover,
 header#gen-header .gen-bottom-header .navbar .navbar-nav li.current-menu-item a,
 header#gen-header .gen-bottom-header .navbar .navbar-nav li.current_page_item a,
-header#gen-header .gen-bottom-header .navbar .navbar-nav li:hover a,
+/* header#gen-header .gen-bottom-header .navbar .navbar-nav li:hover a, */
 header#gen-header .gen-bottom-header .navbar .navbar-nav li.current-menu-ancestor a {
     color: var(--primary-color);
 }

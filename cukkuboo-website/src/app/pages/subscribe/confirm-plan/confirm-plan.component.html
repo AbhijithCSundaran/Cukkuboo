@@ -52,8 +52,10 @@
             <span class="fw-bold me-1 text-primary-clr"> <b>${{ data.plan?.discount_price}}</b></span>
             ($<span class="text-decoration-line-through">{{data?.plan?.price}}</span>)
         
-        You Saved <b class="text-primary-clr">${{data.plan.price - data.plan.discount_price}}  </b></span>
-    </h6>
+        <!-- You Saved <b class="text-primary-clr">${{data.plan.price - data.plan.discount_price}}  </b></span> -->
+    
+    You Saved <b class="text-primary-clr">${{ (data.plan.price - data.plan.discount_price) | number:'1.2-2' }}</b></span>
+</h6>
     <div class="fa-checkbox-row single d-flex mt-4" (click)="acknowledged = !acknowledged">
         <i class="pt-2" [ngClass]="acknowledged ? 'fa-solid fa-square-check' : 'fa-regular fa-square'"></i>
         <span class="checkbox-label ms-2" style="text-align: justify;">

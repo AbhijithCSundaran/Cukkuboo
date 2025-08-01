@@ -53,7 +53,7 @@ export class HelpCenterComponent {
       name: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       countryCode: ['+91', Validators.required],
-      phone: ['', [Validators.required, Validators.pattern(/^[0-9]{7,15}$/)]],
+      phone:  ['', [Validators.required, Validators.pattern(/^\d{6,15}$/)]],
       issueType: ['', Validators.required],
       description: ['', [Validators.required, Validators.minLength(10)]]
     });
@@ -81,10 +81,16 @@ export class HelpCenterComponent {
   }
 
   submitIssue(): void {
-    if (this.helpForm.invalid) {
-      this.helpForm.markAllAsTouched();
-      return;
-    }
+  if (this.helpForm.invalid) {
+  this.helpForm.markAllAsTouched();
+  this.snackBar.open('Please fill all required fields', '', {
+    duration: 3000,
+    verticalPosition: 'top',
+    panelClass: ['snackbar-error']
+  });
+  return;
+}
+
 
     this.loading = true;
     const formData = this.helpForm.value;
@@ -233,7 +239,22 @@ export class HelpCenterComponent {
       }
     }
   }
-
+  
+openFullscreen(file: File): void {
+    const img = new Image();
+    img.src = this.filePreview(file);
+    const newWindow = window.open('');
+    if (newWindow) {
+      newWindow.document.write(`<img src="${img.src}" style="width: 100%; height: auto;" />`);
+      newWindow.document.title = 'Screenshot Preview';
+    } else {
+this.snackBar.open('Popup blocked! Please allow popups for this site.', '', {
+  duration: 3000,
+  verticalPosition: 'top',
+  panelClass: ['snackbar-error'] 
+});
+    }
+  }
   goBack(): void {
     window.history.back();
   }

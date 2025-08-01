@@ -51,7 +51,8 @@ export class AddSubscriptionPlanComponent implements OnInit {
       price: [null, [Validators.required, Validators.min(0), ValidationService.floatValidator]],
       offer_price: [null, [Validators.min(0), ValidationService.floatValidator]],
       period: [null, [Validators.required, Validators.min(1)]],
-      features: ['', Validators.required]
+      features: ['', Validators.required],
+       stripe_price_id: ['', Validators.required]
     });
 
     this.subscriptionPlanId = this.route.snapshot.paramMap.get('id');
@@ -76,7 +77,8 @@ export class AddSubscriptionPlanComponent implements OnInit {
           price: +data.price,
           offer_price: +data.discount_price,
           period: +data.period,
-          features: data.features
+          features: data.features,
+           stripe_price_id: data.stripe_price_id || ''
         });
       },
       error: (err) => {

@@ -330,3 +330,11 @@
   text-overflow: ellipsis;
   max-width: 150px;
 }
+.truncate-modal-title {
+  display: inline-block;
+  max-width: 240px; 
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: bottom;
+}

@@ -51,7 +51,16 @@
             </mat-error>
           </mat-form-field>
         </div>
-
+<!-- Stripe Price ID -->
+<div class="w-50 px-2 pb-3">
+  <mat-form-field appearance="outline" class="w-100">
+    <mat-label>Stripe Price ID</mat-label>
+    <input matInput placeholder="Enter Stripe Price ID" formControlName="stripe_price_id" />
+    <mat-error>
+      <Validation-Messages [control]="dataForm.controls['stripe_price_id']"></Validation-Messages>
+    </mat-error>
+  </mat-form-field>
+</div>
         <!-- Features -->
         <div class="w-50 px-2 pb-3">
           <mat-form-field appearance="outline" class="w-100">
@@ -62,6 +71,7 @@
             </mat-error>
           </mat-form-field>
         </div>
+
 
         <!-- Submit Button -->
         <div class="action">

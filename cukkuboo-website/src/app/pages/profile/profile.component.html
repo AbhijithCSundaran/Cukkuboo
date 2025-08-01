@@ -42,11 +42,10 @@
 
 
 
-                       <!-- Delete Account Button -->
-<button class="btn btn-yes btn-danger text-white btn-sm col-6"
-        (click)="handleDeleteClick()">
-  Delete Account
-</button>
+                        <!-- Delete Account Button -->
+                        <button class="btn btn-yes btn-danger text-white btn-sm col-6" (click)="handleDeleteClick()">
+                            Delete Account
+                        </button>
                     </div>
                 </div>
             </div>
@@ -69,20 +68,14 @@
                             </div>
                         </div>
 
-                    <!-- Email -->
-<div class="form-group row align-items-center mb-3">
-  <label class="col-sm-3 col-form-label">Email Address:</label>
-  <div class="col-sm-9 position-relative">
-    <input
-      class="form-control"
-      type="email"
-      formControlName="email"
-      autocomplete="email"
-      style="text-transform: lowercase"
-      readonly
-    />
-  </div>
-</div>
+                        <!-- Email -->
+                        <div class="form-group row align-items-center mb-3">
+                            <label class="col-sm-3 col-form-label">Email Address:</label>
+                            <div class="col-sm-9 position-relative">
+                                <input class="form-control" type="email" formControlName="email" autocomplete="email"
+                                    style="text-transform: lowercase" readonly />
+                            </div>
+                        </div>
 
 
 
@@ -117,7 +110,8 @@
                                     <mat-form-field appearance="outline" style="width: 65%;">
                                         <mat-label>Mobile Number</mat-label>
                                         <input matInput formControlName="phone" maxlength="15"
-                                            placeholder="Enter mobile number" />
+                                            placeholder="Enter mobile number" (keypress)="allowOnlyDigits($event)" />
+
                                         <mat-error>
                                             <Validation-Messages
                                                 [control]="profileForm.controls['phone']"></Validation-Messages>
@@ -216,52 +210,52 @@
             </div>
 
             <!--Delete Account section-->
-<div *ngIf="ShowDeleteAccount" class="card shadow-sm rounded-3 ca-body">
-  <div class="card-header text-white">
-    <h5 class="mb-0">Delete Account</h5>
-    <hr class="p-2" style="color: #c70d47" />
-  </div>
+            <div *ngIf="ShowDeleteAccount" class="card shadow-sm rounded-3 ca-body">
+                <div class="card-header text-white">
+                    <h5 class="mb-0">Delete Account</h5>
+                    <hr class="p-2" style="color: #c70d47" />
+                </div>
 
-  <div class="card-body">
-    <div class="row justify-content-center">
-      <div class="col-auto d-flex align-items-center user-email">
-        <i class="fa-solid fa-envelope me-2"></i>
-        <span>{{ profileForm.get('email')?.value }}</span>
-      </div>
-    </div>
+                <div class="card-body">
+                    <div class="row justify-content-center">
+                        <div class="col-auto d-flex align-items-center user-email">
+                            <i class="fa-solid fa-envelope me-2"></i>
+                            <span>{{ profileForm.get('email')?.value }}</span>
+                        </div>
+                    </div>
 
-    <p class="text-center mb-3" *ngIf="userData?.auth_type !== 'google'">
-      To delete your account permanently, enter your password.
-    </p>
+                    <p class="text-center mb-3" *ngIf="userData?.auth_type !== 'google'">
+                        To delete your account permanently, enter your password.
+                    </p>
 
-    <form [formGroup]="deleteAccountForm" (ngSubmit)="onSubmitDeleteForm()" class="col-md-8 mx-auto">
-      <!-- Password input only for manual users -->
-      <ng-container *ngIf="userData?.auth_type !== 'google'">
-        <mat-form-field appearance="outline" class="col-12 field-space">
-          <mat-label>Current Password</mat-label>
-          <input matInput [type]="hideCurrent ? 'password' : 'text'"
-                 formControlName="deleteProfile"
-                 placeholder="Enter your current password"
-                 id="deleteProfile" />
-          <button mat-icon-button matSuffix (click)="hideCurrent = !hideCurrent" type="button"
-                  [attr.aria-label]="'Toggle password visibility'" [attr.aria-pressed]="hideCurrent">
-            <mat-icon class="small-eye-icon">
-              {{ hideCurrent ? 'visibility_off' : 'visibility' }}
-            </mat-icon>
-          </button>
-          <mat-error>
-            <Validation-Messages [control]="deleteAccountForm.controls['deleteProfile']"></Validation-Messages>
-          </mat-error>
-        </mat-form-field>
-      </ng-container>
+                    <form [formGroup]="deleteAccountForm" (ngSubmit)="onSubmitDeleteForm()" class="col-md-8 mx-auto">
+                        <!-- Password input only for manual users -->
+                        <ng-container *ngIf="userData?.auth_type !== 'google'">
+                            <mat-form-field appearance="outline" class="col-12 field-space">
+                                <mat-label>Current Password</mat-label>
+                                <input matInput [type]="hideCurrent ? 'password' : 'text'"
+                                    formControlName="deleteProfile" placeholder="Enter your current password"
+                                    id="deleteProfile" />
+                                <button mat-icon-button matSuffix (click)="hideCurrent = !hideCurrent" type="button"
+                                    [attr.aria-label]="'Toggle password visibility'" [attr.aria-pressed]="hideCurrent">
+                                    <mat-icon class="small-eye-icon">
+                                        {{ hideCurrent ? 'visibility_off' : 'visibility' }}
+                                    </mat-icon>
+                                </button>
+                                <mat-error>
+                                    <Validation-Messages
+                                        [control]="deleteAccountForm.controls['deleteProfile']"></Validation-Messages>
+                                </mat-error>
+                            </mat-form-field>
+                        </ng-container>
 
-      <div class="text-center mt-3">
-        <button type="submit" class="btn btn-yes mt-2">Delete</button>
-        <button type="button" class="btn btn-no ms-2 mt-2" (click)="backToProfile()">Back</button>
-      </div>
-    </form>
-  </div>
-</div>
+                        <div class="text-center mt-3">
+                            <button type="submit" class="btn btn-yes mt-2">Delete</button>
+                            <button type="button" class="btn btn-no ms-2 mt-2" (click)="backToProfile()">Back</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
 
 
         </div>

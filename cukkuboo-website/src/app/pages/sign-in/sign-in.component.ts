@@ -85,7 +85,7 @@ export class SignInComponent implements OnInit, OnDestroy {
       email: ['', [Validators.required, Validators.email, ValidationService.emailValidator]],
       otp: [''],
       new_password: ['', [Validators.required, ValidationService.passwordValidator]],
-      confirm_password: ['', [Validators.required,ValidationService.passwordValidator]]
+      confirm_password: ['', [Validators.required]]
     });
   }
 
@@ -148,7 +148,7 @@ export class SignInComponent implements OnInit, OnDestroy {
   navigateToSignUp(): void {
     if (this.modalData && this.dialogRef) {
       this.dialogRef.close(); // Close modal
-      setTimeout(() => this.router.navigate(['/signup']), 100); // Delay to avoid race condition
+      setTimeout(() => this.router.navigate(['/signup']), 100); 
     } else {
       this.router.navigate(['/signup']);
     }
@@ -257,42 +257,49 @@ export class SignInComponent implements OnInit, OnDestroy {
     });
   }
 
-  resetPassword(): void {
-    const { new_password, confirm_password, otp } = this.forgotForm.value;
-
-    if (!new_password || !confirm_password) {
-      this.showSnackbar('Enter both password fields');
-      return;
-    }
-
-    if (new_password !== confirm_password) {
-      this.showSnackbar('Passwords do not match');
-      return;
-    }
-
-    const data = {
-      email: this.emailUsed,
-      otp,
-      new_password,
-      confirm_password
-    };
-
-    this.userService.forgotPassword(data).subscribe({
-      next: (response) => {
-        if (response.success === true) {
-          this.showSnackbar('Password reset successful. Please login.', true);
-          this.step = 0;
-          this.loginForm.patchValue({ email: this.emailUsed });
-          setTimeout(() => this.initializeGoogleSignIn(), 0);
-        } else {
-          this.showSnackbar(response.message || 'Failed to reset password');
-        }
-      },
-      error: () => {
-        this.showSnackbar('Failed to reset password');
-      }
-    });
+resetPassword(): void {
+  if (this.forgotForm.invalid) {
+    this.showSnackbar('Please fill out all required fields with valid input');
+    this.forgotForm.markAllAsTouched(); // Optional: highlights all invalid fields
+    return;
   }
+
+  const { new_password, confirm_password, otp } = this.forgotForm.value;
+
+  if (!new_password || !confirm_password) {
+    this.showSnackbar('Enter both password fields');
+    return;
+  }
+
+  if (new_password !== confirm_password) {
+    this.showSnackbar('Passwords do not match');
+    return;
+  }
+
+  const data = {
+    email: this.emailUsed,
+    otp,
+    new_password,
+    confirm_password
+  };
+
+  this.userService.forgotPassword(data).subscribe({
+    next: (response) => {
+      if (response.success === true) {
+        this.showSnackbar('Password reset successful. Please login.', true);
+        this.step = 0;
+        this.loginForm.patchValue({ email: this.emailUsed });
+        setTimeout(() => this.initializeGoogleSignIn(), 0);
+      } else {
+        this.showSnackbar(response.message || 'Failed to reset password');
+      }
+    },
+    error: () => {
+      this.showSnackbar('Failed to reset password');
+    }
+  });
+}
+
 
   allowOnlyNumbers(event: KeyboardEvent): void {
     const charCode = event.key.charCodeAt(0);

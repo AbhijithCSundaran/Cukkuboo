@@ -96,7 +96,7 @@
                     <!--  Help Center -->
                     <li class="nav-item">
                       <a routerLink="/help-center" class="nav-link">
-                        <i class="fa fa-circle-question mr-1"></i> Help Center
+                        <i class="fa fa-circle-question mr-1"></i> Help & Support
                       </a>
                     </li>
                     <li class="nav-item mt-3 border-top pt-2">
@@ -141,54 +141,61 @@
             </div>
 
             <!-- User Info (Desktop) -->
-            <div *ngIf="isSignedIn" class="gen-header-info-box d-none d-lg-flex align-items-center ml-auto">
 
-              <!-- Account Holder -->
-              <div class="gen-account-holder" (mouseleave)="closeMenu()">
-                <a href="javascript:void(0)" id="gen-user-btn" (click)="showUserDropdown = !showUserDropdown">
-                  <i class="fa fa-user p-1 user-icon"></i>
-                  <span class="mx-1 p-2 user-title">{{ username }}</span>
-                  <i class="fa-solid fa-caret-down"></i>
-                </a>
-                <div class="gen-account-menu" [class.gen-form-show]="showUserDropdown">
-                  <ul class="col-12">
-                    <li><a routerLink="/profile"><i class="fa fa-user"></i> Profile</a></li>
-                    <li><a routerLink="/subscription-details"><i class="fa-solid fa-star"></i> My Subscription</a></li>
-                    <li><a routerLink="/watch-later"><i class="fa fa-clock"></i> Watch Later</a></li>
-                    <li><a routerLink="/history"><i class="fa fa-history"></i> History</a></li>
-                    <!--  Help Center -->
-                    <li><a routerLink="/help-center"><i class="fa fa-circle-question"></i> Help Center</a></li>
-                    <li>
-                      <a (click)="askToSignout()" style="cursor: pointer;">
-                        <i class="fa fa-sign-out mr-1"></i> Sign Out
-                      </a>
-                    </li>
-                  </ul>
+            <div class="gen-header-info-box d-none d-lg-flex align-items-center ml-auto">
+
+              <!-- Conditionally show user-related info -->
+              <ng-container *ngIf="isSignedIn">
+                <!-- Account Holder -->
+                <div class="gen-account-holder" (mouseleave)="closeMenu()">
+                  <a href="javascript:void(0)" id="gen-user-btn" (click)="showUserDropdown = !showUserDropdown">
+                    <i class="fa fa-user p-1 user-icon"></i>
+                    <span class="mx-1 p-2 user-title">{{ username }}</span>
+                    <i class="fa-solid fa-caret-down"></i>
+                  </a>
+                  <div class="gen-account-menu" [class.gen-form-show]="showUserDropdown">
+                    <ul class="col-12">
+                      <li><a routerLink="/profile"><i class="fa fa-user"></i> Profile</a></li>
+                      <li><a routerLink="/subscription-details"><i class="fa-solid fa-star"></i> My Subscription</a>
+                      </li>
+                      <li><a routerLink="/watch-later"><i class="fa fa-clock"></i> Watch Later</a></li>
+                      <li><a routerLink="/history"><i class="fa fa-history"></i> History</a></li>
+                      <li><a routerLink="/help-center"><i class="fa fa-circle-question"></i>  Help & Support</a></li>
+                      <li>
+                        <a (click)="askToSignout()" style="cursor: pointer;">
+                          <i class="fa fa-sign-out mr-1"></i> Sign Out
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
                 </div>
-              </div>
 
-              <!--  Search icon -->
+                <!-- Bell Icon -->
+                <div class="notification-icon mx-3 position-relative">
+                  <i class="fa-solid fa-bell search" (click)="goToNotifications()"></i>
+                  <span class="notification-dot" *ngIf="hasUnreadNotification"></span>
+                </div>
+              </ng-container>
+
+              <!-- Always show search icon -->
               <a routerLink="/movies" [queryParams]="{ search: 1 }" class="d-none d-lg-block mx-2">
                 <i class="fa-solid fa-magnifying-glass search"></i>
               </a>
 
-              <!--  Bell icon -->
-              <div class="notification-icon mx-3 position-relative d-none d-lg-block">
-                <i class="fa-solid fa-bell search" (click)="goToNotifications()"></i>
-                <span class="notification-dot" *ngIf="hasUnreadNotification"></span>
-              </div>
-
-              <!-- Subscribe button -->
-              <div class="gen-btn-container ml-3" *ngIf="userData?.subscription_details?.subscription!=1">
-                <a routerLink="/subscribe" class="gen-button">
-                  <div class="gen-button-block">
-                    <span class="gen-button-line-left"></span>
-                    <span class="gen-button-text">Subscribe</span>
-                  </div>
-                </a>
-              </div>
+              <!-- Conditionally show subscribe (for unsigned or unsubscribed users) -->
+              <ng-container *ngIf="userData?.subscription_details?.subscription != 1">
+                <div class="gen-btn-container ml-3" *ngIf="isSignedIn">
+                  <a routerLink="/subscribe" class="gen-button">
+                    <div class="gen-button-block">
+                      <span class="gen-button-line-left"></span>
+                      <span class="gen-button-text">Subscribe</span>
+                    </div>
+                  </a>
+                </div>
+              </ng-container>
 
             </div>
+
           </nav>
         </div>
       </div>

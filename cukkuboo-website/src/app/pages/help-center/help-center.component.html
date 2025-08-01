@@ -1,6 +1,6 @@
 <section class="help-center-section">
   <div class="container">
-    <h2 class="text-white text-center mb-4 fs-1 fs-md-2 fs-sm-3 fs-xs-4">Help and Support</h2>
+    <h2 class="text-white text-center mb-4 fs-1 fs-md-2 fs-sm-3 fs-xs-4"> Help & Support</h2>
 
     <form [formGroup]="helpForm" (ngSubmit)="submitIssue()" class="help-form">
       <!-- Name -->
@@ -52,7 +52,7 @@
       <!-- Description -->
       <mat-form-field appearance="outline" class="w-100 mb-3">
         <mat-label>Description</mat-label>
-        <textarea matInput formControlName="description" placeholder="Describe your issue" rows="4"></textarea>
+        <textarea matInput formControlName="description" placeholder="Describe your issue" ></textarea>
         <mat-error>Description must be at least 10 characters</mat-error>
       </mat-form-field>
 
@@ -63,20 +63,26 @@
            (dragleave)="onDragLeave($event)"
            [class.dragover]="dragging">
         <ng-container *ngIf="screenshots.length === 0">
-          <p class="text-white mb-2">Drag & drop screenshot here or click the button to upload (optional)</p>
+          <p class="text-white mb-2">Drag & drop screenshot or click the button to upload (Optional)</p>
           <button type="button" class="btn btn-yes" (click)="fileInput.click()">Choose File</button>
         </ng-container>
 
         <input type="file" (change)="onFileSelect($event)" accept="image/*" hidden #fileInput />
 
         <!-- Preview with trash icon -->
-        <div *ngIf="screenshots.length > 0" class="mt-2 d-flex align-items-center justify-content-center flex-column preview-selected">
-          <img [src]="filePreview(screenshots[0])" [alt]="screenshots[0].name" height="80" class="mb-2" />
-          <p class="text-white mb-1">{{ screenshots[0].name }}</p>
-          <button type="button" class="icon-trash" (click)="removeScreenshot(screenshots[0])" aria-label="Remove">
-            <i class="fas fa-trash-alt"></i>
-          </button>
-        </div>
+      <div *ngIf="screenshots.length > 0" class="preview-selected">
+  <div class="image-wrapper">
+    <img [src]="filePreview(screenshots[0])" [alt]="screenshots[0].name" class="screenshot-img" />
+    <button type="button" class="fullscreen-btn" title="View Fullscreen" (click)="openFullscreen(screenshots[0])">
+      <i class="fas fa-expand"></i>
+    </button>
+    <button type="button" class="icon-trash" title="Delete Screenshot" (click)="removeScreenshot(screenshots[0])">
+      <i class="fas fa-trash-alt"></i>
+    </button>
+  </div>
+  <p class="text-white mb-1 text-break">{{ screenshots[0].name }}</p>
+</div>
+
       </div>
 
       <!-- Buttons -->

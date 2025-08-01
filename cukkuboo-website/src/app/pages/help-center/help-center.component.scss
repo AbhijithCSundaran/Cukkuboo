@@ -93,30 +93,61 @@
   }
 
   .preview-selected {
-    img {
-      border-radius: 8px;
-      max-height: 100px;
+    position: relative;
+    width: 100%;
+
+    .image-wrapper {
+      position: relative;
+      display: inline-block;
+      max-height: 120px;
+      overflow: hidden;
+
+      .screenshot-img {
+        max-height: 100px;
+        border-radius: 8px;
+        display: block;
+      }
+
+      .fullscreen-btn,
+      .icon-trash {
+        position: absolute;
+        top: 6px;
+        width: 26px;
+        height: 26px;
+        background: rgba(0, 0, 0, 0.7);
+        color: #fff;
+        border: none;
+        border-radius: 50%;
+        font-size: 0.75rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: transform 0.2s ease;
+
+        i {
+          pointer-events: none;
+        }
+
+        &:hover {
+          transform: scale(1.2);
+        }
+      }
+
+      .fullscreen-btn {
+        left: 6px;
+      }
+
+      .icon-trash {
+        right: 6px;
+        color: #dc3545;
+      }
     }
 
     p {
+      margin-top: 0.5rem;
       margin-bottom: 0.5rem;
-    }
-
-    .icon-trash {
-      font-size: 1rem; // Reduced from 1.4rem to 1rem
-      background: none;
-      border: none;
-      color: #dc3545;
-      cursor: pointer;
-      transition: transform 0.2s ease;
-
-      i {
-        pointer-events: none;
-      }
-
-      &:hover {
-        transform: scale(1.2);
-      }
+      word-break: break-word;
     }
   }
 }
@@ -153,6 +184,6 @@
 
   &:hover {
     background-color: var(--primarydark-color);
-    border-color: var(--primarydark-color); // Don't remove the border
+    border-color: var(--primarydark-color);
   }
 }

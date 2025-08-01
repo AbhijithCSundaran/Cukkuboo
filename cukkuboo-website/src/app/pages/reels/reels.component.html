@@ -10,26 +10,20 @@
         <video #videoEl [src]="reel.video" [poster]="reel.image" [muted]="mutedStates[i]" autoplay loop playsinline
           (click)="togglePlayPause(i)"></video>
 
-<div 
-  class="seekbar-wrapper"
-  (mousedown)="onSeekStart($event, i)"
-  (touchstart)="onSeekStart($event, i)"
-  (mousemove)="onSeekMove($event, i)"
-  (mouseup)="onSeekEnd()"
-  (mouseleave)="onSeekEnd()"
-  (touchmove)="onSeekMove($event, i)"
-  (touchend)="onSeekEnd()">
-  <div class="seekbar-progress" [style.width.%]="progressValues[i] || 0"></div>
-</div>
+        <div class="seekbar-wrapper" (mousedown)="onSeekStart($event, i)" (touchstart)="onSeekStart($event, i)"
+          (mousemove)="onSeekMove($event, i)" (mouseup)="onSeekEnd()" (mouseleave)="onSeekEnd()"
+          (touchmove)="onSeekMove($event, i)" (touchend)="onSeekEnd()">
+          <div class="seekbar-progress" [style.width.%]="progressValues[i] || 0"></div>
+        </div>
 
 
         <button class="back-btn" (click)="navigateHome()" aria-label="Back to Home">
           <span class="material-icons"> chevron_left</span>
         </button>
-       <!-- Fullscreen Button -->
-<button class="fullscreen-btn d-none d-sm-flex" (click)="toggleFullscreen($event)">
-  <i class="fas" [ngClass]="isFullscreen ? 'fa-compress' : 'fa-expand'"></i>
-</button>
+        <!-- Fullscreen Button -->
+        <button class="fullscreen-btn d-none d-sm-flex" (click)="toggleFullscreen($event)">
+          <i class="fas" [ngClass]="isFullscreen ? 'fa-compress' : 'fa-expand'"></i>
+        </button>
 
 
         <!-- Play/Pause Button -->
@@ -38,28 +32,26 @@
           <i [ngClass]="videoStates[i] ? 'fas fa-pause' : 'fas fa-play'"></i>
         </button>
 
-      <!-- Reel Info -->
-<div 
-  class="reel-text ps-3 pe-5" 
-  [class.open]="reel.showDesc" 
-  (click)="reel.description?.length > 40 && (reel.showDesc = !reel.showDesc)">
-  
-  <img class="logo reels-icon-logo" src="assets/images/logo.png" alt="streamlab-image" />
+        <!-- Reel Info -->
+        <div class="reel-text ps-3 pe-5" [class.open]="reel.showDesc"
+          (click)="reel.description?.length > 40 && (reel.showDesc = !reel.showDesc)">
 
-  <div class="title">
-    {{ reel.showDesc ? reel.title : (reel.title | truncate: 30) }}
-  </div>
+          <img class="logo reels-icon-logo" src="assets/images/logo.png" alt="streamlab-image" />
 
-  <div class="decp" [ngClass]="{ 'clickable': reel.description?.length > 40 }">
-    {{
-      reel.showDesc
-        ? reel.description
-        : (reel.description?.length > 40
+          <div class="title">
+            {{ reel.showDesc ? reel.title : (reel.title | truncate: 30) }}
+          </div>
+
+          <div class="decp" [ngClass]="{ 'clickable': reel.description?.length > 40 }">
+            {{
+            reel.showDesc
+            ? reel.description
+            : (reel.description?.length > 40
             ? (reel.description | truncate: 40) + 'more'
             : reel.description)
-    }}
-  </div>
-</div>
+            }}
+          </div>
+        </div>
 
 
         <!-- Icons: Like, Mute, Share -->
@@ -72,7 +64,7 @@
 
           <div class="icon-block" (click)="copyUrlToClipboard(reel)">
             <i class="fas fa-share-alt"></i>
-            <div class="icon-label">Share</div> 
+            <div class="icon-label">Share</div>
           </div>
 
           <div class="icon-block" (click)="toggleMute(i)">

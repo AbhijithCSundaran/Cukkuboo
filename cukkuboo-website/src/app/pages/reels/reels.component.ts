@@ -1,13 +1,4 @@
-import {
-  Component,
-  AfterViewInit,
-  ElementRef,
-  ViewChildren,
-  ViewChild,
-  QueryList,
-  OnInit,
-  OnDestroy
-} from '@angular/core';
+import { Component, AfterViewInit, ElementRef, ViewChildren, ViewChild, QueryList, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MovieService } from '../../services/movie.service';
@@ -147,6 +138,7 @@ export class ReelsComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     window.addEventListener('keydown', this.handleKeydown);
+    this.reelScroll.nativeElement.addEventListener('wheel', this.handleMouseWheel, { passive: false });
   }
 
   onScroll(): void {
@@ -401,9 +393,30 @@ export class ReelsComponent implements OnInit, AfterViewInit, OnDestroy {
     video.currentTime = percentage * video.duration;
     this.progressValues[index] = percentage * 100;
   }
+  private wheelTimeout: any = null;
+
+  handleMouseWheel = (event: WheelEvent) => {
+    event.preventDefault(); // block default scroll
+
+    if (this.wheelTimeout) return; // throttle scroll
+
+    if (event.deltaY > 0) {
+      this.scrollToNext();
+    } else {
+      this.scrollToPrev();
+    }
+
+    // throttle scrolling for 600ms
+    this.wheelTimeout = setTimeout(() => {
+      this.wheelTimeout = null;
+    }, 600);
+  };
 
   ngOnDestroy(): void {
     document.body.classList.remove('reels-page');
     window.removeEventListener('keydown', this.handleKeydown);
+    if (this.reelScroll?.nativeElement) {
+      this.reelScroll.nativeElement.removeEventListener('wheel', this.handleMouseWheel);
+    }
   }
 }

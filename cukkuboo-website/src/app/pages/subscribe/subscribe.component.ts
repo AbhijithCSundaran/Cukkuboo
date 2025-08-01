@@ -9,7 +9,7 @@ import { ConfirmationDialogComponent } from '../../core/components/confirmation-
 import { ConfirmPlanComponent } from './confirm-plan/confirm-plan.component';
 import { InfiniteScrollDirective } from '../../core/directives/infinite-scroll/infinite-scroll.directive';
 import { SignInComponent } from '../sign-in/sign-in.component';
-import { loadStripe, Stripe } from '@stripe/stripe-js';
+
 
 
 @Component({

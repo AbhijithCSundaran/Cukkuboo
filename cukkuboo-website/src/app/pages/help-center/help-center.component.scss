@@ -95,30 +95,38 @@
   .preview-selected {
     position: relative;
     width: 100%;
+    padding-top: 2.5rem; // space for delete button above image
 
     .image-wrapper {
       position: relative;
       display: inline-block;
-      max-height: 120px;
-      overflow: hidden;
+      max-width: 100%;
+      max-height: 300px;
+      overflow: visible;
+      text-align: center;
 
       .screenshot-img {
-        max-height: 100px;
+        max-height: 300px;
+        max-width: 100%;
+        height: auto;
+        width: auto;
         border-radius: 8px;
         display: block;
+        margin: 0 auto;
       }
 
-      .fullscreen-btn,
-      .icon-trash {
+      .fullscreen-btn {
         position: absolute;
-        top: 6px;
-        width: 26px;
-        height: 26px;
-        background: rgba(0, 0, 0, 0.7);
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 36px;
+        height: 36px;
+        background: rgba(0, 0, 0, 0.6);
         color: #fff;
         border: none;
         border-radius: 50%;
-        font-size: 0.75rem;
+        font-size: 1rem;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -130,17 +138,35 @@
         }
 
         &:hover {
-          transform: scale(1.2);
+          transform: translate(-50%, -50%) scale(1.2);
         }
       }
+    }
 
-      .fullscreen-btn {
-        left: 6px;
+    .icon-trash {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 28px;
+      height: 28px;
+      background: rgba(0, 0, 0, 0.7);
+      color: #dc3545;
+      border: none;
+      border-radius: 50%;
+      font-size: 0.8rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 2;
+      transition: transform 0.2s ease;
+
+      i {
+        pointer-events: none;
       }
 
-      .icon-trash {
-        right: 6px;
-        color: #dc3545;
+      &:hover {
+        transform: scale(1.2);
       }
     }
 

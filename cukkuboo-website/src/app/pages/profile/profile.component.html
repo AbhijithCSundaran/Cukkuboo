@@ -31,22 +31,21 @@
                     </div>
 
                     <!-- Change Password Button -->
-                    <div class="d-flex  mt-4 gap-2">
-                        <span matTooltip="Password change not allowed for Google sign-in users"
-                            [matTooltipDisabled]="userData?.auth_type !== 'google'">
-                            <button class="btn btn-yes text-white btn-sm" (click)="toggleChangePassword()"
-                                [disabled]="userData?.auth_type === 'google'">
-                                Change Password
-                            </button>
-                        </span>
+                 <div class="d-flex mt-4 gap-2">
+  <button class="btn btn-yes btn-danger text-white btn-sm col-6"
+    (click)="toggleChangePassword()"
+    [disabled]="userData?.auth_type === 'google'"
+    matTooltip="Password change not allowed for Google sign-in users"
+    [matTooltipDisabled]="userData?.auth_type !== 'google'">
+    Change Password
+  </button>
 
+  <button class="btn btn-yes btn-danger text-white btn-sm col-6"
+    (click)="handleDeleteClick()">
+    Delete Account
+  </button>
+</div>
 
-
-                        <!-- Delete Account Button -->
-                        <button class="btn btn-yes btn-danger text-white btn-sm col-6" (click)="handleDeleteClick()">
-                            Delete Account
-                        </button>
-                    </div>
                 </div>
             </div>
         </div>

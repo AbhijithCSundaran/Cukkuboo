@@ -14,8 +14,12 @@
             <mat-card appearance="outlined" class="h-100 position-relative">
               <mat-card-content>
                 <label class="label">Upload Video</label>
-                <div class="drag-drop-zone" (dragover)="onVideoDragOver($event)" (drop)="onVideoDrop($event)"
-                  (click)="videoInput.click()">
+              <div class="drag-drop-zone"
+     [class.disabled]="uploadProgress > 0 && uploadProgress < 100"
+     (dragover)="uploadProgress > 0 && uploadProgress < 100 ? $event.preventDefault() : onVideoDragOver($event)"
+     (drop)="uploadProgress > 0 && uploadProgress < 100 ? $event.preventDefault() : onVideoDrop($event)"
+     (click)="(uploadProgress > 0 && uploadProgress < 100) ? $event.preventDefault() : videoInput.click()">
+
                   <i class="fa-sharp fa-solid fa-arrow-up-from-bracket upload-icon"></i>
                   <p *ngIf="!videoName">Drag & drop a video here or click to select (MP4 files only, with a maximum size
                     of 2GB)</p>

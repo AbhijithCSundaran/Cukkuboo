@@ -22,7 +22,7 @@
         <!-- Price (supports decimal) -->
         <div class="w-50 px-2 pb-3">
           <mat-form-field appearance="outline" class="w-100">
-            <mat-label>Price</mat-label>
+            <mat-label>Price <i class="bi bi-currency-dollar me-1"></i></mat-label>
             <input matInput type="number" step="0.01" placeholder="Enter price" formControlName="price" />
             <mat-error>
               <Validation-Messages [control]="dataForm.controls['price']"></Validation-Messages>
@@ -33,7 +33,7 @@
         <!-- Offer Price (supports decimal) -->
         <div class="w-50 px-2 pb-3">
           <mat-form-field appearance="outline" class="w-100">
-            <mat-label>Offer Price</mat-label>
+            <mat-label>Offer Price <i class="bi bi-currency-dollar me-1"></i></mat-label>
             <input matInput type="number" step="0.01" placeholder="Enter offer price" formControlName="offer_price" />
             <mat-error>
               <Validation-Messages [control]="dataForm.controls['offer_price']"></Validation-Messages>

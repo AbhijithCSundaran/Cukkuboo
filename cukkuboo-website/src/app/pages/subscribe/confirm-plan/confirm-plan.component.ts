@@ -37,6 +37,21 @@ export class ConfirmPlanComponent {
   //     this.dialogRef.close(true);
   // }
 confirm() {
+  if (!this.acknowledged) {
+    this.snackBar.open(
+      'Please read and acknowledge our Privacy Policy & Terms of Use.',
+      '',
+      {
+        duration: 3000,
+        verticalPosition: 'top',
+        horizontalPosition: 'center',
+        panelClass: ['snackbar-warn']
+      }
+    );
+    return; // Stop further execution
+  }
+
+  // Proceed only if plan and stripe price ID are available
   if (!this.data?.plan?.stripe_price_id) {
     console.error('Stripe price ID is missing.');
     return;
@@ -46,7 +61,6 @@ confirm() {
     .subscribe({
       next: (res) => {
         if (res.checkout_url) {
-          // ✅ Redirect to Stripe Checkout
           window.location.href = res.checkout_url;
         } else {
           console.error('Invalid response from server');
@@ -57,6 +71,7 @@ confirm() {
       }
     });
 }
+
 
   getLink(route: string): string {
     const fullUrl = window.location.href

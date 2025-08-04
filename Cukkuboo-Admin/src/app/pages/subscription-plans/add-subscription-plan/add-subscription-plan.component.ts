@@ -48,8 +48,8 @@ export class AddSubscriptionPlanComponent implements OnInit {
     this.dataForm = this.fb.group({
       subscriptionplan_id: [''],
       plan_name: ['', Validators.required],
-      price: [null, [Validators.required, Validators.min(0), ValidationService.floatValidator]],
-      offer_price: [null, [Validators.min(0), ValidationService.floatValidator]],
+      price: [null,[Validators.required, Validators.min(0), ValidationService.floatValidator]],
+      offer_price: [null,[Validators.required,Validators.min(0), ValidationService.floatValidator]],
       period: [null, [Validators.required, Validators.min(1)]],
       features: ['', Validators.required],
        stripe_price_id: ['', Validators.required]

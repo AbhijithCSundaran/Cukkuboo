@@ -24,17 +24,37 @@ export class ConfirmPlanComponent {
     private subscriptionService: SubscriptionService,
   ) {
   }
-  confirm(): void {
-    if (!this.acknowledged) {
-      this.snackBar.open('Please read and acknowledge our Privacy Policy & Terms of Use.', '', {
+  // confirm(): void {
+  //   if (!this.acknowledged) {
+  //     this.snackBar.open('Please read and acknowledge our Privacy Policy & Terms of Use.', '', {
+  //       duration: 3000,
+  //       verticalPosition: 'top',
+  //       horizontalPosition: 'center',
+  //       panelClass: ['snackbar-warn']
+  //     });
+  //   }
+  //   else
+  //     this.dialogRef.close(true);
+  // }
+confirm() {
+  if (!this.acknowledged) {
+    this.snackBar.open(
+      'Please read and acknowledge our Privacy Policy & Terms of Use.',
+      '',
+      {
         duration: 3000,
         verticalPosition: 'top',
         horizontalPosition: 'center',
         panelClass: ['snackbar-warn']
-      });
-    }
-    else
-      this.dialogRef.close(true);
+      }
+    );
+    return; // Stop further execution
+  }
+
+  // Proceed only if plan and stripe price ID are available
+  if (!this.data?.plan?.stripe_price_id) {
+    console.error('Stripe price ID is missing.');
+    return;
   }
 // confirm() {
 //   if (!this.data?.plan?.stripe_price_id) {
@@ -42,21 +62,21 @@ export class ConfirmPlanComponent {
 //     return;
 //   }
 
-//   this.subscriptionService.createStripeCheckout(this.data.plan.stripe_price_id)
-//     .subscribe({
-//       next: (res) => {
-//         if (res.checkout_url) {
-//           // ✅ Redirect to Stripe Checkout
-//           window.location.href = res.checkout_url;
-//         } else {
-//           console.error('Invalid response from server');
-//         }
-//       },
-//       error: (err) => {
-//         console.error('Stripe Checkout session error:', err);
-//       }
-//     });
-// }
+  this.subscriptionService.createStripeCheckout(this.data.plan.stripe_price_id)
+    .subscribe({
+      next: (res) => {
+        if (res.checkout_url) {
+          window.location.href = res.checkout_url;
+        } else {
+          console.error('Invalid response from server');
+        }
+      },
+      error: (err) => {
+        console.error('Stripe Checkout session error:', err);
+      }
+    });
+}
+
 
   getLink(route: string): string {
     const fullUrl = window.location.href

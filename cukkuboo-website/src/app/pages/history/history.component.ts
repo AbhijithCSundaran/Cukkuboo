@@ -78,18 +78,20 @@ export class HistoryComponent implements OnInit {
     }
   }
 
-  askToRemoveItem(item: any, index: number) {
-    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
-      data: {
-        message: `<p>Are you sure you want to remove <span>"${item?.title}"</span> from history?</p>`
-      },
-    });
-    dialogRef.afterClosed().subscribe((result: any) => {
-      if (result) {
-        this.confirmDelete(item, index);
-      }
-    })
-  }
+askToRemoveItem(item: any, index: number) {
+  const truncatedTitle = this.truncateTitle(item?.title, 20);
+  const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+    data: {
+      message: `<p>Are you sure you want to remove <span>"${truncatedTitle}"</span> from history?</p>`
+    },
+  });
+  dialogRef.afterClosed().subscribe((result: any) => {
+    if (result) {
+      this.confirmDelete(item, index);
+    }
+  });
+}
+
 
   confirmDelete(item: any, index: number): void {
     if (!item) return;
@@ -168,4 +170,9 @@ export class HistoryComponent implements OnInit {
       }
     });
   }
+  truncateTitle(title: string, maxLength: number = 20): string {
+  if (!title) return '';
+  return title.length > maxLength ? title.slice(0, maxLength) + '...' : title;
+}
+
 }

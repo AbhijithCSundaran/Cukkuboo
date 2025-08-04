@@ -60,12 +60,12 @@
       </div>
     </div>
   }
-   <!-- @else {
+   @else {
     <div class="col-12 p-5 text-center">
       <h6 class="fs-6 fs-sm-6">You have no subscription!</h6>
       <button class="btn btn-danger mt-2" (click)="goToSubscribe()">Subscribe Now</button>
     </div>
-  } -->
+  }
 
 </div>
 }
@@ -98,12 +98,12 @@
 </div>
 }
 
-@if(!subscriptionData && !subscriptionHistory.length && !isLonding){
+<!-- @if(!subscriptionData && !subscriptionHistory.length && !isLonding){
 <div class="col-12 p-5 text-center">
   <h6 class="fs-6 fs-sm-6">You have no subscription!</h6>
   <button class="btn btn-danger mt-2" (click)="goToSubscribe()">Subscribe Now</button>
 </div>
-}
+} -->
 
 @if(isLonding) {
 <content-loader></content-loader>

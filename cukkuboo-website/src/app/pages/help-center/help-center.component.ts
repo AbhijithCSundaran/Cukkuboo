@@ -17,6 +17,7 @@ import { FileUploadService } from '../../services/file-upload.service';
 import { StorageService } from '../../core/services/TempStorage/storageService';
 import countrycode from '../../../assets/json/countrycode.json';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { ValidationService } from '../../core/services/validation.service';
 
 @Component({
   selector: 'app-help-center',
@@ -51,9 +52,9 @@ export class HelpCenterComponent {
   ) {
     this.helpForm = this.fb.group({
       name: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
+      email: ['', [Validators.required, ValidationService.emailValidator]],
       countryCode: ['+91', Validators.required],
-      phone:  ['', [Validators.required, Validators.pattern(/^\d{6,15}$/)]],
+      phone: ['', [Validators.required, Validators.pattern(/^\d{6,15}$/)]],
       issueType: ['', Validators.required],
       description: ['', [Validators.required, Validators.minLength(10)]]
     });
@@ -81,15 +82,15 @@ export class HelpCenterComponent {
   }
 
   submitIssue(): void {
-  if (this.helpForm.invalid) {
-  this.helpForm.markAllAsTouched();
-  this.snackBar.open('Please fill all required fields', '', {
-    duration: 3000,
-    verticalPosition: 'top',
-    panelClass: ['snackbar-error']
-  });
-  return;
-}
+    if (this.helpForm.invalid) {
+      this.helpForm.markAllAsTouched();
+      this.snackBar.open('Please fill all required fields', '', {
+        duration: 3000,
+        verticalPosition: 'top',
+        panelClass: ['snackbar-error']
+      });
+      return;
+    }
 
 
     this.loading = true;
@@ -239,8 +240,8 @@ export class HelpCenterComponent {
       }
     }
   }
-  
-openFullscreen(file: File): void {
+
+  openFullscreen(file: File): void {
     const img = new Image();
     img.src = this.filePreview(file);
     const newWindow = window.open('');
@@ -248,11 +249,11 @@ openFullscreen(file: File): void {
       newWindow.document.write(`<img src="${img.src}" style="width: 100%; height: auto;" />`);
       newWindow.document.title = 'Screenshot Preview';
     } else {
-this.snackBar.open('Popup blocked! Please allow popups for this site.', '', {
-  duration: 3000,
-  verticalPosition: 'top',
-  panelClass: ['snackbar-error'] 
-});
+      this.snackBar.open('Popup blocked! Please allow popups for this site.', '', {
+        duration: 3000,
+        verticalPosition: 'top',
+        panelClass: ['snackbar-error']
+      });
     }
   }
   goBack(): void {

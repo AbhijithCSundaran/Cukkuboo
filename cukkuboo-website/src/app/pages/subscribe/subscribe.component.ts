@@ -161,7 +161,7 @@ export class SubscribeComponent implements OnInit {
       cancel_url: updatedUrl + 'failed/' + data.user_subscription_id,
 
     }
-    this.subscriptionService.createStripeCheckout(plan.stripe_price_id).subscribe({
+    this.subscriptionService.createStripeCheckout(model).subscribe({
       next: (res) => {
         if (res.checkout_url) {
           window.location.href = res.checkout_url;

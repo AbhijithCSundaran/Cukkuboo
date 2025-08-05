@@ -71,7 +71,8 @@
           <tr *ngFor="let txn of recentTransactions">
             <td>{{ txn.user_id }}</td>
             <td>{{ txn.plan_name }}</td>
-<td><i class="bi bi-currency-dollar"></i>{{ txn.price }}</td>
+<td><i class="bi bi-currency-dollar"></i>{{ txn.price | number:'1.2-2'}}</td>
+
             <td class="hide-mobile">{{ txn.start_date | date:'MMM d, y' }}</td>
             <td class="hide-mobile">{{ txn.end_date | date:'MMM d, y' }}</td>
             <td>

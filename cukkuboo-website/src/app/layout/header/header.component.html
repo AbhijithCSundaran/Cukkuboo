@@ -127,6 +127,12 @@
                     <li class="menu-item ml-3">
                       <a routerLink="/signin">Sign In</a>
                     </li>
+                    <li class="menu-item ml-3">
+                      <a routerLink="/movies" [queryParams]="{ search: 1 }">
+                        <i class="fa-solid fa-magnifying-glass search"></i>
+                      </a>
+                    </li>
+
                     <li class="menu-item ml-3" *ngIf="userData?.subscription_details?.subscription!=1">
                       <a routerLink="/subscribe" class="gen-button">
                         <div class="gen-button-block">

@@ -112,7 +112,7 @@ export class SignUpComponent implements OnInit {
         password: ['', [Validators.required, ValidationService.passwordValidator]],
         confirmPassword: ['', [Validators.required, ]]
       },
-      // { validators: [this.passwordConfirming] }
+      { validators: [this.passwordConfirming] }
     );
   }
 

@@ -10,7 +10,7 @@ import { environment } from '../../environments/environment';
 export class SubscriptionService {
 
   private apiUrl: string = environment.apiUrl;
-  
+
 
   constructor(private http: HttpClient) { }
 
@@ -55,10 +55,24 @@ export class SubscriptionService {
     return this.http.get(`${this.apiUrl}usersub/history`, { headers: this.headers, params });
   }
 
-   createStripeCheckout(model: any) {
+  createStripeCheckout(model: any) {
     const body = model
     return this.http.post<any>(`${this.apiUrl}/stripe/test`, body);
   }
+
+  updatePaymentSuccess(id: number): Observable<any> {
+    const body = { user_subscription_id: id }
+    return this.http.post(`${this.apiUrl}usersub/status-update`, body, {
+      headers: this.headers
+    });
+  }
+  updatePaymentFailed(id: number): Observable<any> {
+    const body = { user_subscription_id: id }
+    return this.http.post(`${this.apiUrl}usersub/payment-failed`, body, {
+      headers: this.headers
+    });
+  }
+
 
 
 }

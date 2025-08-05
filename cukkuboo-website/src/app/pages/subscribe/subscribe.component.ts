@@ -63,7 +63,7 @@ export class SubscribeComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error loading plans', err);
-       
+
       }
     });
   }
@@ -125,11 +125,12 @@ export class SubscribeComponent implements OnInit {
     this.subscriptionService.saveSubscription(model).subscribe({
       next: (res) => {
         if (res.success) {
-          this.UserData.subscription = 'Premium';
-          res.data.subscription = res.data?.status | 1;
-          this.UserData.subscription_details = res.data;
-          this.storageService.updateItem('userData', this.UserData);
-          this.router.navigate(['/subscription-details'])
+          this.createStripeCheckout(plan);
+          // this.UserData.subscription = 'Premium';
+          // res.data.subscription = res.data?.status | 1;
+          // this.UserData.subscription_details = res.data;
+          // this.storageService.updateItem('userData', this.UserData);
+          // this.router.navigate(['/subscription-details'])
         }
         this.snackBar.open(res?.success ? 'Subscription activated successfully.' : res?.messages?.error || 'Subscription failed.', '',
           {
@@ -148,5 +149,20 @@ export class SubscribeComponent implements OnInit {
       }
     });
   }
-  
+
+  createStripeCheckout(plan: any) {
+    this.subscriptionService.createStripeCheckout(plan.stripe_price_id).subscribe({
+      next: (res) => {
+        if (res.checkout_url) {
+          window.location.href = res.checkout_url;
+        } else {
+          console.error('Invalid response from server');
+        }
+      },
+      error: (err) => {
+        console.error('Stripe Checkout session error:', err);
+      }
+    });
+  }
+
 }

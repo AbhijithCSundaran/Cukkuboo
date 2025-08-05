@@ -29,4 +29,13 @@
         box-shadow: 0 2px 3px #C8D0D8;
         display: inline-block;
         margin: 0 auto;
+        text-align: center;
       }
+
+       .container {
+      display: flex;
+      justify-content: center;  /* Horizontal center */
+      align-items: center;      /* Vertical center */
+      height: 100vh;            /* Full viewport height */
+    //   background: #EBF0F5;
+    }

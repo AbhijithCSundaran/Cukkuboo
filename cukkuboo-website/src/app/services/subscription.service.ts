@@ -55,8 +55,9 @@ export class SubscriptionService {
     return this.http.get(`${this.apiUrl}usersub/history`, { headers: this.headers, params });
   }
 
-   createStripeCheckout(priceId: string) {
-    return this.http.post<any>(`${this.apiUrl}/stripe/test`, { price_id: priceId });
+   createStripeCheckout(model: any) {
+    const body = model
+    return this.http.post<any>(`${this.apiUrl}/stripe/test`, body);
   }
 
 

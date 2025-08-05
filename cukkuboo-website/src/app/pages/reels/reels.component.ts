@@ -138,7 +138,12 @@ export class ReelsComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     window.addEventListener('keydown', this.handleKeydown);
-    this.reelScroll.nativeElement.addEventListener('wheel', this.handleMouseWheel, { passive: false });
+    // this.reelScroll.nativeElement.addEventListener('wheel', this.handleMouseWheel, { passive: false });
+    const el = this.reelScroll.nativeElement;
+    el.addEventListener('wheel', this.handleMouseWheel, { passive: false });
+    el.addEventListener('touchstart', this.handleTouchStart, { passive: false });
+    el.addEventListener('touchend', this.handleTouchEnd, { passive: false });
+
   }
 
   onScroll(): void {
@@ -411,12 +416,39 @@ export class ReelsComponent implements OnInit, AfterViewInit, OnDestroy {
       this.wheelTimeout = null;
     }, 600);
   };
+  private touchStartY = 0;
+  private touchEndY = 0;
+
+  handleTouchStart = (event: TouchEvent) => {
+    this.touchStartY = event.changedTouches[0].screenY;
+  };
+
+  handleTouchEnd = (event: TouchEvent) => {
+    this.touchEndY = event.changedTouches[0].screenY;
+    const deltaY = this.touchStartY - this.touchEndY;
+
+    if (Math.abs(deltaY) < 250) return; // Ignore small swipes
+    if (this.wheelTimeout) return;
+
+    if (deltaY > 0) {
+      this.scrollToNext();
+    } else {
+      this.scrollToPrev();
+    }
+
+    this.wheelTimeout = setTimeout(() => {
+      this.wheelTimeout = null;
+    }, 600);
+  };
 
   ngOnDestroy(): void {
     document.body.classList.remove('reels-page');
     window.removeEventListener('keydown', this.handleKeydown);
-    if (this.reelScroll?.nativeElement) {
-      this.reelScroll.nativeElement.removeEventListener('wheel', this.handleMouseWheel);
+    const el = this.reelScroll?.nativeElement;
+    if (el) {
+      el.removeEventListener('wheel', this.handleMouseWheel);
+      el.removeEventListener('touchstart', this.handleTouchStart);
+      el.removeEventListener('touchend', this.handleTouchEnd);
     }
   }
 }

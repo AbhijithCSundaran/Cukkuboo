@@ -47,7 +47,7 @@ export class JsPlayerComponent {
   }
 
   ngAfterViewInit(): void {
-    this.initVideoPlaying();
+    // this.initVideoPlaying();
   }
   get token(): string | null {
     return localStorage.getItem('t_k') || sessionStorage.getItem('token');
@@ -59,13 +59,6 @@ export class JsPlayerComponent {
       }
     }).then(res => res.blob())
       .then(blob => {
-        // fetch(videoSrc)
-        //   .then(response => {
-        //     if (!response.ok) throw new Error('Video fetch failed');
-        //     return response.blob(); // 👈 Convert to Blob
-        //   })
-        //   .then(blob => {
-        debugger;
         const blobUrl = URL.createObjectURL(blob); // 👈 Convert to blob URL
         this.blobUrl = this.sanitizer.bypassSecurityTrustResourceUrl(blobUrl)
         this.target.nativeElement.src = this.blobUrl?.changingThisBreaksApplicationSecurity;

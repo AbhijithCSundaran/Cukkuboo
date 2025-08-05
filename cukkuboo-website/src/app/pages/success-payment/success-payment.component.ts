@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { SubscriptionService } from '../../services/subscription.service';
 
 @Component({
   selector: 'app-success-payment',
@@ -6,6 +8,40 @@ import { Component } from '@angular/core';
   templateUrl: './success-payment.component.html',
   styleUrl: './success-payment.component.scss'
 })
-export class SuccessPaymentComponent {
+export class SuccessPaymentComponent implements OnInit {
+  message: string = '';
+  
+
+  constructor(
+    private route: ActivatedRoute,
+    private subscriptionService: SubscriptionService
+  ) {
+    this.route.paramMap.subscribe(params => {
+      const id = Number(params.get('id'));
+      if (id)
+        this.UpdateStatus(id);
+    });
+  }
+
+  ngOnInit(): void {
+
+  }
+  UpdateStatus(UsersubId: number) {
+    if (UsersubId) {
+      this.subscriptionService.updatePaymentSuccess(UsersubId).subscribe({
+        next: (res) => {
+          this.message = res?.message || 'Subscription successfully marked as paid!';
+        },
+        error: (err) => {
+          this.message = err?.error?.messages?.error || 'Something went wrong during payment processing.';
+        }
+      });
+    } else {
+      this.message = 'Missing subscription ID.';
+    }
+  }
+
 
 }
+
+

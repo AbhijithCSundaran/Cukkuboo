@@ -125,7 +125,7 @@ export class SubscribeComponent implements OnInit {
     this.subscriptionService.saveSubscription(model).subscribe({
       next: (res) => {
         if (res.success) {
-          this.createStripeCheckout(plan);
+          this.createStripeCheckout(plan, res.data);
           // this.UserData.subscription = 'Premium';
           // res.data.subscription = res.data?.status | 1;
           // this.UserData.subscription_details = res.data;
@@ -151,7 +151,16 @@ export class SubscribeComponent implements OnInit {
     });
   }
 
-  createStripeCheckout(plan: any) {
+  createStripeCheckout(plan: any, data: any) {
+    const currentUrl = window.location.href;
+    const updatedUrl = currentUrl.replace(/#\/.*/, '#/');
+    const model: any = {
+      price_id: plan.stripe_price_id,
+      user_subscription_id: data.user_subscription_id,
+      success_url: updatedUrl + 'success/' + data.user_subscription_id,
+      cancel_url: updatedUrl + 'failed/' + data.user_subscription_id,
+
+    }
     this.subscriptionService.createStripeCheckout(plan.stripe_price_id).subscribe({
       next: (res) => {
         if (res.checkout_url) {

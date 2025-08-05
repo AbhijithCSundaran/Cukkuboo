@@ -57,7 +57,7 @@ export class SubscriptionService {
 
   createStripeCheckout(model: any) {
     const body = model
-    return this.http.post<any>(`${this.apiUrl}/stripe/test`, body);
+    return this.http.post<any>(`${this.apiUrl}stripe/test`, body);
   }
 
   updatePaymentSuccess(id: number): Observable<any> {

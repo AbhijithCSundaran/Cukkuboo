@@ -31,9 +31,10 @@ export class FailedPaymentComponent implements OnInit {
         next: (res) => {
           this.message = res?.message || 'Subscription Failed!';
           setTimeout(() => {
-            const currentUrl = window.location.href;
-            const updatedUrl = currentUrl.replace(/#\/.*/, '#/');
-            window.location.href = updatedUrl + 'subscription-details';
+            // const currentUrl = window.location.href;
+            // const updatedUrl = currentUrl.replace(/#\/.*/, '#/');
+            // window.location.href = updatedUrl + 'subscription-details';
+            window.location.reload();
           }, 5000);
         },
         error: (err) => {

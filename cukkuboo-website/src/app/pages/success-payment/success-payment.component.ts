@@ -34,9 +34,10 @@ export class SuccessPaymentComponent implements OnInit {
         next: (res) => {
           this.message = res?.message || 'Subscription successfully marked as paid!';
           setTimeout(() => {
-            const currentUrl = window.location.href;
-            const updatedUrl = currentUrl.replace(/#\/.*/, '#/');
-            window.location.href = updatedUrl+'subscription-details';
+            // const currentUrl = window.location.href;
+            // const updatedUrl = currentUrl.replace(/#\/.*/, '#/');
+            // window.location.href = updatedUrl+'subscription-details';
+            window.location.reload();
           }, 5000);
         },
         error: (err) => {

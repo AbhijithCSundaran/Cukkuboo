@@ -4,7 +4,7 @@
   <!-- </div> -->
 
   <!-- Reel List -->
-  <div class="reel-scroll hide_scrollbar" #reelScroll>
+  <div class="reel-scroll" #reelScroll>
     <div *ngFor="let reel of reels; let i = index" class="reel-container">
       <div class="reel-inner" (mouseenter)="onHover(i)" (mouseleave)="onLeave(i)">
         <video #videoEl [src]="reel.video" [poster]="reel.image" [muted]="mutedStates[i]" autoplay loop playsinline

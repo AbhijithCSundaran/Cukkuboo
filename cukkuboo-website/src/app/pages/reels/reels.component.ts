@@ -427,7 +427,7 @@ export class ReelsComponent implements OnInit, AfterViewInit, OnDestroy {
     this.touchEndY = event.changedTouches[0].screenY;
     const deltaY = this.touchStartY - this.touchEndY;
 
-    if (Math.abs(deltaY) < 250) return; // Ignore small swipes
+    if (Math.abs(deltaY) < 50) return; // Ignore small swipes
     if (this.wheelTimeout) return;
 
     if (deltaY > 0) {

@@ -87,7 +87,7 @@
 
 <button class="reaction-button" (click)="toggleMovieReaction(2)">
   <i [class]="movieData.is_disliked_by_user ? 'fas fa-thumbs-down text-danger' : 'far fa-thumbs-down'"></i>
-  <span *ngIf="movieData.dislikes !== undefined">{{ formatNumber(movieData.dislikes) }}</span>
+  <!-- <span *ngIf="movieData.dislikes !== undefined">{{ formatNumber(movieData.dislikes) }}</span> -->
 </button>
 
 

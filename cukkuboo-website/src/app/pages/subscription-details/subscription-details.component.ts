@@ -100,6 +100,9 @@ export class SubscriptionDetailsComponent implements OnInit {
             verticalPosition: 'top',
             panelClass: ['snackbar-success']
           });
+          setTimeout(() => {
+            window.location.reload();
+          }, 3000);
         }
       },
       error: (err) => {

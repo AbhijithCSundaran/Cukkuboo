@@ -28,12 +28,15 @@ export class SuccessPaymentComponent implements OnInit {
 
   }
   UpdateStatus(UsersubId: number) {
+
     if (UsersubId) {
       this.subscriptionService.updatePaymentSuccess(UsersubId).subscribe({
         next: (res) => {
           this.message = res?.message || 'Subscription successfully marked as paid!';
-           setTimeout(() => {
-            this.router.navigate(['/subscription-details']);
+          setTimeout(() => {
+            const currentUrl = window.location.href;
+            const updatedUrl = currentUrl.replace(/#\/.*/, '#/');
+            window.location.href = updatedUrl+'subscription-details';
           }, 5000);
         },
         error: (err) => {

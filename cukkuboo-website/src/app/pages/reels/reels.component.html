@@ -60,7 +60,7 @@
         <div class="cntl-icos">
           <div class="icon-block" [class.disabled]="reel.clicked" (click)="toggleLike(reel)">
             <i class="fas" [ngClass]="reel.is_liked_by_user ? 'fa-heart text-danger' : 'fa-heart'"></i>
-            <div class="icon-label">{{ reel.likes }}</div>
+            <div class="icon-label">{{ formatNumber( reel.likes )}}</div>
           </div>
 
           <div class="icon-block" (click)="copyUrlToClipboard(reel)">

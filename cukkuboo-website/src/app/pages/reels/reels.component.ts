@@ -143,6 +143,7 @@ export class ReelsComponent implements OnInit, AfterViewInit, OnDestroy {
     this.loadReels(this.searchText);
   }
 onVideoPlay(reel: any) {
+    this.userData = this.storageService.getItem('userData');
   if (window.innerWidth < 576 && !document.fullscreenElement && !this.isFullscreen) {
     const elem = document.documentElement;
     elem.requestFullscreen().then(() => {
@@ -152,12 +153,14 @@ onVideoPlay(reel: any) {
     });
   }
 
-  // Track view only if not already viewed by the user
+
   if (!reel.is_viewed && this.userData) {
-    const model = {
-      reels_id: reel.id,
-      user_id: this.userData?.id 
-    };
+   const model = {
+  user_id: String(this.userData?.id),
+  reels_id: String(reel.id),
+  status: 1
+};
+
 
     this.movieService.viewReel(model).subscribe({
       next: (res) => {
@@ -195,6 +198,8 @@ onVideoPlay(reel: any) {
             is_viewed: res.data.is_viewed === true || res.data.is_viewed === 1
 
           }];
+
+           this.userData = this.storageService.getItem('userData');
           this.onVideoPlay(newReel[0]);
 
           if (newReel) {
@@ -516,4 +521,17 @@ onVideoPlay(reel: any) {
       el.removeEventListener('touchend', this.handleTouchEnd);
     }
   }
+  
+  formatNumber(value: number): string {
+    if (value >= 1_000_000) {
+      const truncated = Math.floor((value / 1_000_000) * 10) / 10;
+      return truncated + 'M';
+    } else if (value >= 1_000) {
+      const truncated = Math.floor((value / 1_000) * 10) / 10;
+      return truncated + 'K';
+    } else {
+      return value.toString();
+    }
+  }
+
 }

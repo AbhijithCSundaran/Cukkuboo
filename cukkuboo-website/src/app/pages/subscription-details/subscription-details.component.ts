@@ -102,7 +102,7 @@ export class SubscriptionDetailsComponent implements OnInit {
           });
           setTimeout(() => {
             window.location.reload();
-          }, 3000);
+          },);
         }
       },
       error: (err) => {

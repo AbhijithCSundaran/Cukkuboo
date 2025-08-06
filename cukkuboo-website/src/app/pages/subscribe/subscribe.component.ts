@@ -133,7 +133,7 @@ export class SubscribeComponent implements OnInit {
           // this.router.navigate(['/subscription-details'])
         }
         else {
-          this.snackBar.open(res?.messages?.error || 'Subscription failed.', '',
+          this.snackBar.open(res?.messages?.error || 'You are already subscribed to a plan.', '',
             {
               duration: 3000, verticalPosition: 'top', horizontalPosition: 'center', panelClass: ['snackbar-error']
             }

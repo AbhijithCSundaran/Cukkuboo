@@ -135,8 +135,8 @@ export class MovieService {
   }
 
 
-  viewReel(): Observable<any> {
-    return this.http.post(`${this.apiUrl}reelview/view`, {
+  viewReel(model: any):Observable<any> {
+    return this.http.post(`${this.apiUrl}reelview/view`, model, {
       headers: this.headers
     });
   }

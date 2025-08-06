@@ -139,16 +139,23 @@ export class SignUpComponent implements OnInit {
   }
 
   passwordConfirming(group: AbstractControl): ValidationErrors | null {
-    const password = group.get('password')?.value;
-    const confirmPassword = group.get('confirmPassword')?.value;
-    if (password && confirmPassword && password !== confirmPassword) {
-      group.get('confirmPassword')?.setErrors({ passwordsMismatch: true });
-      return { passwordsMismatch: true };
-    } else {
-      group.get('confirmPassword')?.setErrors(null);
-      return null;
-    }
+  const password = group.get('password')?.value;
+  const confirmPassword = group.get('confirmPassword')?.value;
+
+  if (!confirmPassword) {
+    group.get('confirmPassword')?.setErrors({ required: true });
+    return { required: true };
   }
+
+  if (password !== confirmPassword) {
+    group.get('confirmPassword')?.setErrors({ passwordsMismatch: true });
+    return { passwordsMismatch: true };
+  }
+
+  // Clear any previous errors if validation passes
+  group.get('confirmPassword')?.setErrors(null);
+  return null;
+}
 
   onNumberInput(event: any): void {
     const input = event.target;

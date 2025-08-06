@@ -31,7 +31,7 @@ export class FailedPaymentComponent implements OnInit{
         next: (res) => {
           this.message = res?.message || 'Subscription Failed!';
           setTimeout(() => {
-            this.router.navigate(['/subscription-details']);
+            window.location.href = '/subscription-details';
           }, 5000);
         },
         error: (err) => {

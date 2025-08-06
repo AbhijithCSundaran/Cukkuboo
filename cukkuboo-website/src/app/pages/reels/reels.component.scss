@@ -17,6 +17,8 @@ body {
 
 .reel-wrapper .reel-scroll {
   height: 100%;
+  width: 100vw;
+  display: block;
   // overflow-y: auto;
   scroll-snap-type: y mandatory;
 }
@@ -25,6 +27,7 @@ body {
 
 .reel-wrapper .reel-container {
   height: 100vh;
+  min-width: 100vw;
   scroll-snap-align: start;
   display: flex;
   justify-content: center;
@@ -210,9 +213,17 @@ body {
 }
 
 /* Responsive - Mobile */
+@media (max-width: 767px) {
+  .reel-wrapper .reel-scroll {
+    display: inline-flex;
+  }
+}
+
+/* Responsive - Mobile */
 @media (max-width: 575px) {
   .reel-wrapper .cntl-icos {
-    gap: 30px; /* Increased space between icons */
+    gap: 30px;
+    /* Increased space between icons */
   }
 
   .reel-wrapper .cntl-icos .icon-block {
@@ -279,6 +290,7 @@ body {
   opacity: 0.5;
   transition: opacity 0.3s ease;
 }
+
 /* Hide Fullscreen Button on Mobile */
 @media (max-width: 575px) {
   .fullscreen-btn {
@@ -292,10 +304,10 @@ body {
   left: 0;
   width: 100%;
   height: 4px;
-  background-color: rgba(255, 255, 255, 0.1); 
+  background-color: rgba(255, 255, 255, 0.1);
   z-index: 5;
   overflow: hidden;
-  cursor: pointer; 
+  cursor: pointer;
 }
 
 

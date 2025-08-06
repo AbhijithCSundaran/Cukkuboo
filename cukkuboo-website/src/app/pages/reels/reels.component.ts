@@ -416,23 +416,25 @@ export class ReelsComponent implements OnInit, AfterViewInit, OnDestroy {
       this.wheelTimeout = null;
     }, 600);
   };
-  private touchStartY = 0;
-  private touchEndY = 0;
-
+  // Drag left-right
+  private touchStartX = 0;
+  private touchEndX = 0;
   handleTouchStart = (event: TouchEvent) => {
-    this.touchStartY = event.changedTouches[0].screenY;
+    this.touchStartX = event.changedTouches[0].screenX;
   };
 
   handleTouchEnd = (event: TouchEvent) => {
-    this.touchEndY = event.changedTouches[0].screenY;
-    const deltaY = this.touchStartY - this.touchEndY;
+    this.touchEndX = event.changedTouches[0].screenX;
+    const deltaX = this.touchStartX - this.touchEndX;
 
-    if (Math.abs(deltaY) < 250) return; // Ignore small swipes
+    if (Math.abs(deltaX) < 50) return; // Ignore small swipes
     if (this.wheelTimeout) return;
 
-    if (deltaY > 0) {
+    if (deltaX > 0) {
+      // Swiped left
       this.scrollToNext();
     } else {
+      // Swiped right
       this.scrollToPrev();
     }
 
@@ -440,6 +442,30 @@ export class ReelsComponent implements OnInit, AfterViewInit, OnDestroy {
       this.wheelTimeout = null;
     }, 600);
   };
+  // drag up-down
+  // private touchStartY = 0;
+  // private touchEndY = 0;
+  // handleTouchStart = (event: TouchEvent) => {
+  //   this.touchStartY = event.changedTouches[0].screenY;
+  // };
+
+  // handleTouchEnd = (event: TouchEvent) => {
+  //   this.touchEndY = event.changedTouches[0].screenY;
+  //   const deltaY = this.touchStartY - this.touchEndY;
+
+  //   if (Math.abs(deltaY) < 50) return; // Ignore small swipes
+  //   if (this.wheelTimeout) return;
+
+  //   if (deltaY > 0) {
+  //     this.scrollToNext();
+  //   } else {
+  //     this.scrollToPrev();
+  //   }
+
+  //   this.wheelTimeout = setTimeout(() => {
+  //     this.wheelTimeout = null;
+  //   }, 600);
+  // };
 
   ngOnDestroy(): void {
     document.body.classList.remove('reels-page');

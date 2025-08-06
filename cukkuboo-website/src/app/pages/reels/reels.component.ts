@@ -72,6 +72,7 @@ export class ReelsComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnInit(): void {
     document.body.classList.add('reels-page');
     this.userData = this.storageService.getItem('userData');
+    // Fullscreen on mobile
   }
 
   ngAfterViewInit(): void {
@@ -127,15 +128,6 @@ export class ReelsComponent implements OnInit, AfterViewInit, OnDestroy {
       });
     });
 
-    // Fullscreen on mobile
-    if (window.innerWidth < 576 && !document.fullscreenElement) {
-      const elem = document.documentElement;
-      elem.requestFullscreen().then(() => {
-        this.isFullscreen = true;
-      }).catch(err => {
-        console.warn("Fullscreen request failed:", err);
-      });
-    }
 
     window.addEventListener('keydown', this.handleKeydown);
     // this.reelScroll.nativeElement.addEventListener('wheel', this.handleMouseWheel, { passive: false });
@@ -150,7 +142,17 @@ export class ReelsComponent implements OnInit, AfterViewInit, OnDestroy {
     this.pageIndex++;
     this.loadReels(this.searchText);
   }
-
+  onVideoPlay(reel: any) {
+    if (window.innerWidth < 576 && !document.fullscreenElement &&  !this.isFullscreen) {
+      const elem = document.documentElement;
+      elem.requestFullscreen().then(() => {
+        this.isFullscreen = true;
+      }).catch(err => {
+        console.warn("Fullscreen request failed:", err);
+      });
+    }
+    // alert(reel.title)
+  }
   getReelById(id: string): void {
     this.movieService.getReelById(id).subscribe({
       next: (res) => {
@@ -165,6 +167,7 @@ export class ReelsComponent implements OnInit, AfterViewInit, OnDestroy {
             views: Number(res.data.views) || 0,
             is_liked_by_user: res.data.is_liked_by_user === true || res.data.is_liked_by_user === 1
           }];
+          this.onVideoPlay(newReel[0]);
 
           if (newReel) {
             this.reels = [...this.reels, ...newReel];
@@ -193,6 +196,8 @@ export class ReelsComponent implements OnInit, AfterViewInit, OnDestroy {
             is_liked_by_user: data.is_liked_by_user === true || data.is_liked_by_user === 1
           })) || [];
           // console.log(this.pageIndex, this.pageSize, 'reel-length', newReels.length, this.reels.length)
+          if (this.reels.length == 0)
+            this.onVideoPlay(newReels[0]);
 
           if (newReels.length) {
             this.reels = [...this.reels, ...newReels];
@@ -301,6 +306,7 @@ export class ReelsComponent implements OnInit, AfterViewInit, OnDestroy {
   scrollToNext(): void {
     if (this.currentIndex < this.reels.length - 1) {
       this.scrollToIndex(this.currentIndex + 1);
+      this.onVideoPlay(this.reels[this.currentIndex])
     }
   }
 

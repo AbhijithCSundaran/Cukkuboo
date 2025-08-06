@@ -78,9 +78,9 @@
             <td>
               <span class="badge" [ngClass]="{
                 'badge-enabled': txn.status === '1' || txn.status === 1,
-                'badge-disabled': txn.status === '2' || txn.status === 2
+                
               }">
-                {{ txn.status == 1 ? 'Active' : 'Inactive' }}
+                {{ txn.status == 1 ? 'Premium' : '' }}
               </span>
             </td>
           </tr>

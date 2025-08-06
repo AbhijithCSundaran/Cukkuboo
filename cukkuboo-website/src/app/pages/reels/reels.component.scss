@@ -18,7 +18,7 @@ body {
 .reel-wrapper .reel-scroll {
   height: 100%;
   width: 100vw;
-  display: block;
+  // display: block;
   // overflow-y: auto;
   scroll-snap-type: y mandatory;
 }
@@ -213,11 +213,12 @@ body {
 }
 
 /* Responsive - Mobile */
-@media (max-width: 767px) {
-  .reel-wrapper .reel-scroll {
-    display: inline-flex;
-  }
-}
+// @media (max-width: 767px) {
+// for horizondal drag
+//   .reel-wrapper .reel-scroll {
+//     display: inline-flex;
+//   }
+// }
 
 /* Responsive - Mobile */
 @media (max-width: 575px) {

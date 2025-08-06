@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { SubscriptionService } from '../../services/subscription.service';
 
 @Component({
@@ -10,11 +10,12 @@ import { SubscriptionService } from '../../services/subscription.service';
 })
 export class SuccessPaymentComponent implements OnInit {
   message: string = '';
-  
+
 
   constructor(
     private route: ActivatedRoute,
-    private subscriptionService: SubscriptionService
+    private subscriptionService: SubscriptionService,
+    private router: Router
   ) {
     this.route.paramMap.subscribe(params => {
       const id = Number(params.get('id'));
@@ -31,6 +32,9 @@ export class SuccessPaymentComponent implements OnInit {
       this.subscriptionService.updatePaymentSuccess(UsersubId).subscribe({
         next: (res) => {
           this.message = res?.message || 'Subscription successfully marked as paid!';
+           setTimeout(() => {
+            this.router.navigate(['/subscription-details']);
+          }, 5000);
         },
         error: (err) => {
           this.message = err?.error?.messages?.error || 'Something went wrong during payment processing.';

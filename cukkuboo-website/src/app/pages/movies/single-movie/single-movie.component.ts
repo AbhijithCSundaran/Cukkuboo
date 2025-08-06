@@ -138,7 +138,7 @@ export class SingleMovieComponent implements OnInit {
     }
   }
 
-  
+
   addToWatchHistory(model: any) {
     this.movieService.saveHistory(model).subscribe({
       next: () => console.log('Watch history saved.'),
@@ -247,53 +247,53 @@ export class SingleMovieComponent implements OnInit {
     }
   }
 
-toggleMovieReaction(reactionType: number): void {
-  const userData = this.storageService.getItem('userData');
-  if (!userData) {
-    this.openLoginModal();
-    return;
-  }
+  toggleMovieReaction(reactionType: number): void {
+    const userData = this.storageService.getItem('userData');
+    if (!userData) {
+      this.openLoginModal();
+      return;
+    }
 
-  if (!this.movieData || !this.movieData.mov_id) return;
+    if (!this.movieData || !this.movieData.mov_id) return;
 
-  const movieId = this.movieData.mov_id;
+    const movieId = this.movieData.mov_id;
 
-  this.movieService.movieReaction(movieId, reactionType).subscribe({
-    next: () => {
-      this.movieData.likes = Number(this.movieData.likes || 0);
-      this.movieData.dislikes = Number(this.movieData.dislikes || 0);
+    this.movieService.movieReaction(movieId, reactionType).subscribe({
+      next: () => {
+        this.movieData.likes = Number(this.movieData.likes || 0);
+        this.movieData.dislikes = Number(this.movieData.dislikes || 0);
 
-      if (reactionType === 1) {
-        if (this.movieData.is_liked_by_user) {
-          this.movieData.likes = Math.max(0, this.movieData.likes - 1);
-          this.movieData.is_liked_by_user = false;
-        } else {
-          this.movieData.likes += 1;
-          this.movieData.is_liked_by_user = true;
-
-          if (this.movieData.is_disliked_by_user) {
-            this.movieData.dislikes = Math.max(0, this.movieData.dislikes - 1);
-            this.movieData.is_disliked_by_user = false;
-          }
-        }
-      } else if (reactionType === 2) {
-        if (this.movieData.is_disliked_by_user) {
-          this.movieData.dislikes = Math.max(0, this.movieData.dislikes - 1);
-          this.movieData.is_disliked_by_user = false;
-        } else {
-          this.movieData.dislikes += 1;
-          this.movieData.is_disliked_by_user = true;
-
+        if (reactionType === 1) {
           if (this.movieData.is_liked_by_user) {
             this.movieData.likes = Math.max(0, this.movieData.likes - 1);
             this.movieData.is_liked_by_user = false;
+          } else {
+            this.movieData.likes += 1;
+            this.movieData.is_liked_by_user = true;
+
+            if (this.movieData.is_disliked_by_user) {
+              this.movieData.dislikes = Math.max(0, this.movieData.dislikes - 1);
+              this.movieData.is_disliked_by_user = false;
+            }
+          }
+        } else if (reactionType === 2) {
+          if (this.movieData.is_disliked_by_user) {
+            this.movieData.dislikes = Math.max(0, this.movieData.dislikes - 1);
+            this.movieData.is_disliked_by_user = false;
+          } else {
+            this.movieData.dislikes += 1;
+            this.movieData.is_disliked_by_user = true;
+
+            if (this.movieData.is_liked_by_user) {
+              this.movieData.likes = Math.max(0, this.movieData.likes - 1);
+              this.movieData.is_liked_by_user = false;
+            }
           }
         }
-      }
-    },
-    error: (err) => console.error('Error updating reaction:', err)
-  });
-}
+      },
+      error: (err) => console.error('Error updating reaction:', err)
+    });
+  }
 
 
 
@@ -325,13 +325,15 @@ toggleMovieReaction(reactionType: number): void {
   }
 
   formatNumber(value: number): string {
-  if (value >= 1_000_000) {
-    return (value / 1_000_000).toFixed(value % 1_000_000 >= 100_000 ? 1 : 0) + 'M';
-  } else if (value >= 1_000) {
-    return (value / 1_000).toFixed(value % 1_000 >= 100 ? 1 : 0) + 'K';
-  } else {
-    return value.toString();
+    if (value >= 1_000_000) {
+      const truncated = Math.floor((value / 1_000_000) * 10) / 10;
+      return truncated + 'M';
+    } else if (value >= 1_000) {
+      const truncated = Math.floor((value / 1_000) * 10) / 10;
+      return truncated + 'K';
+    } else {
+      return value.toString();
+    }
   }
-}
 
 }

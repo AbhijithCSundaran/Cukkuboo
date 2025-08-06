@@ -111,13 +111,17 @@ export class ListReelsComponent implements OnInit, AfterViewInit {
       panelClass: [panelClass]
     });
   }
-  formatCount(count: number): string {
-  if (count >= 1_000_000) {
-    return (count / 1_000_000).toFixed(1).replace(/\.0$/, '') + 'M';
-  } else if (count >= 1_000) {
-    return (count / 1_000).toFixed(1).replace(/\.0$/, '') + 'k';
+  formatNumber(value: number): string {
+    if (value >= 1_000_000) {
+      const truncated = Math.floor((value / 1_000_000) * 10) / 10;
+      return truncated + 'M';
+    } else if (value >= 1_000) {
+      const truncated = Math.floor((value / 1_000) * 10) / 10;
+      return truncated + 'K';
+    } else {
+      return value.toString();
+    }
   }
-  return count.toString();
-}
+
 
 }

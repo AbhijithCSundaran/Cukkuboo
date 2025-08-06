@@ -142,17 +142,46 @@ export class ReelsComponent implements OnInit, AfterViewInit, OnDestroy {
     this.pageIndex++;
     this.loadReels(this.searchText);
   }
-  onVideoPlay(reel: any) {
-    if (window.innerWidth < 576 && !document.fullscreenElement &&  !this.isFullscreen) {
-      const elem = document.documentElement;
-      elem.requestFullscreen().then(() => {
-        this.isFullscreen = true;
-      }).catch(err => {
-        console.warn("Fullscreen request failed:", err);
-      });
-    }
-    // alert(reel.title)
+onVideoPlay(reel: any) {
+    this.userData = this.storageService.getItem('userData');
+  if (window.innerWidth < 576 && !document.fullscreenElement && !this.isFullscreen) {
+    const elem = document.documentElement;
+    elem.requestFullscreen().then(() => {
+      this.isFullscreen = true;
+    }).catch(err => {
+      console.warn("Fullscreen request failed:", err);
+    });
   }
+
+
+  if (!reel.is_viewed && this.userData) {
+   const model = {
+  user_id: String(this.userData?.id),
+  reels_id: String(reel.id),
+  status: 1
+};
+
+
+    this.movieService.viewReel(model).subscribe({
+      next: (res) => {
+        if (res?.success) {
+          reel.is_viewed = true; 
+          reel.views = (reel.views || 0) + 1;
+          this.snackBar.open('View counted!', '', {
+            duration: 2000,
+            panelClass: ['snackbar-success'],
+            verticalPosition: 'top',
+            horizontalPosition: 'center',
+          });
+        }
+      },
+      error: (err) => {
+        console.error('Error counting view:', err);
+      }
+    });
+  }
+}
+
   getReelById(id: string): void {
     this.movieService.getReelById(id).subscribe({
       next: (res) => {
@@ -165,8 +194,12 @@ export class ReelsComponent implements OnInit, AfterViewInit, OnDestroy {
             description: this.capitalizeFirst(res.data.description),
             likes: Number(res.data.likes) || 0,
             views: Number(res.data.views) || 0,
-            is_liked_by_user: res.data.is_liked_by_user === true || res.data.is_liked_by_user === 1
+            is_liked_by_user: res.data.is_liked_by_user === true || res.data.is_liked_by_user === 1,
+            is_viewed: res.data.is_viewed === true || res.data.is_viewed === 1
+
           }];
+
+           this.userData = this.storageService.getItem('userData');
           this.onVideoPlay(newReel[0]);
 
           if (newReel) {
@@ -193,7 +226,9 @@ export class ReelsComponent implements OnInit, AfterViewInit, OnDestroy {
             description: this.capitalizeFirst(data.description),
             likes: Number(data.likes) || 0,
             views: Number(data.views) || 0,
-            is_liked_by_user: data.is_liked_by_user === true || data.is_liked_by_user === 1
+            is_liked_by_user: data.is_liked_by_user === true || data.is_liked_by_user === 1,
+            is_viewed: res.data.is_viewed === true || res.data.is_viewed === 1
+
           })) || [];
           // console.log(this.pageIndex, this.pageSize, 'reel-length', newReels.length, this.reels.length)
           if (this.reels.length == 0)
@@ -486,4 +521,17 @@ export class ReelsComponent implements OnInit, AfterViewInit, OnDestroy {
       el.removeEventListener('touchend', this.handleTouchEnd);
     }
   }
+  
+  formatNumber(value: number): string {
+    if (value >= 1_000_000) {
+      const truncated = Math.floor((value / 1_000_000) * 10) / 10;
+      return truncated + 'M';
+    } else if (value >= 1_000) {
+      const truncated = Math.floor((value / 1_000) * 10) / 10;
+      return truncated + 'K';
+    } else {
+      return value.toString();
+    }
+  }
+
 }

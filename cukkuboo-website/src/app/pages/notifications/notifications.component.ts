@@ -31,14 +31,8 @@ export class NotificationsComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-
-     this.checkScreenWidth();
-  window.addEventListener('resize', this.checkScreenWidth.bind(this));
-  this.loadNotifications();
+    this.loadNotifications();
   }
-  checkScreenWidth() {
-  this.isMobileView = window.innerWidth <= 575
-}
 
   loadNotifications() {
     this.notificationService
@@ -48,7 +42,7 @@ export class NotificationsComponent implements OnInit {
           if (res?.success) {
             this.notifications = res?.data || [];
             if (this.notifications.length > 0) {
-              // this.selectNotification(this.notifications[0]);
+              this.selectNotification(this.notifications[0]);
             }
           }
         },
@@ -77,35 +71,35 @@ export class NotificationsComponent implements OnInit {
       });
   }
 
-markAllAsRead() {
-  if (this.isMarkingAll) return;
-  this.isMarkingAll = true;
+  markAllAsRead() {
+    if (this.isMarkingAll) return;
+    this.isMarkingAll = true;
 
-  this.notificationService.markAllAsRead().subscribe({
-    next: () => {
-      this.notifications.forEach((n) => {
-        n.read = true;
-        n.status = 2; 
-      });
-      this.isMarkingAll = false;
-      this.snackBar.open('All notifications marked as read.', '', {
-        duration: 3000,
-        verticalPosition: 'top',
-        horizontalPosition: 'center',
-        panelClass: ['snackbar-success']
-      });
-    },
-    error: () => {
-      this.isMarkingAll = false;
-      this.snackBar.open('Failed to mark all as read.', '', {
-        duration: 3000,
-        verticalPosition: 'top',
-        horizontalPosition: 'center',
-        panelClass: ['snackbar-error']
-      });
-    }
-  });
-}
+    this.notificationService.markAllAsRead().subscribe({
+      next: () => {
+        this.notifications.forEach((n) => {
+          n.read = true;
+          n.status = 2;
+        });
+        this.isMarkingAll = false;
+        this.snackBar.open('All notifications marked as read.', '', {
+          duration: 3000,
+          verticalPosition: 'top',
+          horizontalPosition: 'center',
+          panelClass: ['snackbar-success']
+        });
+      },
+      error: () => {
+        this.isMarkingAll = false;
+        this.snackBar.open('Failed to mark all as read.', '', {
+          duration: 3000,
+          verticalPosition: 'top',
+          horizontalPosition: 'center',
+          panelClass: ['snackbar-error']
+        });
+      }
+    });
+  }
 
   askToRemoveItem(item: any, index: number) {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {

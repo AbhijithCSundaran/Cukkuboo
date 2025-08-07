@@ -1,7 +1,7 @@
-        <!-- <span class="heading">Notifications</span> -->
+<!-- <span class="heading">Notifications</span> -->
 
 <div class="notifications-container">
-  
+
   <ng-container *ngIf="notifications.length > 0; else noNotifications">
     <!-- Left Side -->
     <div class="notifications-list">
@@ -31,28 +31,23 @@
       </div>
     </div>
 
-   
-  <!-- Right Side -->
-<div class="notification-detail" *ngIf="selectedNotification"
-     [class.mobile-show]="isMobileView">
-
-
-
-  <button class="close-btn" (click)="selectedNotification = null" *ngIf="isMobileView">
-    <i class="fas fa-times"></i>
-  </button>
-  <div class="detail-header">
-    <div class="detail-title">{{ selectedNotification.title }}</div>
-  </div>
-  <div class="detail-body">
-    <ng-container *ngIf="!isLoadingDetail; else loading">
-      {{ selectedNotification.content }}
-    </ng-container>
-    <ng-template #loading>
-      <div class="loading">Loading...</div>
-    </ng-template>
-  </div>
-</div>
+    <!-- Right Side -->
+    <div class="notification-detail" *ngIf="selectedNotification">
+      <button class="close-btn d-block d-md-none" (click)="selectedNotification = null">
+        <i class="fas fa-times"></i>
+      </button>
+      <div class="detail-header">
+        <div class="detail-title">{{ selectedNotification.title }}</div>
+      </div>
+      <div class="detail-body">
+        <ng-container *ngIf="!isLoadingDetail; else loading">
+          {{ selectedNotification.content }}
+        </ng-container>
+        <ng-template #loading>
+          <div class="loading">Loading...</div>
+        </ng-template>
+      </div>
+    </div>
 
   </ng-container>
 

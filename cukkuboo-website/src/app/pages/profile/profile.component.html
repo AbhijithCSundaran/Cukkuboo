@@ -112,7 +112,7 @@
                                             placeholder="Enter mobile number" (keypress)="allowOnlyDigits($event)" />
 
                                         <mat-error>
-                                            <Validation-Messages
+                                            <Validation-Messages class="validation"
                                                 [control]="profileForm.controls['phone']"></Validation-Messages>
                                         </mat-error>
                                     </mat-form-field>

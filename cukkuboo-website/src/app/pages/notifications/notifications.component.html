@@ -7,10 +7,10 @@
     <div class="notifications-list">
       <div class="header">
         <span class="heading">Notifications</span>
-        <button *ngIf="notifications.length > 0" class="mark-toggle" (click)="markAllAsRead()"
-          [disabled]="isMarkingAll">
-          {{ isMarkingAll ? 'Marking…' : 'Mark All as Read' }}
-        </button>
+      <button *ngIf="hasUnreadNotification" class="mark-toggle" (click)="markAllAsRead()">
+  {{ isMarkingAll ? 'Marking…' : 'Mark All as Read' }}
+</button>
+
       </div>
 
       <div class="scrollable-list">
@@ -23,9 +23,10 @@
           </div>
           <div class="date">{{ notification.date | date: 'short' }}</div>
           <div class="action-buttons">
-            <button class="delete-btn" (click)="askToRemoveItem(notification,i);" title="Delete">
+            <button class="delete-btn " (click)="askToRemoveItem(notification,i);" title="Delete">
               <i class="fas fa-trash"></i>
             </button>
+            
           </div>
         </div>
       </div>
@@ -33,9 +34,20 @@
 
     <!-- Right Side -->
     <div class="notification-detail" *ngIf="selectedNotification">
+      
       <button class="close-btn d-block d-md-none" (click)="selectedNotification = null">
         <i class="fas fa-times"></i>
       </button>
+          <!-- Delete button for mobile -->
+   
+    <button
+  class="delete-btn-mobile d-block d-md-none"
+  (click)="askToRemoveItem(selectedNotification, getSelectedNotificationIndex())"
+  title="Delete">
+  <i class="fas fa-trash"></i>
+</button>
+
+
       <div class="detail-header">
         <div class="detail-title">{{ selectedNotification.title }}</div>
       </div>

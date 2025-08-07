@@ -5,6 +5,7 @@ import { NotificationService } from '../../services/notification.service';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmationDialogComponent } from '../../core/components/confirmation-dialog/confirmation-dialog.component';
+import { StorageService } from '../../core/services/TempStorage/storageService';
 
 @Component({
   selector: 'app-notifications',
@@ -23,16 +24,40 @@ export class NotificationsComponent implements OnInit {
   isLoadingDetail = false;
   isMarkingAll = false;
   isMobileView = false;
+  hasUnreadNotification: boolean = false;
+    userData: any = null;
+      isSignedIn: boolean = false;
+        username: string = '';
+
 
   constructor(
+    private storageService: StorageService,
+
     private notificationService: NotificationService,
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
   ) { }
 
   ngOnInit() {
-    this.loadNotifications();
+
+     this.checkScreenWidth();
+  window.addEventListener('resize', this.checkScreenWidth.bind(this));
+  this.loadNotifications();
+   this.checkAuthAndLoadNotifications();
   }
+
+   checkAuthAndLoadNotifications(): void {
+    const token = this.storageService.getItem('token');
+    this.username = this.storageService.getItem('username');
+    this.userData = this.storageService.getItem('userData')
+    this.isSignedIn = !!token;
+    if (this.userData?.notifications)
+      this.hasUnreadNotification = true;
+  }
+  checkScreenWidth() {
+  this.isMobileView = window.innerWidth <= 575
+}
+
 
   loadNotifications() {
     this.notificationService
@@ -42,7 +67,7 @@ export class NotificationsComponent implements OnInit {
           if (res?.success) {
             this.notifications = res?.data || [];
             if (this.notifications.length > 0) {
-              this.selectNotification(this.notifications[0]);
+              // this.selectNotification(this.notifications[0]);
             }
           }
         },
@@ -71,35 +96,35 @@ export class NotificationsComponent implements OnInit {
       });
   }
 
-  markAllAsRead() {
-    if (this.isMarkingAll) return;
-    this.isMarkingAll = true;
+markAllAsRead() {
+  if (this.isMarkingAll) return;
+  this.isMarkingAll = true;
 
-    this.notificationService.markAllAsRead().subscribe({
-      next: () => {
-        this.notifications.forEach((n) => {
-          n.read = true;
-          n.status = 2;
-        });
-        this.isMarkingAll = false;
-        this.snackBar.open('All notifications marked as read.', '', {
-          duration: 3000,
-          verticalPosition: 'top',
-          horizontalPosition: 'center',
-          panelClass: ['snackbar-success']
-        });
-      },
-      error: () => {
-        this.isMarkingAll = false;
-        this.snackBar.open('Failed to mark all as read.', '', {
-          duration: 3000,
-          verticalPosition: 'top',
-          horizontalPosition: 'center',
-          panelClass: ['snackbar-error']
-        });
-      }
-    });
-  }
+  this.notificationService.markAllAsRead().subscribe({
+    next: () => {
+      this.notifications.forEach((n) => {
+        n.read = true;
+        n.status = 2; 
+      });
+      this.isMarkingAll = false;
+      this.snackBar.open('All notifications marked as read.', '', {
+        duration: 3000,
+        verticalPosition: 'top',
+        horizontalPosition: 'center',
+        panelClass: ['snackbar-success']
+      });
+    },
+    error: () => {
+      this.isMarkingAll = false;
+      this.snackBar.open('Failed to mark all as read.', '', {
+        duration: 3000,
+        verticalPosition: 'top',
+        horizontalPosition: 'center',
+        panelClass: ['snackbar-error']
+      });
+    }
+  });
+}
 
   askToRemoveItem(item: any, index: number) {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
@@ -156,4 +181,9 @@ export class NotificationsComponent implements OnInit {
       this.loadNotifications();
     }
   }
+    getSelectedNotificationIndex(): number {
+  return this.notifications.findIndex(
+    (n) => n.notification_id === this.selectedNotification?.notification_id
+  );
+}
 }

@@ -124,6 +124,7 @@ export class SingleMovieComponent implements OnInit {
     if (video === this.movieData.video) {
       const model = { mov_id: this.movieData.mov_id };
 
+      
       // Only call if not viewed
       if (!this.movieData.is_viewed) {
         this.addToView(model);

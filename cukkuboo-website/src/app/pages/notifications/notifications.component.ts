@@ -22,6 +22,7 @@ export class NotificationsComponent implements OnInit {
   searchText = '';
   isLoadingDetail = false;
   isMarkingAll = false;
+  isMobileView = false;
 
   constructor(
     private notificationService: NotificationService,
@@ -30,8 +31,14 @@ export class NotificationsComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.loadNotifications();
+
+     this.checkScreenWidth();
+  window.addEventListener('resize', this.checkScreenWidth.bind(this));
+  this.loadNotifications();
   }
+  checkScreenWidth() {
+  this.isMobileView = window.innerWidth <= 575
+}
 
   loadNotifications() {
     this.notificationService

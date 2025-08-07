@@ -6,8 +6,6 @@ export const routes: Routes = [
     { path: 'home', redirectTo: '', pathMatch: 'full' },
     { path: 'signin', loadComponent: () => import('./pages/sign-in/sign-in.component').then((m) => m.SignInComponent) },
     { path: 'signup', loadComponent: () => import('./pages/sign-up/sign-up.component').then((m) => m.SignUpComponent) },
-    { path: 'success/:id', loadComponent: () => import('./pages/success-payment/success-payment.component').then((m) => m.SuccessPaymentComponent) },
-    { path: 'failed/:id', loadComponent: () => import('./pages/failed-payment/failed-payment.component').then((m) => m.FailedPaymentComponent) },
     { path: 'reels', loadComponent: () => import('./pages/reels/reels.component').then(m => m.ReelsComponent) },
 
     // {path: '', component:AboutUsComponent },
@@ -26,7 +24,8 @@ export const routes: Routes = [
                     { path: 'privacy-policy', loadComponent: () => import('./pages/privacy-policy/privacy-policy.component').then(m => m.PrivacyPolicyComponent) },
                     { path: 'terms-of-use', loadComponent: () => import('./pages/terms-of-use/terms-of-use.component').then(m => m.TermsOfUseComponent) },
                     { path: 'help-center', loadComponent: () => import('./pages/help-center/help-center.component').then(m => m.HelpCenterComponent) },
-
+                    { path: 'success/:id', loadComponent: () => import('./pages/success-payment/success-payment.component').then((m) => m.SuccessPaymentComponent) },
+                    { path: 'failed/:id', loadComponent: () => import('./pages/failed-payment/failed-payment.component').then((m) => m.FailedPaymentComponent) },
                     // { path: 'contact-us', loadComponent: () => import('./pages/contact-us/contact-us.component').then(m => m.ContactUsComponent) }
                 ]
             },

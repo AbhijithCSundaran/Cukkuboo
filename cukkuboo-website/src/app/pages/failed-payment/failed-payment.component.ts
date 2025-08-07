@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router} from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { SubscriptionService } from '../../services/subscription.service';
 
 @Component({
@@ -8,9 +8,9 @@ import { SubscriptionService } from '../../services/subscription.service';
   templateUrl: './failed-payment.component.html',
   styleUrl: './failed-payment.component.scss'
 })
-export class FailedPaymentComponent implements OnInit{
-    message: string = '';
-     constructor(
+export class FailedPaymentComponent implements OnInit {
+  message: string = '';
+  constructor(
     private route: ActivatedRoute,
     private subscriptionService: SubscriptionService,
     private router: Router
@@ -21,17 +21,20 @@ export class FailedPaymentComponent implements OnInit{
         this.UpdateStatus(id);
     });
   }
-   ngOnInit(): void {
+  ngOnInit(): void {
 
   }
 
-    UpdateStatus(UsersubId: number) {
+  UpdateStatus(UsersubId: number) {
     if (UsersubId) {
       this.subscriptionService.updatePaymentFailed(UsersubId).subscribe({
         next: (res) => {
           this.message = res?.message || 'Subscription Failed!';
           setTimeout(() => {
-            this.router.navigate(['/subscription-details']);
+            // const currentUrl = window.location.href;
+            // const updatedUrl = currentUrl.replace(/#\/.*/, '#/');
+            // window.location.href = updatedUrl + 'subscription-details';
+            window.location.reload();
           }, 5000);
         },
         error: (err) => {

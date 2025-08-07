@@ -20,7 +20,16 @@
      &-canceled {
     background-color: #9e9e9e; // 
     color: #fff;
-  }
+   }
+   &-failed {
+    background-color: #e70d0d;
+    color:#fff
+   }
+
+   &-initiated {
+    background-color: #262af0;
+    color:#fff
+   }
     
   }
 

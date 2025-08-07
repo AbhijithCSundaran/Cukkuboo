@@ -1,3 +1,12 @@
+.success-payment {
+   padding: 3rem 1rem;
+  min-height: 100vh;
+  
+  .container {
+    max-width: 600px;
+    margin: 0 auto;
+    color: #fff;
+  }
 .card {
   background: #262424;
   padding: 60px 40px;
@@ -9,7 +18,7 @@
   margin: 15px auto;
 
   a {
-    
+
     color :var(--primary-color);
     cursor: pointer;
   }
@@ -43,4 +52,6 @@
   font-size: 18px;
   line-height: 1.5;
   margin: 0;
+}
+
 }

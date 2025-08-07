@@ -66,7 +66,6 @@
           border-bottom: 1px solid var(--grey-color);
           background-color: var(--black-color);
           color: var(--primary-color);
-          // text-shadow: 0 0 5px var(--primary-color);
         }
 
         &.active {
@@ -108,7 +107,7 @@
           right: 0;
           transform: translateY(-100%);
           opacity: 0;
-          transform: all 0.2s ease;
+          transition: all 0.2s ease;
 
           button {
             font-size: 0.75rem;
@@ -121,7 +120,7 @@
           .delete-btn {
             background-color: transparent;
             color: white;
-            transform: all 0.2s ease;
+            transition: all 0.2s ease;
 
             &:hover {
               color: var(--primary-color);
@@ -268,14 +267,14 @@
   }
 }
 
+// Capitalization styling
 .title,
 .detail-title,
 .detail-body {
   text-transform: capitalize;
 }
 
-/* Adjustments for tablets and mobile */
-
+// Responsive adjustments
 @media (max-width: 991px) {
   .notifications-container {
     .notifications-list {
@@ -285,7 +284,7 @@
         gap: 0.5rem;
 
         .mark-toggle {
-          align-self: stretch;
+          align-self: flex-end;
         }
       }
     }
@@ -345,14 +344,17 @@
   .notifications-container {
     .notifications-list {
       .header {
+        flex-direction: row;
+        justify-content: flex-end;
+
         .heading {
           display: none;
         }
 
         .mark-toggle {
-          font-size: 0.85rem;
-          padding: 0.2rem 0.4rem;
-          align-self: stretch;
+          font-size: 0.75rem;
+          padding: 0.2rem 0.5rem;
+          align-self: flex-end;
         }
       }
     }

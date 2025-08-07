@@ -1,15 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { SubscriptionService } from '../../services/subscription.service';
+import { SubscriptionService } from '../../../services/subscription.service';
 
 @Component({
-  selector: 'app-failed-payment',
+  selector: 'app-success-payment',
   imports: [],
-  templateUrl: './failed-payment.component.html',
-  styleUrl: './failed-payment.component.scss'
+  templateUrl: './success-payment.component.html',
+  styleUrl: './success-payment.component.scss'
 })
-export class FailedPaymentComponent implements OnInit {
+export class SuccessPaymentComponent implements OnInit {
   message: string = '';
+
+
   constructor(
     private route: ActivatedRoute,
     private subscriptionService: SubscriptionService,
@@ -21,20 +23,21 @@ export class FailedPaymentComponent implements OnInit {
         this.UpdateStatus(id);
     });
   }
+
   ngOnInit(): void {
 
   }
-
   UpdateStatus(UsersubId: number) {
+
     if (UsersubId) {
-      this.subscriptionService.updatePaymentFailed(UsersubId).subscribe({
+      this.subscriptionService.updatePaymentSuccess(UsersubId).subscribe({
         next: (res) => {
-          this.message = res?.message || 'Subscription Failed!';
+          this.message = res?.message || 'Subscription successfully marked as paid!';
           setTimeout(() => {
             // const currentUrl = window.location.href;
             // const updatedUrl = currentUrl.replace(/#\/.*/, '#/');
-            // window.location.href = updatedUrl + 'subscription-details';
-            window.location.reload();
+            // window.location.href = updatedUrl+'subscription-details';
+            this.router.navigate(['/subscription-details']);
           }, 5000);
         },
         error: (err) => {
@@ -46,4 +49,7 @@ export class FailedPaymentComponent implements OnInit {
     }
   }
 
+
 }
+
+

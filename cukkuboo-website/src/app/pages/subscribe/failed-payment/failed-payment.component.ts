@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { SubscriptionService } from '../../../services/subscription.service';
 
 @Component({
   selector: 'app-failed-payment',
-  imports: [],
+  imports: [RouterModule],
   templateUrl: './failed-payment.component.html',
   styleUrl: './failed-payment.component.scss'
 })
@@ -35,7 +35,7 @@ export class FailedPaymentComponent implements OnInit {
             // const updatedUrl = currentUrl.replace(/#\/.*/, '#/');
             // window.location.href = updatedUrl + 'subscription-details';
             // window.location.reload();
-            this.router.navigate(['/subscription-details']);
+            // this.router.navigate(['/subscription-details']);
           }, 5000);
         },
         error: (err) => {

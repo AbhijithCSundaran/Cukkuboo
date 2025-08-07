@@ -34,6 +34,10 @@ export class SubscriptionDetailsComponent implements OnInit {
   ngOnInit(): void {
     // Read query param if user was redirected from a movie page
     this.redirectToMovieId = this.storageService.getItem('movieId');
+    this.loadSubscriptions();
+
+  }
+  loadSubscriptions() {
     const data = this.storageService.getItem('userData');
     if (data?.subscription_details?.user_subscription_id) {
       this.getActiveSubscription();
@@ -95,14 +99,15 @@ export class SubscriptionDetailsComponent implements OnInit {
           const userData = this.storageService.getItem('userData');
           userData.subscription_details.subscription = 3;
           this.storageService.updateItem('userData', userData);
+          this.loadSubscriptions();
           this.snackBar.open('Subscription cancelled successfully.', '', {
             duration: 3000,
             verticalPosition: 'top',
             panelClass: ['snackbar-success']
           });
-          setTimeout(() => {
-            window.location.reload();
-          },);
+          // setTimeout(() => {
+          //   window.location.reload();
+          // },);
         }
       },
       error: (err) => {

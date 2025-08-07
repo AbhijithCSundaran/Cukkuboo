@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { SubscriptionService } from '../../../services/subscription.service';
 
 @Component({
   selector: 'app-success-payment',
-  imports: [],
+  imports: [RouterModule],
   templateUrl: './success-payment.component.html',
   styleUrl: './success-payment.component.scss'
 })
@@ -37,7 +37,7 @@ export class SuccessPaymentComponent implements OnInit {
             // const currentUrl = window.location.href;
             // const updatedUrl = currentUrl.replace(/#\/.*/, '#/');
             // window.location.href = updatedUrl+'subscription-details';
-            this.router.navigate(['/subscription-details']);
+            // this.router.navigate(['/subscription-details']);
           }, 5000);
         },
         error: (err) => {

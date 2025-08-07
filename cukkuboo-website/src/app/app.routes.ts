@@ -24,7 +24,7 @@ export const routes: Routes = [
                     { path: 'privacy-policy', loadComponent: () => import('./pages/privacy-policy/privacy-policy.component').then(m => m.PrivacyPolicyComponent) },
                     { path: 'terms-of-use', loadComponent: () => import('./pages/terms-of-use/terms-of-use.component').then(m => m.TermsOfUseComponent) },
                     { path: 'help-center', loadComponent: () => import('./pages/help-center/help-center.component').then(m => m.HelpCenterComponent) },
-                     { path: 'success/:id', loadComponent: () => import('./pages/success-payment/success-payment.component').then((m) => m.SuccessPaymentComponent) },
+                    { path: 'success/:id', loadComponent: () => import('./pages/success-payment/success-payment.component').then((m) => m.SuccessPaymentComponent) },
                     { path: 'failed/:id', loadComponent: () => import('./pages/failed-payment/failed-payment.component').then((m) => m.FailedPaymentComponent) },
                     // { path: 'contact-us', loadComponent: () => import('./pages/contact-us/contact-us.component').then(m => m.ContactUsComponent) }
                 ]

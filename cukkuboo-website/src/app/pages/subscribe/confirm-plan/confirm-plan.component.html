@@ -35,41 +35,44 @@
 
 <div class="d-flex flex-column justify-content-center align-items-center">
     <h2 mat-dialog-title class="mb-1">Subscribe Now!</h2>
-  
 
-   <h6 class="col-12 mt-2 text-center">
-    To enjoy
-    <b class="mx-1 text-primary-clr">{{ data?.plan?.period }} day{{data?.plan?.period>1?'s':''}}</b>
-    of access for just
-    <span class="fw-bold">
-        <i class="bi bi-currency-dollar"></i>{{ data?.plan?.discount_price ? data?.plan?.discount_price : data?.plan?.price }},
-    </span>
-    Subscribe to plan "<b>{{data?.plan?.plan_name}}</b>" now!
-</h6>
 
-<h6 class="col-12 mt-2 d-flex justify-content-between" *ngIf="data?.plan?.discount_price">
-    <span style="text-align: center; margin: auto;">
-        Only
-        <span class="fw-bold me-1 text-primary-clr">
-            <b><i class="bi bi-currency-dollar"></i>{{ data.plan?.discount_price }}</b>
+    <h6 class="col-12 mt-2 text-center">
+        To enjoy
+        <b class="mx-1 text-primary-clr">{{ data?.plan?.period }} day{{data?.plan?.period>1?'s':''}}</b>
+        of access for just
+        <span class="fw-bold">
+            <i class="bi bi-currency-dollar"></i>{{ data?.plan?.discount_price ? data?.plan?.discount_price :
+            data?.plan?.price }},
         </span>
-        (<i class="bi bi-currency-dollar"></i><span class="text-decoration-line-through">{{ data?.plan?.price }}</span>)
-        You Saved
-        <b class="text-primary-clr">
-            <i class="bi bi-currency-dollar"></i>{{ (data.plan.price - data.plan.discount_price) | number:'1.2-2' }}
-        </b>
-    </span>
-</h6>
+        Subscribe to plan "<b>{{data?.plan?.plan_name}}</b>" now!
+    </h6>
+
+    <h6 class="col-12 mt-2 d-flex justify-content-between" *ngIf="data?.plan?.discount_price">
+        <span style="text-align: center; margin: auto;">
+            Only
+            <span class="fw-bold me-1 text-primary-clr">
+                <b><i class="bi bi-currency-dollar"></i>{{ data.plan?.discount_price }}</b>
+            </span>
+            (<i class="bi bi-currency-dollar"></i><span class="text-decoration-line-through">{{ data?.plan?.price
+                }}</span>)
+            You Saved
+            <b class="text-primary-clr">
+                <i class="bi bi-currency-dollar"></i>{{ (data.plan.price - data.plan.discount_price) | number:'1.2-2' }}
+            </b>
+        </span>
+    </h6>
 
     <div class="fa-checkbox-row single d-flex mt-4" (click)="acknowledged = !acknowledged">
         <i class="pt-2" [ngClass]="acknowledged ? 'fa-solid fa-square-check' : 'fa-regular fa-square'"></i>
         <span class="checkbox-label ms-2" style="text-align: justify;">
             By proceeding, I acknowledge that I have read and agree to the
-            <a [href]="getLink('terms-of-use')" target="_blank" rel="noopener noreferrer" (click)="$event.stopPropagation()">Terms of
+            <a [href]="getLink('terms-of-use')" target="_blank" rel="noopener noreferrer"
+                (click)="$event.stopPropagation()">Terms of
                 Use</a>
             and
-            <a [href]="getLink('privacy-policy')" target="_blank" rel="noopener noreferrer" (click)="$event.stopPropagation()"
-                (click)="$event.stopPropagation()">Privacy Policy</a>,
+            <a [href]="getLink('privacy-policy')" target="_blank" rel="noopener noreferrer"
+                (click)="$event.stopPropagation()" (click)="$event.stopPropagation()">Privacy Policy</a>,
             and I confirm that I am 18 years of age or older.
         </span>
     </div>

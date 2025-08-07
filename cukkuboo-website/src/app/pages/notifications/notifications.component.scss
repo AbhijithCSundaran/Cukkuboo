@@ -164,6 +164,16 @@
     }
 
     .close-btn {
+      display: block;
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: transparent;
+      border: none;
+      font-size: 1.5rem;
+      color: white;
+      cursor: pointer;
+      z-index: 11;
       display: none;
     }
   }
@@ -280,9 +290,11 @@
   .notifications-container {
     .notifications-list {
       .header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 0.5rem;
+        justify-content: flex-end;
+
+        .heading {
+          display: none;
+        }
 
         .mark-toggle {
           align-self: stretch;
@@ -310,24 +322,6 @@
       z-index: 10;
       height: 100vh;
       overflow-y: auto;
-      display: none;
-
-      &.mobile-show {
-        display: block;
-      }
-
-      .close-btn {
-        display: block;
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        background: transparent;
-        border: none;
-        font-size: 1.5rem;
-        color: white;
-        cursor: pointer;
-        z-index: 11;
-      }
 
       .detail-header .detail-title {
         font-size: 1.3rem;
@@ -345,10 +339,6 @@
   .notifications-container {
     .notifications-list {
       .header {
-        .heading {
-          display: none;
-        }
-
         .mark-toggle {
           font-size: 0.85rem;
           padding: 0.2rem 0.4rem;

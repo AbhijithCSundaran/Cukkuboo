@@ -30,6 +30,8 @@ export class AppComponent {
     this.router.events.subscribe(event => {
       if (event instanceof NavigationStart) {
         this.showloader = true;
+        if (this.storageService.getItem('token'))
+          this.loadUserData();
       } else if (
         event instanceof NavigationEnd ||
         event instanceof NavigationCancel ||

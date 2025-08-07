@@ -167,12 +167,12 @@ onVideoPlay(reel: any) {
         if (res?.success) {
           reel.is_viewed = true; 
           reel.views = (reel.views || 0) + 1;
-          this.snackBar.open('View counted!', '', {
-            duration: 2000,
-            panelClass: ['snackbar-success'],
-            verticalPosition: 'top',
-            horizontalPosition: 'center',
-          });
+          // this.snackBar.open('View counted!', '', {
+          //   duration: 2000,
+          //   panelClass: ['snackbar-success'],
+          //   verticalPosition: 'top',
+          //   horizontalPosition: 'center',
+          // });
         }
       },
       error: (err) => {

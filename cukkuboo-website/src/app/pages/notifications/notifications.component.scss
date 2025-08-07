@@ -66,7 +66,7 @@
           border-bottom: 1px solid var(--grey-color);
           background-color: var(--black-color);
           color: var(--primary-color);
-          text-shadow: 0 0 5px var(--primary-color);
+          // text-shadow: 0 0 5px var(--primary-color);
         }
 
         &.active {
@@ -161,6 +161,10 @@
       font-size: 1.1rem;
       line-height: 1.6;
       color: #ddd;
+    }
+
+    .close-btn {
+      display: none;
     }
   }
 
@@ -264,7 +268,14 @@
   }
 }
 
-/* Move button under heading on ≤ 991px */
+.title,
+.detail-title,
+.detail-body {
+  text-transform: capitalize;
+}
+
+/* Adjustments for tablets and mobile */
+
 @media (max-width: 991px) {
   .notifications-container {
     .notifications-list {
@@ -281,13 +292,60 @@
   }
 }
 
+@media (max-width: 767px) {
+  .notifications-container {
+    flex-direction: column;
+
+    .notifications-list {
+      width: 100%;
+      display: block;
+    }
+
+    .notification-detail {
+      width: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      background-color: #000;
+      z-index: 10;
+      height: 100vh;
+      overflow-y: auto;
+      display: none;
+
+      &.mobile-show {
+        display: block;
+      }
+
+      .close-btn {
+        display: block;
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: transparent;
+        border: none;
+        font-size: 1.5rem;
+        color: white;
+        cursor: pointer;
+        z-index: 11;
+      }
+
+      .detail-header .detail-title {
+        font-size: 1.3rem;
+      }
+
+      .detail-body {
+        font-size: 0.95rem;
+        line-height: 1.4;
+      }
+    }
+  }
+}
 
 @media (max-width: 575px) {
   .notifications-container {
     .notifications-list {
       .header {
         .heading {
-          // font-size: 0.7rem;
           display: none;
         }
 
@@ -298,41 +356,12 @@
         }
       }
     }
-  }
-}
-.title,
-.detail-title,
-.detail-body {
-  text-transform: capitalize;
-}
-@media (max-width: 767px) {
-  .notifications-container {
-    .notification-detail {
-      padding: 1rem;
 
-      .detail-header {
-        .detail-title {
-          font-size: 1.3rem; 
-        }
-      }
-
-      .detail-body {
-        font-size: 0.95rem; 
-        line-height: 1.4;
-      }
-    }
-  }
-}
-
-@media (max-width: 575px) {
-  .notifications-container {
     .notification-detail {
       padding: 0.8rem;
 
-      .detail-header {
-        .detail-title {
-          font-size: 1.1rem;
-        }
+      .detail-header .detail-title {
+        font-size: 1.1rem;
       }
 
       .detail-body {

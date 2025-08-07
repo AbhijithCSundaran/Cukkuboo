@@ -32,19 +32,28 @@
     </div>
 
     <!-- Right Side -->
-    <div class="notification-detail" *ngIf="selectedNotification">
-      <div class="detail-header">
-        <div class="detail-title">{{ selectedNotification.title }}</div>
-      </div>
-      <div class="detail-body">
-        <ng-container *ngIf="!isLoadingDetail; else loading">
-          {{ selectedNotification.content }}
-        </ng-container>
-        <ng-template #loading>
-          <div class="loading">Loading...</div>
-        </ng-template>
-      </div>
-    </div>
+  <!-- Right Side -->
+<div class="notification-detail" *ngIf="selectedNotification"
+     [class.mobile-show]="isMobileView">
+
+
+
+  <button class="close-btn" (click)="selectedNotification = null" *ngIf="isMobileView">
+    <i class="fas fa-times"></i>
+  </button>
+  <div class="detail-header">
+    <div class="detail-title">{{ selectedNotification.title }}</div>
+  </div>
+  <div class="detail-body">
+    <ng-container *ngIf="!isLoadingDetail; else loading">
+      {{ selectedNotification.content }}
+    </ng-container>
+    <ng-template #loading>
+      <div class="loading">Loading...</div>
+    </ng-template>
+  </div>
+</div>
+
   </ng-container>
 
   <!-- Full Page Empty State -->

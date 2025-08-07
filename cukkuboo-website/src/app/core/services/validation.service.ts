@@ -10,7 +10,7 @@ export class ValidationService {
             'LatLongValidator': `Not Valid`,
             'invalidEmailAddress': 'Invalid email address',
             'invalidPhoneNo': 'Invalid phone number',
-            'invalidPassword': 'Password must be at least 8 characters and include uppercase, lowercase, numbers, and special characters',
+            'invalidPassword': 'Password must be 8+ characters with uppercase, lowercase, number, symbol.',
             'passwordsMismatch': 'Passwords Mismatch',
             'minlength': `Minimum length ${validatorValue.requiredLength}`,
             'maxlength': `Maximum length ${validatorValue.requiredLength}`,

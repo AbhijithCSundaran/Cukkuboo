@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { SubscriptionService } from '../../services/subscription.service';
+import { SubscriptionService } from '../../../services/subscription.service';
 
 @Component({
   selector: 'app-success-payment',
@@ -33,12 +33,12 @@ export class SuccessPaymentComponent implements OnInit {
       this.subscriptionService.updatePaymentSuccess(UsersubId).subscribe({
         next: (res) => {
           this.message = res?.message || 'Subscription successfully marked as paid!';
-          // setTimeout(() => {
-          //   // const currentUrl = window.location.href;
-          //   // const updatedUrl = currentUrl.replace(/#\/.*/, '#/');
-          //   // window.location.href = updatedUrl+'subscription-details';
-          //   window.location.reload();
-          // }, 5000);
+          setTimeout(() => {
+            // const currentUrl = window.location.href;
+            // const updatedUrl = currentUrl.replace(/#\/.*/, '#/');
+            // window.location.href = updatedUrl+'subscription-details';
+            this.router.navigate(['/subscription-details']);
+          }, 5000);
         },
         error: (err) => {
           this.message = err?.error?.messages?.error || 'Something went wrong during payment processing.';

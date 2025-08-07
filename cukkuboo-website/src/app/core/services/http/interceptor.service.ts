@@ -81,6 +81,7 @@ export class InterceptorService implements HttpInterceptor {
   //   },)
   // }
   openLoginModal() {
+    localStorage.clear();
     const dialogRef = this.dialog.open(SignInComponent, {
       data: 'unauth',
       width: 'auto', height: 'auto',

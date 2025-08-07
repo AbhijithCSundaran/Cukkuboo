@@ -1,11 +1,12 @@
 import { Routes } from '@angular/router';
 import { LayoutComponent } from './layout/layout.component';
 import { authGuard } from './guards/auth/auth.guard';
+import { nonAuthGuard } from './guards/non-auth/non-auth.guard';
 
 export const routes: Routes = [
     { path: 'home', redirectTo: '', pathMatch: 'full' },
-    { path: 'signin', loadComponent: () => import('./pages/sign-in/sign-in.component').then((m) => m.SignInComponent) },
-    { path: 'signup', loadComponent: () => import('./pages/sign-up/sign-up.component').then((m) => m.SignUpComponent) },
+    { path: 'signin', canActivate: [nonAuthGuard], loadComponent: () => import('./pages/sign-in/sign-in.component').then((m) => m.SignInComponent) },
+    { path: 'signup', canActivate: [nonAuthGuard], loadComponent: () => import('./pages/sign-up/sign-up.component').then((m) => m.SignUpComponent) },
     { path: 'reels', loadComponent: () => import('./pages/reels/reels.component').then(m => m.ReelsComponent) },
 
     // {path: '', component:AboutUsComponent },
@@ -24,8 +25,6 @@ export const routes: Routes = [
                     { path: 'privacy-policy', loadComponent: () => import('./pages/privacy-policy/privacy-policy.component').then(m => m.PrivacyPolicyComponent) },
                     { path: 'terms-of-use', loadComponent: () => import('./pages/terms-of-use/terms-of-use.component').then(m => m.TermsOfUseComponent) },
                     { path: 'help-center', loadComponent: () => import('./pages/help-center/help-center.component').then(m => m.HelpCenterComponent) },
-                     { path: 'success/:id', loadComponent: () => import('./pages/success-payment/success-payment.component').then((m) => m.SuccessPaymentComponent) },
-                    { path: 'failed/:id', loadComponent: () => import('./pages/failed-payment/failed-payment.component').then((m) => m.FailedPaymentComponent) },
                     // { path: 'contact-us', loadComponent: () => import('./pages/contact-us/contact-us.component').then(m => m.ContactUsComponent) }
                 ]
             },
@@ -38,6 +37,8 @@ export const routes: Routes = [
                     { path: 'history', loadComponent: () => import('./pages/history/history.component').then(m => m.HistoryComponent) },
                     { path: 'notifications', loadComponent: () => import('./pages/notifications/notifications.component').then(m => m.NotificationsComponent) },
                     { path: 'subscription-details', loadComponent: () => import('./pages/subscription-details/subscription-details.component').then(m => m.SubscriptionDetailsComponent) },
+                    { path: 'success/:id', loadComponent: () => import('./pages/subscribe/success-payment/success-payment.component').then((m) => m.SuccessPaymentComponent) },
+                    { path: 'failed/:id', loadComponent: () => import('./pages/subscribe/failed-payment/failed-payment.component').then((m) => m.FailedPaymentComponent) },
                 ]
             },
         ]

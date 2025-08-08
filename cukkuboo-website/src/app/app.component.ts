@@ -108,7 +108,6 @@ export class AppComponent {
     this.userService.getProfile().subscribe({
       next: (response) => {
         if (response.success) {
-          debugger;
           this.storageService.updateItem('userData', response.data);
           this.storageService.updateItem('username', response.data?.username || 'User');
           this.storageService.updateItem('token', response.data?.jwt_token || 'token');

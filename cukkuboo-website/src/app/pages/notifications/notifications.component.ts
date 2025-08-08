@@ -24,7 +24,6 @@ export class NotificationsComponent implements OnInit {
   isLoadingDetail = false;
   isMarkingAll = false;
   isMobileView = false;
-  hasUnreadNotification: boolean = false;
   userData: any = null;
   isSignedIn: boolean = false;
   username: string = '';
@@ -58,21 +57,19 @@ export class NotificationsComponent implements OnInit {
 
 
   loadNotifications() {
-    this.notificationService
-      .getNotifications(this.pageIndex, this.pageSize, this.searchText)
-      .subscribe({
-        next: (res: any) => {
-          if (res?.success) {
-            this.notifications = res?.data || [];
-            if (this.notifications.length > 0) {
-              // this.selectNotification(this.notifications[0]);
-            }
+    this.notificationService.getNotifications(this.pageIndex, this.pageSize, this.searchText).subscribe({
+      next: (res: any) => {
+        if (res?.success) {
+          this.notifications = res?.data || [];
+          if (this.notifications.length > 0) {
+            this.selectNotification(this.notifications[0]);
           }
-        },
-        error: (err) => {
-          console.error('Error loading notifications:', err);
         }
-      });
+      },
+      error: (err) => {
+        console.error('Error loading notifications:', err);
+      }
+    });
   }
 
   selectNotification(notification: any) {

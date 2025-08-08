@@ -58,7 +58,7 @@ export class HeaderComponent implements OnInit {
     this.username = this.storageService.getItem('username');
     this.userData = this.storageService.getItem('userData')
     this.isSignedIn = !!token;
-    if (this.userData?.notifications)
+    if (this.userData?.notifications && !this.router.url.includes('notifications'))
       this.hasUnreadNotification = true;
   }
 
@@ -130,7 +130,7 @@ export class HeaderComponent implements OnInit {
       this.closeMenu();
     }
   }
-   goToSubscribe(): void {
+  goToSubscribe(): void {
     this.router.navigate(['/subscribe'], { queryParams: { source: 'header' } });
   }
 }

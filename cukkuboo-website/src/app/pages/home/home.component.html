@@ -134,11 +134,12 @@
 
   </ng-container>
 
-  <!-- No Movies Fallback -->
+  <!-- No Movies  -->
   <ng-template #noMoviesTemplate>
-    <div class="text-center text-light p-5">
-      <h3>No Movies available</h3>
-      <p>Check back later for new movies and shows</p>
-    </div>
-  </ng-template>
+  <div class="no-movies-found d-flex flex-column justify-content-center align-items-center w-100" style="min-height: 100vh;">
+    <h3>No Movies available</h3>
+    <p>Check back later for new movies and shows</p>
+  </div>
+</ng-template>
+
 }

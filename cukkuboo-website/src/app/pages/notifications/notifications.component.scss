@@ -121,6 +121,8 @@
             background-color: transparent;
             color: white;
             transition: all 0.2s ease;
+             outline: none; 
+  box-shadow: none; 
 
             &:hover {
               color: var(--primary-color);
@@ -304,6 +306,10 @@
 }
 
 @media (max-width: 767px) {
+
+  .delete-btn{
+    display: none;
+  }
   .notifications-container {
     flex-direction: column;
 
@@ -357,5 +363,25 @@
         font-size: 0.9rem;
       }
     }
+  }
+}
+.delete-btn-mobile {
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 1rem;
+  position: absolute;
+  top: 18px;
+    right: 50px;
+  z-index: 11;
+  padding: 0;
+  margin: 0;
+
+  &:hover {
+    color: var(--primary-color);
+  }
+
+  i {
+    pointer-events: none;
   }
 }

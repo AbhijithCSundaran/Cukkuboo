@@ -7,9 +7,9 @@
     <div class="notifications-list">
       <div class="header">
         <span class="heading">Notifications</span>
-      <button *ngIf="hasUnreadNotification" class="mark-toggle" (click)="markAllAsRead()">
-  {{ isMarkingAll ? 'Marking…' : 'Mark All as Read' }}
-</button>
+        <button *ngIf="userData?.notifications" class="mark-toggle" (click)="markAllAsRead()">
+          {{ isMarkingAll ? 'Marking…' : 'Mark All as Read' }}
+        </button>
 
       </div>
 
@@ -26,7 +26,7 @@
             <button class="delete-btn " (click)="askToRemoveItem(notification,i);" title="Delete">
               <i class="fas fa-trash"></i>
             </button>
-            
+
           </div>
         </div>
       </div>
@@ -34,18 +34,16 @@
 
     <!-- Right Side -->
     <div class="notification-detail" *ngIf="selectedNotification">
-      
+
       <button class="close-btn d-block d-md-none" (click)="selectedNotification = null">
         <i class="fas fa-times"></i>
       </button>
-          <!-- Delete button for mobile -->
-   
-    <button
-  class="delete-btn-mobile d-block d-md-none"
-  (click)="askToRemoveItem(selectedNotification, getSelectedNotificationIndex())"
-  title="Delete">
-  <i class="fas fa-trash"></i>
-</button>
+      <!-- Delete button for mobile -->
+
+      <button class="delete-btn-mobile d-block d-md-none"
+        (click)="askToRemoveItem(selectedNotification, getSelectedNotificationIndex())" title="Delete">
+        <i class="fas fa-trash"></i>
+      </button>
 
 
       <div class="detail-header">

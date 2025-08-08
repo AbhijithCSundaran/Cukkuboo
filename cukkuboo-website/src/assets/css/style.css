@@ -3093,7 +3093,8 @@ header#gen-header.gen-header-style-1 .gen-bottom-header .navbar .navbar-nav li.a
 
 @media (max-width: 1024px) {
     header#gen-header .gen-bottom-header .navbar .navbar-brand img {
-        height: 30px;
+        height: auto;
+        max-height: 30px;
     }
 }
 

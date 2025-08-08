@@ -25,9 +25,9 @@ export class NotificationsComponent implements OnInit {
   isMarkingAll = false;
   isMobileView = false;
   hasUnreadNotification: boolean = false;
-    userData: any = null;
-      isSignedIn: boolean = false;
-        username: string = '';
+  userData: any = null;
+  isSignedIn: boolean = false;
+  username: string = '';
 
 
   constructor(
@@ -40,23 +40,21 @@ export class NotificationsComponent implements OnInit {
 
   ngOnInit() {
 
-     this.checkScreenWidth();
-  window.addEventListener('resize', this.checkScreenWidth.bind(this));
-  this.loadNotifications();
-   this.checkAuthAndLoadNotifications();
+    this.checkScreenWidth();
+    window.addEventListener('resize', this.checkScreenWidth.bind(this));
+    this.loadNotifications();
+    this.checkAuthAndLoadNotifications();
   }
 
-   checkAuthAndLoadNotifications(): void {
+  checkAuthAndLoadNotifications(): void {
     const token = this.storageService.getItem('token');
     this.username = this.storageService.getItem('username');
     this.userData = this.storageService.getItem('userData')
     this.isSignedIn = !!token;
-    if (this.userData?.notifications)
-      this.hasUnreadNotification = true;
   }
   checkScreenWidth() {
-  this.isMobileView = window.innerWidth <= 575
-}
+    this.isMobileView = window.innerWidth <= 575
+  }
 
 
   loadNotifications() {
@@ -96,35 +94,37 @@ export class NotificationsComponent implements OnInit {
       });
   }
 
-markAllAsRead() {
-  if (this.isMarkingAll) return;
-  this.isMarkingAll = true;
+  markAllAsRead() {
+    if (this.isMarkingAll) return;
+    this.isMarkingAll = true;
 
-  this.notificationService.markAllAsRead().subscribe({
-    next: () => {
-      this.notifications.forEach((n) => {
-        n.read = true;
-        n.status = 2; 
-      });
-      this.isMarkingAll = false;
-      this.snackBar.open('All notifications marked as read.', '', {
-        duration: 3000,
-        verticalPosition: 'top',
-        horizontalPosition: 'center',
-        panelClass: ['snackbar-success']
-      });
-    },
-    error: () => {
-      this.isMarkingAll = false;
-      this.snackBar.open('Failed to mark all as read.', '', {
-        duration: 3000,
-        verticalPosition: 'top',
-        horizontalPosition: 'center',
-        panelClass: ['snackbar-error']
-      });
-    }
-  });
-}
+    this.notificationService.markAllAsRead().subscribe({
+      next: () => {
+        this.notifications.forEach((n) => {
+          n.read = true;
+          n.status = 2;
+        });
+        this.userData.notifications = false;
+        this.storageService.updateItem('userData', this.userData);
+        this.isMarkingAll = false;
+        this.snackBar.open('All notifications marked as read.', '', {
+          duration: 3000,
+          verticalPosition: 'top',
+          horizontalPosition: 'center',
+          panelClass: ['snackbar-success']
+        });
+      },
+      error: () => {
+        this.isMarkingAll = false;
+        this.snackBar.open('Failed to mark all as read.', '', {
+          duration: 3000,
+          verticalPosition: 'top',
+          horizontalPosition: 'center',
+          panelClass: ['snackbar-error']
+        });
+      }
+    });
+  }
 
   askToRemoveItem(item: any, index: number) {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
@@ -181,9 +181,9 @@ markAllAsRead() {
       this.loadNotifications();
     }
   }
-    getSelectedNotificationIndex(): number {
-  return this.notifications.findIndex(
-    (n) => n.notification_id === this.selectedNotification?.notification_id
-  );
-}
+  getSelectedNotificationIndex(): number {
+    return this.notifications.findIndex(
+      (n) => n.notification_id === this.selectedNotification?.notification_id
+    );
+  }
 }

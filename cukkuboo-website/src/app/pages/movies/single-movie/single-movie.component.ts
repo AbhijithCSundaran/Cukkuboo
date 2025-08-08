@@ -12,6 +12,7 @@ import { StorageService } from '../../../core/services/TempStorage/storageServic
 import { SignInComponent } from '../../sign-in/sign-in.component';
 import { ConfirmationDialogComponent } from '../../../core/components/confirmation-dialog/confirmation-dialog.component';
 
+declare var a2a: any;
 @Component({
   selector: 'app-single-movie',
   standalone: true,
@@ -33,6 +34,8 @@ export class SingleMovieComponent implements OnInit {
   videoUrl = environment.fileUrl + 'uploads/videos/';
   imageUrl = environment.fileUrl + 'uploads/images/';
   suggetionList: any[] = [];
+  showShareModal = false;
+currentMovieUrl = '';
 
   constructor(
     private route: ActivatedRoute,
@@ -336,5 +339,17 @@ export class SingleMovieComponent implements OnInit {
       return value.toString();
     }
   }
+openShareMenu(): void {
+  this.currentMovieUrl = window.location.href.split('?')[0]; // Movie link without query params
+  this.showShareModal = true;
 
+  setTimeout(() => {
+    if (window && (window as any).a2a) {
+      a2a.init('page');
+    }
+  }, 0);
+}
+  closeShareMenu() {
+    this.showShareModal = false;
+  }
 }

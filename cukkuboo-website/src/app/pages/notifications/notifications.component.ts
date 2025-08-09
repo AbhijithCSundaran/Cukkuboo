@@ -126,7 +126,7 @@ export class NotificationsComponent implements OnInit {
   askToRemoveItem(item: any, index: number) {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       data: {
-        message: `<p>Are you sure you want to delete <span>"${item?.title}"</span>?</p>`
+        message: `<p>Are you sure you want to delete "${item?.title}"?</p>`
       },
     });
     dialogRef.afterClosed().subscribe((result: any) => {

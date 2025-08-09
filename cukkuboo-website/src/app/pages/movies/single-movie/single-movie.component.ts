@@ -182,7 +182,7 @@ currentMovieUrl = '';
   askGotoSubscription() {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       data: {
-        message: `<p>Subscribe to our platform to access this movie.<br>Would you like to visit the <span>Subscription Plan</span> page now?</p>`
+        message: `<p>Subscribe to our platform to access this movie.<br>Would you like to visit the Subscription Plan page now?</p>`
       }
     });
 

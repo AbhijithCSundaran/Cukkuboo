@@ -90,7 +90,7 @@ askToRemoveItem(item: any, index: number) {
   const truncatedTitle = this.truncateTitle(item?.title, 30);
   const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
     data: {
-      message: `<p>Are you sure you want to remove <span>"${truncatedTitle}"</span> from Watch Later?</p>`
+      message: `<p>Are you sure you want to remove "${truncatedTitle}" from Watch Later?</p>`
     },
   });
   dialogRef.afterClosed().subscribe((result: any) => {

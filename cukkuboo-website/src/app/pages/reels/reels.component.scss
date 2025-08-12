@@ -309,12 +309,11 @@ body {
   z-index: 5;
   overflow: hidden;
   cursor: pointer;
-}
 
-
-.seekbar-progress {
-  height: 100%;
-  width: 0%;
-  background-color: #ff0000; // red
-  transition: width 0.1s linear;
+  .seekbar-progress {
+    height: 100%;
+    width: 0%;
+    background-color: #ff0000; // red
+    transition: width 0.1s linear;
+  }
 }

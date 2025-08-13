@@ -135,27 +135,22 @@ export class NotificationsComponent implements OnInit {
       }
     })
   }
-confirmDelete(item: any, index: number) {
-  if (!item) return;
-  this.notificationService
-    .deleteNotification(item.notification_id)
-    .subscribe({
+
+  confirmDelete(item: any, index: number) {
+    if (!item) return;
+
+    this.notificationService.deleteNotification(item.notification_id).subscribe({
       next: () => {
+
         this.notifications.splice(index, 1);
 
-        // If we're showing fewer than pageSize after deletion,
-        // load one more from the server to maintain the count.
+        // fetch d[9]
         if (this.notifications.length < this.pageSize) {
-          this.notificationService
-            .getNotifications(this.pageIndex, this.pageSize - this.notifications.length, this.searchText)
-            .subscribe({
-              next: (res: any) => {
-                if (res?.success && res?.data?.length) {
-                  this.notifications.push(...res.data);
-                }
-              },
-              error: (err) => console.error('Error loading extra notification:', err)
-            });
+
+
+          const pageIndex = 9;
+
+          this.loadNotifications();
         }
 
         this.snackBar.open('Notification removed successfully', '', {
@@ -174,8 +169,7 @@ confirmDelete(item: any, index: number) {
         });
       }
     });
-}
-
+  }
 
   onSearch(text: string) {
     this.searchText = text;

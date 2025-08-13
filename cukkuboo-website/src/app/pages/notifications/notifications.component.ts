@@ -135,31 +135,47 @@ export class NotificationsComponent implements OnInit {
       }
     })
   }
+confirmDelete(item: any, index: number) {
+  if (!item) return;
+  this.notificationService
+    .deleteNotification(item.notification_id)
+    .subscribe({
+      next: () => {
+        this.notifications.splice(index, 1);
 
-  confirmDelete(item: any, index: number) {
-    if (!item) return;
-    this.notificationService
-      .deleteNotification(item.notification_id).subscribe({
-        next: () => {
-          this.notifications.splice(index, 1);
-          this.snackBar.open('Notification removed successfully', '', {
-            duration: 3000,
-            verticalPosition: 'top',
-            horizontalPosition: 'center',
-            panelClass: ['snackbar-success']
-          });
-        },
-        error: () => {
-          this.snackBar.open('Failed to remove notification', '', {
-            duration: 3000,
-            verticalPosition: 'top',
-            horizontalPosition: 'center',
-            panelClass: ['snackbar-error']
-          });
-
+        // If we're showing fewer than pageSize after deletion,
+        // load one more from the server to maintain the count.
+        if (this.notifications.length < this.pageSize) {
+          this.notificationService
+            .getNotifications(this.pageIndex, this.pageSize - this.notifications.length, this.searchText)
+            .subscribe({
+              next: (res: any) => {
+                if (res?.success && res?.data?.length) {
+                  this.notifications.push(...res.data);
+                }
+              },
+              error: (err) => console.error('Error loading extra notification:', err)
+            });
         }
-      });
-  }
+
+        this.snackBar.open('Notification removed successfully', '', {
+          duration: 3000,
+          verticalPosition: 'top',
+          horizontalPosition: 'center',
+          panelClass: ['snackbar-success']
+        });
+      },
+      error: () => {
+        this.snackBar.open('Failed to remove notification', '', {
+          duration: 3000,
+          verticalPosition: 'top',
+          horizontalPosition: 'center',
+          panelClass: ['snackbar-error']
+        });
+      }
+    });
+}
+
 
   onSearch(text: string) {
     this.searchText = text;

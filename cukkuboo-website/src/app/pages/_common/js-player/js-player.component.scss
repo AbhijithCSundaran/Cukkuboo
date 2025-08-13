@@ -1,6 +1,8 @@
 :host {
     display: flex;
+    flex-direction: column;
     background-color: var(--dark-color);
+
     video {
         // -webkit-pointer-events: none;
         // -moz-pointer-events: none;
@@ -18,6 +20,7 @@
         height: 100%;
         margin: auto;
     }
+
     button {
         position: absolute;
         top: 20px;
@@ -31,29 +34,53 @@
         justify-content: center;
         align-items: center;
     }
+
     &.showClose {
         button {
             transform: scale(1.25);
         }
     }
 }
+
 ::ng-deep .video-js {
-  position: relative !important;
+    position: relative !important;
 }
 
 ::ng-deep .vjs-big-play-button {
-  border-radius: 50% !important;
-  width: 70px !important;
-  height: 70px !important;
-  line-height: 70px !important;
-  font-size: 2em;
-  background-color: rgba(0, 0, 0, 0.5) !important;
-  border: none;
-  top: 50% !important;
-  left: 50% !important;
-  transform: translate(-50%, -50%) !important;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-left: 0px!important;
+    border-radius: 50% !important;
+    width: 70px !important;
+    height: 70px !important;
+    line-height: 70px !important;
+    font-size: 2em;
+    background-color: rgba(0, 0, 0, 0.5) !important;
+    border: none;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 0px !important;
+}
+
+::ng-deep.vjs-control-bar {
+    button {
+        color: red !important;
+    }
+
+}
+
+::ng-deep.vjs-play-progress.vjs-slider-bar {
+    color: red !important;
+    background-color: red !important;
+}
+
+::ng-deep.vjs-volume-level {
+    color: red !important;
+    background-color: red !important;
+}
+
+.video-js .vjs-play-progress {
+    color: red !important;
+    background-color: red !important;
 }

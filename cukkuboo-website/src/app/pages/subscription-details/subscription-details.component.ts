@@ -80,7 +80,7 @@ export class SubscriptionDetailsComponent implements OnInit {
   askToConfirm(): void {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       data: {
-        message: `<p>Are you sure you want to cancel <span> Subscription</span>?</p>`
+        message: `<p>Are you sure you want to cancel Subscription?</p>`
       },
     });
 

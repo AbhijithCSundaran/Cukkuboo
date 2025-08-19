@@ -571,7 +571,11 @@ export class AddMovieShowComponent implements OnInit {
       return;
     }
 
-    const model = this.movieForm.value;
+  // Trim spaces from title before sending
+  const model = {
+    ...this.movieForm.value,
+    title: this.movieForm.value.title?.trim()
+  };
 
     this.movieService.addmovies(model).subscribe({
       next: (response) => {

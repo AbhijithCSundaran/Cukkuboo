@@ -310,7 +310,7 @@ resetPassword(): void {
 
   initializeGoogleSignIn(): void {
     google.accounts.id.initialize({
-      client_id: '738497402180-j1miqtb3oopgef6v3i9d4s2c9f8mmtjo.apps.googleusercontent.com',
+      client_id: '897698001499-rflldtgietfgm94vmvbblheui4cgj22e.apps.googleusercontent.com',
       callback: (response: any) => this.handleGoogleLogin(response),
     });
 

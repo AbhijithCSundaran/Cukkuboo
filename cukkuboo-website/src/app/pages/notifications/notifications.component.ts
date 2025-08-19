@@ -126,7 +126,7 @@ export class NotificationsComponent implements OnInit {
   askToRemoveItem(item: any, index: number) {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       data: {
-        message: `<p>Are you sure you want to delete <span>"${item?.title}"</span>?</p>`
+        message: `<p>Are you sure you want to delete "${item?.title}"?</p>`
       },
     });
     dialogRef.afterClosed().subscribe((result: any) => {
@@ -138,27 +138,37 @@ export class NotificationsComponent implements OnInit {
 
   confirmDelete(item: any, index: number) {
     if (!item) return;
-    this.notificationService
-      .deleteNotification(item.notification_id).subscribe({
-        next: () => {
-          this.notifications.splice(index, 1);
-          this.snackBar.open('Notification removed successfully', '', {
-            duration: 3000,
-            verticalPosition: 'top',
-            horizontalPosition: 'center',
-            panelClass: ['snackbar-success']
-          });
-        },
-        error: () => {
-          this.snackBar.open('Failed to remove notification', '', {
-            duration: 3000,
-            verticalPosition: 'top',
-            horizontalPosition: 'center',
-            panelClass: ['snackbar-error']
-          });
 
+    this.notificationService.deleteNotification(item.notification_id).subscribe({
+      next: () => {
+
+        this.notifications.splice(index, 1);
+
+        // fetch d[9]
+        if (this.notifications.length < this.pageSize) {
+
+
+          const pageIndex = 9;
+
+          this.loadNotifications();
         }
-      });
+
+        this.snackBar.open('Notification removed successfully', '', {
+          duration: 3000,
+          verticalPosition: 'top',
+          horizontalPosition: 'center',
+          panelClass: ['snackbar-success']
+        });
+      },
+      error: () => {
+        this.snackBar.open('Failed to remove notification', '', {
+          duration: 3000,
+          verticalPosition: 'top',
+          horizontalPosition: 'center',
+          panelClass: ['snackbar-error']
+        });
+      }
+    });
   }
 
   onSearch(text: string) {

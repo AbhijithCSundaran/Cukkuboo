@@ -35,7 +35,7 @@ export class SingleMovieComponent implements OnInit {
   imageUrl = environment.fileUrl + 'uploads/images/';
   suggetionList: any[] = [];
   showShareModal = false;
-currentMovieUrl = '';
+  currentMovieUrl = '';
 
   constructor(
     private route: ActivatedRoute,
@@ -127,7 +127,7 @@ currentMovieUrl = '';
     if (video === this.movieData.video) {
       const model = { mov_id: this.movieData.mov_id };
 
-      
+
       // Only call if not viewed
       if (!this.movieData.is_viewed) {
         this.addToView(model);
@@ -182,7 +182,7 @@ currentMovieUrl = '';
   askGotoSubscription() {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       data: {
-        message: `<p>Subscribe to our platform to access this movie.<br>Would you like to visit the <span>Subscription Plan</span> page now?</p>`
+        message: `<p>Subscribe to our platform to access this movie.<br>Would you like to visit the Subscription Plan page now?</p>`
       }
     });
 
@@ -339,16 +339,31 @@ currentMovieUrl = '';
       return value.toString();
     }
   }
-openShareMenu(): void {
-  this.currentMovieUrl = window.location.href.split('?')[0]; // Movie link without query params
-  this.showShareModal = true;
+  // openShareMenu(): void {
+  //   this.currentMovieUrl = window.location.href.split('?')[0]; // Movie link without query params
+  //   this.showShareModal = true;
 
-  setTimeout(() => {
-    if (window && (window as any).a2a) {
-      a2a.init('page');
-    }
-  }, 0);
-}
+  //   setTimeout(() => {
+  //     if (window && (window as any).a2a) {
+  //       a2a.init('page');
+  //     }
+  //   }, 0);
+  // }
+  openShareMenu(): void {
+    this.currentMovieUrl = window.location.href.split('?')[0];
+    this.showShareModal = true;
+
+    setTimeout(() => {
+      if (typeof a2a !== 'undefined') {
+        try {
+          a2a.init_all(); // safer than a2a.init('page')
+        } catch (err) {
+          console.error('AddToAny init failed:', err);
+        }
+      }
+    }, 100);
+  }
+
   closeShareMenu() {
     this.showShareModal = false;
   }

@@ -8,6 +8,14 @@ export const routes: Routes = [
     { path: 'signin', canActivate: [nonAuthGuard], loadComponent: () => import('./pages/sign-in/sign-in.component').then((m) => m.SignInComponent) },
     { path: 'signup', canActivate: [nonAuthGuard], loadComponent: () => import('./pages/sign-up/sign-up.component').then((m) => m.SignUpComponent) },
     { path: 'reels', loadComponent: () => import('./pages/reels/reels.component').then(m => m.ReelsComponent) },
+    {
+        path: '',
+        canActivate: [authGuard],
+        children: [
+            { path: 'success/:id', loadComponent: () => import('./pages/subscribe/success-payment/success-payment.component').then((m) => m.SuccessPaymentComponent) },
+            { path: 'failed/:id', loadComponent: () => import('./pages/subscribe/failed-payment/failed-payment.component').then((m) => m.FailedPaymentComponent) },
+        ]
+    },
 
     // {path: '', component:AboutUsComponent },
     {
@@ -37,8 +45,8 @@ export const routes: Routes = [
                     { path: 'history', loadComponent: () => import('./pages/history/history.component').then(m => m.HistoryComponent) },
                     { path: 'notifications', loadComponent: () => import('./pages/notifications/notifications.component').then(m => m.NotificationsComponent) },
                     { path: 'subscription-details', loadComponent: () => import('./pages/subscription-details/subscription-details.component').then(m => m.SubscriptionDetailsComponent) },
-                    { path: 'success/:id', loadComponent: () => import('./pages/subscribe/success-payment/success-payment.component').then((m) => m.SuccessPaymentComponent) },
-                    { path: 'failed/:id', loadComponent: () => import('./pages/subscribe/failed-payment/failed-payment.component').then((m) => m.FailedPaymentComponent) },
+                    // { path: 'success/:id', loadComponent: () => import('./pages/subscribe/success-payment/success-payment.component').then((m) => m.SuccessPaymentComponent) },
+                    // { path: 'failed/:id', loadComponent: () => import('./pages/subscribe/failed-payment/failed-payment.component').then((m) => m.FailedPaymentComponent) },
                 ]
             },
         ]

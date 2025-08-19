@@ -1,24 +1,8 @@
-import {
-  Component,
-  Inject,
-  Optional,
-  OnDestroy,
-  OnInit
-} from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators
-} from '@angular/forms';
-import {
-  MatSnackBar,
-  MatSnackBarModule
-} from '@angular/material/snack-bar';
+import { Component, Inject, Optional, OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { Router, RouterLink } from '@angular/router';
-import {
-  MatFormFieldModule
-} from '@angular/material/form-field';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatButtonModule } from '@angular/material/button';
@@ -29,10 +13,7 @@ import { StorageService } from '../../core/services/TempStorage/storageService';
 import { UserService } from '../../services/user/user.service';
 import { ValidationMessagesComponent } from '../../core/components/validation-messsage/validaation-message.component';
 import { ValidationService } from '../../core/services/validation.service';
-import {
-  MAT_DIALOG_DATA,
-  MatDialogRef
-} from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { SubscriptionStatus } from '../../model/enum';
 
 declare const google: any;
@@ -43,15 +24,9 @@ declare const google: any;
   templateUrl: './sign-in.component.html',
   styleUrls: ['./sign-in.component.scss'],
   imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatCheckboxModule,
-    MatButtonModule,
-    MatIconModule,
-    MatSnackBarModule,
-    RouterLink,
+    CommonModule, ReactiveFormsModule, RouterLink,
+    MatFormFieldModule, MatInputModule, MatCheckboxModule, MatButtonModule,
+    MatIconModule, MatSnackBarModule,
     ValidationMessagesComponent
   ]
 })
@@ -89,7 +64,7 @@ export class SignInComponent implements OnInit, OnDestroy {
     });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
   ngAfterViewInit() {
     this.initializeGoogleSignIn();
@@ -148,7 +123,7 @@ export class SignInComponent implements OnInit, OnDestroy {
   navigateToSignUp(): void {
     if (this.modalData && this.dialogRef) {
       this.dialogRef.close(); // Close modal
-      setTimeout(() => this.router.navigate(['/signup']), 100); 
+      setTimeout(() => this.router.navigate(['/signup']), 100);
     } else {
       this.router.navigate(['/signup']);
     }
@@ -257,48 +232,48 @@ export class SignInComponent implements OnInit, OnDestroy {
     });
   }
 
-resetPassword(): void {
-  if (this.forgotForm.invalid) {
-    this.showSnackbar('Please fill out all required fields with valid input');
-    this.forgotForm.markAllAsTouched(); // Optional: highlights all invalid fields
-    return;
-  }
-
-  const { new_password, confirm_password, otp } = this.forgotForm.value;
-
-  if (!new_password || !confirm_password) {
-    this.showSnackbar('Enter both password fields');
-    return;
-  }
-
-  if (new_password !== confirm_password) {
-    this.showSnackbar('Passwords do not match');
-    return;
-  }
-
-  const data = {
-    email: this.emailUsed,
-    otp,
-    new_password,
-    confirm_password
-  };
-
-  this.userService.forgotPassword(data).subscribe({
-    next: (response) => {
-      if (response.success === true) {
-        this.showSnackbar('Password reset successful. Please login.', true);
-        this.step = 0;
-        this.loginForm.patchValue({ email: this.emailUsed });
-        setTimeout(() => this.initializeGoogleSignIn(), 0);
-      } else {
-        this.showSnackbar(response.message || 'Failed to reset password');
-      }
-    },
-    error: () => {
-      this.showSnackbar('Failed to reset password');
+  resetPassword(): void {
+    if (this.forgotForm.invalid) {
+      this.showSnackbar('Please fill out all required fields with valid input');
+      this.forgotForm.markAllAsTouched(); // Optional: highlights all invalid fields
+      return;
     }
-  });
-}
+
+    const { new_password, confirm_password, otp } = this.forgotForm.value;
+
+    if (!new_password || !confirm_password) {
+      this.showSnackbar('Enter both password fields');
+      return;
+    }
+
+    if (new_password !== confirm_password) {
+      this.showSnackbar('Passwords do not match');
+      return;
+    }
+
+    const data = {
+      email: this.emailUsed,
+      otp,
+      new_password,
+      confirm_password
+    };
+
+    this.userService.forgotPassword(data).subscribe({
+      next: (response) => {
+        if (response.success === true) {
+          this.showSnackbar('Password reset successful. Please login.', true);
+          this.step = 0;
+          this.loginForm.patchValue({ email: this.emailUsed });
+          setTimeout(() => this.initializeGoogleSignIn(), 0);
+        } else {
+          this.showSnackbar(response.message || 'Failed to reset password');
+        }
+      },
+      error: () => {
+        this.showSnackbar('Failed to reset password');
+      }
+    });
+  }
 
 
   allowOnlyNumbers(event: KeyboardEvent): void {
@@ -309,8 +284,20 @@ resetPassword(): void {
   }
 
   initializeGoogleSignIn(): void {
+    const isSecure = window.location.protocol === 'https:';
+    const hostname = window.location.hostname;
+    var clientId = '';
+    if (isSecure && hostname === 'cukkuboo.com') {
+      clientId = '897698001499-rflldtgietfgm94vmvbblheui4cgj22e.apps.googleusercontent.com';
+    } else if (!isSecure && hostname === 'cukkuboo.com') {
+      clientId = '897698001499-8uq1lnfpko5b6jb9882glckhqe28bomf.apps.googleusercontent.com';
+    } else if (isSecure && hostname.includes('staging')) {
+      clientId = 'STAGING_CLIENT_ID';
+    } else {
+      clientId = 'DEV_CLIENT_ID';
+    }
     google.accounts.id.initialize({
-      client_id: '897698001499-rflldtgietfgm94vmvbblheui4cgj22e.apps.googleusercontent.com',
+      client_id: clientId,
       callback: (response: any) => this.handleGoogleLogin(response),
     });
 

@@ -27,7 +27,20 @@ export class NotificationService {
 
 
   getNotifications(pageIndex: number = 0, pageSize: number = 10, searchText: string = ''): Observable<any> {
-    const url = `${this.apiUrl}notification/list?pageIndex=${pageIndex}&pageSize=${pageSize}&search=${encodeURIComponent(searchText)}`;
+    const url = `${this.apiUrl}notification/global?pageIndex=${pageIndex}&pageSize=${pageSize}&search=${encodeURIComponent(searchText)}`;
+    return this.http.get(url, { headers: this.headers });
+  }
+
+  
+  // Save notification 
+  saveNotification(payload: any): Observable<any> {
+    const url = `${this.apiUrl}notification/save`;
+    return this.http.post(url, payload, { headers: this.headers });
+  }
+
+    // Get single notification by ID
+  getNotificationById(id: number | string): Observable<any> {
+    const url = `${this.apiUrl}notification/get/${id}`;
     return this.http.get(url, { headers: this.headers });
   }
 }

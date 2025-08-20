@@ -1,0 +1,147 @@
+<div class="content-container">
+  <div class="header-row">
+    <h2>{{ notificationId ? 'Edit Global Notification' : 'Add Global Notification' }}</h2>
+    <button class="back-to-list-button" (click)="goBack()">Back to List</button>
+  </div>
+
+  <form [formGroup]="notificationForm">
+    <mat-card appearance="outlined" class="form-card">
+      <mat-card-content class="d-flex flex-wrap">
+
+        <!-- Title -->
+        <div class="w-50 px-2 pb-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Title</mat-label>
+            <input matInput formControlName="title" placeholder="Enter notification title" />
+            <mat-error>
+              <Validation-Messages [control]="notificationForm.controls['title']"></Validation-Messages>
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+      
+
+        <!-- Target -->
+        <div class="w-50 px-2 pb-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Target</mat-label>
+            <mat-select formControlName="target">
+              <mat-option value="all">All Users</mat-option>
+              <mat-option value="free">Free Users</mat-option>
+              <mat-option value="premium">Premium Users</mat-option>
+            </mat-select>
+            <mat-error>
+              <Validation-Messages [control]="notificationForm.controls['target']"></Validation-Messages>
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+ 
+
+
+        
+
+          <!-- Content -->
+        <div class="w-50 px-2 pb-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Message</mat-label>
+            <textarea matInput formControlName="content" rows="3" placeholder="Enter notification message"></textarea>
+            <mat-error>
+              <Validation-Messages [control]="notificationForm.controls['content']"></Validation-Messages>
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+       <!-- Image Upload -->
+<div class="w-50 px-2 pb-3">
+  <mat-card appearance="outlined">
+    <mat-card-content>
+      <label class="fw-medium d-block mb-2">
+        Image (optional)
+        <small class="text-muted" *ngIf="!imageFile">
+          (JPEG/PNG recommended)
+        </small>
+      </label>
+
+      <!-- Delete button -->
+      <button type="button" class="trash-button" *ngIf="imageFile"
+              (click)="openDeleteConfirm()">
+        <i class="fa-solid fa-trash"></i>
+      </button>
+
+      <!-- Drag & Drop Zone -->
+      <div class="drag-drop-zone" [ngClass]="{'uploaded': imageFile}"
+           (dragover)="onImageDragOver($event)" 
+           (drop)="onImageDrop($event)"
+           (click)="!imagePreview && imageInput.click()">
+
+        <p *ngIf="!imageFile">Drag & drop an image here or click to select</p>
+
+        <!-- Preview -->
+        <div class="preview-container" *ngIf="imageFile">
+          <img [src]="imagePreview" alt="Image Preview" class="media-preview"
+               (click)="$event.stopPropagation()" #uploadedImg />
+          <button class="fullscreen-button" (click)="openFullscreen(uploadedImg)">
+            <i class="fa-solid fa-expand"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Hidden File Input -->
+      <input type="file" (change)="onImageSelected($event)" accept="image/*" hidden #imageInput />
+    </mat-card-content>
+  </mat-card>
+</div>
+   <!-- Is Scheduled -->
+        <div class="w-50 px-2 pb-3">
+          <mat-slide-toggle formControlName="is_scheduled">Schedule this notification</mat-slide-toggle>
+        </div>
+
+        <!-- Scheduled date + time -->
+        <ng-container *ngIf="notificationForm.get('is_scheduled')?.value">
+          <div class="w-50 px-2 pb-3">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Schedule Date</mat-label>
+              <input matInput [matDatepicker]="schedulePicker" formControlName="scheduled_date"
+                     (click)="schedulePicker.open()" placeholder="Pick a date" readonly />
+              <mat-datepicker-toggle matSuffix [for]="schedulePicker"></mat-datepicker-toggle>
+              <mat-datepicker #schedulePicker></mat-datepicker>
+              <mat-error>
+                <Validation-Messages [control]="notificationForm.controls['scheduled_date']"></Validation-Messages>
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="w-50 px-2 pb-3">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Schedule Time (24h)</mat-label>
+              <input matInput type="time" formControlName="scheduled_time_only" />
+              <mat-error>
+                <Validation-Messages [control]="notificationForm.controls['scheduled_time_only']"></Validation-Messages>
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </ng-container>
+    
+        <!-- Status -->
+        <!-- <div class="w-50 px-2 pb-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Status</mat-label>
+            <mat-select formControlName="status">
+              <mat-option value="1">Active</mat-option>
+              <mat-option value="2">Inactive</mat-option>
+            </mat-select>
+            <mat-error>
+              <Validation-Messages [control]="notificationForm.controls['status']"></Validation-Messages>
+            </mat-error>
+          </mat-form-field>
+        </div> -->
+
+        <!-- Action -->
+        <div class="save">
+          <button class="save-button" mat-raised-button color="primary" (click)="saveNotification()">Save</button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </form>
+</div>

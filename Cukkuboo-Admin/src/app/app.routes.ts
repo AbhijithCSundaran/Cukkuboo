@@ -23,7 +23,10 @@ export const routes: Routes = [
       { path: 'reels', loadComponent: () => import('./pages/list-reels/list-reels.component').then((m) => m.ListReelsComponent) },
       { path: 'add-reels', loadComponent: () => import('./pages/list-reels/add-reels/add-reels.component').then((m) => m.AddReelsComponent) },
       { path: 'edit-reel/:id', loadComponent: () => import('./pages/list-reels/add-reels/add-reels.component').then(m => m.AddReelsComponent) },
-      // { path: 'notifications', loadComponent: () => import('./pages/notifications/notifications.component').then((m) => m.NotificationsComponent) },
+      { path: 'notifications', loadComponent: () => import('./pages/notifications/notifications.component').then((m) => m.NotificationsComponent) },
+      { path: 'add-global-notifications', loadComponent: () => import('./pages/notifications/add-global-notifications/add-global-notifications.component').then((m) => m.AddGlobalNotificationsComponent) },
+      { path: 'edit-global-notifications/:id', loadComponent: () => import('./pages/notifications/add-global-notifications/add-global-notifications.component').then((m) => m.AddGlobalNotificationsComponent) },
+
       { path: 'tickets', loadComponent: () => import('./pages/tickets/tickets.component').then((m) => m.TicketsComponent) },
       { path: 'edit-ticket/:id', loadComponent: () => import('./pages/tickets/edit-tickets/edit-tickets.component').then((m) => m.EditTicketsComponent) },
       // { path: 'list-policies', loadComponent: () => import('./pages/list-policies/list-policies.component').then((m) => m.ListPoliciesComponent) },

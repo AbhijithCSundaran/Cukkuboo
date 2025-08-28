@@ -16,6 +16,7 @@ import { ValidationMessagesComponent } from '../../../core/components/validation
 import { NotificationService } from '../../../services/notification.service';
 import { FileUploadService } from '../../../services/upload/file-upload.service';
 import { HttpEventType } from '@angular/common/http';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-add-global-notifications',
@@ -33,10 +34,12 @@ export class AddGlobalNotificationsComponent implements OnInit {
   public notificationId = 0;
   public notificationForm!: FormGroup;
 
-  imageFile: File | null = null;
-  imageName: string | null = null;
-  imagePreview: string | null = null;
-  uploadProgress: number = 0; // percentage progress
+  uploadProgress: number = 0;
+
+confirmDeleteType: 'image' | null = null;
+
+  // base url for uploaded images
+  imgUrl: string = environment.fileUrl + 'uploads/images/';
 
   constructor(
     private fb: FormBuilder,
@@ -45,7 +48,7 @@ export class AddGlobalNotificationsComponent implements OnInit {
     private snackBar: MatSnackBar,
     private notificationService: NotificationService,
     private fileUploadService: FileUploadService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
@@ -83,13 +86,49 @@ export class AddGlobalNotificationsComponent implements OnInit {
       is_scheduled: [false],                       // boolean
       scheduled_date: [null],                      // Date
       scheduled_time_only: [''],                   // "HH:mm"
-      type: ['global']                             // constant
+      type: ['global'],                            // constant
+      image: ['']
     });
   }
 
-  loadNotification(id: number) {
-    // TODO: implement if needed
-  }
+  // loadNotification(id: number) {
+  //   this.notificationService.getNotificationById(id).subscribe({
+  //     next: (res) => {
+  //       const data = res.data;
+  //       this.notificationForm.patchValue(data);
+  //     },
+  //     error: () => {
+  //       this.snackBar.open('Failed to load notification.', '', {
+  //         duration: 3000,
+  //         panelClass: ['snackbar-error']
+  //       });
+  //     }
+  //   });
+  // }
+loadNotification(id: number) {
+  this.notificationService.getNotificationById(id).subscribe({
+    next: (res) => {
+      const data = res.data;
+
+      // Convert scheduled_time string into Date + Time
+      if (data.scheduled_time) {
+        const dt = new Date(data.scheduled_time);
+
+        data.scheduled_date = dt; // Angular Material Datepicker expects a Date object
+        data.scheduled_time_only = dt.toISOString().substring(11, 16); // HH:mm
+        data.is_scheduled = data.is_scheduled === '1' ? true : false; // convert string -> boolean
+      }
+
+      this.notificationForm.patchValue(data);
+    },
+    error: () => {
+      this.snackBar.open('Failed to load notification.', '', {
+        duration: 3000,
+        panelClass: ['snackbar-error']
+      });
+    }
+  });
+}
 
   private buildScheduledTimestamp(date: Date, hhmm: string): string {
     const [hh, mm] = hhmm.split(':');
@@ -107,18 +146,12 @@ export class AddGlobalNotificationsComponent implements OnInit {
     return /^([01]\d|2[0-3]):([0-5]\d)$/.test(v) ? null : { time: true };
   }
 
-  // IMAGE UPLOAD 
+  // ================== IMAGE UPLOAD ==================
   onImageSelected(event: Event) {
     const input = event.target as HTMLInputElement;
-    if (input.files && input.files.length > 0) {
-      this.imageFile = input.files[0];
-      this.imageName = this.imageFile.name;
-
-      const reader = new FileReader();
-      reader.onload = () => {
-        this.imagePreview = reader.result as string;
-      };
-      reader.readAsDataURL(this.imageFile);
+    if (input.files?.length) {
+      const file = input.files[0];
+      this.uploadImage(file);
     }
   }
 
@@ -129,35 +162,65 @@ export class AddGlobalNotificationsComponent implements OnInit {
 
   onImageDrop(event: DragEvent) {
     event.preventDefault();
-    if (event.dataTransfer && event.dataTransfer.files.length > 0) {
+    if (event.dataTransfer?.files.length) {
       const file = event.dataTransfer.files[0];
       if (file.type.startsWith('image/')) {
-        this.imageFile = file;
-        this.imageName = file.name;
-
-        const reader = new FileReader();
-        reader.onload = () => {
-          this.imagePreview = reader.result as string;
-        };
-        reader.readAsDataURL(file);
+        this.uploadImage(file);
       }
     }
   }
 
-  openDeleteConfirm() {
-    this.imageFile = null;
-    this.imagePreview = null;
-    this.imageName = null;
+  uploadImage(file: File) {
     this.uploadProgress = 0;
+    this.fileUploadService.uploadImage(file).subscribe({
+      next: (event) => {
+        if (event.type === HttpEventType.UploadProgress && event.total) {
+          this.uploadProgress = Math.round((100 * event.loaded) / event.total);
+        } else if (event.type === HttpEventType.Response) {
+          if (event.body?.file_name) {
+            this.notificationForm.patchValue({ image: event.body.file_name });
+            this.snackBar.open('Image uploaded successfully!', '', {
+              duration: 2000,
+              panelClass: ['snackbar-success']
+            });
+          }
+        }
+      },
+      error: () => {
+        this.snackBar.open('Image upload failed', '', {
+          duration: 2000,
+          panelClass: ['snackbar-error']
+        });
+      }
+    });
   }
+
 
   openFullscreen(imgEl: HTMLImageElement) {
     if (imgEl.requestFullscreen) {
       imgEl.requestFullscreen();
     }
   }
+  openDeleteConfirm(type: 'image'): void {
+  this.confirmDeleteType = type;
+}
 
-  // ================== SAVE ==================
+cancelDelete(): void {
+  this.confirmDeleteType = null;
+}
+
+confirmDelete(): void {
+  if (this.confirmDeleteType === 'image') {
+    this.notificationForm.patchValue({ image: '' });
+    this.uploadProgress = 0;
+    this.snackBar.open('Image deleted successfully.', '', {
+      duration: 2000,
+      panelClass: ['snackbar-success']
+    });
+  }
+  this.cancelDelete();
+}
+  // SAVE
   saveNotification(): void {
     if (this.notificationForm.invalid) {
       this.notificationForm.markAllAsTouched();
@@ -188,12 +251,12 @@ export class AddGlobalNotificationsComponent implements OnInit {
       target: formValue.target,
       type: 'global',
       is_scheduled: formValue.is_scheduled ? 1 : 0,
-      scheduled_time: scheduled_datetime,   // ✅ fixed key
-      image: this.imageName || null
+      scheduled_time: scheduled_datetime,
+      image: formValue.image || null
     };
 
     this.notificationService.saveNotification(payload).subscribe({
-      next: (response) => {
+      next: () => {
         const message = this.notificationId
           ? 'Notification updated successfully!'
           : 'Notification saved successfully!';
@@ -206,7 +269,7 @@ export class AddGlobalNotificationsComponent implements OnInit {
 
         this.router.navigate(['/notifications']);
       },
-      error: (err) => {
+      error: () => {
         const message = this.notificationId
           ? 'Failed to update notification. Please try again.'
           : 'Failed to save notification. Please try again.';

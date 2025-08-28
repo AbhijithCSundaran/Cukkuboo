@@ -1,16 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { NotificationService } from '../../services/notification.service';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
-import { ConfirmationDialogComponent } from '../../core/components/confirmation-dialog/confirmation-dialog.component';
+import { NotificationService } from '../../services/notification.service';
 import { StorageService } from '../../core/services/TempStorage/storageService';
+import { ConfirmationDialogComponent } from '../../core/components/confirmation-dialog/confirmation-dialog.component';
+import { environment } from '../../../environments/environment';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-notifications',
   standalone: true,
-  imports: [CommonModule, MatSnackBarModule],
+  imports: [CommonModule, MatSnackBarModule, MatIconModule],
   templateUrl: './notifications.component.html',
   styleUrls: ['./notifications.component.scss']
 })
@@ -25,20 +26,20 @@ export class NotificationsComponent implements OnInit {
   isMarkingAll = false;
   isMobileView = false;
   userData: any = null;
-  isSignedIn: boolean = false;
-  username: string = '';
+  isSignedIn = false;
+  username = '';
 
+  // Base URL for notification images
+  imageUrl : string = environment.fileUrl + 'uploads/images/';
 
   constructor(
     private storageService: StorageService,
-
     private notificationService: NotificationService,
     private snackBar: MatSnackBar,
-    private dialog: MatDialog,
-  ) { }
+    private dialog: MatDialog
+  ) {}
 
   ngOnInit() {
-
     this.checkScreenWidth();
     window.addEventListener('resize', this.checkScreenWidth.bind(this));
     this.loadNotifications();
@@ -48,13 +49,13 @@ export class NotificationsComponent implements OnInit {
   checkAuthAndLoadNotifications(): void {
     const token = this.storageService.getItem('token');
     this.username = this.storageService.getItem('username');
-    this.userData = this.storageService.getItem('userData')
+    this.userData = this.storageService.getItem('userData');
     this.isSignedIn = !!token;
   }
-  checkScreenWidth() {
-    this.isMobileView = window.innerWidth <= 575
-  }
 
+  checkScreenWidth() {
+    this.isMobileView = window.innerWidth <= 575;
+  }
 
   loadNotifications() {
     this.notificationService.getNotifications(this.pageIndex, this.pageSize, this.searchText).subscribe({
@@ -74,21 +75,19 @@ export class NotificationsComponent implements OnInit {
 
   selectNotification(notification: any) {
     this.isLoadingDetail = true;
-    this.notificationService
-      .getNotificationById(notification.notification_id)
-      .subscribe({
-        next: (res: any) => {
-          if (res.success) {
-            notification.status = 2;
-            this.selectedNotification = res.data;
-          }
-          this.isLoadingDetail = false;
-        },
-        error: (err) => {
-          console.error('Error loading notification detail:', err);
-          this.isLoadingDetail = false;
+    this.notificationService.getNotificationById(notification.notification_id).subscribe({
+      next: (res: any) => {
+        if (res.success) {
+          notification.status = 2;
+          this.selectedNotification = res.data;
         }
-      });
+        this.isLoadingDetail = false;
+      },
+      error: (err) => {
+        console.error('Error loading notification detail:', err);
+        this.isLoadingDetail = false;
+      }
+    });
   }
 
   markAllAsRead() {
@@ -125,15 +124,13 @@ export class NotificationsComponent implements OnInit {
 
   askToRemoveItem(item: any, index: number) {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
-      data: {
-        message: `<p>Are you sure you want to delete "${item?.title}"?</p>`
-      },
+      data: { message: `<p>Are you sure you want to delete "${item?.title}"?</p>` }
     });
     dialogRef.afterClosed().subscribe((result: any) => {
       if (result) {
         this.confirmDelete(item, index);
       }
-    })
+    });
   }
 
   confirmDelete(item: any, index: number) {
@@ -141,17 +138,8 @@ export class NotificationsComponent implements OnInit {
 
     this.notificationService.deleteNotification(item.notification_id).subscribe({
       next: () => {
-
         this.notifications.splice(index, 1);
-
-        // fetch d[9]
-        if (this.notifications.length < this.pageSize) {
-
-
-          const pageIndex = 9;
-
-          this.loadNotifications();
-        }
+        this.loadNotifications();
 
         this.snackBar.open('Notification removed successfully', '', {
           duration: 3000,
@@ -188,9 +176,27 @@ export class NotificationsComponent implements OnInit {
       this.loadNotifications();
     }
   }
+
   getSelectedNotificationIndex(): number {
     return this.notifications.findIndex(
       (n) => n.notification_id === this.selectedNotification?.notification_id
     );
+  }
+
+  // ✅ Fullscreen image view
+  openFullScreen(image: string): void {
+    const img = new Image();
+    img.src = this.imageUrl + image;
+    const newWindow = window.open('');
+    if (newWindow) {
+      newWindow.document.write(`<img src="${img.src}" style="width: 100%; height: auto;" />`);
+      newWindow.document.title = 'Notification Image';
+    } else {
+      this.snackBar.open('Popup blocked! Please allow popups for this site.', '', {
+        duration: 3000,
+        verticalPosition: 'top',
+        panelClass: ['snackbar-error']
+      });
+    }
   }
 }

@@ -39,8 +39,9 @@ export class NotificationService {
   }
 
     // Get single notification by ID
-  getNotificationById(id: number | string): Observable<any> {
-    const url = `${this.apiUrl}notification/get/${id}`;
-    return this.http.get(url, { headers: this.headers });
+  getNotificationById(id: number): Observable<any> {
+  return this.http.get(this.apiUrl + 'notification/get/' + id, { headers: this.headers });
   }
-}
+
+  }
+

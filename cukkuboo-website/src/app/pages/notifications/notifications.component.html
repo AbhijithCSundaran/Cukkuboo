@@ -1,5 +1,3 @@
-<!-- <span class="heading">Notifications</span> -->
-
 <div class="notifications-container">
 
   <ng-container *ngIf="notifications.length > 0; else noNotifications">
@@ -10,23 +8,22 @@
         <button *ngIf="userData?.notifications" class="mark-toggle" (click)="markAllAsRead()">
           {{ isMarkingAll ? 'Marking…' : 'Mark All as Read' }}
         </button>
-
       </div>
 
       <div class="scrollable-list">
-        <div *ngFor="let notification of notifications;let i=index" class="notification-item position-relative"
+        <div *ngFor="let notification of notifications; let i = index"
+          class="notification-item position-relative"
           [class.active]="notification.notification_id === selectedNotification?.notification_id"
-          [class.unread]="notification.status == 1" (click)="selectNotification(notification)">
+          [class.unread]="notification.status == 1"
+          (click)="selectNotification(notification)">
           <div class="title-wrapper">
             <div class="title">{{ notification.title }}</div>
-            <!-- <span *ngIf="notification.status == 1" class="dot"></span> -->
           </div>
           <div class="date">{{ notification.date | date: 'short' }}</div>
           <div class="action-buttons">
-            <button class="delete-btn " (click)="askToRemoveItem(notification,i);" title="Delete">
+            <button class="delete-btn" (click)="askToRemoveItem(notification, i);" title="Delete">
               <i class="fas fa-trash"></i>
             </button>
-
           </div>
         </div>
       </div>
@@ -38,30 +35,44 @@
       <button class="close-btn d-block d-md-none" (click)="selectedNotification = null">
         <i class="fas fa-times"></i>
       </button>
-      <!-- Delete button for mobile -->
 
       <button class="delete-btn-mobile d-block d-md-none"
-        (click)="askToRemoveItem(selectedNotification, getSelectedNotificationIndex())" title="Delete">
+        (click)="askToRemoveItem(selectedNotification, getSelectedNotificationIndex())"
+        title="Delete">
         <i class="fas fa-trash"></i>
       </button>
-
 
       <div class="detail-header">
         <div class="detail-title">{{ selectedNotification.title }}</div>
       </div>
+
       <div class="detail-body">
         <ng-container *ngIf="!isLoadingDetail; else loading">
-          {{ selectedNotification.content }}
+          <p>{{ selectedNotification.content }}</p>
+
+          <!-- ✅ Image Preview Section -->
+          <div class="screenshot-wrapper" *ngIf="selectedNotification.image">
+            <label class="display-label">Image</label>
+            <div class="screenshot-container">
+              <img [src]="imageUrl + selectedNotification.image"
+                   alt="Notification Image"
+                   class="screenshot-img"
+                   (click)="openFullScreen(selectedNotification.image)" />
+               <button class="fullscreen-btn" (click)="openFullScreen(selectedNotification.image)">
+            <i class="fa-solid fa-expand"></i>
+          </button>
+            </div>
+          </div>
         </ng-container>
+
         <ng-template #loading>
           <div class="loading">Loading...</div>
         </ng-template>
       </div>
     </div>
-
   </ng-container>
 
-  <!-- Full Page Empty State -->
+  <!-- Empty State -->
   <ng-template #noNotifications>
     <div class="empty-full-page">
       <i class="fas fa-bell-slash empty-icon"></i>

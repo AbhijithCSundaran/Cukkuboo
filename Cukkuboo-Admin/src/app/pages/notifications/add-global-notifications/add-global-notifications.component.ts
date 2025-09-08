@@ -38,6 +38,7 @@ export class AddGlobalNotificationsComponent implements OnInit {
 
 confirmDeleteType: 'image' | null = null;
 
+
   // base url for uploaded images
   imgUrl: string = environment.fileUrl + 'uploads/images/';
 

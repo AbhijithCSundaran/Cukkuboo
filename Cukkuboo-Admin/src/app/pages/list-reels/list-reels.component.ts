@@ -49,7 +49,9 @@ export class ListReelsComponent implements OnInit, AfterViewInit {
     this.listReels(this.pageIndex, this.pageSize, this.searchText);
   }
 
+  
   ngAfterViewInit(): void {
+       // Subscribe to paginator changes to fetch new page data
     this.paginator.page.subscribe(() => {
       this.pageIndex = this.paginator.pageIndex;
       this.pageSize = this.paginator.pageSize;
@@ -57,6 +59,7 @@ export class ListReelsComponent implements OnInit, AfterViewInit {
     });
   }
 
+    // Fetch reels list from API with pagination + search
   listReels(pageIndex: number = 0, pageSize: number = 10, search: string = ''): void {
     this.reelsService.listReels(pageIndex, pageSize, search).subscribe({
       next: (response) => {
@@ -69,7 +72,7 @@ export class ListReelsComponent implements OnInit, AfterViewInit {
       }
     });
   }
-
+  // Apply global search filter (search box input)
   applyGlobalFilter(event: KeyboardEvent): void {
     const value = (event.target as HTMLInputElement).value;
     this.searchText = value.trim().toLowerCase();
@@ -91,6 +94,7 @@ export class ListReelsComponent implements OnInit, AfterViewInit {
 
     this.reelsService.deleteReels(reel.reels_id).subscribe({
       next: () => {
+            // Remove deleted reel from table and reload data
         this.dataSource.data = this.dataSource.data.filter(r => r.reels_id !== reel.reels_id);
         this.listReels(this.pageIndex, this.pageSize, this.searchText);
         this.showSnackbar('Reel deleted successfully!', 'snackbar-success');
@@ -111,6 +115,8 @@ export class ListReelsComponent implements OnInit, AfterViewInit {
       panelClass: [panelClass]
     });
   }
+
+    // Format large numbers into K/M format for likes/views display
   formatNumber(value: number): string {
     if (value >= 1_000_000) {
       const truncated = Math.floor((value / 1_000_000) * 10) / 10;

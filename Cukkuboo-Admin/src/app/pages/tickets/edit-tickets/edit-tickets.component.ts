@@ -163,7 +163,7 @@ export class EditTicketsComponent implements OnInit {
     this.router.navigate(['/tickets']);
   }
 
-  //  Snackbar helper method
+
   showSnackbar(message: string, type: 'success' | 'error') {
     this.snackBar.open(message, 'Close', {
       duration: 3000,

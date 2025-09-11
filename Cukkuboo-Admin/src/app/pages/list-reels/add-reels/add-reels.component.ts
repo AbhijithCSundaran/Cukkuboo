@@ -20,6 +20,7 @@ import { ReelsService } from '../../../services/reels.service';
 import { FileUploadService } from '../../../services/upload/file-upload.service';
 import { environment } from '../../../../environments/environment';
 
+// Custom date adapter to format date in dd-MM-yyyy format
 export class CustomDateAdapter extends NativeDateAdapter {
   override format(date: Date, displayFormat: Object): string {
     if (displayFormat === 'input') {
@@ -36,6 +37,7 @@ export class CustomDateAdapter extends NativeDateAdapter {
   }
 }
 
+// Custom date formats for Angular Material Datepicker
 export const CUSTOM_DATE_FORMATS = {
   parse: {
     dateInput: { day: 'numeric', month: 'numeric', year: 'numeric' }
@@ -88,6 +90,7 @@ export class AddReelsComponent implements OnInit {
   uploadError = '';
   isDragging = false;
 
+   // File base URLs from environment
   videoUrl: string = environment.fileUrl + 'uploads/videos/';
   imgUrl: string = environment.fileUrl + 'uploads/images/';
 
@@ -122,6 +125,7 @@ export class AddReelsComponent implements OnInit {
       
     });
 
+    // Check if editing (id present in route params)
     const id = this.route.snapshot.paramMap.get('id');
     this.isEditMode = !!id;
     if (id) {
@@ -129,36 +133,26 @@ export class AddReelsComponent implements OnInit {
     }
   }
 
+   // Load reel data for editing
   loadReelData(id: number): void {
     this.reelsService.getReelsById(id).subscribe({
       next: (response) => {
         const data = Array.isArray(response?.data) ? response.data[0] : response.data;
-        this.reelForm.patchValue({
-          reels_id: data.reels_id,
-          title: data.title,
-          description: data.description,
-          release_date: data.release_date,
-          access: data.access,
-          status: data.status,
-          thumbnail: data.thumbnail,
-          video: data.video,
-          views: data.views,
-          likes: data.likes,
-          created_by: data.created_by
-        });
 
+        // Populate form fields with existing data
+        this.reelForm.patchValue({ ...data });
+
+        // Show preview for existing thumbnail and video
         if (data.thumbnail) {
           this.thumbnailPreview = this.sanitizer.bypassSecurityTrustUrl(data.thumbnail);
         }
-
         if (data.video) {
           this.reelPreviewUrl = this.sanitizer.bypassSecurityTrustUrl(data.video);
         }
 
         this.cdr.detectChanges();
       },
-      error: (err) => {
-        console.error('Error fetching reel by ID:', err);
+      error: () => {
         this.showSnackbar('Failed to load reel data.', 'snackbar-error');
       }
     });
@@ -194,6 +188,7 @@ export class AddReelsComponent implements OnInit {
         }
       },
       error: (err) => {
+             // Reset state if upload fails
         this.uploadError = 'Upload failed. Please try again.';
         this.uploadProgress = 0;
         this.selectedReelFile = null;
@@ -222,6 +217,7 @@ export class AddReelsComponent implements OnInit {
         }
       },
       error: (err) => {
+             // Reset state if upload fails
         console.error('Upload error:', err);
         this.thumbnailFile = null;
         this.thumbnailPreview = null;
@@ -336,6 +332,7 @@ export class AddReelsComponent implements OnInit {
   }
 
 saveReel(): void {
+    // Validation check
   if (this.reelForm.invalid || !this.reelForm.value['video']) {
     this.reelForm.markAllAsTouched();
     this.snackBar.open('Please fill all required fields.', '', {

@@ -319,7 +319,7 @@ export class AddMovieShowComponent implements OnInit {
 
       this.videoName = file.name;
       this.videoURL = URL.createObjectURL(file);
-      this.getVideoDuration(file); // 👈 Get duration before upload
+      this.getVideoDuration(file); //  Get duration before upload
 
       this.uploadMainVideo(file);
     }
@@ -346,7 +346,7 @@ export class AddMovieShowComponent implements OnInit {
       this.videoURL = URL.createObjectURL(file);
       this.movieForm.controls['video'].setValue(this.videoURL);
 
-      this.getVideoDuration(file); // 👈 Get duration before upload
+      this.getVideoDuration(file); //  Get duration before upload
 
       this.uploadMainVideo(file);
     }

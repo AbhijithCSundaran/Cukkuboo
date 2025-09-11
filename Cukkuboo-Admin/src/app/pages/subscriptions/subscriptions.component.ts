@@ -19,6 +19,8 @@ interface Subscription {
   end_date: string;
   status: string; // will be '1', '2', or '3'
 }
+
+// Custom date adapter to format date as dd-MM-yyyy in the UI
 export class CustomDateAdapter extends NativeDateAdapter {
   override format(date: Date, displayFormat: Object): string {
     if (displayFormat === 'input') {
@@ -35,6 +37,7 @@ export class CustomDateAdapter extends NativeDateAdapter {
   }
 }
 
+// Custom date format configuration for Angular Material Datepicker
 export const CUSTOM_DATE_FORMATS = {
   parse: {
     dateInput: { day: 'numeric', month: 'numeric', year: 'numeric' }
@@ -77,10 +80,12 @@ export class SubscriptionsComponent implements OnInit, AfterViewInit {
   constructor(private userSubscriptionService: UserSubscriptionService) { }
 
   ngOnInit(): void {
+        // Load subscriptions
     this.fetchSubscriptions(this.pageIndex, this.pageSize, this.searchText);
   }
 
   ngAfterViewInit(): void {
+      // Handle paginator event (next/previous page)
     this.paginator.page.subscribe(() => {
       this.pageIndex = this.paginator.pageIndex;
       this.pageSize = this.paginator.pageSize;
@@ -96,6 +101,7 @@ export class SubscriptionsComponent implements OnInit, AfterViewInit {
     this.fetchSubscriptions(this.pageIndex, this.pageSize, this.searchText);
   }
 
+   // Fetch subscriptions from API with filters
   fetchSubscriptions(pageIndex: number, pageSize: number, searchText: string): void {
     const from = this.fromDate ? this.formatDate(this.fromDate) : '';
     const to = this.toDate ? this.formatDate(this.toDate) : '';
@@ -105,6 +111,7 @@ export class SubscriptionsComponent implements OnInit, AfterViewInit {
       .subscribe({
         next: (response) => {
           if (response.success) {
+              // Map response data into Subscription objects
             const mappedData: Subscription[] = response.data.map((item: any) => ({
               username: item.username,
               plan_name: item.plan_name,
@@ -129,6 +136,7 @@ export class SubscriptionsComponent implements OnInit, AfterViewInit {
       });
   }
 
+    // Format date into yyyy-MM-dd for backend API
   formatDate(date: Date): string {
     const d = new Date(date);
     const year = d.getFullYear();

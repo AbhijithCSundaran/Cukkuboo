@@ -11,11 +11,13 @@ import { MovieService } from '../../services/movie.service';
   styleUrl: './dashboard.component.css'
 })
 export class DashboardComponent implements OnInit {
+
   totalSubscribers = 0;
   totalMovies = 0;
   subscribersThisMonth = 0;
   revenueThisMonth = 0;
 
+  // Dashboard lists
   latestContent: any[] = [];
   mostViewedMovies: any[] = [];
   recentTransactions: any[] = [];
@@ -23,18 +25,22 @@ export class DashboardComponent implements OnInit {
   constructor(private movieService: MovieService) {}
 
   ngOnInit(): void {
+    // Call API when component loads to get dashboard data
     this.movieService.getDashboardData().subscribe({
       next: (res) => {
         console.log('Full Dashboard Response:', res);
 
+        // Check if response is valid and contains data
         if (res.success && res.data) {
           const data = res.data;
 
+          // Assign dashboard summary values
           this.totalSubscribers = data.subscriber_count || 0;
           this.totalMovies = data.active_movie_count || 0;
           this.subscribersThisMonth = data.active_user_count || 0;
           this.revenueThisMonth = Number(data.total_revenue) || 0;
 
+          // Assign dashboard content lists
           this.latestContent = data.latest_movies?.movies || [];
           this.mostViewedMovies = data.most_watched_movies?.movies || [];
           this.recentTransactions = data.transaction_list || [];
@@ -43,6 +49,7 @@ export class DashboardComponent implements OnInit {
         }
       },
       error: (err) => {
+        // Handle API error 
         console.error('Dashboard API Error:', err);
       }
     });

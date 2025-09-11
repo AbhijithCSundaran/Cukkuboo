@@ -72,6 +72,7 @@ export class SubscriptionPlansComponent implements OnInit, AfterViewInit {
   this.planService.listPlans(pageIndex, pageSize, search).subscribe({
     next: (response) => {
       console.log('API response from listPlans():', response); 
+      
       this.dataSource.data = response?.data || response || [];
       this.totalItems = response?.total || this.dataSource.data.length;
       expanded: false

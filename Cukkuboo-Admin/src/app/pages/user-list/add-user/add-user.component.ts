@@ -19,7 +19,7 @@ import { ValidationService } from '../../../core/services/validation.service';
 import countrycode from '../../../../assets/json/countrycode.json';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
-
+//  Custom Date Adapter to show dd-mm-yyyy format in Material Datepicker
 
 export class CustomDateAdapter extends NativeDateAdapter {
   override format(date: Date, displayFormat: Object): string {
@@ -36,7 +36,7 @@ export class CustomDateAdapter extends NativeDateAdapter {
     return ('00' + n).slice(-2);
   }
 }
-
+//Custom date format configuration
 export const CUSTOM_DATE_FORMATS = {
   parse: {
     dateInput: { day: 'numeric', month: 'numeric', year: 'numeric' }
@@ -84,6 +84,7 @@ export class AddUserComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    //Get user ID from route for edit mode
     const id = this.route.snapshot.paramMap.get('id');
     this.UserId = id ? +id : 0;
     this.initUserForm();
@@ -134,7 +135,7 @@ export class AddUserComponent implements OnInit {
     }
   }
 
-
+//Fetch existing user data for edit mode and populate the form
   loadUserData(id: number): void {
     this.userService.getUserById(id).subscribe({
       next: (response) => {
@@ -257,6 +258,7 @@ export class AddUserComponent implements OnInit {
     }
   }
 
+  // Format date into yyyy-mm-dd for backend
   formatDate(date: Date): string {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -264,6 +266,7 @@ export class AddUserComponent implements OnInit {
     return `${year}-${month}-${day}`;
   }
 
+   // Restrict phone input to digits only (max 15 chars)
   onNumberInput(event: any): void {
     const input = event.target;
     const filteredValue = input.value.replace(/[^0-9]/g, '').slice(0, 15);

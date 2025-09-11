@@ -37,7 +37,7 @@ export class SidebarComponent {
     this.isMobileView = event.target.innerWidth <= 1024;
   }
 
-
+  // Sidebar menu items
   menuItems: MenuItem[] = [
     { name: 'Dashboard', icon: 'fa-tachometer-alt', path: '/dashboard' },
     {
@@ -83,40 +83,47 @@ export class SidebarComponent {
     },
   ];
 
+ // Toggle sidebar collapse/expand
   toggleSidebar() {
     this.isCollapsed = !this.isCollapsed;
-    this.sidebarToggle.emit(this.isCollapsed);
-    this.closeAllSubmenus();
+    this.sidebarToggle.emit(this.isCollapsed); 
+    this.closeAllSubmenus(); // Close any open submenus
   }
 
+  // Handle menu item click
   onMenuItemClick(menuItem: MenuItem, event: MouseEvent) {
-    event.stopPropagation();
-    if (this.isCollapsed) return;
+    event.stopPropagation(); 
+    if (this.isCollapsed) return; 
 
+    // Toggle clicked item's submenu
     menuItem.showSubmenu = !menuItem.showSubmenu;
+
+    // Close all other submenus
     this.menuItems.forEach((item) => {
       if (item !== menuItem) item.showSubmenu = false;
     });
   }
 
+  // Close all submenus
   closeAllSubmenus() {
     this.menuItems.forEach((item) => (item.showSubmenu = false));
   }
 
+  // Show submenu on hover when sidebar is collapsed
   onMouseEnter(menuItem: MenuItem) {
     if (this.isCollapsed && menuItem.subItems?.length) {
       menuItem.showSubmenu = true;
     }
   }
 
-
-
+  // Hide submenu on hover leave when sidebar is collapsed
   onMouseLeave(menuItem: MenuItem) {
     if (this.isCollapsed && menuItem.subItems?.length) {
       menuItem.showSubmenu = false;
     }
   }
 
+  // Detect clicks outside submenu to close it
   @HostListener('document:click', ['$event'])
   handleClickOutside(event: Event) {
     const target = event.target as HTMLElement;
@@ -125,9 +132,10 @@ export class SidebarComponent {
       this.closeAllSubmenus();
     }
   }
+
+  // Handle submenu item click
   onSubItemClick() {
     this.closeAllSubmenus();
-    this.itemSelected.emit();
+    this.itemSelected.emit(); 
   }
-
 }

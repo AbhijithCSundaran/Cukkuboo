@@ -41,7 +41,9 @@ export class ListMovieShowComponent implements OnInit {
     'status',
     'action'
   ];
+
   dataSource = new MatTableDataSource<any>([]);
+
   confirmDeleteMovie: any = null;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -67,13 +69,16 @@ export class ListMovieShowComponent implements OnInit {
     this.listMovies(this.pageIndex, this.pageSize, this.searchText);
   }
 
+  // Fetch movies list from API with pagination & search
   listMovies(pageIndex: number = 0, pageSize: number = 10, search: string = ''): void {
     this.movieService.listmovies(pageIndex, pageSize, search).subscribe({
       next: (response) => {
+        // Update table data and total items
         this.dataSource.data = response?.data || [];
         this.totalItems = response?.total || 0;
       },
       error: (error) => {
+        // On error, clear table and show error message
         console.error('Error fetching movies:', error);
         this.dataSource.data = [];
         this.totalItems = 0;
@@ -82,12 +87,14 @@ export class ListMovieShowComponent implements OnInit {
     });
   }
 
+  // Search filter applied globally on typing
   applyGlobalFilter(event: KeyboardEvent): void {
     const filterValue = (event.target as HTMLInputElement).value.trim().toLowerCase();
     this.searchText = filterValue;
-    this.pageIndex = 0;
+    this.pageIndex = 0; // Reset to first page after search
     this.listMovies(this.pageIndex, this.pageSize, this.searchText);
   }
+
 
   modalDeleteMovie(movie: any): void {
     this.confirmDeleteMovie = movie;
@@ -97,14 +104,17 @@ export class ListMovieShowComponent implements OnInit {
     this.confirmDeleteMovie = null;
   }
 
+
   confirmDelete(): void {
     const movie = this.confirmDeleteMovie;
     if (!movie) return;
 
     this.movieService.deleteMovies(movie.mov_id).subscribe({
       next: () => {
+        // Remove movie from local table list
         this.dataSource.data = this.dataSource.data.filter(m => m.mov_id !== movie.mov_id);
         this.totalItems--;
+        // Reload movie list to ensure sync with backend
         this.listMovies(this.pageIndex, this.pageSize, this.searchText);
         this.showSnackbar('Movie deleted successfully!', 'snackbar-success');
       },
@@ -114,13 +124,16 @@ export class ListMovieShowComponent implements OnInit {
       }
     });
 
+   
     this.confirmDeleteMovie = null;
   }
+
 
   addNewMovie(): void {
     this.router.navigate(['/add-movie-show']);
   }
 
+ 
   showSnackbar(message: string, panelClass: string = 'snackbar-default'): void {
     this.snackBar.open(message, 'Close', {
       duration: 3000,
@@ -128,16 +141,17 @@ export class ListMovieShowComponent implements OnInit {
       panelClass: [panelClass]
     });
   }
+
+  // Format large numbers into readable format (K, M)
   formatNumber(value: number): string {
     if (value >= 1_000_000) {
       const truncated = Math.floor((value / 1_000_000) * 10) / 10;
-      return truncated + 'M';
+      return truncated + 'M'; // 1.2M
     } else if (value >= 1_000) {
       const truncated = Math.floor((value / 1_000) * 10) / 10;
-      return truncated + 'K';
+      return truncated + 'K'; // 5.4K
     } else {
       return value.toString();
     }
   }
-
 }

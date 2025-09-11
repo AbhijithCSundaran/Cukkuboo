@@ -130,7 +130,7 @@ loadNotification(id: number) {
     }
   });
 }
-
+  //  TIME HANDLING
   private buildScheduledTimestamp(date: Date, hhmm: string): string {
     const [hh, mm] = hhmm.split(':');
     const y = date.getFullYear();

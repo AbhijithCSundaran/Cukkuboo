@@ -54,7 +54,7 @@ export class AddSubscriptionPlanComponent implements OnInit {
       features: ['', Validators.required],
        stripe_price_id: ['', Validators.required]
     });
-
+// Check if route has 'id' param => edit mode
     this.subscriptionPlanId = this.route.snapshot.paramMap.get('id');
     if (this.subscriptionPlanId) {
       this.isEditMode = true;
@@ -100,6 +100,7 @@ export class AddSubscriptionPlanComponent implements OnInit {
     }
 
     const planData = this.dataForm.value;
+       // Ensure offer price is less than original price
     const originalPrice = parseFloat(planData.price);
     const offerPrice = parseFloat(planData.offer_price);
 
@@ -107,7 +108,7 @@ export class AddSubscriptionPlanComponent implements OnInit {
       this.showSnackbar('Offer price must be less than the actual price.', 'snackbar-error');
       return;
     }
-
+   // Set discount_price field for backend
     planData.discount_price = offerPrice;
     if (this.isEditMode && this.subscriptionPlanId) {
       planData.subscriptionplan_id = this.subscriptionPlanId;

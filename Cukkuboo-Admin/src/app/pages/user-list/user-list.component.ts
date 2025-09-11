@@ -59,6 +59,7 @@ export class UserListComponent implements OnInit, AfterViewInit {
     });
   }
 
+  // Fetch users from API with pagination & search
   loadUsers(pageIndex: number = 0, pageSize: number = 10, search: string = ''): void {
     this.userService.list(pageIndex, pageSize, search).subscribe({
       next: (response) => {

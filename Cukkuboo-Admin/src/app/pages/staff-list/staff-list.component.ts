@@ -69,6 +69,7 @@ export class StaffListComponent implements OnInit, AfterViewInit {
     this.staffservice.getStaffList(this.pageIndex, this.pageSize, this.searchText).subscribe({
       next: (response) => {
         debugger;
+          // Format join_date and set data source
         this.dataSource.data = (response.data || []).map((staff: any) => ({
           ...staff,
           join_date: this.fixDateString(staff.join_date)
@@ -81,7 +82,7 @@ export class StaffListComponent implements OnInit, AfterViewInit {
       }
     });
   }
-
+  // Convert join_date to ISO string, handle '0000-00-00'
   fixDateString(date: string): string {
     if(date=='0000-00-00')
       return "NA";

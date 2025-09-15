@@ -23,6 +23,7 @@ import { FileUploadService } from '../../../services/upload/file-upload.service'
 import { environment } from '../../../../environments/environment';
 import { MovieService } from '../../../services/movie.service';
 import { CommonService } from '../../../core/services/common.service';
+import { HlsPlayerComponent } from '../../../core/components/hls-player/hls-player.component';
 
 
 export class CustomDateAdapter extends NativeDateAdapter {
@@ -63,7 +64,7 @@ export const CUSTOM_DATE_FORMATS = {
     ReactiveFormsModule, MatSnackBarModule, MatFormFieldModule, MatInputModule, MatIconModule,
     MatCardModule, MatSelectModule, MatDatepickerModule, MatNativeDateModule, MatButtonModule,
     MatProgressBarModule, MatCheckboxModule,
-    FormsModule, RouterModule, ValidationMessagesComponent
+    FormsModule, RouterModule, ValidationMessagesComponent, HlsPlayerComponent
 
   ],
   templateUrl: './add-movie-show.component.html',
@@ -119,6 +120,7 @@ export class AddMovieShowComponent implements OnInit {
       mov_id: [0],
       title: ['', Validators.required],
       video: ['', Validators.required],
+      video_variants: ['', Validators.required],
       trailer: ['', Validators.required],
       thumbnail: ['', Validators.required],
       banner: ['', Validators.required],
@@ -388,21 +390,27 @@ export class AddMovieShowComponent implements OnInit {
     this.uploadInProgress = true;
     this.uploadProgress = 0;
     this.videoName = file.name;
-    this.uploadVideo(file, this.movieForm.controls['video'], this.uploadInProgress, "uploadProgress");
+    this.uploadVideo(file, this.movieForm.controls['video'], this.movieForm.controls['video_variants'], this.uploadInProgress, "uploadProgress");
   }
 
-  uploadVideo(file: File, control: AbstractControl | null = null, inProgress: boolean = true, progress: string = ''): void {
+  uploadVideo(file: File, videoControl: AbstractControl | null = null, variantsSontrol: AbstractControl | null = null, inProgress: boolean = true, progress: string = ''): void {
+    debugger;
     inProgress = true;
+    (this as any)[progress] = 0;
     this.fileUploadService.uploadVideo(file).subscribe({
       next: (event: HttpEvent<any>) => {
         if (event.type === HttpEventType.UploadProgress && event.total) {
-          (this as any)[progress] = Math.round((event.loaded / event.total) * 100);
-        } else if (event.type === HttpEventType.Response) {
+          (this as any)[progress] = Math.round((event.loaded / event.total) * 100) - 1;
+        } else if (event.type === HttpEventType.Response && event.body) {
           inProgress = false;
           (this as any)[progress] = 100;
           this.showSnackbar('Video uploaded successfully!', 'snackbar-success');
-          if (control && event.body?.file_name)
-            control.setValue(event.body?.file_name)
+          // if (control && event.body?.file_name)
+          //   control.setValue(event.body?.file_name)
+          if (videoControl && event.body?.master)
+            videoControl.setValue(event.body?.master)
+          if (variantsSontrol && event.body?.variants)
+            variantsSontrol.setValue(event.body?.variants)
           this.cdr.detectChanges();
         }
         console.log(this.uploadProgress)
@@ -571,11 +579,11 @@ export class AddMovieShowComponent implements OnInit {
       return;
     }
 
-  // Trim spaces from title before sending
-  const model = {
-    ...this.movieForm.value,
-    title: this.movieForm.value.title?.trim()
-  };
+    // Trim spaces from title before sending
+    const model = {
+      ...this.movieForm.value,
+      title: this.movieForm.value.title?.trim()
+    };
 
     this.movieService.addmovies(model).subscribe({
       next: (response) => {

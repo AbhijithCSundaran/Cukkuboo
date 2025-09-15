@@ -14,11 +14,10 @@
             <mat-card appearance="outlined" class="h-100 position-relative">
               <mat-card-content>
                 <label class="label">Upload Video</label>
-              <div class="drag-drop-zone"
-     [class.disabled]="uploadProgress > 0 && uploadProgress < 100"
-     (dragover)="uploadProgress > 0 && uploadProgress < 100 ? $event.preventDefault() : onVideoDragOver($event)"
-     (drop)="uploadProgress > 0 && uploadProgress < 100 ? $event.preventDefault() : onVideoDrop($event)"
-     (click)="(uploadProgress > 0 && uploadProgress < 100) ? $event.preventDefault() : videoInput.click()">
+                <div class="drag-drop-zone" [class.disabled]="uploadProgress > 0 && uploadProgress < 100"
+                  (dragover)="uploadProgress > 0 && uploadProgress < 100 ? $event.preventDefault() : onVideoDragOver($event)"
+                  (drop)="uploadProgress > 0 && uploadProgress < 100 ? $event.preventDefault() : onVideoDrop($event)"
+                  (click)="(uploadProgress > 0 && uploadProgress < 100) ? $event.preventDefault() : videoInput.click()">
 
                   <i class="fa-sharp fa-solid fa-arrow-up-from-bracket upload-icon"></i>
                   <p *ngIf="!videoName">Drag & drop a video here or click to select (MP4 files only, with a maximum size
@@ -44,11 +43,16 @@
             </button>
             <!-- {{uploadProgress}} -->
             <div class="video-preview-container">
-              <video [src]="videoUrl+movieForm.value['video']" controls controlsList="nodownload"
-                [ngClass]="{ 'vertical-video': isVerticalVideo, 'horizontal-video': !isVerticalVideo }"></video>
+              <!-- <video [src]="videoUrl+movieForm.value['video']" controls controlsList="nodownload"
+                [ngClass]="{ 'vertical-video': isVerticalVideo, 'horizontal-video': !isVerticalVideo }"></video> -->
+              <hls-player class="video_player"
+                [ngClass]="{ 'vertical-video': isVerticalVideo, 'horizontal-video': !isVerticalVideo }"
+                [videoSrc]="movieForm.value['video']">
+              </hls-player>
             </div>
           </div>
         </div>
+        <hls-player class="video_player"></hls-player>
       </div>
 
 
@@ -243,8 +247,11 @@
                 (dragover)="onTrailerDragOver($event)" (drop)="onTrailerDrop($event)"
                 (click)="!movieForm.value['trailer'] && trailerInput.click()">
                 <p *ngIf="!movieForm.value['trailer']">Drag & drop a trailer here or click to select (MP4 only)</p>
-                <video *ngIf="movieForm.value['trailer']" [src]="videoUrl+movieForm.value['trailer']" controls
-                  controlsList="nodownload" class="media-preview"></video>
+                <!-- <video *ngIf="movieForm.value['trailer']" [src]="videoUrl+movieForm.value['trailer']" controls
+                  controlsList="nodownload" class="media-preview"></video> -->
+                <hls-player *ngIf="movieForm.value['trailer']" class="media-preview"
+                  [videoSrc]="movieForm.value['trailer']">
+                </hls-player>
 
               </div>
 

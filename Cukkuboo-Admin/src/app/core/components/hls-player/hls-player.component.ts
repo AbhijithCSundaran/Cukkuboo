@@ -12,7 +12,7 @@ import Hls from 'hls.js';
 })
 export class HlsPlayerComponent implements AfterViewInit, OnDestroy {
   // @Input() videoSrc: string = 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8';
-  @Input() videoSrc: string = 'http://cukkuboo.com/api/index.php/uploads/hls/1757933075_b83599a07d8869766ad6/master.m3u8';
+  @Input() videoSrc: string = 'https://cukkuboo.com/api/index.php/uploads/hls/1757933075_b83599a07d8869766ad6/master.m3u8';
   @ViewChild('videoPlayer', { static: true }) videoRef!: ElementRef<HTMLVideoElement>;
   @Input() controls: boolean = true;
   @Input() autoplay: boolean = true;

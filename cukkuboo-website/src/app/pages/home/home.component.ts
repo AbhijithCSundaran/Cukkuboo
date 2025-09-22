@@ -5,13 +5,13 @@ import { CarouselModule, OwlOptions } from 'ngx-owl-carousel-o';
 import { MovieService } from '../../services/movie.service';
 import { environment } from '../../../environments/environment';
 import { TruncatePipe } from '../../core/pipes/truncate-pipe';
-import { JsPlayerComponent } from '../_common/js-player/js-player.component';
+import { HlsPlayerComponent } from '../_common/hls-player/hls-player.component';
 
 @Component({
   selector: 'app-home',
   standalone: true,
   imports: [CommonModule, CarouselModule, RouterLink,
-    JsPlayerComponent, TruncatePipe
+    HlsPlayerComponent, TruncatePipe
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'

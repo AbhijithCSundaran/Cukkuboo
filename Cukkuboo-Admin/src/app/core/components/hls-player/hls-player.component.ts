@@ -12,8 +12,9 @@ import Hls from 'hls.js';
 })
 export class HlsPlayerComponent implements AfterViewInit, OnDestroy {
   // @Input() videoSrc: string = 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8';
-  @Input() videoSrc: string = 'https://cukkuboo.com/api/index.php/uploads/hls/1757933075_b83599a07d8869766ad6/master.m3u8';
+  @Input() videoSrc: string = 'https://cukkuboo.com/api/uploads/hls/1758527292_bccb83737eaf28aca92c/index.m3u8';
   @ViewChild('videoPlayer', { static: true }) videoRef!: ElementRef<HTMLVideoElement>;
+  @Input() hideClose: boolean = true;
   @Input() controls: boolean = true;
   @Input() autoplay: boolean = true;
   @Input() fullScreen: boolean = false;
@@ -25,6 +26,7 @@ export class HlsPlayerComponent implements AfterViewInit, OnDestroy {
   ngAfterViewInit() {
     const video = this.videoRef.nativeElement;
 
+    // this.videoSrc = this.videoSrc.replace("/index.php", "")
     if (Hls.isSupported()) {
       this.hls = new Hls();
       this.hls.loadSource(this.videoSrc);

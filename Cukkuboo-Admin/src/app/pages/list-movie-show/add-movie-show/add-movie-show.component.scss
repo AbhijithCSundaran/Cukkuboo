@@ -80,6 +80,7 @@ input {
   border-radius: 20px;
   height: 20px;
   width: 100%;
+  overflow: hidden;
   max-width: 400px;
   margin-left: auto;
   margin-right: auto;
@@ -109,12 +110,16 @@ input {
   .progress-text {
     position: absolute;
     width: 100%;
-    text-align: center;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     top: 0;
     left: 0;
-    line-height: 20px;
+    line-height: 1;
+    font-size: 12px;
     font-weight: bold;
-    color: black;
+    color: rgb(255, 255, 255);
   }
 
   .upload-success {
@@ -650,4 +655,13 @@ mat-card[_ngcontent-ng-c3817092942] {
   background-color: white;
   border: 1px solid black;
   border-radius: 8px;
+}
+
+.trailer_progress {
+  width: auto;
+  position: absolute;
+  left: 20px;
+  right: 20px;
+  bottom: 10px;
+  height: 5px;
 }

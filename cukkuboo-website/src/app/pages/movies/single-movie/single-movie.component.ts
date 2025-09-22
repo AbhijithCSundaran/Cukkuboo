@@ -11,6 +11,7 @@ import { RouterLink } from '@angular/router';
 import { StorageService } from '../../../core/services/TempStorage/storageService';
 import { SignInComponent } from '../../sign-in/sign-in.component';
 import { ConfirmationDialogComponent } from '../../../core/components/confirmation-dialog/confirmation-dialog.component';
+import { HlsPlayerComponent } from "../../_common/hls-player/hls-player.component";
 
 declare var a2a: any;
 @Component({
@@ -19,8 +20,8 @@ declare var a2a: any;
   imports: [
     CommonModule,
     RouterLink,
-    JsPlayerComponent,
-    InfiniteScrollDirective
+    InfiniteScrollDirective,
+    HlsPlayerComponent
   ],
   templateUrl: './single-movie.component.html',
   styleUrls: ['./single-movie.component.scss']

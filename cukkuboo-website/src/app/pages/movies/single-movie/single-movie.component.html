@@ -47,8 +47,10 @@
       </div>
     </div>
 
-    <js-player *ngIf="selectedVideo" class="video_player" (onClose)="selectedVideo = ''" [videoSrc]="selectedVideo">
-    </js-player>
+    <!-- <js-player *ngIf="selectedVideo" class="video_player" (onClose)="selectedVideo = ''" [videoSrc]="selectedVideo">
+    </js-player> -->
+    <hls-player *ngIf="selectedVideo" class="video_player" (onClose)="selectedVideo = ''" [videoSrc]="selectedVideo">
+    </hls-player>
   </div>
 </section>
 

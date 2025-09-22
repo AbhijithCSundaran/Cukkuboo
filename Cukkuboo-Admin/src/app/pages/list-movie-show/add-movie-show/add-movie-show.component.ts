@@ -82,7 +82,8 @@ export class AddMovieShowComponent implements OnInit {
   bannerPreview: string | ArrayBuffer | null = null;
   videoName: string | null = null;
   videoURL: string | null = null;
-  uploadProgress = 0;
+  uploadProgressMain = 0;
+  uploadProgressTrailor = 0;
   uploadInProgress = false;
   autoSave = false;
   trailerName = '';
@@ -94,7 +95,7 @@ export class AddMovieShowComponent implements OnInit {
   confirmDeleteType: string | null = null;
 
 
-  videoUrl: string = environment.fileUrl + 'uploads/videos/'
+  videoUrl: string = environment.fileUrl + 'uploads/'
   imgUrl: string = environment.fileUrl + 'uploads/images/'
 
 
@@ -179,6 +180,7 @@ export class AddMovieShowComponent implements OnInit {
               access: data.access,
               status: data.status,
               video: data.video,
+              video_variants: data.video_variants,
               trailer: data.trailer,
               thumbnail: data.thumbnail,
               banner: data.banner,
@@ -268,7 +270,7 @@ export class AddMovieShowComponent implements OnInit {
             control.setValue(event.body?.file_name)
           this.cdr.detectChanges();
         }
-        console.log(this.uploadProgress)
+        // console.log(this.uploadProgressMain)
       },
       error: (err) => {
         inProgress = false;
@@ -320,7 +322,7 @@ export class AddMovieShowComponent implements OnInit {
       }
 
       this.videoName = file.name;
-      this.videoURL = URL.createObjectURL(file);
+      const videoURL = URL.createObjectURL(file);
       this.getVideoDuration(file); // 👈 Get duration before upload
 
       this.uploadMainVideo(file);
@@ -345,8 +347,8 @@ export class AddMovieShowComponent implements OnInit {
       }
 
       this.videoName = file.name;
-      this.videoURL = URL.createObjectURL(file);
-      this.movieForm.controls['video'].setValue(this.videoURL);
+      const videoURL = URL.createObjectURL(file);
+      this.movieForm.controls['video'].setValue(videoURL);
 
       this.getVideoDuration(file); // 👈 Get duration before upload
 
@@ -387,36 +389,36 @@ export class AddMovieShowComponent implements OnInit {
 
 
   uploadMainVideo(file: File) {
-    this.uploadInProgress = true;
-    this.uploadProgress = 0;
+    // this.uploadInProgress = true;
+    this.uploadProgressMain = 0;
     this.videoName = file.name;
-    this.uploadVideo(file, this.movieForm.controls['video'], this.movieForm.controls['video_variants'], this.uploadInProgress, "uploadProgress");
+    this.uploadVideo(file, this.movieForm.controls['video'], this.movieForm.controls['video_variants'], "uploadProgressMain");
   }
 
-  uploadVideo(file: File, videoControl: AbstractControl | null = null, variantsSontrol: AbstractControl | null = null, inProgress: boolean = true, progress: string = ''): void {
+  uploadVideo(file: File, videoControl: AbstractControl | null = null, variantsSontrol: AbstractControl | null = null, progress: string = ''): void {
     debugger;
-    inProgress = true;
+    // inProgress = true;
     (this as any)[progress] = 0;
     this.fileUploadService.uploadVideo(file).subscribe({
       next: (event: HttpEvent<any>) => {
         if (event.type === HttpEventType.UploadProgress && event.total) {
-          (this as any)[progress] = Math.round((event.loaded / event.total) * 100) - 1;
+          (this as any)[progress] = Math.round((event.loaded / event.total) * 100) - 5;
         } else if (event.type === HttpEventType.Response && event.body) {
-          inProgress = false;
+          // inProgress = false;
           (this as any)[progress] = 100;
           this.showSnackbar('Video uploaded successfully!', 'snackbar-success');
           // if (control && event.body?.file_name)
           //   control.setValue(event.body?.file_name)
-          if (videoControl && event.body?.master)
-            videoControl.setValue(event.body?.master)
+          if (videoControl && event.body?.index)
+            videoControl.setValue(event.body?.index)
           if (variantsSontrol && event.body?.variants)
             variantsSontrol.setValue(event.body?.variants)
           this.cdr.detectChanges();
         }
-        console.log(this.uploadProgress)
+        // console.log(this.uploadProgressMain)
       },
       error: (err) => {
-        inProgress = false;
+        // inProgress = false;
         (this as any)[progress] = 0;
         console.error('Upload error:', err);
         this.showSnackbar('Video upload failed.', 'snackbar-error');
@@ -428,7 +430,7 @@ export class AddMovieShowComponent implements OnInit {
   removeMainVideo(): void {
     this.videoName = '';
     this.videoURL = '';
-    this.uploadProgress = 0;
+    this.uploadProgressMain = 0;
 
     this.movieForm.controls['video'].setValue(null);
     this.movieForm.controls['video'].markAsDirty();
@@ -515,7 +517,8 @@ export class AddMovieShowComponent implements OnInit {
 
       this.trailerName = file.name;
       this.trailerURL = URL.createObjectURL(file);
-      this.uploadVideo(file, this.movieForm.controls['trailer']);
+      this.uploadProgressTrailor = 0;
+      this.uploadVideo(file, this.movieForm.controls['trailer'], null, 'uploadProgressTrailor');
 
 
     }
@@ -531,7 +534,8 @@ export class AddMovieShowComponent implements OnInit {
         this.showSnackbar('Only MP4 video files are allowed for trailers.', 'snackbar-error');
         return;
       }
-      this.uploadVideo(file, this.movieForm.controls['trailer']);
+      this.uploadProgressTrailor = 0;
+      this.uploadVideo(file, this.movieForm.controls['trailer'], null, 'uploadProgressTrailor');
 
       this.trailerName = file.name;
       this.trailerURL = URL.createObjectURL(file);

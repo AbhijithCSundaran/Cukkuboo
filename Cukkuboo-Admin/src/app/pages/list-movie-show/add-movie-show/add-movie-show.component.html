@@ -248,14 +248,14 @@
                 (click)="!movieForm.value['trailer'] && trailerInput.click()">
                 <p *ngIf="!movieForm.value['trailer']">Drag & drop a trailer here or click to select (MP4 only)</p>
                 <div *ngIf="!movieForm.value['trailer'] && uploadProgressTrailor<100&&uploadProgressTrailor>0"
-                  class="progress trailer_progress" role="progressbar" aria-label="Danger striped example" aria-valuenow="100"
-                  aria-valuemin="0" aria-valuemax="100">
+                  class="progress trailer_progress" role="progressbar" aria-label="Danger striped example"
+                  aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
                   <div class="progress-bar progress-bar-striped bg-danger " [style.width.%]="uploadProgressTrailor">
                   </div>
                 </div>
                 <!-- <video *ngIf="movieForm.value['trailer']" [src]="videoUrl+movieForm.value['trailer']" controls
                   controlsList="nodownload" class="media-preview"></video> -->
-                <hls-player *ngIf="movieForm.value['trailer']" class="media-preview"
+                <hls-player *ngIf="movieForm.value['trailer']" class=""
                   [videoSrc]="videoUrl+movieForm.value['trailer']">
                 </hls-player>
 

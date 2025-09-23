@@ -25,7 +25,8 @@ export class AppComponent {
     private userService: UserService,
     private router: Router,
   ) {
-
+    if (environment.production)
+      console.log = function () { };
 
     this.router.events.subscribe(event => {
       if (event instanceof NavigationStart) {

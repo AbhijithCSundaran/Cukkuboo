@@ -54,7 +54,7 @@ export class InterceptorService implements HttpInterceptor {
     //handle your auth error or rethrow
     if (err.status === 0 || err.status === 401 || err.status === 403) {
       console.clear()
-      console.log(err.message)
+      console.error(err.message)
       const url = location.href;
       if (!url.includes('signup') && !url.includes('signin'))
         this.openLoginModal();

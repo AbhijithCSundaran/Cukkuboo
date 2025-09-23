@@ -34,11 +34,12 @@ export class HlsPlayerComponent implements AfterViewInit, OnDestroy {
 
   }
   ngOnChanges(changes: SimpleChanges): void {
+    debugger;
     if (changes['videoSrc']) {
       if (changes['videoSrc'].currentValue) {
         const isVideoFormat = this.validExtensions.some(ext => this.videoSrc.toLowerCase().endsWith(ext));
         if (!isVideoFormat)
-          this.videoSrc = structuredClone(this.fileUrl+this.commonService.decryptData(this.videoSrc, 'Abhijith123456789'));
+          this.videoSrc = structuredClone(this.commonService.decryptData(this.videoSrc, 'Abhijith123456789'));
         // this.videoSrc = this.sanitizer.bypassSecurityTrustResourceUrl('blob:https://www.netflix.com/dec19f37-7cb5-4243-9685-a50fdbceaeeb')
       }
     }
@@ -47,12 +48,30 @@ export class HlsPlayerComponent implements AfterViewInit, OnDestroy {
   ngAfterViewInit() {
     const video = this.videoRef.nativeElement;
 
+    // if (Hls.isSupported()) {
+    //   this.hls = new Hls();
+    //   this.hls.loadSource(this.fileUrl+this.videoSrc);
+    //   this.hls.attachMedia(video);
+    // } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+    //   video.src = this.videoSrc;
+    // }
     if (Hls.isSupported()) {
       this.hls = new Hls();
-      this.hls.loadSource(this.videoSrc);
+      this.hls.loadSource(this.fileUrl + this.videoSrc);
       this.hls.attachMedia(video);
+
+      this.hls.on(Hls.Events.MANIFEST_PARSED, () => {
+        video.play().catch(err => {
+          console.warn("Autoplay blocked by browser, showing play button instead.", err);
+        });
+      });
     } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-      video.src = this.videoSrc;
+      video.src = this.fileUrl + this.videoSrc;
+      video.addEventListener('loadedmetadata', () => {
+        video.play().catch(err => {
+          console.warn("Autoplay blocked by browser, showing play button instead.", err);
+        });
+      });
     }
   }
   @HostListener('mouseenter')

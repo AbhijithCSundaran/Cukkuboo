@@ -42,7 +42,7 @@ export class HomeComponent implements OnInit {
             }
           });
           // console.log('Home Data:', this.HomeData);
-          console.log(this.bannerData, this.listSections);
+          // console.log(this.bannerData, this.listSections);
 
         }
       },

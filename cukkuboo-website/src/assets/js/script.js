@@ -125,7 +125,7 @@ Design and Developed by: Gentechtree.com
         if(jQuery('.tv-show-back-data').length)
         {
             var url = jQuery('.tv-show-back-data').data('url');
-            console.log(url);
+            // console.log(url);
             var html = '';
             html += `<div class="tv-single-background">
                 <img src="`+url+`">

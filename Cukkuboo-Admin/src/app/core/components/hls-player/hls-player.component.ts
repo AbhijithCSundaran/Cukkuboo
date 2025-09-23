@@ -1,0 +1,83 @@
+import { CommonModule } from '@angular/common';
+import { AfterViewInit, Component, ElementRef, EventEmitter, HostBinding, HostListener, Input, OnDestroy, Output, ViewChild } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import Hls from 'hls.js';
+
+@Component({
+  selector: 'hls-player',
+  imports: [CommonModule, MatButtonModule, MatIconModule],
+  templateUrl: './hls-player.component.html',
+  styleUrls: ['./hls-player.component.scss']
+})
+export class HlsPlayerComponent implements AfterViewInit, OnDestroy {
+  // @Input() videoSrc: string = 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8';
+  @Input() videoSrc: string = 'https://cukkuboo.com/api/uploads/hls/1758527292_bccb83737eaf28aca92c/index.m3u8';
+  @ViewChild('videoPlayer', { static: true }) videoRef!: ElementRef<HTMLVideoElement>;
+  @Input() hideClose: boolean = true;
+  @Input() controls: boolean = true;
+  @Input() autoplay: boolean = true;
+  @Input() fullScreen: boolean = false;
+  @Output() onClose: EventEmitter<any> = new EventEmitter();
+  private hls?: Hls;
+
+  timeoutId: any;
+  @HostBinding('class.showClose') showClose = false;
+  ngAfterViewInit() {
+    const video = this.videoRef.nativeElement;
+
+    // this.videoSrc = this.videoSrc.replace("/index.php", "")
+    if (Hls.isSupported()) {
+      this.hls = new Hls();
+      this.hls.loadSource(this.videoSrc);
+      this.hls.attachMedia(video);
+      // this.hls.on(Hls.Events.MANIFEST_PARSED, () => {
+      //   video.muted = true; // Required by most browsers for autoplay
+      //   video.play().catch(err => console.warn('Autoplay blocked:', err));
+      // });
+    } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+      video.src = this.videoSrc;
+      // video.addEventListener('loadedmetadata', () => {
+      //   video.muted = true; // Required
+      //   video.play().catch(err => console.warn('Autoplay blocked:', err));
+      // });
+    }
+  }
+  @HostListener('mouseenter')
+  onMouseEnter() {
+    this.resetTimeout();
+  }
+
+  @HostListener('mousemove')
+  onMouseMove() {
+    this.resetTimeout();
+  }
+
+  // @HostListener('mouseleave')
+  // onMouseLeave() {
+  //   this.showClose = false;
+  //   if (this.timeoutId) {
+  //     clearTimeout(this.timeoutId);
+  //     this.timeoutId = null;
+  //   }
+  // }
+
+  private resetTimeout() {
+    this.showClose = true;
+    if (this.timeoutId) {
+      clearTimeout(this.timeoutId);
+    }
+    this.timeoutId = setTimeout(() => {
+      this.showClose = false;
+      this.timeoutId = null;
+    }, 2500);
+  }
+
+  Close(): void {
+    this.onClose.emit(true);
+  }
+
+  ngOnDestroy() {
+    this.hls?.destroy();
+  }
+}

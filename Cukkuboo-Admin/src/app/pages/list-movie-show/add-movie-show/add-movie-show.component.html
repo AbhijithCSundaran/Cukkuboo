@@ -14,11 +14,10 @@
             <mat-card appearance="outlined" class="h-100 position-relative">
               <mat-card-content>
                 <label class="label">Upload Video</label>
-              <div class="drag-drop-zone"
-     [class.disabled]="uploadProgress > 0 && uploadProgress < 100"
-     (dragover)="uploadProgress > 0 && uploadProgress < 100 ? $event.preventDefault() : onVideoDragOver($event)"
-     (drop)="uploadProgress > 0 && uploadProgress < 100 ? $event.preventDefault() : onVideoDrop($event)"
-     (click)="(uploadProgress > 0 && uploadProgress < 100) ? $event.preventDefault() : videoInput.click()">
+                <div class="drag-drop-zone" [class.disabled]="uploadProgressMain > 0 && uploadProgressMain < 100"
+                  (dragover)="uploadProgressMain > 0 && uploadProgressMain < 100 ? $event.preventDefault() : onVideoDragOver($event)"
+                  (drop)="uploadProgressMain > 0 && uploadProgressMain < 100 ? $event.preventDefault() : onVideoDrop($event)"
+                  (click)="(uploadProgressMain > 0 && uploadProgressMain < 100) ? $event.preventDefault() : videoInput.click()">
 
                   <i class="fa-sharp fa-solid fa-arrow-up-from-bracket upload-icon"></i>
                   <p *ngIf="!videoName">Drag & drop a video here or click to select (MP4 files only, with a maximum size
@@ -26,11 +25,11 @@
                   <!-- <span>You can upload videos with a maximum size of 2GB.</span> -->
                   <p *ngIf="videoName">Video Selected: {{ videoName }}</p>
 
-                  <div *ngIf="uploadProgress > 0 && uploadProgress < 100" class="progress-container">
-                    <div class="progress-bar" [style.width.%]="uploadProgress"></div>
-                    <span class="progress-text">{{ uploadProgress }}%</span>
+                  <div *ngIf="uploadProgressMain > 0 && uploadProgressMain < 100" class="progress-container">
+                    <div class="progress-bar" [style.width.%]="uploadProgressMain"></div>
+                    <span class="progress-text">{{ uploadProgressMain }}%</span>
                   </div>
-                  <div *ngIf="uploadProgress === 100" class="upload-success">✅ Upload complete!</div>
+                  <div *ngIf="uploadProgressMain === 100" class="upload-success">✅ Upload complete!</div>
                 </div>
                 <input type="file" (change)="onVideoSelected($event)" accept="video/*" hidden #videoInput />
               </mat-card-content>
@@ -42,12 +41,17 @@
             <button class="trash-button-main" (click)="openDeleteConfirm('video')">
               <i class="fa-solid fa-trash"></i>
             </button>
-            <!-- {{uploadProgress}} -->
+            <!-- {{uploadProgressMain}} -->
             <div class="video-preview-container">
-              <video [src]="videoUrl+movieForm.value['video']" controls controlsList="nodownload"
-                [ngClass]="{ 'vertical-video': isVerticalVideo, 'horizontal-video': !isVerticalVideo }"></video>
+              <!-- <video [src]="videoUrl+movieForm.value['video']" controls controlsList="nodownload"
+                [ngClass]="{ 'vertical-video': isVerticalVideo, 'horizontal-video': !isVerticalVideo }"></video> -->
+              <hls-player class="video_player"
+                [ngClass]="{ 'vertical-video': isVerticalVideo, 'horizontal-video': !isVerticalVideo }"
+                [videoSrc]="videoUrl+movieForm.value['video']">
+              </hls-player>
             </div>
           </div>
+          <!-- <hls-player class="video_player"></hls-player> -->
         </div>
       </div>
 
@@ -243,8 +247,17 @@
                 (dragover)="onTrailerDragOver($event)" (drop)="onTrailerDrop($event)"
                 (click)="!movieForm.value['trailer'] && trailerInput.click()">
                 <p *ngIf="!movieForm.value['trailer']">Drag & drop a trailer here or click to select (MP4 only)</p>
-                <video *ngIf="movieForm.value['trailer']" [src]="videoUrl+movieForm.value['trailer']" controls
-                  controlsList="nodownload" class="media-preview"></video>
+                <div *ngIf="!movieForm.value['trailer'] && uploadProgressTrailor<100&&uploadProgressTrailor>0"
+                  class="progress trailer_progress" role="progressbar" aria-label="Danger striped example"
+                  aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                  <div class="progress-bar progress-bar-striped bg-danger " [style.width.%]="uploadProgressTrailor">
+                  </div>
+                </div>
+                <!-- <video *ngIf="movieForm.value['trailer']" [src]="videoUrl+movieForm.value['trailer']" controls
+                  controlsList="nodownload" class="media-preview"></video> -->
+                <hls-player *ngIf="movieForm.value['trailer']" class=""
+                  [videoSrc]="videoUrl+movieForm.value['trailer']">
+                </hls-player>
 
               </div>
 

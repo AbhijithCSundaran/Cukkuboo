@@ -19,14 +19,15 @@ export class MovieService {
     });
   }
   constructor(private http: HttpClient) { }
-  
-listmovies(pageIndex: number = 0, pageSize: number = 10, searchText: string = ''): Observable<any> {
-  return this.http.get(this.apiUrl + 'movie/moviedetails?pageIndex=' + pageIndex + '&pageSize=' + pageSize + '&search=' + searchText, {
-    headers: this.headers
-  });
-}
+
+  listmovies(pageIndex: number = 0, pageSize: number = 10, searchText: string = ''): Observable<any> {
+    return this.http.get(this.apiUrl + 'movie/moviedetails?pageIndex=' + pageIndex + '&pageSize=' + pageSize + '&search=' + searchText, {
+      headers: this.headers
+    });
+  }
 
   addmovies(model: any): Observable<any> {
+    console.log('movieModel', model)
     const body = model;
     return this.http.post(this.apiUrl + 'movie/store', body, { headers: this.headers });
   }
@@ -37,29 +38,29 @@ listmovies(pageIndex: number = 0, pageSize: number = 10, searchText: string = ''
 
   // for edit prefill
   getMovieById(id: number): Observable<any> {
-  return this.http.get(this.apiUrl + 'getmovie/' + id, { headers: this.headers });
+    return this.http.get(this.apiUrl + 'getmovie/' + id, { headers: this.headers });
   }
 
   deleteMovies(id: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}movie/delete/${id}`, { headers: this.headers });
   }
 
-//   getMostWatchedMovies(): Observable<any> {
-//     return this.http.get(`${this.apiUrl}movies/mostwatchmovie`, {
-//       headers: this.headers
-//     });
-//   }
+  //   getMostWatchedMovies(): Observable<any> {
+  //     return this.http.get(`${this.apiUrl}movies/mostwatchmovie`, {
+  //       headers: this.headers
+  //     });
+  //   }
 
-// getLatestMovies(): Observable<any> {
-//   return this.http.get(`${this.apiUrl}movies/latestmovies`, {
-//     headers: this.headers
-//   });
-// }
+  // getLatestMovies(): Observable<any> {
+  //   return this.http.get(`${this.apiUrl}movies/latestmovies`, {
+  //     headers: this.headers
+  //   });
+  // }
 
-getDashboardData(): Observable<any> {
-  return this.http.get(`${this.apiUrl}movies/dashboard`, {
-    headers: this.headers
-  });
-}
+  getDashboardData(): Observable<any> {
+    return this.http.get(`${this.apiUrl}movies/dashboard`, {
+      headers: this.headers
+    });
+  }
 
 }

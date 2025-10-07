@@ -121,7 +121,7 @@ export class AddMovieShowComponent implements OnInit {
       mov_id: [0],
       title: ['', Validators.required],
       video: ['', Validators.required],
-      video_variants: ['', Validators.required],
+      video_variants: [''],
       trailer: ['', Validators.required],
       thumbnail: ['', Validators.required],
       banner: ['', Validators.required],

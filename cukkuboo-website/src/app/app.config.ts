@@ -16,7 +16,7 @@ export const appConfig: ApplicationConfig = {
     importProvidersFrom(
       BrowserModule,
       BrowserAnimationsModule,
-      RouterModule.forRoot(routes, { useHash: true, scrollPositionRestoration: 'top' })
+      RouterModule.forRoot(routes, { useHash: false, scrollPositionRestoration: 'top' })
     ),
     // provideHttpClient(),
     provideHttpClient(withInterceptorsFromDi()),
